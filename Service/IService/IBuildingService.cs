@@ -1,0 +1,14 @@
+using Domain.CustomEntities;
+using Domain.EntitiesForManagement;
+using Domain.QueryFilter;
+
+namespace Service.IService;
+
+public interface IBuildingService
+{
+    public Task<PagedList<Building>?> GetBuildingList(BuildingFilter filters, CancellationToken token);
+    public Task<Building?> GetBuildingById(int? buildingId);
+    public Task<Building?> AddBuilding(Building building);
+    public Task<Building?> UpdateBuilding(Building building);
+    public Task<bool> DeleteBuilding(int buildingId);
+}
