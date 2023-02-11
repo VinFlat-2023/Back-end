@@ -489,31 +489,31 @@ public class ApplicationContext : DbContext
             new FlatType
             {
                 FlatTypeId = 1,
-                Capacity = 10,
+                RoomCapacity = 10,
                 Status = "Active"
             },
             new FlatType
             {
                 FlatTypeId = 2,
-                Capacity = 2,
+                RoomCapacity = 2,
                 Status = "Active"
             },
             new FlatType
             {
                 FlatTypeId = 3,
-                Capacity = 4,
+                RoomCapacity = 4,
                 Status = "Active"
             },
             new FlatType
             {
                 FlatTypeId = 4,
-                Capacity = 5,
+                RoomCapacity = 5,
                 Status = "Active"
             },
             new FlatType
             {
                 FlatTypeId = 5,
-                Capacity = 6,
+                RoomCapacity = 6,
                 Status = "NonActive"
             }
         );

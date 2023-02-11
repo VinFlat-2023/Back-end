@@ -223,7 +223,7 @@ public class FlatsController : ControllerBase
         var updateFlatType = new FlatType
         {
             FlatTypeId = id,
-            Capacity = flatType.Capacity,
+            RoomCapacity = flatType.Capacity,
             Status = flatType.Status
         };
 
@@ -249,7 +249,7 @@ public class FlatsController : ControllerBase
 
         var newFlatType = new FlatType
         {
-            Capacity = flatType.Capacity,
+            RoomCapacity = flatType.Capacity,
             Status = flatType.Status
         };
 
@@ -278,5 +278,25 @@ public class FlatsController : ControllerBase
             return NotFound("FlatType not found");
 
         return Ok("FlatType deleted");
+    }
+
+    [SwaggerOperation(Summary = "Check total available room")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [HttpDelete("room/{id:int}/slot-available")]
+    public async Task<IActionResult> GetTotalAvailableRoom(int id)
+    {
+        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
+            return BadRequest("You are not authorized to access this information");
+
+        var result = await _serviceWrapper.Flats.GetFlatById(id);
+        return result == null
+            ? NotFound("Flat not found")
+            : Ok(new
+            {
+                status = "Success",
+                message = "Flat found",
+                data = result.Rooms
+                    .Count(x => x.RoomType.NumberOfSlotsAvailable >= 1)
+            });
     }
 }

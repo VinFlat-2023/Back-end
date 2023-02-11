@@ -23,13 +23,12 @@ public class Building
     public int TotalRooms { get; set; }
     public int CoordinateX { get; set; }
     public int CoordinateY { get; set; }
+
     public bool Status { get; set; }
 
     // Management Company
     public int AccountId { get; set; }
-
     [ForeignKey("AreaId")] public int AreaId { get; set; }
-
     public Area Area { get; set; }
     public virtual ICollection<Flat> Flats { get; set; }
 }

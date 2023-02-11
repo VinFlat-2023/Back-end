@@ -111,12 +111,12 @@ public class FlatValidator : BaseValidator, IFlatValidator
                         break;
                 }
 
-            switch (obj?.Capacity)
+            switch (obj?.RoomCapacity)
             {
                 case null:
                     ValidatorResult.Failures.Add("Flat type capacity is required");
                     break;
-                case { } when obj.Capacity < 1:
+                case { } when obj.RoomCapacity < 1:
                     ValidatorResult.Failures.Add("Flat type capacity must be greater than 0");
                     break;
             }

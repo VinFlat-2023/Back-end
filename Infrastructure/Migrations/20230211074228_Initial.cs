@@ -679,7 +679,7 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "FlatTypes",
-                columns: new[] { "FlatTypeId", "Capacity", "Status" },
+                columns: new[] { "FlatTypeId", "RoomCapacity", "Status" },
                 values: new object[,]
                 {
                     { 1, 10, "Active" },
