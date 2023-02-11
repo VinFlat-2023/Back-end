@@ -27,8 +27,8 @@ public static class JwtAuthenticationService
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes
                         (configuration["JwtToken:NotTokenKeyForSureSourceTrustMeDude"])),
                     ClockSkew = TimeSpan.Zero,
-                    ValidIssuer = configuration["JwtToken:Issuer-Local"],
-                    ValidAudience = configuration["JwtToken:Audience-Local"]
+                    ValidIssuer = configuration["JwtToken:Issuer"],
+                    ValidAudience = configuration["JwtToken:Audience"]
                 };
             });
         return services;

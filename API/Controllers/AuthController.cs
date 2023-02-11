@@ -2,6 +2,7 @@ using Domain.ControllerEntities;
 using Domain.EntitiesForManagement;
 using Domain.Utils;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Common;
 using Service.IService;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -57,7 +58,8 @@ public class AuthController : ControllerBase
         {
             status = "Success",
             message = "User logged in successfully",
-            data = jwtToken
+            data = jwtToken,
+                
         });
     }
 
