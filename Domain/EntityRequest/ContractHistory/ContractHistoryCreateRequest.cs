@@ -4,7 +4,7 @@ namespace Domain.EntityRequest.ContractHistory;
 
 public class ContractHistoryCreateRequest
 {
-    public decimal Price { get; set; }
+    public double Price { get; set; }
 
     [MaxLength(200, ErrorMessage = "Description length must less than 200")]
     public string Description { get; set; } = null!;

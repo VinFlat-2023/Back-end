@@ -25,7 +25,7 @@ public class ContractUpdateRequest
     public IFormFile? Image { get; set; }
 
     [Range(0.0, double.MaxValue, ErrorMessage = "Price must not be negative")]
-    public decimal Price { get; set; }
+    public double Price { get; set; }
 
     [MaxLength(20, ErrorMessage = "Status length must less than 20")]
     public string ContractStatus { get; set; } = null!;

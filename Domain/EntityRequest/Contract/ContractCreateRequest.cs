@@ -21,7 +21,7 @@ public class ContractCreateRequest
     public string? ContractStatus { get; set; }
 
     [Range(0.0, double.MaxValue, ErrorMessage = "Price must not be negative")]
-    public decimal Price { get; set; }
+    public double Price { get; set; }
 
     public int RenterId { get; set; } // User Id
 }

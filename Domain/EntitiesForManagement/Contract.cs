@@ -24,6 +24,6 @@ public class Contract
     public string? ImageUrl { get; set; }
 
     [NotMapped] public IFormFile? Image { get; set; }
-    public decimal Price { get; set; }
+    public double Price { get; set; }
     public virtual ICollection<ContractHistory> ContractHistories { get; set; }
 }

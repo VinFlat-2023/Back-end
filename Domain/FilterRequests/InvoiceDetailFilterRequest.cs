@@ -4,7 +4,7 @@ namespace Domain.FilterRequests;
 
 public class InvoiceDetailFilterRequest : PagingFilter
 {
-    public decimal? Amount { get; set; }
+    public double? Amount { get; set; }
 
     public int? InvoiceId { get; set; }
 

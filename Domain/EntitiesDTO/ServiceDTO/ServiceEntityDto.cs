@@ -12,7 +12,7 @@ public class ServiceEntityDto
     public string? Description { get; set; }
     public bool? Status { get; set; }
     public virtual ICollection<InvoiceDetailDto> InvoiceDetails { get; set; } = null!;
-    public decimal? Amount { get; set; }
+    public double? Amount { get; set; }
     public int? ServiceTypeId { get; set; }
 
     [JsonIgnore] public virtual ServiceTypeDto ServiceType { get; set; }

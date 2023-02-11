@@ -376,7 +376,7 @@ public class InvoicesController : ControllerBase
         return (start.Date - end.Date).Days + 1;
     }
 
-    private static decimal CalculateBillAmount(Invoice? invoice)
+    private static double CalculateBillAmount(Invoice? invoice)
     {
         if (invoice == null)
             return -1;

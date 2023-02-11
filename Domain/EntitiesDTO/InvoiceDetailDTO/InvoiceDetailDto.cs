@@ -7,7 +7,7 @@ namespace Domain.EntitiesDTO.InvoiceDetailDTO;
 public class InvoiceDetailDto
 {
     public int InvoiceDetailId { get; set; }
-    public decimal Amount { get; set; }
+    public double Amount { get; set; }
     public int InvoiceId { get; set; }
 
     [JsonIgnore] public virtual InvoiceDto Invoice { get; set; } = null!;

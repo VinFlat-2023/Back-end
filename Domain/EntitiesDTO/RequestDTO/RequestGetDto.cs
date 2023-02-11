@@ -10,7 +10,7 @@ public class RequestDto
     public string? Description { get; set; }
     public DateTime CreateDate { get; set; }
     public DateTime? SolveDate { get; set; }
-    public decimal? Amount { get; set; }
+    public double? Amount { get; set; }
     public string Status { get; set; } = null!;
     public int? TicketTypeId { get; set; }
 

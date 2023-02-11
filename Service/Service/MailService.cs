@@ -193,7 +193,7 @@ public class CustomeMailService : ICustomeMailService
         table.Append("</thead>");
         table.Append("<tbody>");
 
-        decimal total = 0;
+        double total = 0;
         foreach (var detail in invoice.InvoiceDetails)
         {
             table.Append("<tr>");

@@ -4,7 +4,7 @@ public class InvoiceDetailUpdateRequest
 {
     public int InvoiceDetailId { get; set; }
 
-    public decimal Amount { get; set; }
+    public double Amount { get; set; }
 
     public int InvoiceId { get; set; }
 }

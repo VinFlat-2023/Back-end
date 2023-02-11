@@ -5,7 +5,7 @@ namespace Domain.EntitiesForManagement;
 public class InvoiceDetail
 {
     public int InvoiceDetailId { get; set; }
-    public decimal Amount { get; set; }
+    public double Amount { get; set; }
     public int InvoiceId { get; set; }
     public virtual Invoice Invoice { get; set; } = null!;
 
