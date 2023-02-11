@@ -24,9 +24,8 @@ public class InvoiceRepository : IInvoiceRepository
         return _context.Invoices
             .Include(x => x.Account)
             .Include(x => x.Renter)
-            .Include(x => x.InvoiceDetails)
-            .Where(x => x.RenterId == x.Renter.RenterId)
             .Where(x => x.AccountId == x.Account.AccountId)
+            .Where(x => x.RenterId == x.Renter.RenterId)
             // Filter starts here
             .Where(x =>
                 (filter.Name == null || x.Name.Contains(filter.Name))
@@ -46,7 +45,12 @@ public class InvoiceRepository : IInvoiceRepository
     /// <returns></returns>
     public async Task<Invoice?> GetInvoiceDetail(int invoiceId)
     {
-        return await _context.Invoices.FirstOrDefaultAsync(x => x.InvoiceId == invoiceId);
+        return await _context.Invoices
+            .Include(x => x.Account)
+            .Include(x => x.Renter)
+            .Where(x => x.RenterId == x.Renter.RenterId)
+            .Where(x => x.AccountId == x.Account.AccountId)
+            .FirstOrDefaultAsync(x => x.InvoiceId == invoiceId);
     }
 
     /// <summary>
@@ -56,7 +60,22 @@ public class InvoiceRepository : IInvoiceRepository
     /// <returns></returns>
     public async Task<Invoice?> GetInvoiceIncludeRenter(int invoiceId)
     {
-        return await _context.Invoices.Include(e => e.Renter).SingleOrDefaultAsync(e => e.InvoiceId == invoiceId);
+        return await _context.Invoices.Include(e => e.Renter)
+            .SingleOrDefaultAsync(e => e.InvoiceId == invoiceId);
+    }
+
+    public async Task<Invoice?> GetInvoiceByRenter(int renterId)
+    {
+        return await _context.Invoices
+            .Where(x => x.Status == true)
+            .FirstOrDefaultAsync(x => x.RenterId == renterId);
+    }
+
+    public async Task<Invoice?> GetUnpaidInvoiceByRenterAndMonth(int renterId, int month)
+    {
+        return await _context.Invoices
+            .Where(x => x.Status == false)
+            .FirstOrDefaultAsync(x => x.RenterId == renterId && x.CreatedTime.Month == month);
     }
 
     /// <summary>
@@ -83,10 +102,14 @@ public class InvoiceRepository : IInvoiceRepository
         if (invoiceData == null)
             return null;
 
-        invoiceData.Detail = invoice?.Detail ?? invoiceData.Detail;
         invoiceData.Name = invoice?.Name ?? invoiceData.Name;
+        invoiceData.Amount = invoice?.Amount ?? invoiceData.Amount;
         invoiceData.Status = invoice?.Status ?? invoiceData.Status;
-        // TODO : Check if wanted to change invoice destination
+        invoiceData.ImageUrl = invoice?.ImageUrl ?? invoiceData.ImageUrl;
+        invoiceData.Detail = invoice?.Detail ?? invoiceData.Detail;
+        invoiceData.AccountId = invoice?.AccountId ?? invoiceData.AccountId;
+        invoiceData.RenterId = invoice?.RenterId ?? invoiceData.RenterId;
+        invoiceData.InvoiceTypeId = invoice?.InvoiceTypeId ?? invoiceData.InvoiceTypeId;
 
         await _context.SaveChangesAsync();
         return invoiceData;
@@ -115,11 +138,18 @@ public class InvoiceRepository : IInvoiceRepository
     /// <exception cref="NotImplementedException"></exception>
     public List<Invoice> GetUnpaidInvoice()
     {
-        var unpaids = _context.Invoices
+        var unpaidInvoices = _context.Invoices
             .Include(e => e.Renter)
             .Include(e => e.InvoiceDetails)
             .ThenInclude(e => e.Service)
             .Where(e => !e.Status).ToList();
-        return unpaids;
+        return unpaidInvoices;
+    }
+
+    public IEnumerable<Invoice> GetInvoiceListByMonth(int month)
+    {
+        return _context.Invoices
+            .Where(x => x.Status == false && x.CreatedTime.Month == month);
+        //.Where(x.CreatedTime.Month == month);
     }
 }

@@ -38,7 +38,7 @@ public class FlatValidator : BaseValidator, IFlatValidator
                     ValidatorResult.Failures.Add("Flat name is required");
                     break;
                 case { } when obj.Name.Length > 200:
-                    ValidatorResult.Failures.Add("Flat name max length reached");
+                    ValidatorResult.Failures.Add("Flat name cannot exceed 200 characters");
                     break;
             }
 
@@ -48,17 +48,23 @@ public class FlatValidator : BaseValidator, IFlatValidator
                     ValidatorResult.Failures.Add("Flat description is required");
                     break;
                 case { } when obj.Description.Length > 200:
-                    ValidatorResult.Failures.Add("Flat description max length reached");
+                    ValidatorResult.Failures.Add("Flat description cannot exceed 200 characters");
                     break;
             }
 
             if (obj?.Status == null)
                 ValidatorResult.Failures.Add("Flat status is required");
 
-            if (obj?.WaterMeter == null)
+            if (obj?.WaterMeterBefore == null)
                 ValidatorResult.Failures.Add("Flat water meter is required");
 
-            if (obj?.ElectricityMeter == null)
+            if (obj?.ElectricityMeterBefore == null)
+                ValidatorResult.Failures.Add("Flat electricity meter is required");
+
+            if (obj?.WaterMeterAfter == null)
+                ValidatorResult.Failures.Add("Flat water meter is required");
+
+            if (obj?.ElectricityMeterAfter == null)
                 ValidatorResult.Failures.Add("Flat electricity meter is required");
 
             switch (obj?.FlatTypeId)
@@ -118,6 +124,9 @@ public class FlatValidator : BaseValidator, IFlatValidator
                     break;
                 case { } when obj.RoomCapacity < 1:
                     ValidatorResult.Failures.Add("Flat type capacity must be greater than 0");
+                    break;
+                case { } when obj.RoomCapacity > 20:
+                    ValidatorResult.Failures.Add("Flat type capacity must be less than 20");
                     break;
             }
 

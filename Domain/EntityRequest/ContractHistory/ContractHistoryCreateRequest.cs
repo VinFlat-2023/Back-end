@@ -14,6 +14,8 @@ public class ContractHistoryCreateRequest
 
     public DateTime ContractExpiredDate { get; set; }
 
+    public int RenterId { get; set; }
+
     [Range(0, int.MaxValue, ErrorMessage = "Contract Id must not be negative")]
     public int ContractId { get; set; } // Contract
 }

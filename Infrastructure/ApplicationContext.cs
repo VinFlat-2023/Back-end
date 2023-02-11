@@ -14,7 +14,6 @@ public class ApplicationContext : DbContext
     public virtual DbSet<Area> Areas { get; set; } = null!;
     public virtual DbSet<Building> Buildings { get; set; } = null!;
     public virtual DbSet<Contract> Contracts { get; set; } = null!;
-    public virtual DbSet<ContractHistory> ContractHistories { get; set; } = null!;
     public virtual DbSet<Feedback> Feedbacks { get; set; } = null!;
     public virtual DbSet<FeedbackType> FeedbackTypes { get; set; } = null!;
     public virtual DbSet<Flat> Flats { get; set; } = null!;
@@ -24,8 +23,8 @@ public class ApplicationContext : DbContext
     public virtual DbSet<InvoiceDetail> InvoiceDetails { get; set; } = null!;
     public virtual DbSet<InvoiceType> InvoiceTypes { get; set; } = null!;
     public virtual DbSet<Renter> Renters { get; set; } = null!;
-    public virtual DbSet<Ticket> Requests { get; set; } = null!;
-    public virtual DbSet<TicketType> RequestTypes { get; set; } = null!;
+    public virtual DbSet<Ticket> Tickets { get; set; } = null!;
+    public virtual DbSet<TicketType> TicketTypes { get; set; } = null!;
     public virtual DbSet<Role> Roles { get; set; } = null!;
     public virtual DbSet<ServiceEntity> Services { get; set; } = null!;
     public virtual DbSet<ServiceType> ServiceTypes { get; set; } = null!;
@@ -40,6 +39,10 @@ public class ApplicationContext : DbContext
     public virtual DbSet<Notification> Notifications { get; set; } = null!;
 
     public virtual DbSet<NotificationType> NotificationTypes { get; set; } = null!;
+    
+    public virtual DbSet<Room> Rooms { get; set; }
+    
+    public virtual DbSet<RoomType> RoomTypes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -52,6 +55,14 @@ public class ApplicationContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Contract>()
+            .ToTable("Contracts",
+                b => b.IsTemporal());
+
+        modelBuilder.Entity<Invoice>()
+            .ToTable("Invoices",
+                b => b.IsTemporal());
+
         modelBuilder.Entity<Notification>(entity =>
         {
             entity.HasNoKey();
@@ -94,6 +105,7 @@ public class ApplicationContext : DbContext
             new Account
             {
                 AccountId = 1,
+                FullName = "Super admin account",
                 Username = "superadmin",
                 Password = "superadmin",
                 Email = "superadmin@mail",
@@ -105,6 +117,7 @@ public class ApplicationContext : DbContext
             {
                 AccountId = 2,
                 Username = "admin",
+                FullName = "Admin account",
                 Password = "admin",
                 Email = "admin@mail",
                 Phone = "0123543532",
@@ -115,6 +128,7 @@ public class ApplicationContext : DbContext
             {
                 AccountId = 3,
                 Username = "supervisor",
+                FullName = "Supervisor account",
                 Password = "supervisor",
                 Email = "supervisor@mail",
                 Phone = "0123543554",
@@ -125,6 +139,7 @@ public class ApplicationContext : DbContext
             {
                 AccountId = 4,
                 Username = "employee1",
+                FullName = "Employee account 1",
                 Password = "employee1",
                 Email = "employee1@mail",
                 Phone = "0123543235",
@@ -135,6 +150,7 @@ public class ApplicationContext : DbContext
             {
                 AccountId = 5,
                 Username = "employee2",
+                FullName = "Employee account 2",
                 Password = "employee2",
                 Email = "employee2@mail",
                 Phone = "0123123235",
@@ -183,7 +199,7 @@ public class ApplicationContext : DbContext
             {
                 RenterId = 1,
                 Username = "renter1",
-                Email = "renter1@mail",
+                Email = "renter1@mail.com",
                 Password = "renter1",
                 Phone = "0123543125",
                 FullName = "Nguyen Van A",
@@ -198,7 +214,7 @@ public class ApplicationContext : DbContext
             {
                 RenterId = 2,
                 Username = "renter2",
-                Email = "renter2@mail",
+                Email = "renter2@mail.com",
                 Password = "renter2",
                 Phone = "0123543125",
                 FullName = "Nguyen Van B",
@@ -213,7 +229,7 @@ public class ApplicationContext : DbContext
             {
                 RenterId = 3,
                 Username = "renter3",
-                Email = "renter3@mail",
+                Email = "renter3@mail.com",
                 Password = "renter3",
                 Phone = "0123543125",
                 FullName = "Nguyen Van C",
@@ -229,7 +245,7 @@ public class ApplicationContext : DbContext
             {
                 RenterId = 4,
                 Username = "renter4",
-                Email = "renter4@mail",
+                Email = "renter4@mail.com",
                 Password = "renter4",
                 Phone = "0123543125",
                 FullName = "Nguyen Van D",
@@ -238,6 +254,54 @@ public class ApplicationContext : DbContext
                 CitizenNumber = "3214324523",
                 Address = "HN",
                 Gender = "Female",
+                DeviceToken = "ewasdv12344",
+                MajorId = 1,
+                UniversityId = 1
+            }, new Renter
+            {
+                RenterId = 5,
+                Username = "minhkhoi10a3",
+                Email = "trankhaimnhkhoi10a3@mail.com",
+                Password = "123456789",
+                Phone = "0123543125",
+                FullName = "Tran Minh Khoi",
+                BirthDate = DateTime.UtcNow,
+                Status = true,
+                CitizenNumber = "3214324523",
+                Address = "HCM",
+                Gender = "Male",
+                DeviceToken = "ewasdv12344",
+                MajorId = 1,
+                UniversityId = 1
+            }, new Renter
+            {
+                RenterId = 6,
+                Username = "minhkhoi",
+                Email = "trankhaimnhkhoi@mail.com",
+                Password = "123456789",
+                Phone = "0123543125",
+                FullName = "Tran Minh Khoi",
+                BirthDate = DateTime.UtcNow,
+                Status = true,
+                CitizenNumber = "3214324523",
+                Address = "HCM",
+                Gender = "Male",
+                DeviceToken = "ewasdv12344",
+                MajorId = 1,
+                UniversityId = 1
+            }, new Renter
+            {
+                RenterId = 7,
+                Username = "minhkhoitkm",
+                Email = "khoitkmse150850@fpt",
+                Password = "123456789",
+                Phone = "0123543125",
+                FullName = "Tran Minh Khoi",
+                BirthDate = DateTime.UtcNow,
+                Status = true,
+                CitizenNumber = "3214324523",
+                Address = "HCM",
+                Gender = "Male",
                 DeviceToken = "ewasdv12344",
                 MajorId = 1,
                 UniversityId = 1
@@ -392,96 +456,96 @@ public class ApplicationContext : DbContext
                 BuildingId = 1,
                 BuildingName = "Building 1a",
                 Description = "Building 1a",
-                TotalFloor = 10,
-                TotalRooms = 20,
                 Status = true,
                 CoordinateX = 231,
                 CoordinateY = 324,
-                AreaId = 1
+                AreaId = 1,
+                AccountId = 5,
+                ImageUrl = ""
             },
             new Building
             {
                 BuildingId = 2,
                 BuildingName = "Building 1b",
                 Description = "Building 1b",
-                TotalFloor = 10,
-                TotalRooms = 20,
                 Status = true,
                 CoordinateX = 21233,
                 CoordinateY = 334,
-                AreaId = 1
+                AreaId = 1,
+                AccountId = 2,
+                ImageUrl = ""
             },
             new Building
             {
                 BuildingId = 3,
                 BuildingName = "Building 1c",
                 Description = "Building 1c",
-                TotalFloor = 10,
-                TotalRooms = 20,
                 Status = true,
                 CoordinateX = 423,
                 CoordinateY = 3214,
-                AreaId = 2
+                AreaId = 2,
+                AccountId = 2,
+                ImageUrl = ""
             },
             new Building
             {
                 BuildingId = 4,
                 BuildingName = "Building 1d",
                 Description = "Building 1d",
-                TotalFloor = 10,
-                TotalRooms = 20,
                 Status = true,
                 CoordinateX = 2323,
                 CoordinateY = 314,
-                AreaId = 2
+                AreaId = 2,
+                AccountId = 4,
+                ImageUrl = ""
             },
             new Building
             {
                 BuildingId = 5,
                 BuildingName = "Building 1e",
                 Description = "Building 1e",
-                TotalFloor = 10,
-                TotalRooms = 20,
                 Status = true,
                 CoordinateX = 23431,
                 CoordinateY = 3245,
-                AreaId = 3
+                AreaId = 3,
+                AccountId = 3,
+                ImageUrl = ""
             },
             new Building
             {
                 BuildingId = 6,
                 BuildingName = "Building 1f",
                 Description = "Building 1f",
-                TotalFloor = 10,
-                TotalRooms = 20,
                 Status = true,
                 CoordinateX = 21233,
                 CoordinateY = 334,
-                AreaId = 3
+                AreaId = 3,
+                AccountId = 3,
+                ImageUrl = ""
             },
             new Building
             {
                 BuildingId = 7,
                 BuildingName = "Building 1g",
                 Description = "Building 1g",
-                TotalFloor = 10,
-                TotalRooms = 20,
                 Status = true,
                 CoordinateX = 423,
                 CoordinateY = 3214,
-                AreaId = 4
+                AreaId = 4,
+                AccountId = 3,
+                ImageUrl = ""
             },
             new Building
             {
                 BuildingId = 8,
                 BuildingName = "Building 1h",
                 Description = "Building 1h",
-                TotalFloor = 10,
-                TotalRooms = 20,
                 Status = true,
                 CoordinateX = 2323,
                 CoordinateY = 31454,
-                AreaId = 4
+                AreaId = 4,
+                AccountId = 3,
+                ImageUrl = ""
             }
         );
 
@@ -525,8 +589,10 @@ public class ApplicationContext : DbContext
                 Name = "Flat 1",
                 Description = "Flat 1",
                 Status = "Active",
-                WaterMeter = 0,
-                ElectricityMeter = 0,
+                WaterMeterBefore = 0,
+                ElectricityMeterBefore = 0,
+                WaterMeterAfter = 0,
+                ElectricityMeterAfter = 0,
                 FlatTypeId = 1,
                 BuildingId = 1
             },
@@ -536,8 +602,10 @@ public class ApplicationContext : DbContext
                 Name = "Flat 2",
                 Description = "Flat 2",
                 Status = "Active",
-                WaterMeter = 0,
-                ElectricityMeter = 0,
+                WaterMeterBefore = 0,
+                ElectricityMeterBefore = 0,
+                WaterMeterAfter = 0,
+                ElectricityMeterAfter = 0,
                 FlatTypeId = 3,
                 BuildingId = 3
             },
@@ -547,8 +615,10 @@ public class ApplicationContext : DbContext
                 Name = "Flat 3",
                 Description = "Flat 3",
                 Status = "Active",
-                WaterMeter = 0,
-                ElectricityMeter = 0,
+                WaterMeterBefore = 0,
+                ElectricityMeterBefore = 0,
+                WaterMeterAfter = 0,
+                ElectricityMeterAfter = 0,
                 FlatTypeId = 2,
                 BuildingId = 2
             },
@@ -558,8 +628,10 @@ public class ApplicationContext : DbContext
                 Name = "Flat 4",
                 Description = "Flat 4",
                 Status = "NonActive",
-                WaterMeter = 0,
-                ElectricityMeter = 0,
+                WaterMeterBefore = 0,
+                ElectricityMeterBefore = 0,
+                WaterMeterAfter = 0,
+                ElectricityMeterAfter = 0,
                 FlatTypeId = 5,
                 BuildingId = 2
             }
@@ -569,29 +641,29 @@ public class ApplicationContext : DbContext
             new TicketType
             {
                 TicketTypeId = 1,
-                Name = "Repair",
+                TicketTypeName = "Repair",
                 Description = "Repair",
                 Status = true
             },
             new TicketType
             {
                 TicketTypeId = 2,
-                Name = "Maintenance",
-                Description = "Maintenance",
+                TicketTypeName = "Bảo trì",
+                Description = "Bảo trì",
                 Status = true
             },
             new TicketType
             {
                 TicketTypeId = 3,
-                Name = "Other",
-                Description = "Other",
+                TicketTypeName = "Khác",
+                Description = "Khác",
                 Status = true
             },
             new TicketType
             {
                 TicketTypeId = 4,
-                Name = "Complaint",
-                Description = "Complaint",
+                TicketTypeName = "Phàn nàn",
+                Description = "Phàn nàn",
                 Status = true
             }
         );
@@ -600,26 +672,70 @@ public class ApplicationContext : DbContext
             new ServiceType
             {
                 ServiceTypeId = 1,
-                Name = "Water Supply",
+                Name = "Nước",
                 Status = "Active"
             },
             new ServiceType
             {
                 ServiceTypeId = 2,
-                Name = "Gas Supply",
+                Name = "Gas",
                 Status = "Active"
             },
             new ServiceType
             {
                 ServiceTypeId = 3,
-                Name = "Electricity Supply",
+                Name = "Điện",
                 Status = "Active"
             },
             new ServiceType
             {
                 ServiceTypeId = 4,
-                Name = "Other",
+                Name = "Còn lại",
                 Status = "Active"
+            }
+        );
+
+
+        modelBuilder.Entity<ServiceEntity>().HasData(
+            new ServiceEntity
+            {
+                ServiceId = 1,
+                Name = "Cung cấp nước 1",
+                Description = "Cung cấp nước 1",
+                Status = true,
+                Amount = 0,
+                ServiceTypeId = 1,
+                BuildingId = 2
+            },
+            new ServiceEntity
+            {
+                ServiceId = 2,
+                Name = "Cung cấp nước 2",
+                Description = "Cung cấp nước 2 ",
+                Status = true,
+                Amount = 0,
+                ServiceTypeId = 1,
+                BuildingId = 1
+            },
+            new ServiceEntity
+            {
+                ServiceId = 3,
+                Name = "Cung cấp nước 3",
+                Description = "Cung cấp nước 3",
+                Status = true,
+                Amount = 0,
+                ServiceTypeId = 3,
+                BuildingId = 3
+            },
+            new ServiceEntity
+            {
+                ServiceId = 4,
+                Name = "Cung cấp nước 4",
+                Description = "Cung cấp nước 4",
+                Status = true,
+                Amount = 0,
+                ServiceTypeId = 2,
+                BuildingId = 4
             }
         );
 
@@ -641,7 +757,209 @@ public class ApplicationContext : DbContext
             }
         );
 
+        modelBuilder.Entity<Ticket>().HasData(
+            new Ticket
+            {
+                TicketId = 1,
+                TicketName = "Phàn nàn về dịch vụ nước 1",
+                Description = "Phàn nàn về dịch vụ nước 1",
+                CreateDate = DateTime.UtcNow,
+                Amount = 0,
+                Status = "Pending",
+                TicketTypeId = 1,
+                RenterId = 1,
+                AccountId = 4
+            },
+            new Ticket
+            {
+                TicketId = 2,
+                TicketName = "Phàn nàn về dịch vụ nước 2",
+                Description = "Phàn nàn về dịch vụ nước 2",
+                CreateDate = DateTime.UtcNow,
+                Amount = 0,
+                Status = "Pending",
+                TicketTypeId = 2,
+                RenterId = 1,
+                AccountId = 4
+            },
+            new Ticket
+            {
+                TicketId = 3,
+                TicketName = "Phàn nàn về dịch vụ nước 3",
+                Description = "Phàn nàn về dịch vụ nước 3",
+                CreateDate = DateTime.UtcNow,
+                Amount = 0,
+                Status = "Pending",
+                TicketTypeId = 1,
+                RenterId = 1,
+                AccountId = 4
+            },
+            new Ticket
+            {
+                TicketId = 4,
+                TicketName = "Phàn nàn về dịch vụ nước 4",
+                Description = "Phàn nàn về dịch vụ nước 4",
+                CreateDate = DateTime.UtcNow,
+                Amount = 0,
+                Status = "Pending",
+                TicketTypeId = 1,
+                RenterId = 1,
+                AccountId = 4
+            }
+        );
 
+        modelBuilder.Entity<InvoiceType>().HasData(
+            new InvoiceType
+            {
+                InvoiceTypeId = 1,
+                Status = true,
+                InvoiceTypeName = "Thu",
+                InvoiceTypeIdWildCard = 1
+            },
+            new InvoiceType
+            {
+                InvoiceTypeId = 2,
+                Status = true,
+                InvoiceTypeName = "Chi",
+                InvoiceTypeIdWildCard = 2
+            }
+        );
+
+        modelBuilder.Entity<Invoice>().HasData(
+            new Invoice
+            {
+                InvoiceId = 1,
+                Name = "Hoá đơn điện tử cho renter 1",
+                Amount = 0,
+                Status = true,
+                Detail = "Detail for invoice 1",
+                CreatedTime = DateTime.UtcNow,
+                RenterId = 1,
+                AccountId = 2,
+                InvoiceTypeId = 1
+            },
+            new Invoice
+            {
+                InvoiceId = 2,
+                Name = "Hoá đơn điện tử cho renter 2",
+                Amount = 0,
+                Status = true,
+                Detail = "Detail for invoice 2",
+                CreatedTime = DateTime.UtcNow,
+                RenterId = 2,
+                AccountId = 3,
+                InvoiceTypeId = 1
+            },
+            new Invoice
+            {
+                InvoiceId = 3,
+                Name = "Hoá đơn điện tử cho renter 3",
+                Amount = 0,
+                Status = true,
+                Detail = "Detail for invoice 3",
+                CreatedTime = DateTime.UtcNow,
+                RenterId = 3,
+                AccountId = 4,
+                InvoiceTypeId = 1
+            }
+        );
+
+        modelBuilder.Entity<InvoiceDetail>().HasData(
+            new InvoiceDetail
+            {
+                InvoiceDetailId = 1,
+                InvoiceId = 1,
+                Amount = 0,
+                ServiceId = 1
+            },
+            new InvoiceDetail
+            {
+                InvoiceDetailId = 2,
+                InvoiceId = 1,
+                Amount = 0,
+                ServiceId = 2
+            },
+            new InvoiceDetail
+            {
+                InvoiceDetailId = 3,
+                InvoiceId = 1,
+                Amount = 0,
+                TicketId = 1
+            },
+            new InvoiceDetail
+            {
+                InvoiceDetailId = 4,
+                InvoiceId = 2,
+                Amount = 0,
+                TicketId = 2
+            },
+            new InvoiceDetail
+            {
+                InvoiceDetailId = 5,
+                InvoiceId = 2,
+                Amount = 0,
+                ServiceId = 3
+            },
+            new InvoiceDetail
+            {
+                InvoiceDetailId = 6,
+                InvoiceId = 2,
+                Amount = 0,
+                ServiceId = 3
+            },
+            new InvoiceDetail
+            {
+                InvoiceDetailId = 7,
+                InvoiceId = 3,
+                Amount = 0,
+                TicketId = 3
+            },
+            new InvoiceDetail
+            {
+                InvoiceDetailId = 8,
+                InvoiceId = 3,
+                Amount = 0,
+                TicketId = 4
+            },
+            new InvoiceDetail
+            {
+                InvoiceDetailId = 9,
+                InvoiceId = 3,
+                Amount = 0,
+                TicketId = 4
+            }
+        );
+
+        modelBuilder.Entity<Contract>().HasData(
+            new Contract
+            {
+                ContractId = 1,
+                ContractName = "Contract for renter 1",
+                DateSigned = DateTime.UtcNow - TimeSpan.FromDays(30),
+                StartDate = DateTime.UtcNow - TimeSpan.FromDays(25),
+                EndDate = null,
+                LastUpdated = DateTime.UtcNow,
+                ContractStatus = "Active",
+                Price = 1800000,
+                RenterId = 1,
+                Description = "Contract description for renter 1",
+                ImageUrl = "No image"
+            },
+            new Contract
+            {
+                ContractId = 2,
+                ContractName = "Contract for renter 2",
+                DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
+                StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
+                EndDate = null,
+                LastUpdated = DateTime.UtcNow,
+                ContractStatus = "Active",
+                Price = 2800000,
+                RenterId = 2,
+                Description = "Contract description for renter 2",
+                ImageUrl = "No image"
+            }
+        );
         modelBuilder.Entity<Wallet>(entity =>
         {
             entity.ToTable("Wallet");

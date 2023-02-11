@@ -17,17 +17,15 @@ namespace API.Controllers;
 [ApiController]
 public class BuildingsController : ControllerBase
 {
-    private readonly IJwtRoleCheckerHelper _jwtRoleCheckHelper;
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
     private readonly IBuildingValidator _validator;
 
-    public BuildingsController(IMapper mapper, IServiceWrapper serviceWrapper, IJwtRoleCheckerHelper jwtRoleCheckHelper,
+    public BuildingsController(IMapper mapper, IServiceWrapper serviceWrapper,
         IBuildingValidator validator)
     {
         _mapper = mapper;
         _serviceWrapper = serviceWrapper;
-        _jwtRoleCheckHelper = jwtRoleCheckHelper;
         _validator = validator;
     }
 
@@ -40,8 +38,12 @@ public class BuildingsController : ControllerBase
 
         var list = await _serviceWrapper.Buildings.GetBuildingList(filter, token);
         if (list != null && !list.Any())
-            return NotFound("No building available");
-
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Building list is empty",
+                data = ""
+            });
         var resultList = _mapper.Map<IEnumerable<BuildingDto>>(list);
 
         return list != null
@@ -53,7 +55,7 @@ public class BuildingsController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Building list is not initialized");
+            : BadRequest("Building list is empty");
     }
 
     // GET: api/Buildings/5
@@ -63,7 +65,12 @@ public class BuildingsController : ControllerBase
     {
         var entity = await _serviceWrapper.Buildings.GetBuildingById(id);
         if (entity == null)
-            return NotFound("Building not found");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Building not found",
+                data = ""
+            });
         return Ok(new
         {
             status = "Success",
@@ -79,12 +86,6 @@ public class BuildingsController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutBuilding(int id, [FromForm] BuildingUpdateRequest building)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
-        if (id != building.BuildingId)
-            return BadRequest("Building id does not match");
-
         var updateBuilding = new Building
         {
             BuildingId = id,
@@ -92,24 +93,30 @@ public class BuildingsController : ControllerBase
             Description = building.Description,
             CoordinateX = building.CoordinateX ?? 0,
             CoordinateY = building.CoordinateY ?? 0,
-            TotalFloor = building.TotalFloor ?? 0,
-            TotalRooms = building.TotalRooms ?? 0,
             AreaId = building.AreaId
         };
 
         var validation = await _validator.ValidateParams(updateBuilding, id);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
-
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
         var result = await _serviceWrapper.Buildings.UpdateBuilding(updateBuilding);
 
         if (result == null)
-            return NotFound("Building not found");
-
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Building failed to update",
+                data = ""
+            });
         return Ok(new
         {
             status = "Success",
-            message = "Update building successfully",
+            message = "Building updated",
             data = ""
         });
     }
@@ -121,28 +128,33 @@ public class BuildingsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> PostBuilding([FromForm] BuildingCreateRequest building)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var newBuilding = new Building
         {
             BuildingName = building.BuildingName,
             Description = building.Description,
             CoordinateX = building.CoordinateX ?? 0,
             CoordinateY = building.CoordinateY ?? 0,
-            TotalFloor = building.TotalFloor ?? 0,
-            TotalRooms = building.TotalRooms ?? 0,
+            TotalRooms = 0,
             Status = building.Status,
             AreaId = building.AreaId
         };
 
         var validation = await _validator.ValidateParams(newBuilding, null);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
-
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
         var result = await _serviceWrapper.Buildings.AddBuilding(newBuilding);
         if (result == null)
-            return NotFound("Create new building failed");
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Building failed to create",
+                data = ""
+            });
 
         return CreatedAtAction("GetBuilding", new { id = result.BuildingId }, result);
     }
@@ -153,13 +165,15 @@ public class BuildingsController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteBuilding(int id)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var result = await _serviceWrapper.Buildings.DeleteBuilding(id);
 
         return !result
-            ? NotFound("Building not found")
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Building not found",
+                data = ""
+            })
             : Ok(
                 new
                 {

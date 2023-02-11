@@ -7,7 +7,7 @@ public interface IInvoiceTypeRepository
 {
     Task<InvoiceType?> GetInvoiceTypeById(int id);
     IQueryable<InvoiceType> GetInvoiceTypes(InvoiceTypeFilter filters);
-    Task<InvoiceType?> UpdateInvoiceType(InvoiceType? invoiceType);
+    Task<InvoiceType?> UpdateInvoiceType(InvoiceType invoiceType);
     Task<bool> DeleteInvoiceType(int id);
     Task<InvoiceType?> AddInvoiceType(InvoiceType invoiceType);
 }

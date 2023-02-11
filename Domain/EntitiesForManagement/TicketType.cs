@@ -14,8 +14,8 @@ public class TicketType
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int TicketTypeId { get; set; }
 
-    public string? Name { get; set; }
-    public string? Description { get; set; }
+    public string TicketTypeName { get; set; }
+    public string Description { get; set; }
     public bool Status { get; set; }
     public virtual ICollection<Ticket> Tickets { get; set; }
 }

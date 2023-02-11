@@ -16,14 +16,14 @@ internal class TicketTypeRepository : ITicketTypeRepository
     }
 
     /// <summary>
-    ///     Get all ticket types
+    ///     Get all ticketFilterRequest types
     /// </summary>
     /// <returns></returns>
     public IQueryable<TicketType> GetTicketTypeList(TicketTypeFilter filters)
     {
-        return _context.RequestTypes
+        return _context.TicketTypes
             .Where(x =>
-                (filters.Name == null || x.Name.Contains(filters.Name))
+                (filters.Name == null || x.TicketTypeName.Contains(filters.Name))
                 && (filters.Status == null || x.Status == filters.Status)
                 && (filters.Description == null || x.Description.Contains(filters.Description)))
             .AsNoTracking();
@@ -34,20 +34,20 @@ internal class TicketTypeRepository : ITicketTypeRepository
     /// </summary>
     /// <param name="ticketTypeId"></param>
     /// <returns></returns>
-    public IQueryable<TicketType> GetTicketTypeDetail(int? ticketTypeId)
+    public IQueryable<TicketType> GetRequestTypeDetail(int? ticketTypeId)
     {
-        return _context.RequestTypes
+        return _context.TicketTypes
             .Where(x => x.TicketTypeId == ticketTypeId);
     }
 
     /// <summary>
-    ///     AddFeedback new ticket type
+    ///     AddFeedback new ticketFilterRequest type
     /// </summary>
     /// <param name="ticketType"></param>
     /// <returns></returns>
     public async Task<TicketType> AddTicketType(TicketType ticketType)
     {
-        await _context.RequestTypes.AddAsync(ticketType);
+        await _context.TicketTypes.AddAsync(ticketType);
         await _context.SaveChangesAsync();
         return ticketType;
     }
@@ -59,32 +59,32 @@ internal class TicketTypeRepository : ITicketTypeRepository
     /// <returns></returns>
     public async Task<TicketType?> UpdateTicketType(TicketType? ticketType)
     {
-        var ticketTypeData = await _context.RequestTypes
+        var requestTypeData = await _context.TicketTypes
             .FirstOrDefaultAsync(x => x.TicketTypeId == ticketType!.TicketTypeId);
-        if (ticketTypeData == null)
+        if (requestTypeData == null)
             return null;
 
-        ticketTypeData.Description = ticketType?.Description ?? ticketTypeData.Description;
-        ticketTypeData.Name = ticketType?.Name ?? ticketTypeData.Name;
-        ticketTypeData.Status = ticketType?.Status ?? ticketTypeData.Status;
+        requestTypeData.Description = ticketType?.Description ?? requestTypeData.Description;
+        requestTypeData.TicketTypeName = ticketType?.TicketTypeName ?? requestTypeData.TicketTypeName;
+        requestTypeData.Status = ticketType?.Status ?? requestTypeData.Status;
 
         await _context.SaveChangesAsync();
 
-        return ticketTypeData;
+        return requestTypeData;
     }
 
     /// <summary>
     ///     DeleteFeedback TicketType
     /// </summary>
-    /// <param name="requestTypeId"></param>
+    /// <param name="ticketTypeId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteTicketType(int requestTypeId)
+    public async Task<bool> DeleteTicketType(int ticketTypeId)
     {
-        var requestTypeFound = await _context.RequestTypes
-            .FirstOrDefaultAsync(x => x.TicketTypeId == requestTypeId);
-        if (requestTypeFound == null)
+        var ticketTypeFound = await _context.TicketTypes
+            .FirstOrDefaultAsync(x => x.TicketTypeId == ticketTypeId);
+        if (ticketTypeFound == null)
             return false;
-        _context.RequestTypes.Remove(requestTypeFound);
+        _context.TicketTypes.Remove(ticketTypeFound);
         await _context.SaveChangesAsync();
         return true;
     }
@@ -92,15 +92,18 @@ internal class TicketTypeRepository : ITicketTypeRepository
     /// <summary>
     ///     Toggle TicketType status by Id
     /// </summary>
-    /// <param name="requestTypeId"></param>
+    /// <param name="ticketTypeId"></param>
     /// <returns></returns>
-    public async Task<bool> ToggleTicketTypeStatus(int requestTypeId)
+    public async Task<bool> ToggleTicketTypeStatus(int ticketTypeId)
     {
-        var requestTypeStatus = await _context.RequestTypes
-            .FirstOrDefaultAsync(x => x.TicketTypeId == requestTypeId);
-        if (requestTypeStatus == null)
+        var ticketTypeStatus = await _context.TicketTypes
+            .FirstOrDefaultAsync(x => x.TicketTypeId == ticketTypeId);
+
+        if (ticketTypeStatus == null)
             return false;
-        _context.RequestTypes.Remove(requestTypeStatus);
+
+        ticketTypeStatus.Status = !ticketTypeStatus.Status;
+
         await _context.SaveChangesAsync();
         return true;
     }

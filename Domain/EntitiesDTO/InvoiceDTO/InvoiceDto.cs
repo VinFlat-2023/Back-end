@@ -24,19 +24,17 @@ public class InvoiceDto
 
     public DateTime? PaymentTime { get; set; }
 
-    public TimeSpan? PaymentPeriod { get; set; }
-
     public DateTime CreatedTime { get; set; }
 
     // Receiver account
     public int RenterId { get; set; }
 
-    [JsonIgnore] public virtual RenterDto Renter { get; set; } = null!;
+    public virtual RenterDto Renter { get; set; } = null!;
 
     // Management account
     public int? AccountId { get; set; }
 
-    [JsonIgnore] public virtual AccountDto? Account { get; set; }
+    public virtual AccountDto? Account { get; set; }
 
     public int InvoiceTypeId { get; set; }
 

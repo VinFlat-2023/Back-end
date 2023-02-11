@@ -1,0 +1,13 @@
+﻿namespace Domain.EntityRequest.Request;
+
+public class TicketCreateRequest
+{
+    public string RequestName { get; set; } = null!;
+    public string Description { get; set; } = null!;
+    public DateTime? SolveDate { get; set; }
+    public double? Amount { get; set; }
+    public string Status { get; set; } = null!;
+    public int TicketTypeId { get; set; }
+    public int RenterId { get; set; }
+    public int AccountId { get; set; }
+}

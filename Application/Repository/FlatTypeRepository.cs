@@ -24,7 +24,7 @@ public class FlatTypeRepository : IFlatTypeRepository
         return _context.FlatTypes
             .Where(x =>
                 (filters.Status == null || x.Status == filters.Status)
-                && (filters.Capacity == null || x.RoomCapacity == filters.Capacity))
+                && (filters.RoomCapacity == null || x.RoomCapacity == filters.RoomCapacity))
             .AsNoTracking();
     }
 

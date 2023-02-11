@@ -44,7 +44,6 @@ public class LoggingMiddleware
         {
             var routeData = context.GetRouteData();
 
-            // TODO: implement logging to files here, adding 3rd party logger here ^^
             _logger.LogError(ex,
                 "An unhandled exception has occurred while executing the request. " +
                 "\nUrl: {RequestDisplayUrl}. " +
@@ -136,11 +135,11 @@ public class LoggingMiddleware
 
         var readStreamInChunks = await ReadStreamInChunks(requestStream);
 
-        _logger.LogInformation("\nHttp Request Information:" +
-                               "\nSchema:{request.Scheme} " +
-                               "\nHost: {request.Host} " +
-                               "\nPath: {request.Path} " +
-                               "\nQueryString: {request.QueryString} " +
+        _logger.LogInformation("\nHttp Ticket Information:" +
+                               "\nSchema:{RequestScheme} " +
+                               "\nHost: {RequestHost} " +
+                               "\nPath: {RequestPath} " +
+                               "\nQueryString: {RequestQueryString} " +
                                "\nRequest Body: {ReadStreamInChunks} \n"
             , request.Scheme, request.Host,
             request.Path, queryStringNullOrNot, readStreamInChunks);
@@ -160,10 +159,10 @@ public class LoggingMiddleware
             : "No query string";
 
         _logger.LogInformation("\nHttp Response Information\n" +
-                               "\nSchema:{context.Request.Scheme} " +
-                               "\nHost: {context.Request.Host} " +
-                               "\nPath: {context.Request.Path} " +
-                               "\nQueryString: {context.Request.QueryString} " +
+                               "\nSchema:{ContextTicketScheme} " +
+                               "\nHost: {ContextTicketHost} " +
+                               "\nPath: {ContextTicketPath} " +
+                               "\nQueryString: {ContextTicketQueryString} " +
                                "\nResponse Body: {ReadStreamInChunks} \n",
             context.Request.Scheme, context.Request.Host,
             context.Request.Path, queryStringNullOrNot, readStreamInChunks);

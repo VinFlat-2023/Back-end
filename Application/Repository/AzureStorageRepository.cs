@@ -52,7 +52,6 @@ public class AzureStorageRepository : IAzureStorageRepository
                     new BlobHttpHeaders
                     {
                         // fileExtension should be image/{extension}
-                        // TODO : Get file extension, and should be valid
                         ContentType = $"image/{fileExtension}"
                     });
             }
@@ -139,7 +138,6 @@ public class AzureStorageRepository : IAzureStorageRepository
                     new BlobHttpHeaders
                     {
                         // fileExtension should be image/{extension}
-                        // TODO : Get file extension, and should be valid
                         ContentType = $"image/{fileExtension}"
                     });
             }

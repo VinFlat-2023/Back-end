@@ -21,6 +21,4 @@ public class RenterFilterRequest : PagingFilter
     public int? UniversityId { get; set; }
 
     public int? MajorId { get; set; }
-
-    public int? ContractId { get; set; }
 }

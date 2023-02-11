@@ -1,4 +1,4 @@
-using Application.IRepository;
+﻿using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.Options;
@@ -53,5 +53,69 @@ public class InvoiceService : IInvoiceService
     public async Task<bool> DeleteInvoice(int invoiceId)
     {
         return await _repositoryWrapper.Invoices.DeleteInvoice(invoiceId);
+    }
+
+    public async Task<Invoice?> GetInvoiceByRenter(int renterId)
+    {
+        return await _repositoryWrapper.Invoices.GetInvoiceByRenter(renterId);
+    }
+
+    //Run on 1st day of months , generate this month empty invoice
+    public async Task<bool> AutoGenerateEmptyInvoice()
+    {
+        Console.WriteLine("\n\nAutoGenerateInvoice========================");
+        //Get all user with active invoice
+        var renters = _repositoryWrapper.Renters.GetRenterWithActiveContract();
+        var currentMonth = DateTime.UtcNow.Month;
+        foreach (var renter in renters)
+        {
+            Console.WriteLine($"User: {renter.Username}");
+            //Check if user has paid last 2 months, true: gen new invoice, false: log, todo
+            var previous1MonthUnpaidInvoice =
+                await _repositoryWrapper.Invoices.GetUnpaidInvoiceByRenterAndMonth(renter.RenterId, currentMonth - 1);
+            var previous2MonthUnpaidInvoice =
+                await _repositoryWrapper.Invoices.GetUnpaidInvoiceByRenterAndMonth(renter.RenterId, currentMonth - 2);
+            if (previous1MonthUnpaidInvoice != null && previous2MonthUnpaidInvoice != null)
+            {
+                Console.WriteLine($"Unpaid invoices of month {currentMonth - 1}: ");
+                Console.WriteLine(
+                    $"Username: {renter.Username}, Invoice name: {previous1MonthUnpaidInvoice.Name}, Created: {previous1MonthUnpaidInvoice.CreatedTime}, Status: {previous1MonthUnpaidInvoice.Status}");
+                Console.WriteLine($"Unpaid invoices of month {currentMonth - 2}: ");
+                Console.WriteLine(
+                    $"Username: {renter.Username}, Invoice name: {previous2MonthUnpaidInvoice.Name}, Created: {previous1MonthUnpaidInvoice.CreatedTime}, Status: {previous2MonthUnpaidInvoice.Status}");
+            }
+            else
+            {
+                var createdInvoice = new Invoice
+                {
+                    Name = $"Hoá đơn tháng {currentMonth} cho {renter.Username}",
+                    Amount = 0,
+                    Status = false,
+                    Detail = $"Hoá đơn tháng {currentMonth} cho {renter.Username}",
+                    CreatedTime = DateTime.UtcNow, //Start of this month
+                    DueDate = DateTime.UtcNow.AddMonths(1).AddDays(-1), //End of this month
+                    RenterId = renter.RenterId,
+                    InvoiceTypeId = 1
+                };
+                await _repositoryWrapper.Invoices.AddInvoice(createdInvoice);
+            }
+        }
+
+        return true;
+    }
+
+    public async Task<bool> AutoFinishInvoice()
+    {
+        var thisMonthInvoices = _repositoryWrapper.Invoices.GetInvoiceListByMonth(DateTime.UtcNow.Month);
+        foreach (var invoice in thisMonthInvoices)
+        {
+            Console.WriteLine(
+                $"Invoice name: {invoice.Name}, Created: {invoice.CreatedTime}, Status: {invoice.Status}");
+            //TODO: Finish invoice
+            for (var i = 0; i <= 0; i++)
+                Console.WriteLine("Anh Duc oi! finish dum em cai AutoFinishInvoice trong Invoice Service");
+        }
+
+        return true;
     }
 }

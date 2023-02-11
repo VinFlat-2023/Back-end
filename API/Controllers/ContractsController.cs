@@ -20,17 +20,15 @@ namespace API.Controllers;
 [ApiController]
 public class ContractsController : ControllerBase
 {
-    private readonly IJwtRoleCheckerHelper _jwtRoleCheckHelper;
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
     private readonly IContractValidator _validator;
 
     public ContractsController(IMapper mapper, IServiceWrapper serviceWrapper,
-        IJwtRoleCheckerHelper jwtRoleCheckHelper, IContractValidator validator)
+        IContractValidator validator)
     {
         _mapper = mapper;
         _serviceWrapper = serviceWrapper;
-        _jwtRoleCheckHelper = jwtRoleCheckHelper;
         _validator = validator;
     }
 
@@ -40,10 +38,6 @@ public class ContractsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetContracts([FromQuery] ContractFilterRequest request, CancellationToken token)
     {
-        // TODO Add filter ? So It can get by renter ID too
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var filter = _mapper.Map<ContractFilter>(request);
 
         var list = await _serviceWrapper.Contracts.GetContractList(filter, token);
@@ -61,7 +55,7 @@ public class ContractsController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Contract list is not initialized");
+            : BadRequest("Contract list is empty");
     }
 
     //TODO get contract by renter ID
@@ -72,9 +66,6 @@ public class ContractsController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetContract(int id)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var entity = await _serviceWrapper.Contracts.GetContractById(id);
         if (entity == null)
             return NotFound("Contract not found");
@@ -93,50 +84,37 @@ public class ContractsController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutContract(int id, [FromForm] ContractUpdateRequest contract)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var imageExtension = ImageExtension.ImageExtensionChecker(contract.Image?.FileName);
 
+        var contractEntity = await _serviceWrapper.Contracts.GetContractById(id);
+
+        if (contractEntity == null)
+            return NotFound("Contract not found");
+        
         var updateContract = new Contract
         {
-            ContractId = contract.ContractId,
-            DateSigned = contract.DateSigned,
-            StartDate = contract.StartDate,
-            EndDate = contract.EndDate ?? null,
-            Description = contract.Description,
+            ContractId = id,
+            ContractName = contract.ContractName ?? "Contract for " + contractEntity.RenterId,
+            DateSigned = contract.DateSigned ?? contractEntity.DateSigned,
+            StartDate = contract.StartDate ?? contractEntity.StartDate,
+            EndDate = contract.EndDate ?? contractEntity.EndDate,
             LastUpdated = DateTime.UtcNow,
+            ContractStatus = contract.ContractStatus ?? contractEntity.ContractStatus,
+            Price = contract.Price ?? contractEntity.Price,
+            RenterId = contractEntity.RenterId,
             ImageUrl = (await _serviceWrapper.AzureStorage.UploadAsync(contract.Image, "Contract",
                 imageExtension))?.Blob.Uri,
-            Price = contract.Price,
-            ContractStatus = contract.ContractStatus
+            //ImageUrl = contract.ImageUrl,
+            Description = contract.Description ?? "No description"
         };
 
-        var validation1 = await _validator.ValidateParams(updateContract, id);
-        if (!validation1.IsValid)
-            return BadRequest(validation1.Failures.FirstOrDefault());
+        var validation = await _validator.ValidateParams(updateContract, id);
+        if (!validation.IsValid)
+            return BadRequest(validation.Failures.FirstOrDefault());
 
-        var result1 = await _serviceWrapper.Contracts.UpdateContract(updateContract);
-        if (result1 == null)
+        var result = await _serviceWrapper.Contracts.UpdateContract(updateContract);
+        if (result == null)
             return BadRequest("Contract update failed");
-
-        // Create another copy of contract history
-        var addNewContractHistory = new ContractHistory
-        {
-            ContractId = result1.ContractId,
-            Description = result1.Description,
-            Price = result1.Price,
-            ContractHistoryStatus = result1.ContractStatus,
-            ContractExpiredDate = result1.EndDate
-        };
-
-        var validation2 = await _validator.ValidateParams(addNewContractHistory, null);
-        if (!validation2.IsValid)
-            return BadRequest(validation2.Failures.FirstOrDefault());
-
-        var result2 = await _serviceWrapper.ContractHistories.AddContractHistory(addNewContractHistory);
-        if (result2 == null)
-            return BadRequest("Cannot add new contract history");
 
         return Ok("Contract updated");
     }
@@ -148,23 +126,27 @@ public class ContractsController : ControllerBase
     [HttpPost("sign")]
     public async Task<IActionResult> PostContract([FromForm] ContractCreateRequest contract)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var imageExtension = ImageExtension.ImageExtensionChecker(contract.Image?.FileName);
+        
+        var renterEntity = await _serviceWrapper.Renters.GetRenterById(contract.RenterId);
+
+        if (renterEntity == null)
+            return BadRequest("Renter not found");
 
         var newContract = new Contract
         {
+            ContractName = contract.ContractName ?? "Contract for " + renterEntity.FullName,
             DateSigned = contract.DateSigned,
             StartDate = contract.StartDate,
             EndDate = contract.EndDate,
             LastUpdated = DateTime.UtcNow,
             ContractStatus = contract.ContractStatus ?? "Active",
             Price = contract.Price,
+            RenterId = renterEntity.RenterId,
             ImageUrl = (await _serviceWrapper.AzureStorage.UploadAsync(contract.Image, "Contract",
                 imageExtension))?.Blob.Uri,
-            Description = contract.Description
-            // TODO : get the current user id based on the token
+            //ImageUrl = contract.ImageUrl,
+            Description = contract.Description ?? "No description"
         };
 
         var validation = await _validator.ValidateParams(newContract, null);
@@ -184,143 +166,11 @@ public class ContractsController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteContract(int id)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var result = await _serviceWrapper.Contracts.DeleteContract(id);
         if (!result)
             return NotFound("Contract not found");
 
         return Ok("Contract deleted");
     }
-
-    [SwaggerOperation(Summary = "Get Contract History")]
-    [Authorize(Roles = "Admin, SuperAdmin, Supervisor")]
-    [HttpGet("history")]
-    public async Task<IActionResult> GetContractHistories([FromQuery] ContractHistoryFilterRequest request,
-        CancellationToken token)
-    {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
-        var filters = _mapper.Map<ContractHistoryFilter>(request);
-
-        var list = await _serviceWrapper.ContractHistories.GetContractHistoryList(filters, token);
-        if (list != null && !list.Any())
-            return NotFound("No contract history available");
-
-        var resultList = _mapper.Map<IEnumerable<ContractHistoryDto>>(list);
-
-        return list != null
-            ? Ok(new
-            {
-                status = "Success",
-                message = "Contract histories found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
-            })
-            : BadRequest("Contract history list is not initialized");
-    }
-
-    // GET: api/ContractHistories/5
-    [SwaggerOperation(Summary = "[Authorize] Get Contract History")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [HttpGet("history/{id:int}")]
-    public async Task<IActionResult> GetContractHistory(int id)
-    {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
-        var entity = await _serviceWrapper.ContractHistories.GetContractHistoryById(id);
-        if (entity == null)
-            return NotFound("Contract history not found");
-        return Ok(new
-        {
-            status = "Success",
-            message = "Contract history found",
-            data = _mapper.Map<ContractHistoryDto>(entity)
-        });
-    }
-
-    // DELETE: api/ContractHistories/5
-    [SwaggerOperation(Summary = "[Authorize] Remove Contract History")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [HttpDelete("history/{id:int}")]
-    public async Task<IActionResult> DeleteContractHistory(int id)
-    {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
-        var result = await _serviceWrapper.ContractHistories.DeleteContractHistory(id);
-
-        if (!result)
-            return NotFound("Contract history not found");
-
-        return Ok("Contract history deleted successfully");
-    }
-
-    // PUT: api/ContractHistories/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Update Contract History info")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [HttpPut("history/{id:int}")]
-    public async Task<IActionResult> PutContractHistory(int id, [FromForm] ContractHistoryCreateRequest contractHistory)
-    {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
-        var updateContract = new ContractHistory
-        {
-            ContractHistoryId = id,
-            Description = contractHistory.Description,
-            ContractHistoryStatus = contractHistory.ContractHistoryStatus,
-            ContractExpiredDate = contractHistory.ContractExpiredDate,
-            Price = contractHistory.Price
-        };
-
-        var validation = await _validator.ValidateParams(updateContract, null);
-        if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
-
-        var result = await _serviceWrapper.ContractHistories.UpdateContractHistory(updateContract);
-        if (result == null)
-            return NotFound("Contract history not found");
-
-        return Ok("Contract history updated successfully");
-    }
-
-    // POST: api/ContractHistories
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Create Contract History")]
-    [HttpPost("history")]
-    public async Task<IActionResult> PostContractHistory(
-        [FromForm] ContractHistoryCreateRequest contractHistory)
-    {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
-        var contractCheck = await _serviceWrapper.Contracts.GetContractById(contractHistory.ContractId);
-        if (contractCheck == null)
-            return NotFound("Contract not found");
-
-        var addNewContractHistory = new ContractHistory
-        {
-            ContractId = contractHistory.ContractId,
-            Description = contractHistory.Description,
-            Price = contractHistory.Price,
-            ContractHistoryStatus = contractHistory.ContractHistoryStatus,
-            ContractExpiredDate = contractHistory.ContractExpiredDate
-        };
-
-        var validation = await _validator.ValidateParams(addNewContractHistory, null);
-        if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
-
-        var result = await _serviceWrapper.ContractHistories.UpdateContractHistory(addNewContractHistory);
-        if (result == null)
-            return NotFound("Contract history not found");
-
-        return CreatedAtAction("GetContractHistory", new { id = result.ContractHistoryId }, result);
-    }
+    
 }

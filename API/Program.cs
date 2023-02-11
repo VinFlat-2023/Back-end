@@ -1,6 +1,9 @@
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Domain.Options;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Newtonsoft.Json;
@@ -46,6 +49,13 @@ builder.Services.AddCors(o =>
     });
 });
 
+using var json = Assembly.GetExecutingAssembly()
+    .GetManifestResourceStream("API.Firebase.firebase_config.json");
+FirebaseApp.Create(new AppOptions
+{
+    Credential = GoogleCredential.FromStream(json)
+});
+
 builder.Logging.AddLoggerConfig();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -57,7 +67,7 @@ builder.Services.AddAuthorizationService();
 builder.Services.Configure<PaginationOption>(config.GetSection("Pagination"));
 
 //Add Scheduler service
-builder.Services.AddSchedulerService();
+builder.Services.AddSchedulerService(builder.Environment);
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>

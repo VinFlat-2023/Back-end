@@ -6,7 +6,6 @@ public interface IServiceWrapper
     public IAccountService Accounts { get; }
     public IAreaService Areas { get; }
     public IBuildingService Buildings { get; }
-    public IContractHistoryService ContractHistories { get; }
     public IContractService Contracts { get; }
     public IFeedbackService Feedbacks { get; }
     public IFeedbackTypeService FeedbackTypes { get; }
@@ -27,4 +26,5 @@ public interface IServiceWrapper
     public IWalletService Wallets { get; }
     public IDeviceService Devices { get; }
     public ICustomeMailService Mails { get; }
+    public INotificationService Notifications { get; }
 }

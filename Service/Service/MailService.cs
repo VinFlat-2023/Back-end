@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Application.IRepository;
+﻿using Application.IRepository;
 using Domain.CustomEntities.Mail;
 using Domain.CustomEntities.MomoEntities;
 using Domain.EntitiesForManagement;
@@ -66,9 +65,9 @@ public class CustomeMailService : ICustomeMailService
     private List<MimeMessage> CreateMimeMessageWithSimpleTemplateList(MailMessageEntity message)
     {
         var list = new List<MimeMessage>();
-        var templatePath = rootPath + Path.DirectorySeparatorChar + MailTemplateEnum.FOLDER +
-                           Path.DirectorySeparatorChar + MailTemplateEnum.DEFAULT_TEMPLATE;
-        var template = GetTemplate(templatePath);
+        //var templatePath = rootPath + Path.DirectorySeparatorChar + MailTemplateHelper.FOLDER +
+        //                   Path.DirectorySeparatorChar + MailTemplateHelper.DEFAULT_TEMPLATE_FILE;
+        var template = MailTemplateHelper.DEFAULT_TEMPLATE(rootPath);
         var logoPath = rootPath + Path.DirectorySeparatorChar + "Images" + Path.DirectorySeparatorChar +
                        "logowhite.png";
         foreach (var receiver in message.Receivers)
@@ -124,9 +123,9 @@ public class CustomeMailService : ICustomeMailService
     {
         //List<String> receivers = unpaidInvoices.Select(e => e.Renter.Email).ToList();
         var list = new List<MimeMessage>();
-        var templatePath = rootPath + Path.DirectorySeparatorChar + MailTemplateEnum.FOLDER +
-                           Path.DirectorySeparatorChar + MailTemplateEnum.PAYMENT_REMINDER_TEMPLATE;
-        var template = GetTemplate(templatePath);
+        var templatePath = rootPath + Path.DirectorySeparatorChar + MailTemplateHelper.FOLDER +
+                           Path.DirectorySeparatorChar + MailTemplateHelper.PAYMENT_REMINDER_TEMPLATE_FILE;
+        var template = MailTemplateHelper.PAYMENT_REMINDER_TEMPLATE(rootPath);
         var logoPath = rootPath + Path.DirectorySeparatorChar + "Images" + Path.DirectorySeparatorChar +
                        "logowhite.png";
         foreach (var invoice in unpaidInvoices)
@@ -151,13 +150,13 @@ public class CustomeMailService : ICustomeMailService
                 bodyBuilder.HtmlBody = FormatTemplate(template, logo.ContentId, name,
                     invoice.DueDate != null
                         ? invoice.DueDate?.ToString("dd/MM/yy")
-                        : DateTime.Now.AddMonths(1).ToString(), InvoiceToHtmlTable(invoice));
+                        : DateTime.Now.AddMonths(1).ToString(), invoice.ToHtmlTable());
             }
             catch
             {
                 //bodyBuilder = new BodyBuilder { HtmlBody = string.Format(DefaultTemplate, message.Content) };
                 bodyBuilder = new BodyBuilder
-                    { HtmlBody = FormatTemplate(DefaultTemplate, InvoiceToHtmlTable(invoice)) };
+                    { HtmlBody = FormatTemplate(DefaultTemplate, invoice.ToHtmlTable()) };
             }
             //if (message.Attachments != null && message.Attachments.Any())
             //{
@@ -182,57 +181,6 @@ public class CustomeMailService : ICustomeMailService
         return list;
     }
 
-    private string InvoiceToHtmlTable(Invoice invoice)
-    {
-        var table = new StringBuilder("");
-        table.Append("<table class=\"service-table\">");
-        table.Append("<thead>");
-        table.Append("<th>Service</th>");
-        table.Append("<th>Quantity</th>");
-        table.Append("<th>Fee</th>");
-        table.Append("</thead>");
-        table.Append("<tbody>");
-
-        double total = 0;
-        foreach (var detail in invoice.InvoiceDetails)
-        {
-            table.Append("<tr>");
-            table.Append($"<td>{detail.Service.Name}</td >");
-            table.Append($"<td>{detail.Amount}</td >");
-            table.Append($"<td>{detail.Amount * detail.Amount}</td>");
-
-            table.Append("</tr>");
-            total += detail.Amount * detail.Amount;
-        }
-
-        table.Append("<tr>");
-        table.Append("<td colspan=\"2\">Total</td >");
-        table.Append($"<td>{total}</td >");
-
-        table.Append("</tr>");
-        table.Append("</tbody>");
-        table.Append("</table>");
-        return table.ToString();
-    }
-
-    private string GetTemplate(string templatePath)
-    {
-        string template;
-        try
-        {
-            using (var streamReader = File.OpenText(templatePath))
-            {
-                template = streamReader.ReadToEnd();
-            }
-        }
-        catch
-        {
-            Console.WriteLine($"Get Email Template {templatePath}: Not found");
-            return DefaultTemplate;
-        }
-
-        return template;
-    }
 
     /// <summary>
     ///     Replacing {number} marker in the email template with string values

@@ -71,7 +71,7 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
                     ValidatorResult.Failures.Add("Feedback description is required");
                     break;
                 case { } when obj.Description.Length > 500:
-                    ValidatorResult.Failures.Add("Feedback description max length reached");
+                    ValidatorResult.Failures.Add("Feedback description cannot exceed 500 characters");
                     break;
             }
 
@@ -81,7 +81,7 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
                     ValidatorResult.Failures.Add("Feedback title is required");
                     break;
                 case { } when obj.FeedbackTitle.Length > 100:
-                    ValidatorResult.Failures.Add("Feedback title max length reached");
+                    ValidatorResult.Failures.Add("Feedback title cannot exceed 100 characters");
                     break;
             }
 
@@ -125,7 +125,7 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
                     ValidatorResult.Failures.Add("Feedback type name is required");
                     break;
                 case { } when obj.Name.Length > 200:
-                    ValidatorResult.Failures.Add("Feedback type name max length reached");
+                    ValidatorResult.Failures.Add("Feedback type name cannot exceed 200 characters");
                     break;
             }
         }

@@ -86,16 +86,6 @@ public class ServiceWrapper : IServiceWrapper
         }
     }
 
-    public IContractHistoryService ContractHistories
-    {
-        get
-        {
-            if (_contractHistories == null)
-                _contractHistories = new ContractHistoryService(repositories, _paginationOptions);
-            return _contractHistories;
-        }
-    }
-
     public IContractService Contracts
     {
         get
@@ -258,6 +248,15 @@ public class ServiceWrapper : IServiceWrapper
         }
     }
 
+    public INotificationService Notifications
+    {
+        get
+        {
+            if (_noti == null) _noti = new NotificationService(repositories, _paginationOptions);
+            return _noti;
+        }
+    }
+
     public ICustomeMailService Mails
     {
         get
@@ -281,7 +280,6 @@ public class ServiceWrapper : IServiceWrapper
     private IAccountService _account;
     private IAreaService _area;
     private IBuildingService _building;
-    private IContractHistoryService _contractHistories;
     private IContractService _contracts;
     private IFeedbackService _feedback;
     private IFeedbackTypeService _feedbackType;
@@ -302,6 +300,7 @@ public class ServiceWrapper : IServiceWrapper
     private ITokenService tokens;
     private IDeviceService _devices;
     private ICustomeMailService _mails;
+    private INotificationService _noti;
 
     #endregion
 }

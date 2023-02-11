@@ -19,14 +19,9 @@ public class DailyJob : IJob
 
     public async Task Execute(IJobExecutionContext context)
     {
-        //var receivers = new[]
-        //    { "trankhaiminhkhoi@gmail.com", "trankhaiminhkhoi10a3@gmail.com", "tramdbse140878@fpt.edu.vn" };
-        //var subject = "Test Daily Scheduler";
-        //var content = $"Email sent at {DateTime.Now.ToString("dd/MM/yy hh.mm.ss")}";
-        //IFormFileCollection attachments = null;
         await mailService.SendEmailWithDefaultTemplateAsync(
-            new[] { "trankhaiminhkhoi@gmail.com", "trankhaiminhkhoi10a3@gmail.com", "tramdbse140878@fpt.edu.vn" },
-            "Test Daily Scheduler",
+            new[] { "trankhaiminhkhoi@gmail.com", "trankhaiminhkhoi10a3@gmail.com" },
+            "Test Daily Job Scheduler",
             $"Email sent at {DateTime.Now.ToString("dd/MM/yy hh.mm.ss")}",
             null
         );

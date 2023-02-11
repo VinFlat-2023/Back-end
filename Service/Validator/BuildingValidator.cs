@@ -63,16 +63,6 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
                     break;
             }
 
-            switch (obj?.TotalFloor)
-            {
-                case { } when string.IsNullOrWhiteSpace(obj.TotalFloor.ToString()):
-                    ValidatorResult.Failures.Add("Building total floor is required");
-                    break;
-                case { } when obj.TotalFloor > 500:
-                    ValidatorResult.Failures.Add("Building total floor cannot exceed 500");
-                    break;
-            }
-
             switch (obj?.TotalRooms)
             {
                 case { } when string.IsNullOrWhiteSpace(obj.TotalRooms.ToString()):

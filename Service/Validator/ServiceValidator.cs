@@ -58,11 +58,22 @@ public class ServiceValidator : BaseValidator, IServiceValidator
             switch (obj?.ServiceTypeId)
             {
                 case null:
-                    ValidatorResult.Failures.Add("Renter is required");
+                    ValidatorResult.Failures.Add("Service type is required");
                     break;
                 case not null:
                     if (await _conditionCheckHelper.ServiceTypeCheck(obj.ServiceTypeId) == null)
                         ValidatorResult.Failures.Add("Service type provided does not exist");
+                    break;
+            }
+
+            switch (obj?.BuildingId)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Building is required");
+                    break;
+                case not null:
+                    if (await _conditionCheckHelper.BuildingCheck(obj.BuildingId) == null)
+                        ValidatorResult.Failures.Add("Building provided does not exist");
                     break;
             }
         }

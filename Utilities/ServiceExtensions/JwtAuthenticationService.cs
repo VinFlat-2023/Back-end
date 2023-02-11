@@ -20,10 +20,11 @@ public static class JwtAuthenticationService
                 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
+                    // Remember to set to true on production
                     ValidateIssuerSigningKey = false,
                     ValidateIssuer = false,
                     ValidateAudience = false,
-                    ValidateLifetime = true,
+                    ValidateLifetime = false,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes
                         (configuration["JwtToken:NotTokenKeyForSureSourceTrustMeDude"])),
                     ClockSkew = TimeSpan.Zero,

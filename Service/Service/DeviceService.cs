@@ -33,7 +33,7 @@ public class DeviceService : IDeviceService
         return await _wrapper.Devices.GetListUserDeviceByToken(deviceToken);
     }
 
-    public async Task<UserDevice> GetUDByDeviceToken(string? deviceToken)
+    public async Task<UserDevice> GetUdByDeviceToken(string? deviceToken)
     {
         return await _wrapper.Devices.GetUDByDeviceToken(deviceToken);
     }

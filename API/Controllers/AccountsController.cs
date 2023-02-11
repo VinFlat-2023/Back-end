@@ -8,7 +8,6 @@ using Domain.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Service.IHelper;
 using Service.IService;
 using Service.IValidator;
 using Swashbuckle.AspNetCore.Annotations;
@@ -19,17 +18,15 @@ namespace API.Controllers;
 [ApiController]
 public class AccountsController : ControllerBase
 {
-    private readonly IJwtRoleCheckerHelper _jwtRoleCheckHelper;
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
     private readonly IAccountValidator _validator;
 
     public AccountsController(IServiceWrapper serviceWrapper, IMapper mapper,
-        IJwtRoleCheckerHelper jwtRoleCheckHelper, IAccountValidator validator)
+        IAccountValidator validator)
     {
         _serviceWrapper = serviceWrapper;
         _mapper = mapper;
-        _jwtRoleCheckHelper = jwtRoleCheckHelper;
         _validator = validator;
     }
 
@@ -39,15 +36,17 @@ public class AccountsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAccounts([FromQuery] AccountFilterRequest request, CancellationToken token)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var filter = _mapper.Map<AccountFilter>(request);
 
         var list = await _serviceWrapper.Accounts.GetAccountList(filter, token);
 
         if (list != null && !list.Any())
-            return NotFound("No account available");
+            return NotFound(new
+            {
+                status = "Success",
+                message = "Account list is empty",
+                data = ""
+            });
 
         var resultList = _mapper.Map<IEnumerable<AccountDto>>(list);
 
@@ -60,7 +59,12 @@ public class AccountsController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Account list is not initialized");
+            : NotFound(new
+            {
+                status = "Not Found",
+                message = "Account list is empty",
+                data = ""
+            });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get account by ID")]
@@ -68,12 +72,14 @@ public class AccountsController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetAccount(int id)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var entity = await _serviceWrapper.Accounts.GetAccountById(id);
         if (entity == null)
-            return NotFound("Account not found");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Account not found",
+                data = ""
+            });
         return Ok(
             new
             {
@@ -88,9 +94,6 @@ public class AccountsController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> CreateAccount([FromForm] AccountCreateRequest account)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var newAccount = new Account
         {
             Username = account.Username,
@@ -103,17 +106,27 @@ public class AccountsController : ControllerBase
 
         var validation = await _validator.ValidateParams(newAccount, null, User);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         // Create User Device token
         var result = await _serviceWrapper.Accounts.AddAccount(newAccount);
         if (result == null)
-            return NotFound("Account not created");
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Account failed to create",
+                data = ""
+            });
 
         if (!StringUtils.IsNotEmpty(account.DeviceToken))
             return CreatedAtAction("GetAccount", new { id = result.AccountId }, result);
 
-        var userDeviceFound = await _serviceWrapper.Devices.GetUDByDeviceToken(account.DeviceToken);
+        var userDeviceFound = await _serviceWrapper.Devices.GetUdByDeviceToken(account.DeviceToken);
 
         if (userDeviceFound.UserName == result.Username)
             return CreatedAtAction("GetAccount", new { id = result.AccountId }, result);
@@ -132,9 +145,6 @@ public class AccountsController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateAccount(int id, [FromForm] AccountUpdateRequest account)
     {
-        if (await _jwtRoleCheckHelper.IsManagementAndEmployeeRoleAuthorized(User, id))
-            return BadRequest("You are not authorized to access this information");
-
         var updateAccount = new Account
         {
             AccountId = id,
@@ -147,13 +157,27 @@ public class AccountsController : ControllerBase
 
         var validation = await _validator.ValidateParams(updateAccount, id, User);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.Accounts.UpdateAccount(updateAccount);
         if (result == null)
-            return NotFound("Updating account failed");
-
-        return Ok("Account updated successfully");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Updating account failed",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Account updated",
+            data = ""
+        });
     }
 
     [SwaggerOperation(Summary = "Activate and Deactivate Account")]
@@ -161,14 +185,20 @@ public class AccountsController : ControllerBase
     [HttpPut("toggle-account/{id:int}")]
     public async Task<IActionResult> ToggleAccountStatus(int id)
     {
-        if (await _jwtRoleCheckHelper.IsManagementAndEmployeeRoleAuthorized(User, id))
-            return BadRequest("You are not authorized to access this information");
-
         var result = await _serviceWrapper.Accounts.ToggleAccountStatus(id);
         if (!result)
-            return BadRequest("Updating account status failed");
-
-        return Ok($"Status updated at : {DateTime.Now.ToShortDateString()}");
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Account status failed to update",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Account status updated",
+            data = ""
+        });
     }
 
     // DELETE: api/Accounts/5
@@ -177,14 +207,15 @@ public class AccountsController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteAccount(int id)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var account = await _serviceWrapper.Accounts.GetAccountById(id);
 
         if (account == null)
-            return BadRequest("Account not found");
-
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Account not found",
+                data = ""
+            });
         var listUserDevice =
             await _serviceWrapper.Devices.GetDeviceByUserName(account.Username);
 
@@ -194,8 +225,18 @@ public class AccountsController : ControllerBase
         var result = await _serviceWrapper.Accounts.DeleteAccount(id);
 
         if (!result)
-            return BadRequest("Account failed to delete");
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Account failed to delete",
+                data = ""
+            });
 
-        return Ok($"Account deleted at : {DateTime.Now.ToShortDateString()}");
+        return Ok(new
+        {
+            status = "Success",
+            message = "Account deleted",
+            data = ""
+        });
     }
 }

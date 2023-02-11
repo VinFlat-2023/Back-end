@@ -7,10 +7,6 @@ namespace Domain.EntityRequest.Invoice;
 
 public class InvoiceUpdateRequest
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int InvoiceId { get; set; }
-
     public string Name { get; set; }
     public int Amount { get; set; }
     public bool Status { get; set; }
@@ -28,11 +24,7 @@ public class InvoiceUpdateRequest
 
     public int ContractId { get; set; }
 
-    public virtual EntitiesForManagement.Contract Contract { get; set; }
-
     public DateTime PaymentTime { get; set; }
-
-    public TimeSpan PaymentPeriod { get; set; }
 
     public DateTime CreatedTime { get; set; }
 

@@ -44,7 +44,7 @@ public class ContractValidator : BaseValidator, IContractValidator
                     ValidatorResult.Failures.Add("Contract description is required");
                     break;
                 case { } when obj.Description.Length > 500:
-                    ValidatorResult.Failures.Add("Contract description cannot exceed 500 characters");
+                    ValidatorResult.Failures.Add("Contract description cannot exceed 100 characters");
                     break;
             }
 
@@ -67,61 +67,6 @@ public class ContractValidator : BaseValidator, IContractValidator
         catch (Exception e)
         {
             ValidatorResult.Failures.Add("An error occurred while validating the contract");
-            Console.WriteLine(e.Message, e.Data);
-        }
-
-        return ValidatorResult;
-    }
-
-    public async Task<ValidatorResult> ValidateParams(ContractHistory? obj, int? contractHistoryId)
-    {
-        try
-        {
-            if (contractHistoryId != null)
-                switch (obj?.ContractHistoryId)
-                {
-                    case { } when obj.ContractHistoryId != contractHistoryId:
-                        ValidatorResult.Failures.Add("Contract history id mismatch");
-                        break;
-                    case null:
-                        ValidatorResult.Failures.Add("Contract history is required");
-                        break;
-                    case not null:
-                        if (await _conditionCheckHelper.ContractHistoryCheck(obj.ContractHistoryId) == null)
-                            ValidatorResult.Failures.Add("Contract history provided does not exist");
-                        break;
-                }
-
-            switch (obj?.ContractId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Contract is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.ContractCheck(obj.ContractId) == null)
-                        ValidatorResult.Failures.Add("Contract provided does not exist");
-                    break;
-            }
-
-            if (obj?.Price == null)
-                ValidatorResult.Failures.Add("Price is required");
-
-            switch (obj?.Description)
-            {
-                case { } when string.IsNullOrWhiteSpace(obj.Description):
-                    ValidatorResult.Failures.Add("Contract history description is required");
-                    break;
-                case { } when obj.Description.Length > 500:
-                    ValidatorResult.Failures.Add("Contract history description max length reached");
-                    break;
-            }
-
-            if (obj?.ContractHistoryStatus == null)
-                ValidatorResult.Failures.Add("Status is required");
-        }
-        catch (Exception e)
-        {
-            ValidatorResult.Failures.Add("An error occurred while validating the contract history");
             Console.WriteLine(e.Message, e.Data);
         }
 

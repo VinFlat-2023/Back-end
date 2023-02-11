@@ -32,6 +32,28 @@ public class TicketValidator : BaseValidator, ITicketValidator
                         break;
                 }
 
+            switch (obj?.RenterId)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Renter id is required");
+                    break;
+                case not null:
+                    if (await _conditionCheckHelper.RenterCheck(obj.RenterId) == null)
+                        ValidatorResult.Failures.Add("Renter provided does not exist");
+                    break;
+            }
+
+            switch (obj?.AccountId)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Management account id is required");
+                    break;
+                case not null:
+                    if (await _conditionCheckHelper.AccountCheck(obj.AccountId) == null)
+                        ValidatorResult.Failures.Add("Management account provided does not exist");
+                    break;
+            }
+
             switch (obj?.TicketName)
             {
                 case { } when string.IsNullOrWhiteSpace(obj.TicketName):
@@ -81,21 +103,21 @@ public class TicketValidator : BaseValidator, ITicketValidator
         }
         catch (Exception e)
         {
-            ValidatorResult.Failures.Add("An error occurred while validating the request");
+            ValidatorResult.Failures.Add("An error occurred while validating the ticketFilterRequest");
             Console.WriteLine(e.Message, e.Data);
         }
 
         return ValidatorResult;
     }
 
-    public async Task<ValidatorResult> ValidateParams(TicketType? obj, int? requestTypeId)
+    public async Task<ValidatorResult> ValidateParams(TicketType? obj, int? ticketTypeId)
     {
         try
         {
-            if (requestTypeId != null)
+            if (ticketTypeId != null)
                 switch (obj?.TicketTypeId)
                 {
-                    case { } when obj.TicketTypeId != requestTypeId:
+                    case { } when obj.TicketTypeId != ticketTypeId:
                         ValidatorResult.Failures.Add("Ticket id mismatch");
                         break;
                     case null:
@@ -117,12 +139,12 @@ public class TicketValidator : BaseValidator, ITicketValidator
                     break;
             }
 
-            switch (obj?.Name)
+            switch (obj?.TicketTypeName)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.Name):
+                case { } when string.IsNullOrWhiteSpace(obj.TicketTypeName):
                     ValidatorResult.Failures.Add("Ticket type name is required");
                     break;
-                case { } when obj.Name.Length > 100:
+                case { } when obj.TicketTypeName.Length > 100:
                     ValidatorResult.Failures.Add("Ticket type name cannot exceed 100 characters");
                     break;
             }
@@ -132,7 +154,7 @@ public class TicketValidator : BaseValidator, ITicketValidator
         }
         catch (Exception e)
         {
-            ValidatorResult.Failures.Add("An error occurred while validating the request type");
+            ValidatorResult.Failures.Add("An error occurred while validating the ticketFilterRequest type");
             Console.WriteLine(e.Message, e.Data);
         }
 

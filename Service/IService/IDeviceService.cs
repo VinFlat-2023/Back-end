@@ -8,6 +8,6 @@ public interface IDeviceService
     public Task<UserDevice> UpdateUserDeviceInfo(UserDevice ud);
     public Task DeleteUserDevice(List<UserDevice> userDevices);
     public Task<List<UserDevice>> GetDeviceByUserName(string? userName);
-    public Task<UserDevice> GetUDByDeviceToken(string? deviceToken);
+    public Task<UserDevice> GetUdByDeviceToken(string? deviceToken);
     public Task<List<UserDevice>> GetListUserDeviceByToken(string deviceToken);
 }

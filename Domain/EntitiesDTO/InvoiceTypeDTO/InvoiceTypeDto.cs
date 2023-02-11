@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace Domain.EntitiesDTO.InvoiceTypeDTO;
 
 public class InvoiceTypeDto
@@ -9,4 +11,6 @@ public class InvoiceTypeDto
     public string? InvoiceTypeName { get; set; } = null!;
 
     public bool? Status { get; set; }
+
+    [JsonIgnore] public int InvoiceTypeIdWildCard { get; set; }
 }

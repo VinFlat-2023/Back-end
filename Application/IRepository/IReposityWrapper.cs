@@ -6,7 +6,6 @@ public interface IRepositoryWrapper
     public IAccountRepository Accounts { get; }
     public IAreaRepository Areas { get; }
     public IBuildingRepository Buildings { get; }
-    public IContractHistoryRepository ContractHistories { get; }
     public IContractRepository Contracts { get; }
     public IFeedbackTypeRepository FeedbackTypes { get; }
     public IFeedbackRepository Feedbacks { get; }
@@ -15,10 +14,8 @@ public interface IRepositoryWrapper
     public IInvoiceRepository Invoices { get; }
     public IMajorRepository Majors { get; }
     public IRenterRepository Renters { get; }
-
     public ITicketRepository Tickets { get; }
     public ITicketTypeRepository TicketTypes { get; }
-
     public IRoleRepository Roles { get; }
     public IInvoiceTypeRepository InvoiceTypes { get; }
     public IInvoiceDetailRepository InvoiceDetails { get; }

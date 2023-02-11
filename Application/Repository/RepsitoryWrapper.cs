@@ -72,15 +72,6 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
-    public IContractHistoryRepository ContractHistories
-    {
-        get
-        {
-            if (_contractHistories == null) _contractHistories = new ContractHistoryRepository(_context);
-            return _contractHistories;
-        }
-    }
-
     public IFeedbackRepository Feedbacks
     {
         get
@@ -242,7 +233,6 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IAccountRepository _accounts;
     private IAreaRepository _areas;
     private IBuildingRepository _buildings;
-    private IContractHistoryRepository _contractHistories;
     private IContractRepository _contracts;
     private IFeedbackRepository _feedbacks;
     private IFeedbackTypeRepository _feedbackTypes;

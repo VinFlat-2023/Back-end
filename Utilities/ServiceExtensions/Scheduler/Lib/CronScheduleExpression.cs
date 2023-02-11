@@ -6,7 +6,13 @@ public static class CronScheduleExpression
     ///     Day 1 of every months
     ///     Start at 00:00:00
     /// </summary>
-    public const string Monthly = "0 0 0 1 1/1 ? *";
+    public const string StartMonthly = "0 0 0 1 1/1 ? *";
+
+    /// <summary>
+    ///     Last day of every months
+    ///     Start at 00:00:00
+    /// </summary>
+    public const string EndMonthly = "0 0 L * ? *";
 
     /// <summary>
     ///     Every Day

@@ -27,7 +27,7 @@ public class RoleValidator : BaseValidator, IRoleValidator
                         ValidatorResult.Failures.Add("Role is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.ContractCheck(obj.RoleId) == null)
+                        if (await _conditionCheckHelper.RoleCheck(obj.RoleId) == null)
                             ValidatorResult.Failures.Add("Role provided does not exist");
                         break;
                 }

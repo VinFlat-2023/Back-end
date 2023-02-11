@@ -22,6 +22,7 @@ public class RenterRepository : IRenterRepository
             .ThenInclude(x => x.Majors)
             .Include(x => x.Major)
             .Where(x => x.MajorId == x.Major.MajorId)
+            .Where(x => x.UniversityId == x.University.UniversityId)
             // Filter starts here
             .Where(x =>
                 (filters.Username == null || x.Username.Contains(filters.Username))
@@ -32,7 +33,6 @@ public class RenterRepository : IRenterRepository
                 && (filters.UniversityId == null || x.UniversityId == filters.UniversityId)
                 && (filters.MajorId == null || x.MajorId == filters.MajorId)
                 && (filters.Gender == null || x.Gender == filters.Gender)
-                && (filters.ContractId == null || x.ContractId == filters.ContractId)
                 && (filters.FullName == null || x.FullName.Contains(filters.FullName)))
             .AsNoTracking();
     }
@@ -51,38 +51,6 @@ public class RenterRepository : IRenterRepository
     }
 
     /// <summary>
-    ///     Get a list of all renters by renter name query
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    public IQueryable<Renter> GetRenterContainingName(string name)
-    {
-        return _context.Renters
-            .Where(x => x.FullName.Contains(name));
-    }
-
-    /// <summary>
-    ///     Get a list of all renters by university name query
-    /// </summary>
-    /// <param name="uniName"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public IQueryable<Renter> GetRenterListByUni(string uniName)
-    {
-        return null;
-    }
-
-    /// <summary>
-    ///     Get a list of all renters by major name query
-    /// </summary>
-    /// <param name="majorName"></param>
-    /// <returns></returns>
-    public IQueryable<Renter> GetRenterListByMajor(string majorName)
-    {
-        return null;
-    }
-
-    /// <summary>
     ///     Get a renter detail by Id
     /// </summary>
     /// <param name="userId"></param>
@@ -90,6 +58,22 @@ public class RenterRepository : IRenterRepository
     public IQueryable<Renter> GetRenterDetail(int? userId)
     {
         return _context.Renters
+            .Include(x => x.University)
+            .ThenInclude(x => x.Majors)
+            .Include(x => x.Major)
+            .Include(x => x.Contracts
+                .Where(y => y.ContractStatus == "Active"))
+            .Where(x => x.MajorId == x.Major.MajorId)
+            .Where(x => x.UniversityId == x.University.UniversityId)
+            .Where(x => x.RenterId == userId);
+    }
+
+    public IQueryable<Renter> GetRenterDetailWithContractId(int userId)
+    {
+        return _context.Renters
+            .Include(x => x.Contracts)
+            .ThenInclude(x => x.Flat)
+            .ThenInclude(x => x.Building)
             .Where(x => x.RenterId == userId);
     }
 
@@ -116,16 +100,16 @@ public class RenterRepository : IRenterRepository
         return user;
     }
 
-    public async Task<Renter?> RenterUsernameCheck(string username)
+    public async Task<Renter?> RenterUsernameCheck(string? username)
     {
         return await _context.Renters
-            .FirstOrDefaultAsync(x => x.Username.ToLower().Equals(username.ToLower()));
+            .FirstOrDefaultAsync(x => username != null && x.Username.ToLower().Equals(username.ToLower()));
     }
 
-    public async Task<Renter?> RenterEmailCheck(string email)
+    public async Task<Renter?> RenterEmailCheck(string? email)
     {
         return await _context.Renters
-            .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            .FirstOrDefaultAsync(x => email != null && x.Email.ToLower().Equals(email.ToLower()));
     }
 
     /// <summary>
@@ -210,5 +194,18 @@ public class RenterRepository : IRenterRepository
     {
         var user = await _context.Renters.FirstOrDefaultAsync(r => r.Username == userName);
         return user;
+    }
+
+    public IEnumerable<Renter> GetRenterWithActiveContract()
+    {
+        var renters = _context.Contracts
+            .Include(e => e.Renter)
+            .Where(e => e.ContractStatus == "Active")
+            .ToList().AsQueryable()
+            .Select(e => e.Renter).DistinctBy(e => e.RenterId);
+        Console.WriteLine(
+            $"\n\nGetRenterWithActiveContract=========\nNum of renters with contracts: {renters.Count()}");
+        foreach (var renter in renters) Console.WriteLine(renter.Username);
+        return renters;
     }
 }

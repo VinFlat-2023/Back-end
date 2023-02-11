@@ -54,7 +54,7 @@ public class MajorsController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Major list is not initialized");
+            : BadRequest("Major list is empty");
     }
 
     // GET: api/Majors/5

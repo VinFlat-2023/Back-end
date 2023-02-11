@@ -1,11 +1,10 @@
-using Domain.EntitiesDTO.ContractHistoryDTO;
-using Domain.EntitiesDTO.RenterDTO;
-
 namespace Domain.EntitiesDTO.ContractDTO;
 
 public class ContractDto
 {
     public int ContractId { get; set; }
+
+    public string? ContractName { get; set; }
 
     public DateTime? DateSigned { get; set; }
 
@@ -22,10 +21,4 @@ public class ContractDto
     public string? ImageUrl { get; set; }
 
     public double? Price { get; set; }
-
-    public int RenterId { get; set; }
-
-    public virtual RenterDto Renter { get; set; }
-
-    public virtual ICollection<ContractHistoryDto> ContractHistories { get; set; }
 }

@@ -4,7 +4,6 @@ namespace Domain.EntityRequest.ContractHistory;
 
 public class ContractHistoryUpdateRequest
 {
-    public int ContractHistoryId { get; set; }
     public double Price { get; set; }
 
     [MaxLength(200, ErrorMessage = "Description length must less than 200")]
@@ -14,5 +13,8 @@ public class ContractHistoryUpdateRequest
     public string ContractHistoryStatus { get; set; } = null!;
 
     public DateTime ContractExpiredDate { get; set; }
+
+    public int RenterId { get; set; }
+
     public int ContractId { get; set; } // Contract
 }

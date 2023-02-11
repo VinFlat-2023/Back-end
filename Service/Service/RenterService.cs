@@ -53,14 +53,20 @@ public class RenterService : IRenterService
         return await _repositoryWrapper.Renters.GetRenterByUsername(username).FirstOrDefaultAsync();
     }
 
-    public async Task<Renter?> RenterUsernameCheck(string? userName)
+    public async Task<Renter?> RenterUsernameCheck(string? username)
     {
-        return await _repositoryWrapper.Renters.RenterUsernameCheck(userName);
+        return await _repositoryWrapper.Renters.RenterUsernameCheck(username);
     }
 
     public async Task<Renter?> RenterEmailCheck(string? email)
     {
         return await _repositoryWrapper.Renters.RenterEmailCheck(email);
+    }
+
+    public async Task<Renter> RenterDetailWithAccountId(int userId)
+    {
+        return await _repositoryWrapper.Renters.GetRenterDetailWithContractId(userId)
+            .FirstOrDefaultAsync();
     }
 
     public async Task<Renter?> AddRenter(Renter renter)
@@ -94,15 +100,5 @@ public class RenterService : IRenterService
     {
         return await _repositoryWrapper.Renters.GetRenter(username, password)
             .FirstOrDefaultAsync();
-    }
-
-    public IQueryable<Renter> GetRenterListByUni(string uniName)
-    {
-        return _repositoryWrapper.Renters.GetRenterListByUni(uniName);
-    }
-
-    public IQueryable<Renter> GetRenterListByMajor(string majorName)
-    {
-        return _repositoryWrapper.Renters.GetRenterListByMajor(majorName);
     }
 }

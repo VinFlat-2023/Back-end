@@ -17,17 +17,15 @@ namespace API.Controllers;
 [ApiController]
 public class AreasController : ControllerBase
 {
-    private readonly IJwtRoleCheckerHelper _jwtRoleCheckHelper;
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
     private readonly IAreaValidator _validator;
 
-    public AreasController(IMapper mapper, IServiceWrapper serviceWrapper, IJwtRoleCheckerHelper jwtRoleCheckHelper,
+    public AreasController(IMapper mapper, IServiceWrapper serviceWrapper,
         IAreaValidator validator)
     {
         _mapper = mapper;
         _serviceWrapper = serviceWrapper;
-        _jwtRoleCheckHelper = jwtRoleCheckHelper;
         _validator = validator;
     }
 
@@ -40,7 +38,12 @@ public class AreasController : ControllerBase
 
         var list = await _serviceWrapper.Areas.GetAreaList(filter, token);
         if (list != null && !list.Any())
-            return NotFound("No area available");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Area list is empty",
+                data = ""
+            });
 
         var resultList = _mapper.Map<IEnumerable<AreaDto>>(list);
 
@@ -53,7 +56,12 @@ public class AreasController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Area list is not initialized");
+            : NotFound(new
+            {
+                status = "Not Found",
+                message = "Area list is empty",
+                data = ""
+            });
     }
 
     // GET: api/Areas/5
@@ -63,7 +71,12 @@ public class AreasController : ControllerBase
     {
         var entity = await _serviceWrapper.Areas.GetAreaById(id);
         if (entity == null)
-            return NotFound("Area not found");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Area not found",
+                data = ""
+            });
         return Ok(new
         {
             status = "Success",
@@ -79,9 +92,6 @@ public class AreasController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutArea(int id, [FromForm] AreaUpdateRequest area)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var updateArea = new Area
         {
             AreaId = id,
@@ -91,13 +101,27 @@ public class AreasController : ControllerBase
 
         var validation = await _validator.ValidateParams(updateArea, id);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
-
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+        
         var result = await _serviceWrapper.Areas.UpdateArea(updateArea);
         if (result == null)
-            return NotFound("Area not found");
-
-        return Ok("Area updated successfully");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Area not found",
+                data = ""
+            });
+        return Ok( new
+        {
+            status = "Success",
+            message = "Area updated",
+            data = _mapper.Map<AreaDto>(result)
+        });
     }
 
     // POST: api/Areas
@@ -107,9 +131,6 @@ public class AreasController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> PostArea([FromForm] AreaCreateRequest area)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var newArea = new Area
         {
             Name = area.Name,
@@ -119,12 +140,20 @@ public class AreasController : ControllerBase
 
         var validation = await _validator.ValidateParams(newArea, null);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
-
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
         var result = await _serviceWrapper.Areas.AddArea(newArea);
         if (result == null)
-            return NotFound("Area failed to create");
-
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Area failed to create",
+                data = ""
+            });
         return CreatedAtAction("GetArea", new { id = result.AreaId }, result);
     }
 
@@ -134,13 +163,20 @@ public class AreasController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteArea(int id)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var result = await _serviceWrapper.Areas.DeleteArea(id);
         if (!result)
-            return NotFound("Area not found");
-
-        return Ok("Area deleted successfully");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Area not found",
+                data = ""
+            });
+        
+        return Ok(new
+        {
+            status = "Success",
+            message = "Area deleted",
+            data = ""
+        });
     }
 }

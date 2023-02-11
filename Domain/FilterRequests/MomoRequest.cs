@@ -12,7 +12,7 @@ public class MomoRequest
     public int Amount { get; set; }
     public string Lang { get; set; }
     public string OrderInfo { get; set; }
-    public string TicketId { get; set; }
+    public string RequestId { get; set; }
     public string ExtraData { get; set; }
     public string Signature { get; set; }
 }

@@ -31,11 +31,15 @@ public class AuthController : ControllerBase
             .AccountLogin(loginModel.Username, loginModel.Password);
 
         if (account == null)
-            return Unauthorized("Username or password is wrong");
-
+            return Unauthorized(new
+            {
+                status = "Success",
+                message = "Username or password is wrong",
+                data = ""
+            });
         if (StringUtils.IsNotEmpty(loginModel.DeviceToken))
         {
-            var userDeviceFound = await _serviceWrapper.Devices.GetUDByDeviceToken(loginModel.DeviceToken);
+            var userDeviceFound = await _serviceWrapper.Devices.GetUdByDeviceToken(loginModel.DeviceToken);
             if (userDeviceFound == null)
             {
                 var userDevice = new UserDevice
@@ -78,11 +82,16 @@ public class AuthController : ControllerBase
             .RenterLogin(loginModel.Username, loginModel.Password);
 
         if (renter == null)
-            return Unauthorized("Username or password is wrong");
+            return Unauthorized(new
+            {
+                status = "Success",
+                message = "Username or password is wrong",
+                data = ""
+            });
 
         if (StringUtils.IsNotEmpty(loginModel.DeviceToken))
         {
-            var userDeviceFound = await _serviceWrapper.Devices.GetUDByDeviceToken(loginModel.DeviceToken);
+            var userDeviceFound = await _serviceWrapper.Devices.GetUdByDeviceToken(loginModel.DeviceToken);
             if (userDeviceFound == null)
             {
                 var userDevice = new UserDevice

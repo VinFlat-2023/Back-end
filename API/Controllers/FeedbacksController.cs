@@ -43,7 +43,7 @@ public class FeedbacksController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Feedback list is not initialized");
+            : BadRequest("Feedback list is empty");
     }
 
     // GET: api/Feedbacks/5
@@ -167,7 +167,7 @@ public class FeedbacksController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Feedback type list is not initialized");
+            : BadRequest("Feedback type list is empty");
     }
 
     // GET: api/FeedbackTypes/5

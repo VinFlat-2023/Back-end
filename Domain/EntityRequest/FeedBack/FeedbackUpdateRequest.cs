@@ -2,7 +2,6 @@
 
 public class FeedbackUpdateRequest
 {
-    public int FeedbackId { get; set; }
     public string FeedbackTitle { get; set; } = null!;
     public string Description { get; set; } = null!;
     public string Status { get; set; } = null!;

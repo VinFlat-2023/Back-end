@@ -19,6 +19,10 @@ public class InvoiceDetailRepository : IInvoiceDetailRepository
     {
         return _context.InvoiceDetails
             .Include(x => x.Service)
+            .Where(x => x.ServiceId == x.Service.ServiceId)
+            .Include(x => x.Ticket)
+            .Where(x => x.TicketId == x.Ticket.TicketId)
+            .Include(x => x.Invoice)
             .Where(x => x.InvoiceId == x.Invoice.InvoiceId)
             // Filter starts here
             .Where(x =>
@@ -29,7 +33,10 @@ public class InvoiceDetailRepository : IInvoiceDetailRepository
 
     public async Task<InvoiceDetail?> GetInvoiceDetailById(int? id)
     {
-        return await _context.InvoiceDetails.FirstOrDefaultAsync(x => x.InvoiceId == id);
+        return await _context.InvoiceDetails
+            .Include(x => x.Service)
+            .Include(x => x.Ticket)
+            .FirstOrDefaultAsync(x => x.InvoiceId == id);
     }
 
     public async Task<List<InvoiceDetail>> GetInvoiceDetailListByUserId(int id, CancellationToken token)
@@ -60,7 +67,6 @@ public class InvoiceDetailRepository : IInvoiceDetailRepository
         return true;
     }
 
-    // tODO : Check update
     public async Task<InvoiceDetail?> UpdateInvoiceDetail(InvoiceDetail invoiceDetail)
     {
         _context.Entry(invoiceDetail).State = EntityState.Modified;

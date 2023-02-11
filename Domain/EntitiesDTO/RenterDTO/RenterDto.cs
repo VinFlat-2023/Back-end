@@ -3,6 +3,7 @@ using Domain.EntitiesDTO.FeedbackDTO;
 using Domain.EntitiesDTO.InvoiceDTO;
 using Domain.EntitiesDTO.MajorDTO;
 using Domain.EntitiesDTO.UniversityDTO;
+using Domain.EntitiesForManagement;
 using Newtonsoft.Json;
 
 namespace Domain.EntitiesDTO.RenterDTO;
@@ -43,9 +44,9 @@ public class RenterDto
 
     public virtual UniversityDto? University { get; set; }
 
-    public int? ContractId { get; set; }
-
     public string? DeviceToken { get; set; }
+
+    [JsonIgnore] public virtual ICollection<UserDevice>? UserDevices { get; set; }
 
     [JsonIgnore] public virtual ICollection<ContractDto>? Contract { get; set; }
 

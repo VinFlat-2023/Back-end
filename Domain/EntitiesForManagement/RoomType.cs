@@ -4,7 +4,5 @@ public class RoomType
 {
     public int RoomTypeId { get; set; }
     public string? Description { get; set; }
-    public bool IsDeletable { get; set; }
     public int NumberOfSlots { get; set; }
-    public int NumberOfSlotsAvailable { get; set; }
 }

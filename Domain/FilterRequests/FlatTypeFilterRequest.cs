@@ -4,7 +4,7 @@ namespace Domain.FilterRequests;
 
 public class FlatTypeFilterRequest : PagingFilter
 {
-    public int? Capacity { get; set; }
+    public int? RoomCapacity { get; set; }
 
     public string? Status { get; set; }
 }

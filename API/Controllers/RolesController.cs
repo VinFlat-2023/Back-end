@@ -57,7 +57,7 @@ public class RolesController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Role list is not initialized");
+            : BadRequest("Role list is empty");
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get Role")]

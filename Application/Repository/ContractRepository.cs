@@ -21,12 +21,27 @@ public class ContractRepository : IContractRepository
     /// <returns></returns>
     public IQueryable<Contract> GetContractList(ContractFilter filters)
     {
+        // TODO : Compare date time
         return _context.Contracts
             .Where(x =>
                 (filters.Description == null || x.Description.Contains(filters.Description))
-                && (filters.ContractStatus == null || x.ContractStatus == filters.ContractStatus)
-                && (filters.Price == null || x.Price == filters.Price))
+                && (filters.ContractStatus == null || x.ContractStatus == filters.ContractStatus))
             .AsNoTracking();
+    }
+
+    public IQueryable<Contract> GetContractHistoryList(ContractHistoryFilter filters)
+    {
+        return _context.Contracts
+            .TemporalAll()
+            .Include(x => x.Renter)
+            .Where(x => x.Renter.RenterId == x.RenterId)
+            // filter starts here
+            .Where(x =>
+                (filters.ContractName == null || x.ContractName.Contains(filters.ContractName))
+                && (filters.ContractId == null || x.ContractId == filters.ContractId)
+                && (filters.ContractStatus == null || x.ContractStatus == filters.ContractStatus)
+                && (filters.RenterId == null || x.RenterId == filters.RenterId))
+            .Reverse();
     }
 
     /// <summary>
@@ -34,9 +49,16 @@ public class ContractRepository : IContractRepository
     /// </summary>
     /// <param name="contractId"></param>
     /// <returns></returns>
-    public IQueryable<Contract> GetContractDetail(int? contractId)
+    public IQueryable<Contract?> GetContractDetail(int contractId)
     {
         return _context.Contracts
+            .Where(x => x.ContractId == contractId);
+    }
+
+    public IQueryable<Contract?> GetContractHistoryDetail(int contractId)
+    {
+        return _context.Contracts
+            .Reverse()
             .Where(x => x.ContractId == contractId);
     }
 
@@ -45,7 +67,7 @@ public class ContractRepository : IContractRepository
     /// </summary>
     /// <param name="contract"></param>
     /// <returns></returns>
-    public async Task<Contract> AddContract(Contract contract)
+    public async Task<Contract?> AddContract(Contract? contract)
     {
         await _context.Contracts.AddAsync(contract);
         await _context.SaveChangesAsync();
@@ -67,14 +89,12 @@ public class ContractRepository : IContractRepository
 
         //contractData.FlatId = contract?.FlatId ?? contractData.FlatId;
         contractData.DateSigned = contract?.DateSigned ?? contractData.DateSigned;
+        contractData.ContractName = contract?.ContractName ?? contractData.ContractName;
         contractData.EndDate = contract?.EndDate ?? contractData.EndDate;
         contractData.StartDate = contract?.StartDate ?? contractData.StartDate;
         contractData.ContractStatus = contract?.ContractStatus ?? contractData.ContractStatus;
         contractData.Price = contract?.Price ?? contractData.Price;
-        // TODO : Check if flatId and its corresponding flat is available for rent
-        // TODO : Check if this is correct and do we want to update all fields
         contractData.LastUpdated = DateTime.Now;
-        // TODO : AddExpenseHistory a contract history table and add a new record to it using old contract data
 
         await _context.SaveChangesAsync();
 

@@ -11,5 +11,7 @@ public class InvoiceDetail
 
     [ForeignKey("Service")] public int? ServiceId { get; set; }
 
-    public virtual ServiceEntity Service { get; set; }
+    public virtual ServiceEntity? Service { get; set; }
+    public int? TicketId { get; set; }
+    public virtual Ticket? Ticket { get; set; }
 }

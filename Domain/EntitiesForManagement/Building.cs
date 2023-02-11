@@ -16,11 +16,8 @@ public class Building
 
     public string BuildingName { get; set; }
     public string Description { get; set; }
-    public int TotalFloor { get; set; }
-
-    // TODO : Add more properties about price per water / electricity / gas / etc
-    // TODO : Total rooms = Total rooms created in building
     public int TotalRooms { get; set; }
+    public string ImageUrl { get; set; }
     public double CoordinateX { get; set; }
     public double CoordinateY { get; set; }
 
@@ -28,7 +25,8 @@ public class Building
 
     // Management Company
     public int AccountId { get; set; }
+    public virtual Account Account { get; set; }
     [ForeignKey("AreaId")] public int AreaId { get; set; }
-    public Area Area { get; set; }
+    public virtual Area Area { get; set; }
     public virtual ICollection<Flat> Flats { get; set; }
 }

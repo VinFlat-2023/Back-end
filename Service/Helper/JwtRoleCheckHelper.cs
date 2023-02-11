@@ -16,7 +16,6 @@ public class JwtRoleCheckHelper : IJwtRoleCheckerHelper
         return roleCheck is not ("Admin" or "SuperAdmin" or "Supervisor");
     }
 
-    // TODO: Add check if renter ID has the same ID as the ticket object here
     public async Task<bool> IsRenterRoleAuthorized(ClaimsPrincipal user, int id)
     {
         var roleCheck = await JwtRoleCheck(user);
@@ -60,7 +59,7 @@ public class JwtRoleCheckHelper : IJwtRoleCheckerHelper
         return roleCheck is not "SuperAdmin";
     }
 
-    private async Task<string> JwtRoleCheck(ClaimsPrincipal user)
+    private static async Task<string> JwtRoleCheck(ClaimsPrincipal user)
     {
         return await Task.FromResult(user.Identities
             .FirstOrDefault()?.Claims
@@ -68,7 +67,7 @@ public class JwtRoleCheckHelper : IJwtRoleCheckerHelper
             ?.Value ?? string.Empty);
     }
 
-    private async Task<bool> JwtCheck(IPrincipal user)
+    private static async Task<bool> JwtCheck(IPrincipal user)
     {
         var jwtId = user.Identity?.Name;
         if (string.IsNullOrEmpty(jwtId) || jwtId == string.Empty || int.Parse(jwtId) <= 0)

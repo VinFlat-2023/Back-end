@@ -30,18 +30,15 @@ public class Invoice
     public IFormFile? Image { get; set; }
 
     public DateTime? PaymentTime { get; set; }
-    public TimeSpan? PaymentPeriod { get; set; }
 
     public DateTime CreatedTime { get; set; }
 
     // Receiver account
     public int RenterId { get; set; }
-
     public virtual Renter Renter { get; set; }
 
     // Management account
     public int AccountId { get; set; }
-
     public virtual Account Account { get; set; }
     public int InvoiceTypeId { get; set; }
 

@@ -36,8 +36,8 @@ public class TokenService : ITokenService
             securityKey, SecurityAlgorithms.HmacSha512Signature);
 
         var token = new JwtSecurityToken(
-            _configuration["JwtToken:Issuer-Local"],
-            _configuration["JwtToken:Audience-Local"],
+            _configuration["JwtToken:Issuer"],
+            _configuration["JwtToken:Audience"],
             claims,
             expires: DateTime.UtcNow.AddDays(1),
             signingCredentials: credential);
@@ -63,8 +63,8 @@ public class TokenService : ITokenService
             securityKey, SecurityAlgorithms.HmacSha512Signature);
 
         var token = new JwtSecurityToken(
-            _configuration["JwtToken:Issuer-Local"],
-            _configuration["JwtToken:Audience-Local"],
+            _configuration["JwtToken:Issuer"],
+            _configuration["JwtToken:Audience"],
             claims,
             expires: DateTime.UtcNow.AddDays(1),
             signingCredentials: credential);

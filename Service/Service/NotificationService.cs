@@ -158,6 +158,7 @@ public class NotificationService : INotificationService
         return notiSave;
     }
 
+
     public async Task<bool> UpdateStatusNotification(int notiId, string userName)
     {
         var result = await _repositoryWrapper.Notifications.UpdateStatusNotificationByUserName(notiId, userName);

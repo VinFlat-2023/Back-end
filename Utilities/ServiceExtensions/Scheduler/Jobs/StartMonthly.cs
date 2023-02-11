@@ -5,30 +5,36 @@ using Utilities.ServiceExtensions.Scheduler.Lib;
 
 namespace Utilities.ServiceExtensions.Scheduler.Jobs;
 
-public class MonthlyJob : IJob
+public class StartMonthlyJob : IJob
 {
-    public static readonly string schedule = CronScheduleExpression.Monthly;
+    public static readonly string schedule = CronScheduleExpression.StartMonthly;
+    private readonly IInvoiceService invoiceService;
     private readonly ICustomeMailService mailService;
 
-    public MonthlyJob(IServiceProvider service)
+    public StartMonthlyJob(IServiceProvider service)
     {
         var scope = service.CreateScope();
         mailService = scope.ServiceProvider.GetRequiredService<IServiceWrapper>().Mails;
+        invoiceService = scope.ServiceProvider.GetRequiredService<IServiceWrapper>().Invoices;
     }
 
     public async Task Execute(IJobExecutionContext context)
     {
-        //var receivers = new[]
-        //    { "trankhaiminhkhoi@gmail.com", "trankhaiminhkhoi10a3@gmail.com", "tramdbse140878@fpt.edu.vn" };
-        //var subject = "Test Monthly Scheduler";
-        //var content = $"Email sent at {DateTime.Now.ToString("dd/MM/yy hh.mm.ss")}";
-        //IFormFileCollection attachments = null;
         await mailService.SendEmailWithDefaultTemplateAsync(
-            new[] { "trankhaiminhkhoi@gmail.com", "trankhaiminhkhoi10a3@gmail.com", "tramdbse140878@fpt.edu.vn" },
-            "Test Monthly Scheduler",
+            new[] { "trankhaiminhkhoi@gmail.com", "trankhaiminhkhoi10a3@gmail.com" },
+            "Test Start Monthly Job Scheduler",
             $"Email sent at {DateTime.Now.ToString("dd/MM/yy hh.mm.ss")}",
             null
         );
+        try
+        {
+            await invoiceService.AutoFinishInvoice();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+
         await mailService.SendPaymentReminderAsync();
         Console.WriteLine($"Monthly Task completed at {DateTime.Now.ToString("dd/MM/yy hh.mm.ss")}");
         //return Task.CompletedTask;

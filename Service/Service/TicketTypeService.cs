@@ -38,7 +38,7 @@ public class TicketTypeService : ITicketTypeService
 
     public async Task<TicketType?> GetTicketTypeById(int? ticketTypeId)
     {
-        return await _repositoryWrapper.TicketTypes.GetTicketTypeDetail(ticketTypeId)
+        return await _repositoryWrapper.TicketTypes.GetRequestTypeDetail(ticketTypeId)
             .FirstOrDefaultAsync();
     }
 

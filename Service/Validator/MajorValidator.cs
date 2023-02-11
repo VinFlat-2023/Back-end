@@ -51,6 +51,9 @@ public class MajorValidator : BaseValidator, IMajorValidator
                 case { } when obj.Name.Length > 100:
                     ValidatorResult.Failures.Add("Major name cannot exceed 100 characters");
                     break;
+                case { } when obj.Name.Length < 1:
+                    ValidatorResult.Failures.Add("Major name must be at least 1 characters");
+                    break;
             }
         }
         catch (Exception e)

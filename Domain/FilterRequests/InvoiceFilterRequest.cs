@@ -18,8 +18,6 @@ public class InvoiceFilterRequest : PagingFilter
 
     public DateTime? PaymentTime { get; set; }
 
-    public TimeSpan? PaymentPeriod { get; set; }
-
     public DateTime? CreatedTime { get; set; }
 
     public int? RenterId { get; set; }

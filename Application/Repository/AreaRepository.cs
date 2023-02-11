@@ -102,7 +102,6 @@ internal class AreaRepository : IAreaRepository
         if (areaFound == null)
             return false;
 
-        // TODO: Should do a check to delete all related entities
         _context.Areas.Remove(areaFound);
         await _context.SaveChangesAsync();
         return true;

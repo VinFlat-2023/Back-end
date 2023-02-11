@@ -13,10 +13,10 @@ public class InvoiceFilter : PagingFilter
 
     public DateTime? PaymentTime { get; set; }
 
-    public TimeSpan? PaymentPeriod { get; set; }
-
     public DateTime? CreatedTime { get; set; }
+
     public int? RenterId { get; set; }
+
     public int? AccountId { get; set; }
 
     public int? InvoiceTypeId { get; set; }

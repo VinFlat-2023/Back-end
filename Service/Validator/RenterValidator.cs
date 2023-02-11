@@ -44,10 +44,18 @@ public class RenterValidator : BaseValidator, IRenterValidator
                 case { } when string.IsNullOrWhiteSpace(obj.Username):
                     ValidatorResult.Failures.Add("Username is required");
                     break;
-                case not null:
-                    if (await _conditionCheckHelper.RenterUsernameCheck(obj.Username) != null)
-                        ValidatorResult.Failures.Add("Username is duplicated");
-                    break;
+                /*
+
+case not null:
+if (renterId == null)
+{
+    if (await _conditionCheckHelper.AccountUsernameExist(obj.Username) != null)
+        ValidatorResult.Failures.Add("Username is duplicated");
+    if (await _conditionCheckHelper.RenterUsernameCheck(obj.Username) != null)
+        ValidatorResult.Failures.Add("Username is duplicated");
+}
+break;
+*/
             }
 
             switch (obj?.Email)
@@ -58,10 +66,19 @@ public class RenterValidator : BaseValidator, IRenterValidator
                 case { } when string.IsNullOrWhiteSpace(obj.Email):
                     ValidatorResult.Failures.Add("Email is required");
                     break;
+                case { } when !Regex.IsMatch(obj.Email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"):
+                    ValidatorResult.Failures.Add("Email is invalid");
+                    break;
+
+                /*
                 case not null:
-                    if (await _conditionCheckHelper.RenterEmailCheck(obj.Username) != null)
+                
+                    if (await _conditionCheckHelper.AccountEmailCheck(obj.Email) != null)
+                        ValidatorResult.Failures.Add("Email is duplicated");
+                    if (await _conditionCheckHelper.RenterEmailCheck(obj.Email) != null)
                         ValidatorResult.Failures.Add("Email is duplicated");
                     break;
+                    */
             }
 
             var validatePhoneNumberRegex =
@@ -104,6 +121,9 @@ public class RenterValidator : BaseValidator, IRenterValidator
                 case { } when !validateNumber.IsMatch(obj.CitizenNumber):
                     ValidatorResult.Failures.Add("Phone number is invalid");
                     break;
+                case { } when obj.CitizenNumber.Length > 20:
+                    ValidatorResult.Failures.Add("Citizen number cannot exceed 20 characters");
+                    break;
             }
 
             switch (obj?.Address)
@@ -115,6 +135,12 @@ public class RenterValidator : BaseValidator, IRenterValidator
                     ValidatorResult.Failures.Add("Address is required");
                     break;
             }
+
+            if (obj?.MajorId != null && await _conditionCheckHelper.MajorCheck(obj.MajorId) == null)
+                ValidatorResult.Failures.Add("Major provided does not exist");
+
+            if (obj is { MajorId: { }, UniversityId: null })
+                ValidatorResult.Failures.Add("University is required when major is provided");
 
             if (obj?.UniversityId != null)
             {

@@ -2,7 +2,6 @@
 
 public class FlatTypeUpdateRequest
 {
-    public int FlatTypeId { get; set; }
-    public int Capacity { get; set; }
-    public string Status { get; set; }
+    public int RoomCapacity { get; set; }
+    public string? Status { get; set; }
 }

@@ -20,6 +20,7 @@ public class InvoiceTypeRepository : IInvoiceTypeRepository
         return _context.InvoiceTypes
             .Where(x =>
                 (filters.InvoiceTypeName == null || x.InvoiceTypeName.Contains(filters.InvoiceTypeName))
+                && (filters.InvoiceTypeIdWildCard == null || x.InvoiceTypeIdWildCard == filters.InvoiceTypeIdWildCard)
                 && (filters.Status == null || x.Status == filters.Status))
             .AsNoTracking();
     }
@@ -33,13 +34,12 @@ public class InvoiceTypeRepository : IInvoiceTypeRepository
     public async Task<InvoiceType?> UpdateInvoiceType(InvoiceType? invoiceType)
     {
         var invoiceTypeData = await _context.InvoiceTypes
-            .FirstOrDefaultAsync(x => x.InvoiceTypeId == invoiceType!.InvoiceTypeId);
+            .FirstOrDefaultAsync(x => invoiceType != null && x.InvoiceTypeId == invoiceType.InvoiceTypeId);
         if (invoiceTypeData == null)
             return null;
 
         invoiceTypeData.InvoiceTypeName = invoiceType?.InvoiceTypeName ?? invoiceTypeData.InvoiceTypeName;
         invoiceTypeData.Status = invoiceType?.Status ?? invoiceTypeData.Status;
-        // TODO : Check if wanted to change invoice destination
 
         await _context.SaveChangesAsync();
         return invoiceTypeData;

@@ -6,8 +6,8 @@ namespace Application.IRepository;
 public interface ITicketRepository
 {
     public IQueryable<Ticket> GetTicketList(TicketFilter filter);
-    public IQueryable<Ticket> GetTicketDetail(int ticketId);
-    public Task<Ticket> AddTicket(Ticket ticket);
+    public IQueryable<Ticket> GetTicketDetail(int? ticketId);
+    public Task<Ticket> CreateRequest(Ticket ticket);
     public Task<Ticket?> UpdateTicket(Ticket ticket);
     public Task<bool> DeleteTicket(int ticketId);
 }

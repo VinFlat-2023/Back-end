@@ -29,6 +29,7 @@ public class AccountRepository : IAccountRepository
                 (filters.Username == null || x.Username.Contains(filters.Username))
                 && (filters.Status == null || x.Status == filters.Status)
                 && (filters.RoleId == null || x.RoleId == filters.RoleId)
+                && (filters.FullName == null || x.FullName.Contains(filters.FullName))
                 && (filters.Phone == null || x.Phone.Contains(filters.Phone)))
             .AsNoTracking();
     }
@@ -77,13 +78,17 @@ public class AccountRepository : IAccountRepository
     {
         var accountData = await _context.Accounts
             .FirstOrDefaultAsync(x => x.AccountId == account!.AccountId);
+
         if (accountData == null)
             return null;
+
         accountData.Email = account?.Email ?? accountData.Email;
         accountData.Password = account?.Password ?? accountData.Password;
         accountData.Phone = account?.Phone ?? accountData.Phone;
         accountData.Username = account?.Username ?? accountData.Username;
         accountData.RoleId = account?.RoleId ?? accountData.RoleId;
+        accountData.FullName = account?.FullName ?? accountData.FullName;
+
         await _context.SaveChangesAsync();
 
         return accountData;

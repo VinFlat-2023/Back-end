@@ -23,15 +23,20 @@ public class BuildingRepository : IBuildingRepository
     {
         return _context.Buildings
             .Include(x => x.Area)
+            .Include(x => x.Account)
+            .ThenInclude(x => x.Role)
             .Where(x => x.AreaId == x.Area.AreaId)
+            .Where(x => x.AccountId == x.Account.AccountId)
+            .Where(x => x.Account.RoleId == x.Account.Role.RoleId)
             // Filter starts here
             .Where(x =>
                 (filter.BuildingName == null || x.BuildingName.Contains(filter.BuildingName))
                 && (filter.Status == null || x.Status == filter.Status)
-                && (filter.TotalFloor == null || x.TotalFloor == filter.TotalFloor)
                 && (filter.TotalRooms == null || x.TotalRooms == filter.TotalRooms)
                 && (filter.AreaId == null || x.AreaId == filter.AreaId)
-                && (filter.AccountId == null || x.AccountId == filter.AccountId))
+                && (filter.AccountId == null || x.AccountId == filter.AccountId)
+                && (filter.Username == null || x.Account.Username == filter.Username)
+                && (filter.AreaName == null || x.Area.Name == filter.AreaName))
             .AsNoTracking();
     }
 
@@ -43,6 +48,12 @@ public class BuildingRepository : IBuildingRepository
     public IQueryable<Building?> GetBuildingDetail(int? buildingId)
     {
         return _context.Buildings
+            .Include(x => x.Area)
+            .Include(x => x.Account)
+            .ThenInclude(x => x.Role)
+            .Where(x => x.AreaId == x.Area.AreaId)
+            .Where(x => x.AccountId == x.Account.AccountId)
+            .Where(x => x.Account.RoleId == x.Account.Role.RoleId)
             .Where(x => x.BuildingId == buildingId);
     }
 
@@ -66,17 +77,20 @@ public class BuildingRepository : IBuildingRepository
     public async Task<Building?> UpdateBuilding(Building? building)
     {
         var buildingData = await _context.Buildings
-            .FirstOrDefaultAsync(x => x.BuildingId == building!.BuildingId);
+            .FirstOrDefaultAsync(x => building != null
+                                      && x.BuildingId == building.BuildingId);
+
         if (buildingData == null)
             return null;
+
+        var count = _context.Flats.Count(x => x.BuildingId == building.BuildingId);
 
         buildingData.Description = building?.Description ?? buildingData.Description;
         buildingData.Status = building?.Status ?? buildingData.Status;
         buildingData.CoordinateX = building?.CoordinateX ?? buildingData.CoordinateX;
         buildingData.CoordinateY = building?.CoordinateY ?? buildingData.CoordinateY;
-        buildingData.TotalFloor = building?.TotalFloor ?? buildingData.TotalFloor;
-        // TODO : Check if total room is not larger than total flats available
-        buildingData.TotalRooms = building?.TotalRooms ?? buildingData.TotalRooms;
+        buildingData.ImageUrl = building?.ImageUrl ?? buildingData.ImageUrl;
+        buildingData.TotalRooms = count;
         buildingData.BuildingName = building?.BuildingName ?? buildingData.BuildingName;
 
         await _context.SaveChangesAsync();
@@ -93,7 +107,7 @@ public class BuildingRepository : IBuildingRepository
     {
         var buildingFound = await _context.Buildings
             .FirstOrDefaultAsync(x => x.BuildingId == buildingId);
-        if (buildingFound == null || buildingFound.Status)
+        if (buildingFound == null)
             return false;
         _context.Buildings.Remove(buildingFound);
         await _context.SaveChangesAsync();

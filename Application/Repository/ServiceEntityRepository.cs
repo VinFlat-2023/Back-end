@@ -22,6 +22,9 @@ internal class ServiceEntityRepository : IServiceEntityRepository
     public IQueryable<ServiceEntity> GetServiceList(ServiceEntityFilter filters)
     {
         return _context.Services
+            .Include(x => x.ServiceType)
+            .Where(x => x.ServiceTypeId == x.ServiceType.ServiceTypeId)
+            // Filter starts here
             .Where(x =>
                 (filters.Name == null || x.Name.Contains(filters.Name))
                 && (filters.Status == null || x.Status == filters.Status)

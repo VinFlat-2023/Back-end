@@ -19,17 +19,15 @@ namespace API.Controllers;
 [ApiController]
 public class ServicesController : ControllerBase
 {
-    private readonly IJwtRoleCheckerHelper _jwtRoleCheckHelper;
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
     private readonly IServiceValidator _validator;
 
-    public ServicesController(IServiceWrapper serviceWrapper, IMapper mapper, IJwtRoleCheckerHelper jwtRoleCheckHelper,
+    public ServicesController(IServiceWrapper serviceWrapper, IMapper mapper,
         IServiceValidator validator)
     {
         _serviceWrapper = serviceWrapper;
         _mapper = mapper;
-        _jwtRoleCheckHelper = jwtRoleCheckHelper;
         _validator = validator;
     }
 
@@ -40,9 +38,6 @@ public class ServicesController : ControllerBase
     public async Task<IActionResult> GetServiceEntities([FromQuery] ServiceFilterRequest request,
         CancellationToken token)
     {
-        if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var filter = _mapper.Map<ServiceEntityFilter>(request);
 
         var list = await _serviceWrapper.ServicesEntity.GetServiceEntityList(filter, token);
@@ -60,7 +55,7 @@ public class ServicesController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Service list is not initialized");
+            : BadRequest("Service list is empty");
     }
 
     // GET: api/ServiceEntitys/5
@@ -87,12 +82,6 @@ public class ServicesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update service by id")]
     public async Task<IActionResult> PutServiceEntity(int id, [FromForm] ServiceUpdateRequest service)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
-        if (id != service.ServiceId)
-            return BadRequest("Service id mismatch");
-
         var updateService = new ServiceEntity
         {
             ServiceId = id,
@@ -181,7 +170,7 @@ public class ServicesController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Service type list is not initialized");
+            : BadRequest("Service type list is empty");
     }
 
     // GET: api/ServiceTypes/5

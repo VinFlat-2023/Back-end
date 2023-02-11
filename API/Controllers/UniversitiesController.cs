@@ -58,7 +58,7 @@ public class UniversitiesController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("University list is not initialized");
+            : BadRequest("University list is empty");
     }
 
     // GET: api/Universities/5

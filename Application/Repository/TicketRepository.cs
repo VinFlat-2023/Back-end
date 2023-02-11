@@ -16,12 +16,12 @@ internal class TicketRepository : ITicketRepository
     }
 
     /// <summary>
-    ///     Get all tickets
+    ///     Get all requests
     /// </summary>
     /// <returns></returns>
     public IQueryable<Ticket> GetTicketList(TicketFilter filters)
     {
-        return _context.Requests
+        return _context.Tickets
             .Include(x => x.TicketType)
             .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
             // Filter starts here
@@ -38,9 +38,11 @@ internal class TicketRepository : ITicketRepository
     /// </summary>
     /// <param name="ticketId"></param>
     /// <returns></returns>
-    public IQueryable<Ticket> GetTicketDetail(int ticketId)
+    public IQueryable<Ticket> GetTicketDetail(int? ticketId)
     {
-        return _context.Requests
+        return _context.Tickets
+            .Include(x => x.TicketType)
+            .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
             .Where(x => x.TicketId == ticketId);
     }
 
@@ -49,9 +51,9 @@ internal class TicketRepository : ITicketRepository
     /// </summary>
     /// <param name="ticket"></param>
     /// <returns></returns>
-    public async Task<Ticket> AddTicket(Ticket ticket)
+    public async Task<Ticket> CreateRequest(Ticket ticket)
     {
-        await _context.Requests.AddAsync(ticket);
+        await _context.Tickets.AddAsync(ticket);
         await _context.SaveChangesAsync();
         return ticket;
     }
@@ -63,31 +65,31 @@ internal class TicketRepository : ITicketRepository
     /// <returns></returns>
     public async Task<Ticket?> UpdateTicket(Ticket? ticket)
     {
-        var requestData = await _context.Requests
+        var ticketData = await _context.Tickets
             .FirstOrDefaultAsync(x => x.TicketId == ticket!.TicketId);
-        if (requestData == null)
+        if (ticketData == null)
             return null;
 
-        requestData.Description = ticket?.Description ?? requestData.Description;
-        requestData.SolveDate = ticket?.SolveDate ?? requestData.SolveDate;
-        requestData.TicketTypeId = ticket?.TicketTypeId ?? requestData.TicketTypeId;
+        ticketData.Description = ticket?.Description ?? ticketData.Description;
+        ticketData.SolveDate = ticket?.SolveDate ?? ticketData.SolveDate;
+        ticketData.TicketTypeId = ticket?.TicketTypeId ?? ticketData.TicketTypeId;
 
         await _context.SaveChangesAsync();
-        return requestData;
+        return ticketData;
     }
 
     /// <summary>
-    ///     DeleteFeedback request by id
+    ///     DeleteFeedback ticket by id
     /// </summary>
-    /// <param name="requestId"></param>
+    /// <param name="ticketId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteTicket(int requestId)
+    public async Task<bool> DeleteTicket(int ticketId)
     {
-        var requestFound = await _context.Requests
-            .FirstOrDefaultAsync(x => x.TicketId == requestId);
-        if (requestFound == null)
+        var ticketFound = await _context.Tickets
+            .FirstOrDefaultAsync(x => x.TicketId == ticketId);
+        if (ticketFound == null)
             return false;
-        _context.Requests.Remove(requestFound);
+        _context.Tickets.Remove(ticketFound);
         await _context.SaveChangesAsync();
         return true;
     }

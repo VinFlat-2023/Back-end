@@ -75,6 +75,10 @@ public class FlatRepository : IFlatRepository
         flatData.Name = flat?.Name ?? flatData.Name;
         flatData.Description = flat?.Description ?? flatData.Description;
         flatData.Status = flat?.Status ?? flatData.Status;
+        flatData.WaterMeterBefore = flat?.WaterMeterBefore ?? flatData.WaterMeterBefore;
+        flatData.ElectricityMeterBefore = flat?.ElectricityMeterBefore ?? flatData.ElectricityMeterBefore;
+        flatData.WaterMeterAfter = flat?.WaterMeterAfter ?? flatData.WaterMeterAfter;
+        flatData.ElectricityMeterAfter = flat?.ElectricityMeterAfter ?? flatData.ElectricityMeterAfter;
 
         await _context.SaveChangesAsync();
         return flatData;

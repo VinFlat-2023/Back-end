@@ -5,8 +5,6 @@ namespace Domain.EntitiesDTO.NotificationDTO;
 public class NotificationDTO
 {
     public int NotificationId { get; set; }
-    public int? AccountId { get; set; }
-    public int? RenterId { get; set; }
     public string Content { get; set; } = null!;
     public string Title { get; set; } = null!;
     public DateTime Time { get; set; }
@@ -14,6 +12,7 @@ public class NotificationDTO
     public int NotificationTypeId { get; set; }
     public Guid ActionId { get; set; }
     public int ActionStatusColor { get; set; }
+    public string UserName { get; set; } = null!;
 
     // Custom Fields
 

@@ -36,7 +36,7 @@ public class TicketService : ITicketService
         return pagedList;
     }
 
-    public async Task<Ticket?> GetTicketById(int ticketId)
+    public async Task<Ticket?> GetTicketById(int? ticketId)
     {
         return await _repositoryWrapper.Tickets.GetTicketDetail(ticketId)
             .FirstOrDefaultAsync();
@@ -44,7 +44,7 @@ public class TicketService : ITicketService
 
     public async Task<Ticket?> AddTicket(Ticket ticket)
     {
-        return await _repositoryWrapper.Tickets.AddTicket(ticket);
+        return await _repositoryWrapper.Tickets.CreateRequest(ticket);
     }
 
     public async Task<Ticket?> UpdateTicket(Ticket ticket)

@@ -45,8 +45,15 @@ public class AccountValidator : BaseValidator, IAccountValidator
                     ValidatorResult.Failures.Add("Username max length reached");
                     break;
                 case not null:
-                    if (await _conditionCheckHelper.AccountUsernameExist(obj.Username) != null)
-                        ValidatorResult.Failures.Add("Username is duplicated");
+                    /*
+                    if (accountId == null)
+                    {
+                        if (await _conditionCheckHelper.AccountUsernameExist(obj.Username) != null)
+                            ValidatorResult.Failures.Add("Username is duplicated");
+                        if (await _conditionCheckHelper.RenterUsernameCheck(obj.Username) != null)
+                            ValidatorResult.Failures.Add("Username is duplicated");
+                    }
+                    */
                     break;
             }
 
@@ -58,10 +65,21 @@ public class AccountValidator : BaseValidator, IAccountValidator
                 case { } when string.IsNullOrWhiteSpace(obj.Email):
                     ValidatorResult.Failures.Add("Email is required");
                     break;
-                case not null:
-                    if (await _conditionCheckHelper.AccountEmailCheck(obj.Email) != null)
-                        ValidatorResult.Failures.Add("Email is duplicated");
+                case { } when !Regex.IsMatch(obj.Email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"):
+                    ValidatorResult.Failures.Add("Email is invalid");
                     break;
+                /*
+
+case not null:
+if (accountId == null)
+{
+   if (await _conditionCheckHelper.AccountUsernameExist(obj.Username) != null)
+       ValidatorResult.Failures.Add("Username is duplicated");
+   if (await _conditionCheckHelper.RenterUsernameCheck(obj.Username) != null)
+       ValidatorResult.Failures.Add("Username is duplicated");
+}
+break;
+*/
             }
 
             var validatePhoneNumberRegex =
@@ -74,6 +92,12 @@ public class AccountValidator : BaseValidator, IAccountValidator
                     break;
                 case { } when !validatePhoneNumberRegex.IsMatch(obj.Phone):
                     ValidatorResult.Failures.Add("Phone number is invalid");
+                    break;
+                case { } when obj.Phone.Length > 15:
+                    ValidatorResult.Failures.Add("Phone number cannot exceed 15 characters");
+                    break;
+                case { } when obj.Phone.Length < 7:
+                    ValidatorResult.Failures.Add("Phone number cannot be less than 7 characters");
                     break;
             }
 

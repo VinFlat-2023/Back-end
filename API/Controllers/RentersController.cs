@@ -20,17 +20,15 @@ namespace API.Controllers;
 [ApiController]
 public class RentersController : ControllerBase
 {
-    private readonly IJwtRoleCheckerHelper _jwtRoleCheckHelper;
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
     private readonly IRenterValidator _validator;
 
     public RentersController(IMapper mapper, IServiceWrapper serviceWrapper,
-        IJwtRoleCheckerHelper jwtRoleCheckHelper, IRenterValidator validator)
+       IRenterValidator validator)
     {
         _mapper = mapper;
         _serviceWrapper = serviceWrapper;
-        _jwtRoleCheckHelper = jwtRoleCheckHelper;
         _validator = validator;
     }
 
@@ -40,8 +38,7 @@ public class RentersController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get renter list")]
     public async Task<IActionResult> GetRenters([FromQuery] RenterFilterRequest request, CancellationToken token)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
+     
 
         var filter = _mapper.Map<RenterFilter>(request);
 
@@ -61,7 +58,7 @@ public class RentersController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Renter list is not initialized");
+            : BadRequest("Renter list is empty");
     }
 
     [HttpGet("nofilter")]
@@ -69,9 +66,6 @@ public class RentersController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get renters")]
     public async Task<IActionResult> GetRenterNoFilter(CancellationToken token)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var list = await _serviceWrapper.Renters.GetRenterListNoFilter(token);
 
         if (list == null)
@@ -87,9 +81,6 @@ public class RentersController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get renter by id")]
     public async Task<IActionResult> GetRenter(int id)
     {
-        if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User, id))
-            return BadRequest("You are not authorized to access this information");
-
         var entity = await _serviceWrapper.Renters.GetRenterById(id);
 
         return entity == null
@@ -109,9 +100,6 @@ public class RentersController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update renter by id")]
     public async Task<IActionResult> PutRenter([FromForm] RenterUpdateRequest renter, int id)
     {
-        if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User, id))
-            return BadRequest("You are not authorized to access this information");
-
         var renterCheck = await _serviceWrapper.Renters.GetRenterById(id);
 
         if (renterCheck == null)
@@ -159,9 +147,6 @@ public class RentersController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Register a new renter")]
     public async Task<IActionResult> PostRenter([FromForm] RenterCreateRequest renter)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var imageExtension = ImageExtension.ImageExtensionChecker(renter.Image?.FileName);
 
         var finalizeCreation = new Renter
@@ -196,7 +181,7 @@ public class RentersController : ControllerBase
         if (!StringUtils.IsNotEmpty(renter.DeviceToken))
             return Ok("Created successfully");
 
-        var userDeviceFound = await _serviceWrapper.Devices.GetUDByDeviceToken(renter.DeviceToken);
+        var userDeviceFound = await _serviceWrapper.Devices.GetUdByDeviceToken(renter.DeviceToken);
         if (userDeviceFound.UserName == result.Username)
             return Ok("Device token generated successfully");
         userDeviceFound.UserName = result.Username;
@@ -212,9 +197,6 @@ public class RentersController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Disable renter")]
     public async Task<IActionResult> DeleteRenter(int id)
     {
-        if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User, id))
-            return BadRequest("You are not authorized to access this information");
-
         var renter = await _serviceWrapper.Renters.GetRenterById(id);
 
         if (renter == null)

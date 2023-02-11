@@ -68,7 +68,7 @@ public class InvoiceValidator : BaseValidator, IInvoiceValidator
             switch (obj?.Name)
             {
                 case { } when obj.Name.Length > 100:
-                    ValidatorResult.Failures.Add("Name cannot exceed 100 characters");
+                    ValidatorResult.Failures.Add("TicketTypeName cannot exceed 100 characters");
                     break;
                 case { } when string.IsNullOrWhiteSpace(obj.Name):
                     ValidatorResult.Failures.Add("Invoice name is required");
@@ -100,9 +100,6 @@ public class InvoiceValidator : BaseValidator, IInvoiceValidator
 
             if (obj?.CreatedTime == null)
                 ValidatorResult.Failures.Add("Created time is required");
-
-            if (obj?.PaymentPeriod == null)
-                ValidatorResult.Failures.Add("Payment period is required");
         }
         catch (Exception e)
         {
@@ -152,6 +149,18 @@ public class InvoiceValidator : BaseValidator, IInvoiceValidator
                     case not null:
                         if (await _conditionCheckHelper.ServiceCheck(obj.ServiceId) == null)
                             ValidatorResult.Failures.Add("Service provided does not exist");
+                        break;
+                }
+
+            if (obj?.TicketId != null)
+                switch (obj.TicketId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Ticket is required");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.TicketCheck(obj.TicketId) == null)
+                            ValidatorResult.Failures.Add("Ticket provided does not exist");
                         break;
                 }
 

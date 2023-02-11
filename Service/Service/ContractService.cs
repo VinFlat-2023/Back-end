@@ -20,6 +20,23 @@ public class ContractService : IContractService
         _paginationOptions = paginationOptions.Value;
     }
 
+    public async Task<PagedList<Contract>?> GetContractHistoryList(ContractHistoryFilter filters,
+        CancellationToken token)
+    {
+        var queryable = _repositoryWrapper.Contracts.GetContractHistoryList(filters);
+
+        if (!queryable.Any())
+            return null;
+
+        var page = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var size = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
+        var pagedList = await PagedList<Contract>
+            .Create(queryable, page, size, token);
+
+        return pagedList;
+    }
+
     public async Task<PagedList<Contract>?> GetContractList(ContractFilter filters, CancellationToken token)
     {
         var queryable = _repositoryWrapper.Contracts.GetContractList(filters);
@@ -36,13 +53,19 @@ public class ContractService : IContractService
         return pagedList;
     }
 
-    public async Task<Contract?> GetContractById(int? contractId)
+    public async Task<Contract?> GetContractById(int contractId)
     {
         return await _repositoryWrapper.Contracts.GetContractDetail(contractId)
             .FirstOrDefaultAsync();
     }
 
-    public async Task<Contract?> AddContract(Contract contract)
+    public async Task<Contract?> GetContractHistoryById(int contractId)
+    {
+        return await _repositoryWrapper.Contracts.GetContractHistoryDetail(contractId)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<Contract?> AddContract(Contract? contract)
     {
         return await _repositoryWrapper.Contracts.AddContract(contract);
     }

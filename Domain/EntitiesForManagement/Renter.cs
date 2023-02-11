@@ -11,7 +11,7 @@ public class Renter
     {
         Invoices = new HashSet<Invoice>();
         Feedbacks = new HashSet<Feedback>();
-        ContractHistories = new HashSet<ContractHistory>();
+        Contracts = new HashSet<Contract>();
     }
 
     [Key]
@@ -48,10 +48,9 @@ public class Renter
     public int? MajorId { get; set; }
     public virtual Major Major { get; set; }
     public virtual University University { get; set; }
-    [ForeignKey("ContractId")] public int? ContractId { get; set; }
     public string? DeviceToken { get; set; }
-    public virtual ICollection<ContractHistory>? ContractHistories { get; set; }
-    public virtual ICollection<Invoice>? Invoices { get; set; }
-    public virtual ICollection<Feedback>? Feedbacks { get; set; }
-    public virtual ICollection<UserDevice>? UserDevices { get; set; }
+    public virtual ICollection<Contract> Contracts { get; set; }
+    public virtual ICollection<Invoice> Invoices { get; set; }
+    public virtual ICollection<Feedback> Feedbacks { get; set; }
+    public virtual ICollection<UserDevice> UserDevices { get; set; }
 }
