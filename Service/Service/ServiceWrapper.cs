@@ -177,21 +177,21 @@ public class ServiceWrapper : IServiceWrapper
         }
     }
 
-    public IRequestService Requests
+    public ITicketService Tickets
     {
         get
         {
-            if (_request == null) _request = new RequestService(repositories, _paginationOptions);
-            return _request;
+            if (_ticket == null) _ticket = new TicketService(repositories, _paginationOptions);
+            return _ticket;
         }
     }
 
-    public IRequestTypeService RequestTypes
+    public ITicketTypeService TicketTypes
     {
         get
         {
-            if (_requestType == null) _requestType = new RequestTypeService(repositories, _paginationOptions);
-            return _requestType;
+            if (_ticketType == null) _ticketType = new TicketTypeService(repositories, _paginationOptions);
+            return _ticketType;
         }
     }
 
@@ -292,8 +292,8 @@ public class ServiceWrapper : IServiceWrapper
     private IInvoiceDetailService _invoiceDetail;
     private IMajorService _major;
     private IRenterService _renter;
-    private IRequestService _request;
-    private IRequestTypeService _requestType;
+    private ITicketService _ticket;
+    private ITicketTypeService _ticketType;
     private IRoleService _roles;
     private IServiceEntityService _serviceEntity;
     private IServiceTypeService _serviceType;

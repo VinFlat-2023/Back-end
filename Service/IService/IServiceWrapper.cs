@@ -17,8 +17,8 @@ public interface IServiceWrapper
     public IInvoiceDetailService InvoiceDetails { get; }
     public IMajorService Majors { get; }
     public IRenterService Renters { get; }
-    public IRequestService Requests { get; }
-    public IRequestTypeService RequestTypes { get; }
+    public ITicketService Tickets { get; }
+    public ITicketTypeService TicketTypes { get; }
     public IRoleService Roles { get; }
     public ITokenService Tokens { get; }
     public IServiceEntityService ServicesEntity { get; }

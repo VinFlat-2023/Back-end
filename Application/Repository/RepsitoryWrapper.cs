@@ -144,21 +144,21 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
-    public IRequestRepository Requests
+    public ITicketRepository Tickets
     {
         get
         {
-            if (_requests == null) _requests = new RequestRepository(_context);
-            return _requests;
+            if (_tickets == null) _tickets = new TicketRepository(_context);
+            return _tickets;
         }
     }
 
-    public IRequestTypeRepository RequestTypes
+    public ITicketTypeRepository TicketTypes
     {
         get
         {
-            if (_requestTypes == null) _requestTypes = new RequestTypeRepository(_context);
-            return _requestTypes;
+            if (_ticketTypes == null) _ticketTypes = new TicketTypeRepository(_context);
+            return _ticketTypes;
         }
     }
 
@@ -251,8 +251,8 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IInvoiceRepository _invoices;
     private IMajorRepository _majors;
     private IRenterRepository _renters;
-    private IRequestRepository _requests;
-    private IRequestTypeRepository _requestTypes;
+    private ITicketRepository _tickets;
+    private ITicketTypeRepository _ticketTypes;
     private IRoleRepository _roles;
     private IServiceEntityRepository _servicesEntity;
     private IServiceTypeRepository _serviceTypes;

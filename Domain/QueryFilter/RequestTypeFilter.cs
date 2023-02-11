@@ -1,6 +1,6 @@
 namespace Domain.QueryFilter;
 
-public class RequestTypeFilter : PagingFilter
+public class TicketTypeFilter : PagingFilter
 {
     public string? Name { get; set; }
 

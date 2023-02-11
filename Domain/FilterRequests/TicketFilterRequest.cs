@@ -2,9 +2,9 @@ using Domain.QueryFilter;
 
 namespace Domain.FilterRequests;
 
-public class RequestFilterRequest : PagingFilter
+public class TicketFilterRequest : PagingFilter
 {
-    public string? RequestName { get; set; }
+    public string? TicketName { get; set; }
 
     public string? Description { get; set; }
 
@@ -16,5 +16,5 @@ public class RequestFilterRequest : PagingFilter
 
     public string Status { get; set; } = null!;
 
-    public int? RequestTypeId { get; set; }
+    public int? TicketTypeId { get; set; }
 }

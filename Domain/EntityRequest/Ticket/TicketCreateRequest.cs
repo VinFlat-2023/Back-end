@@ -2,9 +2,9 @@
 
 namespace Domain.EntityRequest.Request;
 
-public class RequestCreateRequest
+public class TicketCreateRequest
 {
-    public string RequestName { get; set; } = null!;
+    public string TicketName { get; set; } = null!;
     public string Description { get; set; } = null!;
 
     [Required] public DateTime CreateDate { get; set; }
@@ -12,5 +12,5 @@ public class RequestCreateRequest
     public DateTime? SolveDate { get; set; }
     public decimal? Amount { get; set; }
     public string Status { get; set; } = null!;
-    [Required] public int RequestTypeId { get; set; }
+    [Required] public int TicketTypeId { get; set; }
 }

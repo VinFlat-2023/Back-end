@@ -15,19 +15,19 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace API.Controllers;
 
-[Route("api/requests")]
+[Route("api/tickets")]
 [ApiController]
-public class RequestsController : ControllerBase
+public class TicketsController : ControllerBase
 {
     private readonly IJwtRoleCheckerHelper _jwtRoleCheckHelper;
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
 
-    private readonly IRequestValidator _validator;
+    private readonly ITicketValidator _validator;
 
     // GET: api/Requests
-    public RequestsController(IMapper mapper, IServiceWrapper serviceWrapper,
-        IJwtRoleCheckerHelper jwtRoleCheckHelper, IRequestValidator validator)
+    public TicketsController(IMapper mapper, IServiceWrapper serviceWrapper,
+        IJwtRoleCheckerHelper jwtRoleCheckHelper, ITicketValidator validator)
     {
         _mapper = mapper;
         _serviceWrapper = serviceWrapper;
@@ -37,17 +37,18 @@ public class RequestsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Get request list")]
-    public async Task<IActionResult> GetRequests([FromQuery] RequestFilterRequest request, CancellationToken token)
+    [SwaggerOperation(Summary = "[Authorize] Get ticket list")]
+    public async Task<IActionResult> GetTickets([FromQuery] TicketFilterRequest ticketFilterRequest,
+        CancellationToken token)
     {
         if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
             return BadRequest("You are not authorized to access this information");
 
-        var filter = _mapper.Map<RequestFilter>(request);
+        var filter = _mapper.Map<TicketFilter>(ticketFilterRequest);
 
-        var list = await _serviceWrapper.Requests.GetRequestList(filter, token);
+        var list = await _serviceWrapper.Tickets.GetTicketList(filter, token);
         if (list != null && !list.Any())
-            return NotFound("No request available");
+            return NotFound("No ticket available");
 
         var resultList = _mapper.Map<IEnumerable<RequestDto>>(list);
 
@@ -64,15 +65,15 @@ public class RequestsController : ControllerBase
     // GET: api/Requests/5
     [HttpGet("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Get request by id")]
-    public async Task<IActionResult> GetRequest(int id)
+    [SwaggerOperation(Summary = "[Authorize] Get ticket by id")]
+    public async Task<IActionResult> GetTicket(int id)
     {
         if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
             return BadRequest("You are not authorized to access this information");
 
-        var entity = await _serviceWrapper.Requests.GetRequestById(id);
+        var entity = await _serviceWrapper.Tickets.GetTicketById(id);
         if (entity == null)
-            return NotFound("No requests found");
+            return NotFound("No tickets found");
         return Ok(_mapper.Map<RequestDto>(entity));
     }
 
@@ -80,8 +81,8 @@ public class RequestsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Update request (Not finished yet !!!)")]
-    public async Task<IActionResult> PutRequest(int id, [FromForm] RequestUpdateRequest request)
+    [SwaggerOperation(Summary = "[Authorize] Update ticket (Not finished yet !!!)")]
+    public async Task<IActionResult> PutTicket(int id, [FromForm] TicketUpdateRequest ticketUpdateRequest)
     {
         /*
         var requestEntity = (await _serviceWrapper.Requests.GetRequestById(id));
@@ -94,9 +95,9 @@ public class RequestsController : ControllerBase
 
         var updateRequest = new Request
         {
-            RequestId = id,
-            RequestName = request.RequestName ?? null,
-            RequestTypeId = request.RequestTypeId ?? null,
+            TicketId = id,
+            TicketName = request.TicketName ?? null,
+            TicketTypeId = request.TicketTypeId ?? null,
             Description = request.Description ?? null,
             CreateDate = DateTime.UtcNow,
             Status = request.Status,
@@ -109,7 +110,7 @@ public class RequestsController : ControllerBase
         if (!validation.IsValid)
             return BadRequest(validation.Failures.FirstOrDefault());
 
-        var result = await _serviceWrapper.Requests.UpdateRequest(updateRequest);
+        var result = await _serviceWrapper.Requests.UpdateTicket(updateRequest);
         if (result == null)
             return NotFound("Request failed to update");
         */
@@ -122,38 +123,38 @@ public class RequestsController : ControllerBase
     [HttpPost]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Create request")]
-    public async Task<IActionResult> PostRequest([FromForm] RequestCreateRequest request)
+    public async Task<IActionResult> PostTicket([FromForm] TicketCreateRequest ticketCreateRequest)
     {
         if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User))
             return BadRequest("You are not authorized to access this information");
 
-        var newRequest = new Request
+        var newRequest = new Ticket
         {
-            RequestName = request.RequestName,
-            Description = request.Description,
+            TicketName = ticketCreateRequest.TicketName,
+            Description = ticketCreateRequest.Description,
             CreateDate = DateTime.UtcNow,
-            RequestTypeId = request.RequestTypeId,
-            Status = request.Status,
+            TicketTypeId = ticketCreateRequest.TicketTypeId,
+            Status = ticketCreateRequest.Status,
             // TODO : Auto assign to active invoice -> invoice detail if not assigned manually
-            SolveDate = request.SolveDate ?? null,
-            Amount = request.Amount ?? 0
+            SolveDate = ticketCreateRequest.SolveDate ?? null,
+            Amount = ticketCreateRequest.Amount ?? 0
         };
 
         var validation = await _validator.ValidateParams(newRequest, null);
         if (!validation.IsValid)
             return BadRequest(validation.Failures.FirstOrDefault());
 
-        var result = await _serviceWrapper.Requests.AddRequest(newRequest);
+        var result = await _serviceWrapper.Tickets.AddTicket(newRequest);
         if (result == null)
             return BadRequest("Request failed to create");
-        return CreatedAtAction("GetRequest", new { id = result.RequestId }, result);
+        return CreatedAtAction("GetTicket", new { id = result.TicketId }, result);
     }
 
     // DELETE: api/Requests/5
     [HttpDelete("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Delete request (Not finished yet !!!)")]
-    public async Task<IActionResult> DeleteRequest(int id)
+    public async Task<IActionResult> DeleteTicket(int id)
     {
         /*777
         var requestEntity = (await _serviceWrapper.Requests.GetRequestById(id))
@@ -165,7 +166,7 @@ public class RequestsController : ControllerBase
         if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User, requestEntity.Value))
             return BadRequest("You are not authorized to access this information");
 
-        var result = await _serviceWrapper.Requests.DeleteRequest(id);
+        var result = await _serviceWrapper.Requests.DeleteTicket(id);
         if (!result)
             return NotFound("Request not found");
             
@@ -177,14 +178,15 @@ public class RequestsController : ControllerBase
     [HttpGet("type")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Get request list")]
-    public async Task<IActionResult> GetRequestTypes([FromQuery] RequestTypeFilter request, CancellationToken token)
+    public async Task<IActionResult> GetTIcketTypes([FromQuery] TicketTypeFilterRequest request,
+        CancellationToken token)
     {
         if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User))
             return BadRequest("You are not authorized to access this information");
 
-        var filter = _mapper.Map<RequestTypeFilter>(request);
+        var filter = _mapper.Map<TicketTypeFilter>(request);
 
-        var list = await _serviceWrapper.RequestTypes.GetRequestTypeList(filter, token);
+        var list = await _serviceWrapper.TicketTypes.GetTicketTypeList(filter, token);
         if (list != null && !list.Any())
             return NotFound("No request type available");
 
@@ -204,12 +206,12 @@ public class RequestsController : ControllerBase
     [HttpGet("type/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Get request type by id")]
-    public async Task<IActionResult> GetRequestType(int id)
+    public async Task<IActionResult> GetTicketType(int id)
     {
         if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
             return BadRequest("You are not authorized to access this information");
 
-        var entity = await _serviceWrapper.RequestTypes.GetRequestTypeById(id);
+        var entity = await _serviceWrapper.TicketTypes.GetTicketTypeById(id);
         if (entity == null)
             return NotFound("No request type found");
         return Ok(_mapper.Map<RequestTypeDto>(entity));
@@ -220,16 +222,17 @@ public class RequestsController : ControllerBase
     [HttpPut("type/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Update request type")]
-    public async Task<IActionResult> PutRequestType(int id, [FromForm] RequestTypeCreateRequest requestType)
+    public async Task<IActionResult> PutTicketType(int id,
+        [FromForm] TicketTypeCreateRequest ticketTypeCreateRequestType)
     {
         if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
             return BadRequest("You are not authorized to access this information");
 
-        var updateRequestType = new RequestType
+        var updateRequestType = new TicketType
         {
-            RequestTypeId = id,
-            Description = requestType.Description,
-            Name = requestType.Name,
+            TicketTypeId = id,
+            Description = ticketTypeCreateRequestType.Description,
+            Name = ticketTypeCreateRequestType.Name,
             Status = true
         };
 
@@ -237,8 +240,8 @@ public class RequestsController : ControllerBase
         if (!validation.IsValid)
             return BadRequest(validation.Failures.FirstOrDefault());
 
-        var result = await _serviceWrapper.RequestTypes
-            .UpdateRequestType(updateRequestType);
+        var result = await _serviceWrapper.TicketTypes
+            .UpdateTicketType(updateRequestType);
         if (result == null)
             return NotFound("Request type not found");
 
@@ -250,15 +253,15 @@ public class RequestsController : ControllerBase
     [HttpPost("type/")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Create request type")]
-    public async Task<IActionResult> PostRequestType([FromForm] RequestTypeCreateRequest requestType)
+    public async Task<IActionResult> PostTicketType([FromForm] TicketTypeCreateRequest ticketTypeCreateRequestType)
     {
         if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
             return BadRequest("You are not authorized to access this information");
 
-        var newRequestType = new RequestType
+        var newRequestType = new TicketType
         {
-            Description = requestType.Description,
-            Name = requestType.Name,
+            Description = ticketTypeCreateRequestType.Description,
+            Name = ticketTypeCreateRequestType.Name,
             Status = true
         };
 
@@ -266,22 +269,22 @@ public class RequestsController : ControllerBase
         if (!validation.IsValid)
             return BadRequest(validation.Failures.FirstOrDefault());
 
-        var result = await _serviceWrapper.RequestTypes.AddRequestType(newRequestType);
+        var result = await _serviceWrapper.TicketTypes.AddTicketType(newRequestType);
         if (result == null)
             return NotFound("Request type not found");
-        return CreatedAtAction("GetRequestType", new { id = result.RequestTypeId }, result);
+        return CreatedAtAction("GetTicketType", new { id = result.TicketTypeId }, result);
     }
 
     // DELETE: api/RequestTypes/5
     [HttpDelete("type/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Delete request type")]
-    public async Task<IActionResult> DeleteRequestType(int id)
+    public async Task<IActionResult> DeleteTicketType(int id)
     {
         if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
             return BadRequest("You are not authorized to access this information");
 
-        var result = await _serviceWrapper.RequestTypes.DeleteRequestType(id);
+        var result = await _serviceWrapper.TicketTypes.DeleteTicketType(id);
         if (!result)
             return NotFound("Request type not found");
 

@@ -3,19 +3,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.EntitiesForManagement;
 
-public class RequestType
+public class TicketType
 {
-    public RequestType()
+    public TicketType()
     {
-        Requests = new HashSet<Request>();
+        Tickets = new HashSet<Ticket>();
     }
 
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int RequestTypeId { get; set; }
+    public int TicketTypeId { get; set; }
 
     public string? Name { get; set; }
     public string? Description { get; set; }
-    public bool? Status { get; set; }
-    public virtual ICollection<Request> Requests { get; set; }
+    public bool Status { get; set; }
+    public virtual ICollection<Ticket> Tickets { get; set; }
 }

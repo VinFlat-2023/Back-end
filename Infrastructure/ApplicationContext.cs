@@ -24,8 +24,8 @@ public class ApplicationContext : DbContext
     public virtual DbSet<InvoiceDetail> InvoiceDetails { get; set; } = null!;
     public virtual DbSet<InvoiceType> InvoiceTypes { get; set; } = null!;
     public virtual DbSet<Renter> Renters { get; set; } = null!;
-    public virtual DbSet<Request> Requests { get; set; } = null!;
-    public virtual DbSet<RequestType> RequestTypes { get; set; } = null!;
+    public virtual DbSet<Ticket> Requests { get; set; } = null!;
+    public virtual DbSet<TicketType> RequestTypes { get; set; } = null!;
     public virtual DbSet<Role> Roles { get; set; } = null!;
     public virtual DbSet<ServiceEntity> Services { get; set; } = null!;
     public virtual DbSet<ServiceType> ServiceTypes { get; set; } = null!;
@@ -565,31 +565,31 @@ public class ApplicationContext : DbContext
             }
         );
 
-        modelBuilder.Entity<RequestType>().HasData(
-            new RequestType
+        modelBuilder.Entity<TicketType>().HasData(
+            new TicketType
             {
-                RequestTypeId = 1,
+                TicketTypeId = 1,
                 Name = "Repair",
                 Description = "Repair",
                 Status = true
             },
-            new RequestType
+            new TicketType
             {
-                RequestTypeId = 2,
+                TicketTypeId = 2,
                 Name = "Maintenance",
                 Description = "Maintenance",
                 Status = true
             },
-            new RequestType
+            new TicketType
             {
-                RequestTypeId = 3,
+                TicketTypeId = 3,
                 Name = "Other",
                 Description = "Other",
                 Status = true
             },
-            new RequestType
+            new TicketType
             {
-                RequestTypeId = 4,
+                TicketTypeId = 4,
                 Name = "Complaint",
                 Description = "Complaint",
                 Status = true

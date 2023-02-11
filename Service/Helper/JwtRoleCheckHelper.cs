@@ -16,7 +16,7 @@ public class JwtRoleCheckHelper : IJwtRoleCheckerHelper
         return roleCheck is not ("Admin" or "SuperAdmin" or "Supervisor");
     }
 
-    // TODO: Add check if renter ID has the same ID as the request object here
+    // TODO: Add check if renter ID has the same ID as the ticket object here
     public async Task<bool> IsRenterRoleAuthorized(ClaimsPrincipal user, int id)
     {
         var roleCheck = await JwtRoleCheck(user);

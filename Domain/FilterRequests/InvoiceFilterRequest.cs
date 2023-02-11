@@ -26,5 +26,6 @@ public class InvoiceFilterRequest : PagingFilter
 
     public int? AccountId { get; set; }
 
-    public int? InvoiceTypeId { get; set; }
+    public int? InvoiceTypeId { get; set;
+}
 }

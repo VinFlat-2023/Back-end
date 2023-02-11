@@ -3,9 +3,9 @@ using Service.Validator;
 
 namespace Service.IValidator;
 
-public interface IRequestValidator
+public interface ITicketValidator
 {
-    Task<ValidatorResult> ValidateParams(Request? obj, int? requestId);
+    Task<ValidatorResult> ValidateParams(Ticket? obj, int? TicketId);
 
-    Task<ValidatorResult> ValidateParams(RequestType? obj, int? requestTypeId);
+    Task<ValidatorResult> ValidateParams(TicketType? obj, int? TicketTypeId);
 }

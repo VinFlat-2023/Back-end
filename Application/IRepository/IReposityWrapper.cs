@@ -15,8 +15,10 @@ public interface IRepositoryWrapper
     public IInvoiceRepository Invoices { get; }
     public IMajorRepository Majors { get; }
     public IRenterRepository Renters { get; }
-    public IRequestRepository Requests { get; }
-    public IRequestTypeRepository RequestTypes { get; }
+
+    public ITicketRepository Tickets { get; }
+    public ITicketTypeRepository TicketTypes { get; }
+
     public IRoleRepository Roles { get; }
     public IInvoiceTypeRepository InvoiceTypes { get; }
     public IInvoiceDetailRepository InvoiceDetails { get; }

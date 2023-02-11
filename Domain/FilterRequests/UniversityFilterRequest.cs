@@ -10,5 +10,6 @@ public class UniversityFilterRequest : PagingFilter
 
     public string? Status { get; set; }
 
-    public string? Address { get; set; }
+    public string? Address { get; set;
+}
 }

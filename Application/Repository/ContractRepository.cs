@@ -96,5 +96,4 @@ public class ContractRepository : IContractRepository
         await _context.SaveChangesAsync();
         return true;
     }
-
 }

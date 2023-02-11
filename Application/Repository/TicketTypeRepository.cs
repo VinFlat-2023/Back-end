@@ -6,20 +6,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Repository;
 
-internal class RequestTypeRepository : IRequestTypeRepository
+internal class TicketTypeRepository : ITicketTypeRepository
 {
     private readonly ApplicationContext _context;
 
-    public RequestTypeRepository(ApplicationContext context)
+    public TicketTypeRepository(ApplicationContext context)
     {
         _context = context;
     }
 
     /// <summary>
-    ///     Get all request types
+    ///     Get all ticket types
     /// </summary>
     /// <returns></returns>
-    public IQueryable<RequestType> GetRequestTypeList(RequestTypeFilter filters)
+    public IQueryable<TicketType> GetTicketTypeList(TicketTypeFilter filters)
     {
         return _context.RequestTypes
             .Where(x =>
@@ -32,45 +32,45 @@ internal class RequestTypeRepository : IRequestTypeRepository
     /// <summary>
     ///     Get RequestType by Id
     /// </summary>
-    /// <param name="requestTypeId"></param>
+    /// <param name="ticketTypeId"></param>
     /// <returns></returns>
-    public IQueryable<RequestType> GetRequestTypeDetail(int? requestTypeId)
+    public IQueryable<TicketType> GetTicketTypeDetail(int? ticketTypeId)
     {
         return _context.RequestTypes
-            .Where(x => x.RequestTypeId == requestTypeId);
+            .Where(x => x.TicketTypeId == ticketTypeId);
     }
 
     /// <summary>
-    ///     AddFeedback new request type
+    ///     AddFeedback new ticket type
     /// </summary>
-    /// <param name="requestType"></param>
+    /// <param name="ticketType"></param>
     /// <returns></returns>
-    public async Task<RequestType> AddRequestType(RequestType requestType)
+    public async Task<TicketType> AddTicketType(TicketType ticketType)
     {
-        await _context.RequestTypes.AddAsync(requestType);
+        await _context.RequestTypes.AddAsync(ticketType);
         await _context.SaveChangesAsync();
-        return requestType;
+        return ticketType;
     }
 
     /// <summary>
     ///     UpdateFeedback RequestType
     /// </summary>
-    /// <param name="requestType"></param>
+    /// <param name="ticketType"></param>
     /// <returns></returns>
-    public async Task<RequestType?> UpdateRequestType(RequestType? requestType)
+    public async Task<TicketType?> UpdateTicketType(TicketType? ticketType)
     {
-        var requestTypeData = await _context.RequestTypes
-            .FirstOrDefaultAsync(x => x.RequestTypeId == requestType!.RequestTypeId);
-        if (requestTypeData == null)
+        var ticketTypeData = await _context.RequestTypes
+            .FirstOrDefaultAsync(x => x.TicketTypeId == ticketType!.TicketTypeId);
+        if (ticketTypeData == null)
             return null;
 
-        requestTypeData.Description = requestType?.Description ?? requestTypeData.Description;
-        requestTypeData.Name = requestType?.Name ?? requestTypeData.Name;
-        requestTypeData.Status = requestType?.Status ?? requestTypeData.Status;
+        ticketTypeData.Description = ticketType?.Description ?? ticketTypeData.Description;
+        ticketTypeData.Name = ticketType?.Name ?? ticketTypeData.Name;
+        ticketTypeData.Status = ticketType?.Status ?? ticketTypeData.Status;
 
         await _context.SaveChangesAsync();
 
-        return requestTypeData;
+        return ticketTypeData;
     }
 
     /// <summary>
@@ -78,10 +78,10 @@ internal class RequestTypeRepository : IRequestTypeRepository
     /// </summary>
     /// <param name="requestTypeId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteRequestType(int requestTypeId)
+    public async Task<bool> DeleteTicketType(int requestTypeId)
     {
         var requestTypeFound = await _context.RequestTypes
-            .FirstOrDefaultAsync(x => x.RequestTypeId == requestTypeId);
+            .FirstOrDefaultAsync(x => x.TicketTypeId == requestTypeId);
         if (requestTypeFound == null)
             return false;
         _context.RequestTypes.Remove(requestTypeFound);
@@ -94,10 +94,10 @@ internal class RequestTypeRepository : IRequestTypeRepository
     /// </summary>
     /// <param name="requestTypeId"></param>
     /// <returns></returns>
-    public async Task<bool> ToggleRequestTypeStatus(int requestTypeId)
+    public async Task<bool> ToggleTicketTypeStatus(int requestTypeId)
     {
         var requestTypeStatus = await _context.RequestTypes
-            .FirstOrDefaultAsync(x => x.RequestTypeId == requestTypeId);
+            .FirstOrDefaultAsync(x => x.TicketTypeId == requestTypeId);
         if (requestTypeStatus == null)
             return false;
         _context.RequestTypes.Remove(requestTypeStatus);

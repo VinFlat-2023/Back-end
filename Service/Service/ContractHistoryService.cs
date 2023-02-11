@@ -36,7 +36,7 @@ public class ContractHistoryService : IContractHistoryService
 
         return pagedList;
     }
- 
+
     public async Task<ContractHistory?> GetContractHistoryById(int? contractHistoryId)
     {
         return await _repositoryWrapper.ContractHistories.GetContractHistoryDetail(contractHistoryId)

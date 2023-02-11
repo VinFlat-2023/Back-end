@@ -6,7 +6,7 @@ namespace Service.IService;
 public interface IAzureStorageService
 {
     /// <summary>
-    ///     This method uploads a file submitted with the request
+    ///     This method uploads a file submitted with the ticket
     /// </summary>
     /// <param name="file">File for upload</param>
     /// <param name="containerName"></param>

@@ -60,7 +60,6 @@ public class AutoMapper : Profile
 {
     public AutoMapper()
     {
-        // TODO : Remapping all DTOs and Entities
         // Basic DTOs
         MapAccount();
         MapArea();
@@ -195,29 +194,29 @@ public class AutoMapper : Profile
 
     private void MapRequestType()
     {
-        CreateMap<RequestType, RequestTypeDto>()
+        CreateMap<TicketType, RequestTypeDto>()
             .ForAllMembers(o => o.ExplicitExpansion());
-        CreateMap<RequestTypeDto, RequestType>()
+        CreateMap<RequestTypeDto, TicketType>()
             .ReverseMap();
-        CreateMap<RequestTypeCreateRequest, RequestType>()
+        CreateMap<TicketTypeCreateRequest, TicketType>()
             .ReverseMap();
-        CreateMap<RequestTypeUpdateRequest, RequestType>()
+        CreateMap<TicketTypeUpdateRequest, TicketType>()
             .ReverseMap();
-        CreateMap<RequestTypeFilterRequest, RequestTypeFilter>()
+        CreateMap<TicketTypeFilterRequest, TicketTypeFilter>()
             .ReverseMap();
     }
 
     private void MapRequest()
     {
-        CreateMap<Request, RequestDto>()
+        CreateMap<Ticket, RequestDto>()
             .ForAllMembers(o => o.ExplicitExpansion());
-        CreateMap<RequestDto, Request>()
+        CreateMap<RequestDto, Ticket>()
             .ReverseMap();
-        CreateMap<RequestCreateRequest, Request>()
+        CreateMap<TicketCreateRequest, Ticket>()
             .ReverseMap();
-        CreateMap<RequestUpdateRequest, Request>()
+        CreateMap<TicketUpdateRequest, Ticket>()
             .ReverseMap();
-        CreateMap<RequestFilterRequest, RequestFilter>()
+        CreateMap<TicketFilterRequest, TicketFilter>()
             .ReverseMap();
     }
 

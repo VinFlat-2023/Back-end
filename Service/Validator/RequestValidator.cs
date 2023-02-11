@@ -4,51 +4,51 @@ using Service.IValidator;
 
 namespace Service.Validator;
 
-public class RequestValidator : BaseValidator, IRequestValidator
+public class TicketValidator : BaseValidator, ITicketValidator
 {
     private readonly IConditionCheckHelper _conditionCheckHelper;
 
-    public RequestValidator(IConditionCheckHelper conditionCheckHelper)
+    public TicketValidator(IConditionCheckHelper conditionCheckHelper)
     {
         _conditionCheckHelper = conditionCheckHelper;
     }
 
-    public async Task<ValidatorResult> ValidateParams(Request? obj, int? requestId)
+    public async Task<ValidatorResult> ValidateParams(Ticket? obj, int? ticketId)
     {
         try
         {
-            if (requestId != null)
-                switch (obj?.RequestId)
+            if (ticketId != null)
+                switch (obj?.TicketId)
                 {
-                    case { } when obj.RequestId != requestId:
-                        ValidatorResult.Failures.Add("Request id mismatch");
+                    case { } when obj.TicketId != ticketId:
+                        ValidatorResult.Failures.Add("Ticket id mismatch");
                         break;
                     case null:
-                        ValidatorResult.Failures.Add("Request is required");
+                        ValidatorResult.Failures.Add("Ticket is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.RequestCheck(obj.RequestId) == null)
-                            ValidatorResult.Failures.Add("Request provided does not exist");
+                        if (await _conditionCheckHelper.TicketCheck(obj.TicketId) == null)
+                            ValidatorResult.Failures.Add("Ticket provided does not exist");
                         break;
                 }
 
-            switch (obj?.RequestName)
+            switch (obj?.TicketName)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.RequestName):
-                    ValidatorResult.Failures.Add("Request name is required");
+                case { } when string.IsNullOrWhiteSpace(obj.TicketName):
+                    ValidatorResult.Failures.Add("Ticket name is required");
                     break;
-                case { } when obj.RequestName.Length > 500:
-                    ValidatorResult.Failures.Add("Request name cannot exceed 100 characters");
+                case { } when obj.TicketName.Length > 500:
+                    ValidatorResult.Failures.Add("Ticket name cannot exceed 100 characters");
                     break;
             }
 
             switch (obj?.Description)
             {
                 case { } when string.IsNullOrWhiteSpace(obj.Description):
-                    ValidatorResult.Failures.Add("Request description is required");
+                    ValidatorResult.Failures.Add("Ticket description is required");
                     break;
                 case { } when obj.Description.Length > 500:
-                    ValidatorResult.Failures.Add("Request description cannot exceed 500 characters");
+                    ValidatorResult.Failures.Add("Ticket description cannot exceed 500 characters");
                     break;
             }
 
@@ -65,19 +65,19 @@ public class RequestValidator : BaseValidator, IRequestValidator
                     break;
             }
 
-            switch (obj?.RequestTypeId)
+            switch (obj?.TicketTypeId)
             {
                 case null:
-                    ValidatorResult.Failures.Add("Request type is required");
+                    ValidatorResult.Failures.Add("Ticket type is required");
                     break;
                 case not null:
-                    if (await _conditionCheckHelper.RequestTypeCheck(obj.RequestTypeId) == null)
-                        ValidatorResult.Failures.Add("Request type provided does not exist");
+                    if (await _conditionCheckHelper.TicketTypeCheck(obj.TicketTypeId) == null)
+                        ValidatorResult.Failures.Add("Ticket type provided does not exist");
                     break;
             }
 
             if (obj?.Status == null)
-                ValidatorResult.Failures.Add("Request status is required");
+                ValidatorResult.Failures.Add("Ticket status is required");
         }
         catch (Exception e)
         {
@@ -88,47 +88,47 @@ public class RequestValidator : BaseValidator, IRequestValidator
         return ValidatorResult;
     }
 
-    public async Task<ValidatorResult> ValidateParams(RequestType? obj, int? requestTypeId)
+    public async Task<ValidatorResult> ValidateParams(TicketType? obj, int? requestTypeId)
     {
         try
         {
             if (requestTypeId != null)
-                switch (obj?.RequestTypeId)
+                switch (obj?.TicketTypeId)
                 {
-                    case { } when obj.RequestTypeId != requestTypeId:
-                        ValidatorResult.Failures.Add("Request id mismatch");
+                    case { } when obj.TicketTypeId != requestTypeId:
+                        ValidatorResult.Failures.Add("Ticket id mismatch");
                         break;
                     case null:
-                        ValidatorResult.Failures.Add("Request type is required");
+                        ValidatorResult.Failures.Add("Ticket type is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.RequestTypeCheck(obj.RequestTypeId) == null)
-                            ValidatorResult.Failures.Add("Request type provided does not exist");
+                        if (await _conditionCheckHelper.TicketTypeCheck(obj.TicketTypeId) == null)
+                            ValidatorResult.Failures.Add("Ticket type provided does not exist");
                         break;
                 }
 
             switch (obj?.Description)
             {
                 case { } when string.IsNullOrWhiteSpace(obj.Description):
-                    ValidatorResult.Failures.Add("Request type description is required");
+                    ValidatorResult.Failures.Add("Ticket type description is required");
                     break;
                 case { } when obj.Description.Length > 500:
-                    ValidatorResult.Failures.Add("Request type description cannot exceed 500 characters");
+                    ValidatorResult.Failures.Add("Ticket type description cannot exceed 500 characters");
                     break;
             }
 
             switch (obj?.Name)
             {
                 case { } when string.IsNullOrWhiteSpace(obj.Name):
-                    ValidatorResult.Failures.Add("Request type name is required");
+                    ValidatorResult.Failures.Add("Ticket type name is required");
                     break;
                 case { } when obj.Name.Length > 100:
-                    ValidatorResult.Failures.Add("Request type name cannot exceed 100 characters");
+                    ValidatorResult.Failures.Add("Ticket type name cannot exceed 100 characters");
                     break;
             }
 
             if (obj?.Status == null)
-                ValidatorResult.Failures.Add("Request type status is required");
+                ValidatorResult.Failures.Add("Ticket type status is required");
         }
         catch (Exception e)
         {

@@ -38,9 +38,9 @@ public interface IConditionCheckHelper
 
     public Task<ContractHistory?> ContractHistoryCheck(int? id);
 
-    public Task<RequestType?> RequestTypeCheck(int? id);
+    public Task<TicketType?> TicketTypeCheck(int? id);
 
-    public Task<Request?> RequestCheck(int id);
+    public Task<Ticket?> TicketCheck(int id);
 
     public Task<InvoiceDetail?> InvoiceDetailCheck(int? id);
 

@@ -4,11 +4,11 @@ using Domain.QueryFilter;
 
 namespace Service.IService;
 
-public interface IRequestTypeService
+public interface ITicketTypeService
 {
-    public Task<PagedList<RequestType>?> GetRequestTypeList(RequestTypeFilter filter, CancellationToken token);
-    public Task<RequestType?> GetRequestTypeById(int? requestTypeId);
-    public Task<RequestType?> AddRequestType(RequestType requestType);
-    public Task<RequestType?> UpdateRequestType(RequestType requestType);
-    public Task<bool> DeleteRequestType(int requestTypeId);
+    public Task<PagedList<TicketType>?> GetTicketTypeList(TicketTypeFilter filter, CancellationToken token);
+    public Task<TicketType?> GetTicketTypeById(int? ticketTypeId);
+    public Task<TicketType?> AddTicketType(TicketType ticketType);
+    public Task<TicketType?> UpdateTicketType(TicketType ticketType);
+    public Task<bool> DeleteTicketType(int ticketTypeId);
 }

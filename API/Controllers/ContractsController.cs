@@ -9,7 +9,6 @@ using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Service.IHelper;
 using Service.IService;
 using Service.IValidator;
@@ -103,7 +102,7 @@ public class ContractsController : ControllerBase
             ImageUrl = (await _serviceWrapper.AzureStorage.UploadAsync(contract.Image, "Contract",
                 imageExtension))?.Blob.Uri,
             Price = contract.Price,
-            ContractStatus = contract.ContractStatus,
+            ContractStatus = contract.ContractStatus
         };
 
         var validation1 = await _validator.ValidateParams(updateContract, id);

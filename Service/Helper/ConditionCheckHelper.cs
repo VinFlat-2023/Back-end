@@ -99,14 +99,14 @@ public class ConditionCheckHelper : IConditionCheckHelper
         return await _serviceWrapper.ContractHistories.GetContractHistoryById(id) ?? null;
     }
 
-    public async Task<RequestType?> RequestTypeCheck(int? id)
+    public async Task<TicketType?> TicketTypeCheck(int? id)
     {
-        return await _serviceWrapper.RequestTypes.GetRequestTypeById(id) ?? null;
+        return await _serviceWrapper.TicketTypes.GetTicketTypeById(id) ?? null;
     }
 
-    public async Task<Request?> RequestCheck(int id)
+    public async Task<Ticket?> TicketCheck(int id)
     {
-        return await _serviceWrapper.Requests.GetRequestById(id) ?? null;
+        return await _serviceWrapper.Tickets.GetTicketById(id) ?? null;
     }
 
     public async Task<InvoiceDetail?> InvoiceDetailCheck(int? id)
