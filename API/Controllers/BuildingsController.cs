@@ -47,7 +47,9 @@ public class BuildingsController : ControllerBase
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "List found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
@@ -62,7 +64,12 @@ public class BuildingsController : ControllerBase
         var entity = await _serviceWrapper.Buildings.GetBuildingById(id);
         if (entity == null)
             return NotFound("Building not found");
-        return Ok(_mapper.Map<BuildingDto>(entity));
+        return Ok(new
+        {
+            status = "Success",
+            message = "Building found",
+            data = _mapper.Map<BuildingDto>(entity)
+        });
     }
 
     // PUT: api/Buildings/5
@@ -99,7 +106,10 @@ public class BuildingsController : ControllerBase
         if (result == null)
             return NotFound("Building not found");
 
-        return Ok(new { message = "Update building successfully" });
+        return Ok(new
+        {
+            message = "Update building successfully"
+        });
     }
 
     // POST: api/Buildings

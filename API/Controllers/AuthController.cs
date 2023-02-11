@@ -53,7 +53,12 @@ public class AuthController : ControllerBase
         }
 
         var jwtToken = _serviceWrapper.Tokens.CreateTokenForAccount(account);
-        return Ok(new { Token = jwtToken });
+        return Ok(new
+        {
+            status = "Success",
+            message = "User logged in successfully",
+            data = jwtToken
+        });
     }
 
     /// <summary>
@@ -91,6 +96,11 @@ public class AuthController : ControllerBase
         }
 
         var jwtToken = _serviceWrapper.Tokens.CreateTokenForRenter(renter);
-        return Ok(new { Token = jwtToken });
+        return Ok(new
+        {
+            status = "Success",
+            message = "User logged in successfully",
+            data = jwtToken
+        });
     }
 }

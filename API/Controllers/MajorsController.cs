@@ -48,7 +48,9 @@ public class MajorsController : ControllerBase
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "List found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
@@ -65,7 +67,12 @@ public class MajorsController : ControllerBase
         if (!result.Any())
             return NotFound("No major available for this university");
 
-        return Ok(_mapper.Map<IEnumerable<MajorDto>>(result));
+        return Ok(new
+        {
+            status = "Success",
+            message = "Major list found",
+            data = _mapper.Map<IEnumerable<MajorDto>>(result)
+        });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Create Major")]

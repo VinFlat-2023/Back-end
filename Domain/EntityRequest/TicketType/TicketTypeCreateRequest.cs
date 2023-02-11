@@ -1,4 +1,4 @@
-﻿namespace Domain.EntityRequest.RequestType;
+﻿namespace Domain.EntityRequest.TicketType;
 
 public class TicketTypeCreateRequest
 {

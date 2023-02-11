@@ -17,6 +17,5 @@ public class BuildingFilterRequest : PagingFilter
     // Management Company
     public int? AccountId { get; set; }
 
-    public int? AreaId { get; set;
-}
+    public int? AreaId { get; set; }
 }

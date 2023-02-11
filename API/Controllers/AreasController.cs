@@ -47,7 +47,9 @@ public class AreasController : ControllerBase
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "List found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
@@ -62,8 +64,12 @@ public class AreasController : ControllerBase
         var entity = await _serviceWrapper.Areas.GetAreaById(id);
         if (entity == null)
             return NotFound("Area not found");
-        var dto = _mapper.Map<AreaDto>(entity);
-        return Ok(dto);
+        return Ok(new
+        {
+            status = "Success",
+            message = "Area found",
+            data = _mapper.Map<AreaDto>(entity)
+        });
     }
 
     // PUT: api/Areas/5

@@ -55,7 +55,9 @@ public class RentersController : ControllerBase
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "List found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
@@ -90,10 +92,14 @@ public class RentersController : ControllerBase
 
         var entity = await _serviceWrapper.Renters.GetRenterById(id);
 
-        if (entity == null)
-            return NotFound("Renter not found");
-
-        return Ok(_mapper.Map<RenterDto>(entity));
+        return entity == null
+            ? NotFound("Renter not found")
+            : Ok(new
+            {
+                status = "Success",
+                message = "Renter found",
+                data = _mapper.Map<RenterDto>(entity)
+            });
     }
 
     // PUT: api/Renters/5

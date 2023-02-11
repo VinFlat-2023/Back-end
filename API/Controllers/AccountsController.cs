@@ -54,7 +54,9 @@ public class AccountsController : ControllerBase
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "List found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
@@ -72,7 +74,13 @@ public class AccountsController : ControllerBase
         var entity = await _serviceWrapper.Accounts.GetAccountById(id);
         if (entity == null)
             return NotFound("Account not found");
-        return Ok(_mapper.Map<AccountDto>(entity));
+        return Ok(
+            new
+            {
+                status = "Success",
+                message = "Account found",
+                data = _mapper.Map<AccountDto>(entity)
+            });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Create Account")]

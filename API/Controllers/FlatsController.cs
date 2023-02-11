@@ -52,7 +52,9 @@ public class FlatsController : ControllerBase
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "List found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
@@ -71,7 +73,13 @@ public class FlatsController : ControllerBase
         var entity = await _serviceWrapper.Flats.GetFlatById(id);
         if (entity == null)
             return NotFound("Flat not found");
-        return Ok(_mapper.Map<FlatDto>(entity));
+        return Ok(
+            new
+            {
+                status = "Success",
+                message = "Flat found",
+                data = _mapper.Map<FlatDto>(entity)
+            });
     }
 
     // PUT: api/Flats/5
@@ -171,7 +179,9 @@ public class FlatsController : ControllerBase
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "List found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
@@ -188,9 +198,14 @@ public class FlatsController : ControllerBase
             return BadRequest("You are not authorized to access this information");
 
         var entity = await _serviceWrapper.FlatTypes.GetFlatTypeById(id);
-        if (entity == null)
-            return NotFound("No flat type found");
-        return Ok(_mapper.Map<FlatTypeDto>(entity));
+        return entity == null
+            ? NotFound("No flat type found")
+            : Ok(new
+            {
+                status = "Success",
+                message = "Flat type found",
+                data = _mapper.Map<FlatTypeDto>(entity)
+            });
     }
 
     // PUT: api/FlatTypes/5

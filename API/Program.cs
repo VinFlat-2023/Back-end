@@ -1,8 +1,5 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Domain.Options;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Utilities.MiddlewareExtension;
@@ -15,12 +12,14 @@ var builder = WebApplication.CreateBuilder(args);
 //AddExpenseHistory odata to api
 builder.Services.AddControllers(options =>
 {
+    /*
     options.OutputFormatters.RemoveType<SystemTextJsonOutputFormatter>();
     options.OutputFormatters.Add(new SystemTextJsonOutputFormatter(
         new JsonSerializerOptions(JsonSerializerDefaults.Web)
         {
             ReferenceHandler = ReferenceHandler.Preserve
         }));
+    */
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

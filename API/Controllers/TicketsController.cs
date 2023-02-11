@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Domain.EntitiesDTO.RequestDTO;
-using Domain.EntitiesDTO.RequestTypeDTO;
+using Domain.EntitiesDTO.TicketDTO;
+using Domain.EntitiesDTO.TicketTypeDTO;
 using Domain.EntitiesForManagement;
-using Domain.EntityRequest.Request;
-using Domain.EntityRequest.RequestType;
+using Domain.EntityRequest.Ticket;
+using Domain.EntityRequest.TicketType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Microsoft.AspNetCore.Authorization;
@@ -50,16 +50,18 @@ public class TicketsController : ControllerBase
         if (list != null && !list.Any())
             return NotFound("No ticket available");
 
-        var resultList = _mapper.Map<IEnumerable<RequestDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<TicketDto>>(list);
 
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "List found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Request list is not initialized");
+            : BadRequest("Ticket list is not initialized");
     }
 
     // GET: api/Requests/5
@@ -72,9 +74,14 @@ public class TicketsController : ControllerBase
             return BadRequest("You are not authorized to access this information");
 
         var entity = await _serviceWrapper.Tickets.GetTicketById(id);
-        if (entity == null)
-            return NotFound("No tickets found");
-        return Ok(_mapper.Map<RequestDto>(entity));
+        return entity == null
+            ? NotFound("Ticket not found")
+            : Ok(new
+            {
+                status = "Success",
+                message = "Ticket found",
+                data = _mapper.Map<TicketDto>(entity)
+            });
     }
 
     // PUT: api/Requests/5
@@ -188,18 +195,20 @@ public class TicketsController : ControllerBase
 
         var list = await _serviceWrapper.TicketTypes.GetTicketTypeList(filter, token);
         if (list != null && !list.Any())
-            return NotFound("No request type available");
+            return NotFound("No ticket type available");
 
-        var resultList = _mapper.Map<IEnumerable<RequestTypeDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<TicketTypeDto>>(list);
 
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "List found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Request type list is not initialized");
+            : BadRequest("Ticket type list is not initialized");
     }
 
     // GET: api/RequestTypes/5
@@ -212,9 +221,14 @@ public class TicketsController : ControllerBase
             return BadRequest("You are not authorized to access this information");
 
         var entity = await _serviceWrapper.TicketTypes.GetTicketTypeById(id);
-        if (entity == null)
-            return NotFound("No request type found");
-        return Ok(_mapper.Map<RequestTypeDto>(entity));
+        return entity == null
+            ? NotFound("Ticket type not found")
+            : Ok(new
+            {
+                status = "Success",
+                message = "Ticket type found",
+                data = _mapper.Map<TicketTypeDto>(entity)
+            });
     }
 
     // PUT: api/RequestTypes/5

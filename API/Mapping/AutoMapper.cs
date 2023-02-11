@@ -17,11 +17,11 @@ using Domain.EntitiesDTO.MailMessageDTO;
 using Domain.EntitiesDTO.MajorDTO;
 using Domain.EntitiesDTO.NotificationDTO;
 using Domain.EntitiesDTO.RenterDTO;
-using Domain.EntitiesDTO.RequestDTO;
-using Domain.EntitiesDTO.RequestTypeDTO;
 using Domain.EntitiesDTO.RoleDTO;
 using Domain.EntitiesDTO.ServiceDTO;
 using Domain.EntitiesDTO.ServiceTypeDTO;
+using Domain.EntitiesDTO.TicketDTO;
+using Domain.EntitiesDTO.TicketTypeDTO;
 using Domain.EntitiesDTO.UniversityDTO;
 using Domain.EntitiesDTO.WalletDTO;
 using Domain.EntitiesDTO.WalletTypeDTO;
@@ -40,11 +40,11 @@ using Domain.EntityRequest.InvoiceDetail;
 using Domain.EntityRequest.InvoiceType;
 using Domain.EntityRequest.Major;
 using Domain.EntityRequest.Renter;
-using Domain.EntityRequest.Request;
-using Domain.EntityRequest.RequestType;
 using Domain.EntityRequest.Role;
 using Domain.EntityRequest.Service;
 using Domain.EntityRequest.ServiceType;
+using Domain.EntityRequest.Ticket;
+using Domain.EntityRequest.TicketType;
 using Domain.EntityRequest.University;
 using Domain.EntityRequest.Wallet;
 using Domain.EnumEntities;
@@ -194,9 +194,9 @@ public class AutoMapper : Profile
 
     private void MapRequestType()
     {
-        CreateMap<TicketType, RequestTypeDto>()
+        CreateMap<TicketType, TicketTypeDto>()
             .ForAllMembers(o => o.ExplicitExpansion());
-        CreateMap<RequestTypeDto, TicketType>()
+        CreateMap<TicketTypeDto, TicketType>()
             .ReverseMap();
         CreateMap<TicketTypeCreateRequest, TicketType>()
             .ReverseMap();
@@ -208,9 +208,9 @@ public class AutoMapper : Profile
 
     private void MapRequest()
     {
-        CreateMap<Ticket, RequestDto>()
+        CreateMap<Ticket, TicketDto>()
             .ForAllMembers(o => o.ExplicitExpansion());
-        CreateMap<RequestDto, Ticket>()
+        CreateMap<TicketDto, Ticket>()
             .ReverseMap();
         CreateMap<TicketCreateRequest, Ticket>()
             .ReverseMap();

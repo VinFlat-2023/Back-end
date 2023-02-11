@@ -55,7 +55,9 @@ public class InvoicesController : ControllerBase
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "List found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
@@ -74,7 +76,12 @@ public class InvoicesController : ControllerBase
         var entity = await _serviceWrapper.Invoices.GetInvoiceById(id);
         if (entity == null)
             return NotFound("No invoice available");
-        return Ok(_mapper.Map<InvoiceDto>(entity));
+        return Ok(new
+        {
+            status = "Success",
+            message = "Invoice found",
+            data = _mapper.Map<InvoiceDto>(entity)
+        });
     }
 
     // PUT: api/Invoices/5
@@ -182,7 +189,9 @@ public class InvoicesController : ControllerBase
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "List found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
@@ -197,10 +206,15 @@ public class InvoicesController : ControllerBase
         if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
             return BadRequest("You are not authorized to access this information");
 
-        var result = await _serviceWrapper.InvoiceTypes.GetInvoiceTypeById(id);
-        return result == null
+        var entity = await _serviceWrapper.InvoiceTypes.GetInvoiceTypeById(id);
+        return entity == null
             ? NotFound("Invoice type not found")
-            : Ok(_mapper.Map<InvoiceTypeDto>(result));
+            : Ok(new
+            {
+                status = "Success",
+                message = "Invoice type found",
+                data = _mapper.Map<InvoiceTypeDto>(entity)
+            });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Delete Invoice")]
@@ -300,7 +314,9 @@ public class InvoicesController : ControllerBase
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "List found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
@@ -315,10 +331,15 @@ public class InvoicesController : ControllerBase
         if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
             return BadRequest("You are not authorized to access this information");
 
-        var result = await _serviceWrapper.InvoiceDetails.GetInvoiceDetailById(id);
-        return result == null
+        var entity = await _serviceWrapper.InvoiceDetails.GetInvoiceDetailById(id);
+        return entity == null
             ? NotFound("Invoice detail not found")
-            : Ok(_mapper.Map<InvoiceDto>(result));
+            : Ok(new
+            {
+                status = "Success",
+                message = "Invoice detail found",
+                data = _mapper.Map<InvoiceDto>(entity)
+            });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get Invoice detail by user id with true")]
@@ -343,10 +364,15 @@ public class InvoicesController : ControllerBase
         if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
             return BadRequest("You are not authorized to access this information");
 
-        var result = await _serviceWrapper.InvoiceDetails.GetActiveInvoiceDetailByUserId(id, token);
-        return result == null
+        var entity = await _serviceWrapper.InvoiceDetails.GetActiveInvoiceDetailByUserId(id, token);
+        return entity == null
             ? NotFound("Invoice detail with active status by this user not found")
-            : Ok(_mapper.Map<InvoiceDto>(result));
+            : Ok(new
+            {
+                status = "Success",
+                message = "Flat type found",
+                data = _mapper.Map<InvoiceDto>(entity)
+            });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Delete Invoice")]

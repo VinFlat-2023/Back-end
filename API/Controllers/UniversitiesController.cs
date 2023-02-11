@@ -52,7 +52,9 @@ public class UniversitiesController : ControllerBase
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "List found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
@@ -70,10 +72,14 @@ public class UniversitiesController : ControllerBase
 
         var entity = await _serviceWrapper.Universities.GetUniversityById(id);
 
-        if (entity == null)
-            return NotFound("University not found");
-
-        return Ok(_mapper.Map<UniversityDto>(entity));
+        return entity == null
+            ? NotFound("University not found")
+            : Ok(new
+            {
+                status = "Success",
+                message = "University found",
+                data = _mapper.Map<UniversityDto>(entity)
+            });
     }
 
     // PUT: api/Universities/5

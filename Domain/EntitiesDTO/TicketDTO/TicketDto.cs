@@ -1,9 +1,9 @@
-using Domain.EntitiesDTO.RequestTypeDTO;
+using Domain.EntitiesDTO.TicketTypeDTO;
 using Newtonsoft.Json;
 
-namespace Domain.EntitiesDTO.RequestDTO;
+namespace Domain.EntitiesDTO.TicketDTO;
 
-public class RequestDto
+public class TicketDto
 {
     public int TicketId { get; set; }
     public string? TicketName { get; set; }
@@ -14,5 +14,5 @@ public class RequestDto
     public string Status { get; set; } = null!;
     public int? TicketTypeId { get; set; }
 
-    [JsonIgnore] public virtual RequestTypeDto RequestType { get; set; } = null!;
+    [JsonIgnore] public virtual TicketTypeDto TicketType { get; set; } = null!;
 }

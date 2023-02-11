@@ -30,7 +30,7 @@ internal class TicketTypeRepository : ITicketTypeRepository
     }
 
     /// <summary>
-    ///     Get RequestType by Id
+    ///     Get TicketType by Id
     /// </summary>
     /// <param name="ticketTypeId"></param>
     /// <returns></returns>
@@ -53,7 +53,7 @@ internal class TicketTypeRepository : ITicketTypeRepository
     }
 
     /// <summary>
-    ///     UpdateFeedback RequestType
+    ///     UpdateFeedback TicketType
     /// </summary>
     /// <param name="ticketType"></param>
     /// <returns></returns>
@@ -74,7 +74,7 @@ internal class TicketTypeRepository : ITicketTypeRepository
     }
 
     /// <summary>
-    ///     DeleteFeedback RequestType
+    ///     DeleteFeedback TicketType
     /// </summary>
     /// <param name="requestTypeId"></param>
     /// <returns></returns>
@@ -90,7 +90,7 @@ internal class TicketTypeRepository : ITicketTypeRepository
     }
 
     /// <summary>
-    ///     Toggle RequestType status by Id
+    ///     Toggle TicketType status by Id
     /// </summary>
     /// <param name="requestTypeId"></param>
     /// <returns></returns>

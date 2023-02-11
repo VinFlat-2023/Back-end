@@ -51,7 +51,9 @@ public class RolesController : ControllerBase
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "List found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
@@ -68,9 +70,14 @@ public class RolesController : ControllerBase
             return BadRequest("You are not authorized to access this information");
 
         var entity = await _serviceWrapper.Roles.GetRoleById(id);
-        if (entity == null)
-            return NotFound("No role available");
-        return Ok(_mapper.Map<RoleDto>(entity));
+        return entity == null
+            ? NotFound("Role not found")
+            : Ok(new
+            {
+                status = "Success",
+                message = "Role found",
+                data = _mapper.Map<RoleDto>(entity)
+            });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get Role")]

@@ -55,7 +55,9 @@ public class ContractsController : ControllerBase
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "Contract list found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
@@ -76,7 +78,12 @@ public class ContractsController : ControllerBase
         var entity = await _serviceWrapper.Contracts.GetContractById(id);
         if (entity == null)
             return NotFound("Contract not found");
-        return Ok(_mapper.Map<ContractDto>(entity));
+        return Ok(new
+        {
+            status = "Success",
+            message = "Contract found",
+            data = _mapper.Map<ContractDto>(entity)
+        });
     }
 
     // PUT: api/Contract/5
@@ -207,7 +214,9 @@ public class ContractsController : ControllerBase
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "Contract histories found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
@@ -226,8 +235,12 @@ public class ContractsController : ControllerBase
         var entity = await _serviceWrapper.ContractHistories.GetContractHistoryById(id);
         if (entity == null)
             return NotFound("Contract history not found");
-        var dto = _mapper.Map<ContractHistoryDto>(entity);
-        return Ok(dto);
+        return Ok(new
+        {
+            status = "Success",
+            message = "Contract history found",
+            data = _mapper.Map<ContractHistoryDto>(entity)
+        });
     }
 
     // DELETE: api/ContractHistories/5

@@ -54,7 +54,9 @@ public class ServicesController : ControllerBase
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "List found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
@@ -68,9 +70,14 @@ public class ServicesController : ControllerBase
     public async Task<IActionResult> GetServiceEntity(int id)
     {
         var entity = await _serviceWrapper.ServicesEntity.GetServiceEntityById(id);
-        if (entity == null)
-            return NotFound("No service available");
-        return Ok(_mapper.Map<ServiceEntityDto>(entity));
+        return entity == null
+            ? NotFound("Service not found")
+            : Ok(new
+            {
+                status = "Success",
+                message = "Service found",
+                data = _mapper.Map<ServiceEntityDto>(entity)
+            });
     }
 
     // PUT: api/ServiceEntitys/5
@@ -168,7 +175,9 @@ public class ServicesController : ControllerBase
         return list != null
             ? Ok(new
             {
-                resultList,
+                status = "Success",
+                message = "List found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
@@ -182,9 +191,14 @@ public class ServicesController : ControllerBase
     public async Task<IActionResult> GetServiceType(int id)
     {
         var entity = await _serviceWrapper.ServiceTypes.GetServiceTypeById(id);
-        if (entity == null)
-            return NotFound("Service type not found");
-        return Ok(_mapper.Map<ServiceTypeDto>(entity));
+        return entity == null
+            ? NotFound("Service type not found")
+            : Ok(new
+            {
+                status = "Success",
+                message = "Service type found",
+                data = _mapper.Map<ServiceTypeDto>(entity)
+            });
     }
 
     // PUT: api/ServiceTypes/5
