@@ -25,9 +25,9 @@ public class BuildingDto
 
     public int AreaId { get; set; }
 
-    public int AccountId { get; set; }
+    [JsonIgnore] public int AccountId { get; set; }
 
-    public AccountDto Account { get; set; }
+    [JsonIgnore] public AccountDto Account { get; set; }
 
     public AreaDto Area { get; set; }
 

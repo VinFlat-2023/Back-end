@@ -57,7 +57,11 @@ public class AuthController : ControllerBase
         {
             status = "Success",
             message = "User logged in successfully",
-            data = jwtToken
+            data = new
+            {
+                id = account.AccountId,
+                token = jwtToken
+            }
         });
     }
 
@@ -100,7 +104,11 @@ public class AuthController : ControllerBase
         {
             status = "Success",
             message = "User logged in successfully",
-            data = jwtToken
+            data = new
+            {
+                id = renter.RenterId,
+                token = jwtToken
+            }
         });
     }
 }

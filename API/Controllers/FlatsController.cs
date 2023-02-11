@@ -112,7 +112,12 @@ public class FlatsController : ControllerBase
         if (result == null)
             return NotFound("Flat not found");
 
-        return Ok("Flat updated");
+        return Ok(new
+        {
+            status = "Success",
+            message = "Flat updated",
+            data = ""
+        });
     }
 
     // POST: api/Flats

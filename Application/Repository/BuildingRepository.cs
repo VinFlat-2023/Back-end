@@ -93,7 +93,7 @@ public class BuildingRepository : IBuildingRepository
     {
         var buildingFound = await _context.Buildings
             .FirstOrDefaultAsync(x => x.BuildingId == buildingId);
-        if (buildingFound == null)
+        if (buildingFound == null || buildingFound.Status)
             return false;
         _context.Buildings.Remove(buildingFound);
         await _context.SaveChangesAsync();

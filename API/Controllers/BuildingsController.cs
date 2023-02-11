@@ -108,7 +108,9 @@ public class BuildingsController : ControllerBase
 
         return Ok(new
         {
-            message = "Update building successfully"
+            status = "Success",
+            message = "Update building successfully",
+            data = ""
         });
     }
 
@@ -158,6 +160,12 @@ public class BuildingsController : ControllerBase
 
         return !result
             ? NotFound("Building not found")
-            : Ok("Delete building successfully");
+            : Ok(
+                new
+                {
+                    status = "Success",
+                    message = "Building deleted",
+                    data = ""
+                });
     }
 }
