@@ -8,7 +8,6 @@ using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Service.IHelper;
 using Service.IService;
 using Service.IValidator;
 using Swashbuckle.AspNetCore.Annotations;
@@ -238,7 +237,7 @@ public class TicketsController : ControllerBase
         if (result == null)
             return NotFound("Request type not found");
 
-        return Ok("Request type updated successfully");
+        return Ok("Request type updated");
     }
 
     // POST: api/RequestTypes

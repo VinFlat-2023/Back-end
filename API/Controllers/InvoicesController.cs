@@ -9,7 +9,6 @@ using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Service.IHelper;
 using Service.IService;
 using Service.IValidator;
 using Swashbuckle.AspNetCore.Annotations;
@@ -26,7 +25,7 @@ public class InvoicesController : ControllerBase
 
     // GET: api/Invoices
     public InvoicesController(IMapper mapper, IServiceWrapper serviceWrapper,
-       IInvoiceValidator validator)
+        IInvoiceValidator validator)
     {
         _mapper = mapper;
         _serviceWrapper = serviceWrapper;
@@ -106,7 +105,7 @@ public class InvoicesController : ControllerBase
 
         if (result == null)
             return NotFound("Invoice failed to update");
-        return Ok("Invoice updated successfully");
+        return Ok("Invoice updated");
     }
 
     // POST: api/Invoices
@@ -330,7 +329,6 @@ public class InvoicesController : ControllerBase
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> CreateNewInvoiceDetail([FromForm] InvoiceDetailCreateRequest invoiceDetail)
     {
-        
         return Ok("On development");
     }
 
@@ -339,7 +337,6 @@ public class InvoicesController : ControllerBase
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> UpdateInvoiceDetail(int id, [FromForm] InvoiceDetailCreateRequest invoiceDetail)
     {
-
         return Ok("On development");
     }
 

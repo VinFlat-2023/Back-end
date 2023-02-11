@@ -108,7 +108,7 @@ public class UniversitiesController : ControllerBase
         var result = await _serviceWrapper.Universities.UpdateUniversity(updateUniversity);
         if (result == null)
             return NotFound("University not found");
-        return Ok("University updated successfully");
+        return Ok("University updated");
     }
 
     // POST: api/Universities

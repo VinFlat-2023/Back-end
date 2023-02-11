@@ -1,15 +1,12 @@
 using API.Extension;
 using AutoMapper;
 using Domain.EntitiesDTO.ContractDTO;
-using Domain.EntitiesDTO.ContractHistoryDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Contract;
-using Domain.EntityRequest.ContractHistory;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Service.IHelper;
 using Service.IService;
 using Service.IValidator;
 using Swashbuckle.AspNetCore.Annotations;
@@ -68,7 +65,12 @@ public class ContractsController : ControllerBase
     {
         var entity = await _serviceWrapper.Contracts.GetContractById(id);
         if (entity == null)
-            return NotFound("Contract not found");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Contract not found",
+                data = ""
+            });
         return Ok(new
         {
             status = "Success",
@@ -89,8 +91,12 @@ public class ContractsController : ControllerBase
         var contractEntity = await _serviceWrapper.Contracts.GetContractById(id);
 
         if (contractEntity == null)
-            return NotFound("Contract not found");
-        
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Contract not found",
+                data = ""
+            });
         var updateContract = new Contract
         {
             ContractId = id,
@@ -110,13 +116,26 @@ public class ContractsController : ControllerBase
 
         var validation = await _validator.ValidateParams(updateContract, id);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
-
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
         var result = await _serviceWrapper.Contracts.UpdateContract(updateContract);
         if (result == null)
-            return BadRequest("Contract update failed");
-
-        return Ok("Contract updated");
+            return BadRequest(new
+            {
+                status = "Not Found",
+                message = "Contract failed to update",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Contract updated",
+            data = ""
+        });
     }
 
     // POST: api/Contract
@@ -127,12 +146,16 @@ public class ContractsController : ControllerBase
     public async Task<IActionResult> PostContract([FromForm] ContractCreateRequest contract)
     {
         var imageExtension = ImageExtension.ImageExtensionChecker(contract.Image?.FileName);
-        
+
         var renterEntity = await _serviceWrapper.Renters.GetRenterById(contract.RenterId);
 
         if (renterEntity == null)
-            return BadRequest("Renter not found");
-
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Renter not found",
+                data = ""
+            });
         var newContract = new Contract
         {
             ContractName = contract.ContractName ?? "Contract for " + renterEntity.FullName,
@@ -151,12 +174,21 @@ public class ContractsController : ControllerBase
 
         var validation = await _validator.ValidateParams(newContract, null);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.Contracts.AddContract(newContract);
         if (result == null)
-            return NotFound();
-
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Contract failed to create",
+                data = ""
+            });
         return CreatedAtAction("GetContract", new { id = result.ContractId }, result);
     }
 
@@ -168,9 +200,17 @@ public class ContractsController : ControllerBase
     {
         var result = await _serviceWrapper.Contracts.DeleteContract(id);
         if (!result)
-            return NotFound("Contract not found");
-
-        return Ok("Contract deleted");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Contract not found",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Contract deleted",
+            data = ""
+        });
     }
-    
 }

@@ -6,7 +6,6 @@ using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Service.IHelper;
 using Service.IService;
 using Service.IValidator;
 using Swashbuckle.AspNetCore.Annotations;
@@ -17,17 +16,15 @@ namespace API.Controllers;
 [ApiController]
 public class MajorsController : ControllerBase
 {
-    private readonly IJwtRoleCheckerHelper _jwtRoleCheckHelper;
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
     private readonly IMajorValidator _validator;
 
     public MajorsController(IMapper mapper, IServiceWrapper serviceWrapper,
-        IJwtRoleCheckerHelper jwtRoleCheckHelper, IMajorValidator validator)
+        IMajorValidator validator)
     {
         _mapper = mapper;
         _serviceWrapper = serviceWrapper;
-        _jwtRoleCheckHelper = jwtRoleCheckHelper;
         _validator = validator;
     }
 
@@ -41,8 +38,12 @@ public class MajorsController : ControllerBase
 
         var list = await _serviceWrapper.Majors.GetMajorList(filter, token);
         if (list != null && !list.Any())
-            return NotFound("No major available");
-
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Major list is empty",
+                data = ""
+            });
         var resultList = _mapper.Map<IEnumerable<MajorDto>>(list);
 
         return list != null
@@ -54,7 +55,12 @@ public class MajorsController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Major list is empty");
+            : NotFound(new
+            {
+                status = "Not Found",
+                message = "Major list is empty",
+                data = ""
+            });
     }
 
     // GET: api/Majors/5
@@ -65,8 +71,12 @@ public class MajorsController : ControllerBase
     {
         var result = await _serviceWrapper.Majors.GetMajorListByUniversity(id);
         if (!result.Any())
-            return NotFound("No major available for this university");
-
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Major list in this university is empty",
+                data = ""
+            });
         return Ok(new
         {
             status = "Success",
@@ -80,9 +90,6 @@ public class MajorsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> PostMajor([FromForm] MajorCreateRequest major)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var addNewMajor = new Major
         {
             Name = major.Name,
@@ -91,13 +98,21 @@ public class MajorsController : ControllerBase
 
         var validation = await _validator.ValidateParams(addNewMajor, null);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
-
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
         var result = await _serviceWrapper.Majors.AddMajor(addNewMajor);
 
         if (result == null)
-            return BadRequest("Major failed to add");
-
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Major failed to create",
+                data = ""
+            });
         return CreatedAtAction("GetMajor", new { id = result.MajorId }, result);
     }
 
@@ -108,9 +123,6 @@ public class MajorsController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateMajor(int id, [FromForm] MajorUpdateRequest major)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var updateMajor = new Major
         {
             MajorId = id,
@@ -120,13 +132,26 @@ public class MajorsController : ControllerBase
 
         var validation = await _validator.ValidateParams(updateMajor, id);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
-
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
         var result = await _serviceWrapper.Majors.UpdateMajor(updateMajor);
         if (result == null)
-            return NotFound("Updating major failed");
-
-        return Ok($"Major updated at : {DateTime.Now.ToShortDateString()}");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Updating major failed",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Major updated",
+            data = ""
+        });
     }
 
     // DELETE: api/Majors/5
@@ -137,8 +162,17 @@ public class MajorsController : ControllerBase
     {
         var result = await _serviceWrapper.Majors.DeleteMajor(id);
         if (!result)
-            return NotFound("Deleting major failed");
-
-        return Ok($"Major deleted at : {DateTime.Now.ToShortDateString()}");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Major failed to delete",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Major deleted",
+            data = ""
+        });
     }
 }

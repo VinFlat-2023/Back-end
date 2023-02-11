@@ -9,7 +9,6 @@ using Domain.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Service.IHelper;
 using Service.IService;
 using Service.IValidator;
 using Swashbuckle.AspNetCore.Annotations;
@@ -25,7 +24,7 @@ public class RentersController : ControllerBase
     private readonly IRenterValidator _validator;
 
     public RentersController(IMapper mapper, IServiceWrapper serviceWrapper,
-       IRenterValidator validator)
+        IRenterValidator validator)
     {
         _mapper = mapper;
         _serviceWrapper = serviceWrapper;
@@ -38,14 +37,17 @@ public class RentersController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get renter list")]
     public async Task<IActionResult> GetRenters([FromQuery] RenterFilterRequest request, CancellationToken token)
     {
-     
-
         var filter = _mapper.Map<RenterFilter>(request);
 
         var list = await _serviceWrapper.Renters.GetRenterList(filter, token);
 
         if (list != null && !list.Any())
-            return NotFound("No renter available");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Renter list is empty",
+                data = ""
+            });
 
         var resultList = _mapper.Map<IEnumerable<RenterDto>>(list);
 
@@ -58,22 +60,13 @@ public class RentersController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Renter list is empty");
+            : NotFound(new
+            {
+                status = "Not Found",
+                message = "Renter list is empty",
+                data = ""
+            });
     }
-
-    [HttpGet("nofilter")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Get renters")]
-    public async Task<IActionResult> GetRenterNoFilter(CancellationToken token)
-    {
-        var list = await _serviceWrapper.Renters.GetRenterListNoFilter(token);
-
-        if (list == null)
-            return NotFound("Renter list not found");
-
-        return Ok(_mapper.Map<IEnumerable<RenterDto>>(list));
-    }
-
 
     // GET: api/Renters/5
     [HttpGet("{id:int}")]
@@ -84,7 +77,12 @@ public class RentersController : ControllerBase
         var entity = await _serviceWrapper.Renters.GetRenterById(id);
 
         return entity == null
-            ? NotFound("Renter not found")
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Renter not found",
+                data = ""
+            })
             : Ok(new
             {
                 status = "Success",
@@ -103,8 +101,12 @@ public class RentersController : ControllerBase
         var renterCheck = await _serviceWrapper.Renters.GetRenterById(id);
 
         if (renterCheck == null)
-            return NotFound("The renter is not available in our system!");
-
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Renters not found",
+                data = ""
+            });
         var imageExtension = ImageExtension.ImageExtensionChecker(renter.Image?.FileName);
 
         var fileNameUserImage = renterCheck.ImageUrl?.Split('/').Last();
@@ -136,9 +138,20 @@ public class RentersController : ControllerBase
 
         var result = await _serviceWrapper.Renters.UpdateRenter(finalizeUpdate);
         if (result == null)
-            return NotFound("Update failed");
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Renter failed to update",
+                data = ""
+            });
 
-        return Ok("Update successfully");
+        return Ok(
+            new
+            {
+                status = "Success",
+                message = "Renter updated",
+                data = ""
+            });
     }
 
     // POST: api/Renters
@@ -171,23 +184,45 @@ public class RentersController : ControllerBase
 
         var validation = await _validator.ValidateParams(finalizeCreation, null);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
-
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
         var result = await _serviceWrapper.Renters.AddRenter(finalizeCreation);
 
         if (result == null)
-            return NotFound("Create failed");
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Renters failed to create",
+                data = ""
+            });
 
         if (!StringUtils.IsNotEmpty(renter.DeviceToken))
-            return Ok("Created successfully");
+            return CreatedAtAction("GetRenter", new { id = result.RenterId }, result);
 
         var userDeviceFound = await _serviceWrapper.Devices.GetUdByDeviceToken(renter.DeviceToken);
+
         if (userDeviceFound.UserName == result.Username)
-            return Ok("Device token generated successfully");
+            return Ok(new
+            {
+                status = "Success",
+                message = "Device token generated successfully",
+                data = ""
+            });
+
         userDeviceFound.UserName = result.Username;
+
         await _serviceWrapper.Devices.UpdateUserDeviceInfo(userDeviceFound);
 
-        return Ok("Device token generated successfully");
+        return Ok(new
+        {
+            status = "Success",
+            message = "Device token generated successfully",
+            data = ""
+        });
     }
 
 
@@ -209,7 +244,17 @@ public class RentersController : ControllerBase
 
         var result = await _serviceWrapper.Renters.DeleteRenter(id);
         return result
-            ? NotFound("Renter failed to delete")
-            : Ok("Renter deleted");
+            ? BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Renter failed to delete",
+                data = ""
+            })
+            : Ok(new
+            {
+                status = "Success",
+                message = "Renter deleted successfully",
+                data = ""
+            });
     }
 }

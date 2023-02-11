@@ -39,9 +39,9 @@ public class ApplicationContext : DbContext
     public virtual DbSet<Notification> Notifications { get; set; } = null!;
 
     public virtual DbSet<NotificationType> NotificationTypes { get; set; } = null!;
-    
+
     public virtual DbSet<Room> Rooms { get; set; }
-    
+
     public virtual DbSet<RoomType> RoomTypes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

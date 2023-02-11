@@ -6,7 +6,6 @@ using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Service.IHelper;
 using Service.IService;
 using Service.IValidator;
 using Swashbuckle.AspNetCore.Annotations;
@@ -107,7 +106,7 @@ public class AreasController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
-        
+
         var result = await _serviceWrapper.Areas.UpdateArea(updateArea);
         if (result == null)
             return NotFound(new
@@ -116,7 +115,7 @@ public class AreasController : ControllerBase
                 message = "Area not found",
                 data = ""
             });
-        return Ok( new
+        return Ok(new
         {
             status = "Success",
             message = "Area updated",
@@ -171,7 +170,7 @@ public class AreasController : ControllerBase
                 message = "Area not found",
                 data = ""
             });
-        
+
         return Ok(new
         {
             status = "Success",

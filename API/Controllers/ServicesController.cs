@@ -8,7 +8,6 @@ using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Service.IHelper;
 using Service.IService;
 using Service.IValidator;
 using Swashbuckle.AspNetCore.Annotations;
@@ -42,7 +41,12 @@ public class ServicesController : ControllerBase
 
         var list = await _serviceWrapper.ServicesEntity.GetServiceEntityList(filter, token);
         if (list != null && !list.Any())
-            return NotFound("No Service available");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Service list is empty",
+                data = ""
+            });
 
         var resultList = _mapper.Map<IEnumerable<ServiceEntityDto>>(list);
 
@@ -55,7 +59,12 @@ public class ServicesController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Service list is empty");
+            : NotFound(new
+            {
+                status = "Not Found",
+                message = "Service list is empty",
+                data = ""
+            });
     }
 
     // GET: api/ServiceEntitys/5
@@ -66,7 +75,12 @@ public class ServicesController : ControllerBase
     {
         var entity = await _serviceWrapper.ServicesEntity.GetServiceEntityById(id);
         return entity == null
-            ? NotFound("Service not found")
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Service not found",
+                data = ""
+            })
             : Ok(new
             {
                 status = "Success",
@@ -96,13 +110,28 @@ public class ServicesController : ControllerBase
 
         var validation = await _validator.ValidateParams(updateService, id);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.ServicesEntity.UpdateServiceEntity(updateService);
         if (result == null)
-            return NotFound("Service not found");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Service not found",
+                data = ""
+            });
 
-        return Ok("Service updated successfully");
+        return Ok(new
+        {
+            status = "Success",
+            message = "Service updated",
+            data = ""
+        });
     }
 
     // POST: api/ServiceEntitiess
@@ -129,7 +158,12 @@ public class ServicesController : ControllerBase
 
         var result = await _serviceWrapper.ServicesEntity.AddServiceEntity(newService);
         if (result == null)
-            return NotFound("Service not found");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Service not found",
+                data = ""
+            });
 
         return CreatedAtAction("GetServiceEntity", new { id = result.ServiceId }, result);
     }
@@ -142,9 +176,18 @@ public class ServicesController : ControllerBase
     {
         var result = await _serviceWrapper.ServicesEntity.DeleteServiceEntity(id);
         if (!result)
-            return NotFound("Service not found");
-
-        return Ok("Service deleted");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Service not found",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Service deleted",
+            data = ""
+        });
     }
 
     [HttpGet("type")]
@@ -157,7 +200,12 @@ public class ServicesController : ControllerBase
 
         var list = await _serviceWrapper.ServiceTypes.GetServiceTypeList(filter, token);
         if (list != null && !list.Any())
-            return NotFound("No service type available");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Service type list is empty",
+                data = ""
+            });
 
         var resultList = _mapper.Map<IEnumerable<ServiceTypeDto>>(list);
 
@@ -170,7 +218,12 @@ public class ServicesController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Service type list is empty");
+            : NotFound(new
+            {
+                status = "Not Found",
+                message = "Service type list is empty",
+                data = ""
+            });
     }
 
     // GET: api/ServiceTypes/5
@@ -181,7 +234,12 @@ public class ServicesController : ControllerBase
     {
         var entity = await _serviceWrapper.ServiceTypes.GetServiceTypeById(id);
         return entity == null
-            ? NotFound("Service type not found")
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Service type not found",
+                data = ""
+            })
             : Ok(new
             {
                 status = "Success",
@@ -206,13 +264,27 @@ public class ServicesController : ControllerBase
 
         var validation = await _validator.ValidateParams(updateServiceType, id);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.ServiceTypes.UpdateServiceType(updateServiceType);
         if (result == null)
-            return NotFound("Service type not found");
-
-        return Ok("Service type updated");
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Service type failed to update",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Service type updated",
+            data = ""
+        });
     }
 
     // POST: api/ServiceTypes
@@ -234,8 +306,12 @@ public class ServicesController : ControllerBase
 
         var result = await _serviceWrapper.ServiceTypes.AddServiceType(addNewServiceType);
         if (result == null)
-            return BadRequest("Service type failed to add");
-
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Service type failed to create",
+                data = ""
+            });
         return CreatedAtAction("GetServiceType", new { id = result.ServiceTypeId }, result);
     }
 
@@ -247,8 +323,17 @@ public class ServicesController : ControllerBase
     {
         var result = await _serviceWrapper.ServiceTypes.DeleteServiceType(id);
         if (!result)
-            return NotFound("Service type not found");
-
-        return Ok("Service type deleted");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Service type not found",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Service type deleted",
+            data = ""
+        });
     }
 }

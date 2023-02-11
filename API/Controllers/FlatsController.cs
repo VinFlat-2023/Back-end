@@ -8,7 +8,6 @@ using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Service.IHelper;
 using Service.IService;
 using Service.IValidator;
 using Swashbuckle.AspNetCore.Annotations;
@@ -61,7 +60,7 @@ public class FlatsController : ControllerBase
     [HttpGet("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetFlat(int id)
-    { 
+    {
         var entity = await _serviceWrapper.Flats.GetFlatById(id);
         if (entity == null)
             return NotFound("Flat not found");

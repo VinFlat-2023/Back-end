@@ -129,13 +129,22 @@ public class AccountsController : ControllerBase
         var userDeviceFound = await _serviceWrapper.Devices.GetUdByDeviceToken(account.DeviceToken);
 
         if (userDeviceFound.UserName == result.Username)
-            return CreatedAtAction("GetAccount", new { id = result.AccountId }, result);
-
+            return Ok(new
+            {
+                status = "Success",
+                message = "Device token generated successfully",
+                data = ""
+            });
         userDeviceFound.UserName = result.Username;
 
         await _serviceWrapper.Devices.UpdateUserDeviceInfo(userDeviceFound);
 
-        return CreatedAtAction("GetAccount", new { id = result.AccountId }, result);
+        return Ok(new
+        {
+            status = "Success",
+            message = "Device token generated successfully",
+            data = ""
+        });
     }
 
     // PUT: api/Accounts/5
@@ -148,10 +157,10 @@ public class AccountsController : ControllerBase
         var updateAccount = new Account
         {
             AccountId = id,
-            Username = account.Username ?? string.Empty,
+            Username = account.Username,
             Password = account.Password ?? string.Empty,
-            Email = account.Email ?? string.Empty,
-            Phone = account.Phone ?? string.Empty,
+            Email = account.Email,
+            Phone = account.Phone,
             RoleId = account.RoleId
         };
 

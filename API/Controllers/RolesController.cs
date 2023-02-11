@@ -44,7 +44,12 @@ public class RolesController : ControllerBase
 
         var list = await _serviceWrapper.Roles.GetRoleList(filter, token);
         if (list != null && !list.Any())
-            return NotFound("No role available");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Role list is empty",
+                data = ""
+            });
 
         var resultList = _mapper.Map<IEnumerable<RoleDto>>(list);
 
@@ -57,7 +62,12 @@ public class RolesController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Role list is empty");
+            : NotFound(new
+            {
+                status = "Not Found",
+                message = "Role list is empty",
+                data = ""
+            });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get Role")]
@@ -71,7 +81,12 @@ public class RolesController : ControllerBase
 
         var entity = await _serviceWrapper.Roles.GetRoleById(id);
         return entity == null
-            ? NotFound("Role not found")
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Role not found",
+                data = ""
+            })
             : Ok(new
             {
                 status = "Success",
@@ -101,9 +116,19 @@ public class RolesController : ControllerBase
 
         var result = await _serviceWrapper.Roles.AddRole(newRole);
         if (result == null)
-            return NotFound("Role failed to create");
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Role failed to create",
+                data = ""
+            });
 
-        return Ok(_mapper.Map<RoleDto>(result));
+        return Ok(new
+        {
+            status = "Success",
+            message = "Account deleted",
+            data = _mapper.Map<RoleDto>(result)
+        });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Update Role info")]
@@ -123,12 +148,26 @@ public class RolesController : ControllerBase
 
         var validation = await _validator.ValidateParams(updateRole, id);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.Roles.UpdateRole(updateRole);
         if (result == null)
-            return NotFound("Updating role failed");
-
-        return Ok("Role updated successfully");
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Role failed to update",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Role updated",
+            data = ""
+        });
     }
 }
