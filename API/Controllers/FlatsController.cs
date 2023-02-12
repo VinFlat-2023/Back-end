@@ -228,12 +228,21 @@ public class FlatsController : ControllerBase
 
         var validation = await _validator.ValidateParams(newFlatType, null);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.FlatTypes.AddFlatType(newFlatType);
         if (result == null)
-            return NotFound("Flat type not found");
-
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Flat type not found",
+                data = ""
+            });
         return CreatedAtAction("GetFlatType", new { id = result.FlatTypeId }, result);
     }
 
@@ -245,25 +254,63 @@ public class FlatsController : ControllerBase
     {
         var result = await _serviceWrapper.FlatTypes.DeleteFlatType(id);
         if (!result)
-            return NotFound("FlatType not found");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Flat type not found",
+                data = ""
+            });
 
-        return Ok("FlatType deleted");
+        return Ok(new
+        {
+            status = "Success",
+            message = "Flat type deleted",
+            data = ""
+        });
     }
 
-    [SwaggerOperation(Summary = "Check total available room")]
+    [SwaggerOperation(Summary = "Check total available slots")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpDelete("room/{id:int}/slot-available")]
     public async Task<IActionResult> GetTotalAvailableRoom(int id)
     {
         var result = await _serviceWrapper.Flats.GetFlatById(id);
-        return result == null
-            ? NotFound("Flat not found")
-            : Ok(new
-            {
-                status = "Success",
-                message = "Flat found",
-                data = result.Rooms
-                    .Count(x => x.AvailableSlots >= 1)
-            });
+
+        switch (result)
+        {
+            case null:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Flat not found",
+                    data = ""
+                });
+
+            case { } when result.Rooms.Any(x => x.AvailableSlots == 0):
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "This flat is not available",
+                    data = ""
+                });
+
+            case { } when result.Rooms.Any(x => x.AvailableSlots >= 1):
+                return Ok(
+                    new
+                    {
+                        status = "Success",
+                        message = "This flat is still available",
+                        data = ""
+                    });
+            default:
+                break;
+        }
+
+        return BadRequest(new
+        {
+            status = "Bad Request",
+            message = "Bad request in searching for flat",
+            data = ""
+        });
     }
 }

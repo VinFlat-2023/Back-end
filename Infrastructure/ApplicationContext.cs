@@ -943,7 +943,8 @@ public class ApplicationContext : DbContext
                 Price = 1800000,
                 RenterId = 1,
                 Description = "Contract description for renter 1",
-                ImageUrl = "No image"
+                ImageUrl = "No image",
+                FlatId = 2
             },
             new Contract
             {
@@ -957,9 +958,11 @@ public class ApplicationContext : DbContext
                 Price = 2800000,
                 RenterId = 2,
                 Description = "Contract description for renter 2",
-                ImageUrl = "No image"
+                ImageUrl = "No image",
+                FlatId = 3
             }
         );
+
         modelBuilder.Entity<Wallet>(entity =>
         {
             entity.ToTable("Wallet");

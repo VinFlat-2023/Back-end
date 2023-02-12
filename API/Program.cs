@@ -1,9 +1,6 @@
-using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Domain.Options;
-using FirebaseAdmin;
-using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Newtonsoft.Json;
@@ -49,12 +46,14 @@ builder.Services.AddCors(o =>
     });
 });
 
+/*
 using var json = Assembly.GetExecutingAssembly()
     .GetManifestResourceStream("API.Firebase.firebase_config.json");
 FirebaseApp.Create(new AppOptions
 {
     Credential = GoogleCredential.FromStream(json)
 });
+*/
 
 builder.Logging.AddLoggerConfig();
 
