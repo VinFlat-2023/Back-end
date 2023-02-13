@@ -134,7 +134,12 @@ public class RentersController : ControllerBase
 
         var validation = await _validator.ValidateParams(finalizeUpdate, id);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.Renters.UpdateRenter(finalizeUpdate);
         if (result == null)

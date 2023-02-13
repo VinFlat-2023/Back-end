@@ -42,7 +42,12 @@ public class InvoicesController : ControllerBase
         var list = await _serviceWrapper.Invoices.GetInvoiceList(filter, token);
 
         if (list != null && !list.Any())
-            return NotFound("No account available");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "List is empty",
+                data = ""
+            });
 
         var resultList = _mapper.Map<IEnumerable<InvoiceDto>>(list);
 
@@ -61,12 +66,48 @@ public class InvoicesController : ControllerBase
     // GET: api/Invoices/5
     [SwaggerOperation(Summary = "[Authorize] Get Invoice")]
     [HttpGet("{id:int}/user/{userId:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    public async Task<IActionResult> GetInvoice(int id, int userId)
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    public async Task<IActionResult> GetInvoiceByManagement(int id)
     {
         var entity = await _serviceWrapper.Invoices.GetInvoiceById(id);
         if (entity == null)
-            return NotFound("No invoice available");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "No invoice found",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Invoice found",
+            data = _mapper.Map<InvoiceDto>(entity)
+        });
+    }
+
+    [SwaggerOperation(Summary = "[Authorize] Get Invoice")]
+    [HttpGet("{id:int}/user/{userId:int}")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    public async Task<IActionResult> GetInvoiceRenter(int id, int userId, CancellationToken token)
+    {
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+        if (userCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "No user found",
+                data = ""
+            });
+        var entity = await _serviceWrapper.Invoices
+            .GetInvoiceList(new InvoiceFilter { RenterId = userId }, token);
+
+        if (entity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "No invoice found",
+                data = ""
+            });
         return Ok(new
         {
             status = "Success",
@@ -121,7 +162,8 @@ public class InvoicesController : ControllerBase
             ImageUrl = invoice.ImageUrl,
             Detail = invoice.Detail,
             AccountId = int.Parse(User.Identity.Name),
-            RenterId = invoice.RenterId
+            RenterId = invoice.RenterId,
+            InvoiceTypeId = invoice.InvoiceTypeId
         };
 
         var validation = await _validator.ValidateParams(addNewInvoice, null);
@@ -158,7 +200,12 @@ public class InvoicesController : ControllerBase
 
         var list = await _serviceWrapper.InvoiceTypes.GetInvoiceTypes(filter, token);
         if (list != null && !list.Any())
-            return NotFound("No invoice type available");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Invoice type list is empty",
+                data = ""
+            });
 
         var resultList = _mapper.Map<IEnumerable<InvoiceTypeDto>>(list);
 
@@ -171,17 +218,27 @@ public class InvoicesController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Invoice type is empty");
+            : NotFound(new
+            {
+                status = "Not Found",
+                message = "Invoice type list is empty",
+                data = ""
+            });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Delete Invoice")]
+    [SwaggerOperation(Summary = "[Authorize] Get Invoice by id")]
     [HttpGet("types/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceById(int id)
     {
         var entity = await _serviceWrapper.InvoiceTypes.GetInvoiceTypeById(id);
         return entity == null
-            ? NotFound("Invoice type not found")
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Invoice type not found",
+                data = ""
+            })
             : Ok(new
             {
                 status = "Success",
@@ -190,10 +247,10 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Delete Invoice")]
+    [SwaggerOperation(Summary = "[Authorize] Create Invoice")]
     [HttpPost("types")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    public async Task<IActionResult> CreateNewInvoiceType([FromForm] InvoiceTypeCreateRequest invoiceType)
+    public async Task<IActionResult> CreateNewInvoiceType([FromBody] InvoiceTypeCreateRequest invoiceType)
     {
         var newInvoiceType = new InvoiceType
         {
@@ -211,10 +268,10 @@ public class InvoicesController : ControllerBase
             : Ok("Invoice type created successfully");
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Delete Invoice")]
+    [SwaggerOperation(Summary = "[Authorize] Update Invoice")]
     [HttpPut("types/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    public async Task<IActionResult> UpdateInvoiceType(int id, [FromForm] InvoiceTypeUpdateRequest invoiceType)
+    public async Task<IActionResult> UpdateInvoiceType(int id, [FromBody] InvoiceTypeUpdateRequest invoiceType)
     {
         var updateInvoiceType = new InvoiceType
         {
@@ -233,7 +290,7 @@ public class InvoicesController : ControllerBase
             : Ok(_mapper.Map<InvoiceTypeDto>(result));
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Delete invoice")]
+    [SwaggerOperation(Summary = "[Authorize] Delete invoice type")]
     [HttpDelete("types/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> DeleteInvoiceType(int id)
@@ -265,7 +322,12 @@ public class InvoicesController : ControllerBase
 
         var list = await _serviceWrapper.InvoiceDetails.GetInvoiceDetails(filter, token);
         if (list != null && !list.Any())
-            return NotFound("No invoice type available");
+            return NotFound(new
+            {
+                status = "Success",
+                message = "List found",
+                data = ""
+            });
 
         var resultList = _mapper.Map<IEnumerable<InvoiceTypeDto>>(list);
 
@@ -319,23 +381,36 @@ public class InvoicesController : ControllerBase
             : Ok(new
             {
                 status = "Success",
-                message = "Flat type found",
+                message = "Invoice detail found",
                 data = _mapper.Map<InvoiceDto>(entity)
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Delete Invoice")]
-    [HttpPost("details")]
+    [SwaggerOperation(Summary = "[Authorize] Create Invoice based on renter")]
+    [HttpPut("create")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    public async Task<IActionResult> CreateNewInvoiceDetail([FromForm] InvoiceDetailCreateRequest invoiceDetail)
+    public async Task<IActionResult> CreateManyInvoice([FromBody] List<MassInvoiceCreateRequest> invoices)
     {
-        return Ok("On development");
+        var result = await _serviceWrapper.Invoices.BatchInsertInvoice(invoices);
+        return !result
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Invoices failed to create",
+                data = ""
+            })
+            : Ok(new
+            {
+                status = "Success",
+                message = "Invoices created successfully",
+                data = ""
+            });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Delete Invoice")]
+    [SwaggerOperation(Summary = "[Authorize] Update Invoice detail")]
     [HttpPut("details/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    public async Task<IActionResult> UpdateInvoiceDetail(int id, [FromForm] InvoiceDetailCreateRequest invoiceDetail)
+    public async Task<IActionResult> UpdateInvoiceDetail(int id, [FromBody] InvoiceDetailCreateRequest invoiceDetail)
     {
         return Ok("On development");
     }

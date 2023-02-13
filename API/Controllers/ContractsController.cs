@@ -39,7 +39,12 @@ public class ContractsController : ControllerBase
 
         var list = await _serviceWrapper.Contracts.GetContractList(filter, token);
         if (list != null && !list.Any())
-            return NotFound("No contract available");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "No contract available",
+                data = ""
+            });
 
         var resultList = _mapper.Map<IEnumerable<ContractDto>>(list);
 
@@ -52,7 +57,12 @@ public class ContractsController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Contract list is empty");
+            : NotFound(new
+            {
+                status = "Not Found",
+                message = "No contract available",
+                data = ""
+            });
     }
 
     //TODO get contract by renter ID

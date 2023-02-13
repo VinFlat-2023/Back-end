@@ -154,7 +154,12 @@ public class ServicesController : ControllerBase
 
         var validation = await _validator.ValidateParams(newService, null);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.ServicesEntity.AddServiceEntity(newService);
         if (result == null)
@@ -302,7 +307,12 @@ public class ServicesController : ControllerBase
 
         var validation = await _validator.ValidateParams(addNewServiceType, null);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.ServiceTypes.AddServiceType(addNewServiceType);
         if (result == null)

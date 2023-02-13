@@ -45,7 +45,12 @@ public class UniversitiesController : ControllerBase
 
         var list = await _serviceWrapper.Universities.GetUniversityList(filter, token);
         if (list != null && !list.Any())
-            return NotFound("No university available");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "University list is empty",
+                data = ""
+            });
 
         var resultList = _mapper.Map<IEnumerable<UniversityDto>>(list);
 
@@ -58,7 +63,12 @@ public class UniversitiesController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("University list is empty");
+            : NotFound(new
+            {
+                status = "Not Found",
+                message = "University list is empty",
+                data = ""
+            });
     }
 
     // GET: api/Universities/5
@@ -103,12 +113,26 @@ public class UniversitiesController : ControllerBase
 
         var validation = await _validator.ValidateParams(updateUniversity, id);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
-
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
         var result = await _serviceWrapper.Universities.UpdateUniversity(updateUniversity);
         if (result == null)
-            return NotFound("University not found");
-        return Ok("University updated");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "University not found",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "University updated",
+            data = _mapper.Map<UniversityDto>(result)
+        });
     }
 
     // POST: api/Universities
@@ -131,11 +155,20 @@ public class UniversitiesController : ControllerBase
 
         var validation = await _validator.ValidateParams(addNewUniversity, null);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
-
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
         var result = await _serviceWrapper.Universities.AddUniversity(addNewUniversity);
         if (result == null)
-            return NotFound("University failed to add");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "University failed to create",
+                data = ""
+            });
         return CreatedAtAction("GetUniversity", new { id = result.UniversityId }, result);
     }
 
@@ -149,8 +182,17 @@ public class UniversitiesController : ControllerBase
             return BadRequest("You are not authorized to access this information");
         var result = await _serviceWrapper.Universities.DeleteUniversity(id);
         if (!result)
-            return NotFound("University not found");
-
-        return Ok("University deleted");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "University not found",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "University deleted",
+            data = ""
+        });
     }
 }

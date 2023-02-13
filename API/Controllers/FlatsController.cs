@@ -39,7 +39,12 @@ public class FlatsController : ControllerBase
         var filter = _mapper.Map<FlatFilter>(request);
         var list = await _serviceWrapper.Flats.GetFlatList(filter, token);
         if (list != null && !list.Any())
-            return NotFound("Flat list is empty!");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Flat list is empty",
+                data = ""
+            });
 
         var resultList = _mapper.Map<IEnumerable<FlatDto>>(list);
 
@@ -52,7 +57,12 @@ public class FlatsController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Flat list is empty");
+            : NotFound(new
+            {
+                status = "Not Found",
+                message = "Flat list is empty",
+                data = ""
+            });
     }
 
     // GET: api/Flats/5
@@ -63,7 +73,12 @@ public class FlatsController : ControllerBase
     {
         var entity = await _serviceWrapper.Flats.GetFlatById(id);
         if (entity == null)
-            return NotFound("Flat not found");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Flat not found",
+                data = ""
+            });
         return Ok(
             new
             {
@@ -92,11 +107,21 @@ public class FlatsController : ControllerBase
 
         var validation = await _validator.ValidateParams(updateFlat, id);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.Flats.UpdateFlat(updateFlat);
         if (result == null)
-            return NotFound("Flat not found");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Flat not found",
+                data = ""
+            });
 
         return Ok(new
         {
@@ -128,11 +153,20 @@ public class FlatsController : ControllerBase
 
         var validation = await _validator.ValidateParams(newFlat, null);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
-
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
         var result = await _serviceWrapper.Flats.AddFlat(newFlat);
         if (result == null)
-            return NotFound("Flat not found");
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Flat failed to create",
+                data = ""
+            });
         return CreatedAtAction("GetFlat", new { id = result.FlatId }, result);
     }
 
@@ -144,8 +178,18 @@ public class FlatsController : ControllerBase
     {
         var result = await _serviceWrapper.Flats.DeleteFlat(id);
         if (!result)
-            return NotFound("Flat not found");
-        return Ok("Flat deleted");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Flat failed to create",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Flat deleted",
+            data = ""
+        });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get Flat Type List")]
@@ -169,7 +213,12 @@ public class FlatsController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Flat type list is empty");
+            : BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Flat type list is empty",
+                data = ""
+            });
     }
 
     // GET: api/FlatTypes/5
@@ -180,7 +229,12 @@ public class FlatsController : ControllerBase
     {
         var entity = await _serviceWrapper.FlatTypes.GetFlatTypeById(id);
         return entity == null
-            ? NotFound("No flat type found")
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Flat type not found",
+                data = ""
+            })
             : Ok(new
             {
                 status = "Success",
@@ -205,12 +259,28 @@ public class FlatsController : ControllerBase
 
         var validation = await _validator.ValidateParams(updateFlatType, id);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.FlatTypes.UpdateFlatType(updateFlatType);
         if (result == null)
-            return NotFound("Flat type not found");
-        return Ok("Flat type updated");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Flat type not found",
+                data = ""
+            });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Flat type updated",
+            data = ""
+        });
     }
 
     // POST: api/FlatTypes
@@ -303,14 +373,13 @@ public class FlatsController : ControllerBase
                         data = ""
                     });
             default:
-                break;
+                return BadRequest(
+                    new
+                    {
+                        status = "Success",
+                        message = "Flat service is unavailable",
+                        data = ""
+                    });
         }
-
-        return BadRequest(new
-        {
-            status = "Bad Request",
-            message = "Bad request in searching for flat",
-            data = ""
-        });
     }
 }

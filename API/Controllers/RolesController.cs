@@ -112,7 +112,12 @@ public class RolesController : ControllerBase
 
         var validation = await _validator.ValidateParams(newRole, null);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Role failed to create",
+                data = ""
+            });
 
         var result = await _serviceWrapper.Roles.AddRole(newRole);
         if (result == null)

@@ -1,6 +1,7 @@
 ﻿using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
+using Domain.EntityRequest.Invoice;
 using Domain.Options;
 using Domain.QueryFilter;
 using Microsoft.Extensions.Options;
@@ -102,6 +103,11 @@ public class InvoiceService : IInvoiceService
         }
 
         return true;
+    }
+
+    public async Task<bool> BatchInsertInvoice(IEnumerable<MassInvoiceCreateRequest> invoices)
+    {
+        return await _repositoryWrapper.Invoices.BatchInsertInvoice(invoices);
     }
 
     public async Task<bool> AutoFinishInvoice()

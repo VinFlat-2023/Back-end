@@ -1,5 +1,6 @@
 ﻿using Application.IRepository;
 using Domain.EntitiesForManagement;
+using Domain.EntityRequest.Invoice;
 using Domain.QueryFilter;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -151,5 +152,37 @@ public class InvoiceRepository : IInvoiceRepository
         return _context.Invoices
             .Where(x => x.Status == false && x.CreatedTime.Month == month);
         //.Where(x.CreatedTime.Month == month);
+    }
+
+    public async Task<bool> BatchInsertInvoice(IEnumerable<MassInvoiceCreateRequest> invoices)
+    {
+        await using
+            var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            foreach (var invoiceEntity in invoices
+                         .Select(
+                             invoice => new Invoice
+                             {
+                                 Name = invoice.Name,
+                                 DueDate = DateTime.Now.AddMonths(1),
+                                 Status = true,
+                                 Detail = invoice.Detail,
+                                 AccountId = invoice.AccountId,
+                                 RenterId = invoice.RenterId,
+                                 InvoiceTypeId = invoice.InvoiceTypeId,
+                                 CreatedTime = DateTime.Now
+                             }))
+                _context.Invoices.Add(invoiceEntity);
+
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return false;
+        }
     }
 }

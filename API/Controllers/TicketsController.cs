@@ -41,7 +41,12 @@ public class TicketsController : ControllerBase
 
         var list = await _serviceWrapper.Tickets.GetTicketList(filter, token);
         if (list != null && !list.Any())
-            return NotFound("No ticket available");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Ticket list is empty",
+                data = ""
+            });
 
         var resultList = _mapper.Map<IEnumerable<TicketDto>>(list);
 
@@ -54,7 +59,12 @@ public class TicketsController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Ticket list is empty");
+            : NotFound(new
+            {
+                status = "Not Found",
+                message = "Service type list is empty",
+                data = ""
+            });
     }
 
     // GET: api/Requests/5
@@ -65,7 +75,12 @@ public class TicketsController : ControllerBase
     {
         var entity = await _serviceWrapper.Tickets.GetTicketById(id);
         return entity == null
-            ? NotFound("Ticket not found")
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Ticket not found",
+                data = ""
+            })
             : Ok(new
             {
                 status = "Success",
@@ -136,11 +151,22 @@ public class TicketsController : ControllerBase
 
         var validation = await _validator.ValidateParams(newRequest, null);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.Tickets.AddTicket(newRequest);
         if (result == null)
-            return BadRequest("Request failed to create");
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Request failed to create",
+                data = ""
+            });
+
         return CreatedAtAction("GetTicket", new { id = result.TicketId }, result);
     }
 
@@ -178,8 +204,14 @@ public class TicketsController : ControllerBase
         var filter = _mapper.Map<TicketTypeFilter>(request);
 
         var list = await _serviceWrapper.TicketTypes.GetTicketTypeList(filter, token);
+
         if (list != null && !list.Any())
-            return NotFound("No ticket type available");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "List not found",
+                data = ""
+            });
 
         var resultList = _mapper.Map<IEnumerable<TicketTypeDto>>(list);
 
@@ -192,7 +224,12 @@ public class TicketsController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Ticket type list is empty");
+            : BadRequest(new
+            {
+                status = "Bad Request",
+                message = "List not found",
+                data = ""
+            });
     }
 
     // GET: api/RequestTypes/5
@@ -203,7 +240,12 @@ public class TicketsController : ControllerBase
     {
         var entity = await _serviceWrapper.TicketTypes.GetTicketTypeById(id);
         return entity == null
-            ? NotFound("Ticket type not found")
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Ticket type not found",
+                data = ""
+            })
             : Ok(new
             {
                 status = "Success",
@@ -230,14 +272,29 @@ public class TicketsController : ControllerBase
 
         var validation = await _validator.ValidateParams(updateRequestType, id);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.TicketTypes
             .UpdateTicketType(updateRequestType);
         if (result == null)
-            return NotFound("Request type not found");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Request type not found",
+                data = ""
+            });
 
-        return Ok("Request type updated");
+        return Ok(new
+        {
+            status = "Success",
+            message = "Request type updated",
+            data = _mapper.Map<TicketTypeDto>(result)
+        });
     }
 
     // POST: api/RequestTypes
@@ -256,11 +313,21 @@ public class TicketsController : ControllerBase
 
         var validation = await _validator.ValidateParams(newRequestType, null);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.TicketTypes.AddTicketType(newRequestType);
         if (result == null)
-            return NotFound("Request type not found");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Request type not found",
+                data = ""
+            });
         return CreatedAtAction("GetTicketType", new { id = result.TicketTypeId }, result);
     }
 
@@ -272,8 +339,18 @@ public class TicketsController : ControllerBase
     {
         var result = await _serviceWrapper.TicketTypes.DeleteTicketType(id);
         if (!result)
-            return NotFound("Request type not found");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Request type not found",
+                data = ""
+            });
 
-        return Ok("Request type deleted");
+        return Ok(new
+        {
+            status = "Success",
+            message = "Request type deleted",
+            data = ""
+        });
     }
 }
