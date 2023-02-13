@@ -64,8 +64,8 @@ public class InvoicesController : ControllerBase
     }
 
     // GET: api/Invoices/5
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice")]
-    [HttpGet("{id:int}/user/{userId:int}")]
+    [SwaggerOperation(Summary = "[Authorize] Get Invoice by management")]
+    [HttpGet("{id:int}/user")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceByManagement(int id)
     {
@@ -85,10 +85,10 @@ public class InvoicesController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice")]
-    [HttpGet("{id:int}/user/{userId:int}")]
+    [SwaggerOperation(Summary = "[Authorize] Get Invoice by renter")]
+    [HttpGet("user/{userId:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    public async Task<IActionResult> GetInvoiceRenter(int id, int userId, CancellationToken token)
+    public async Task<IActionResult> GetInvoiceRenter(int userId, CancellationToken token)
     {
         var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
         if (userCheck == null)
@@ -100,6 +100,36 @@ public class InvoicesController : ControllerBase
             });
         var entity = await _serviceWrapper.Invoices
             .GetInvoiceList(new InvoiceFilter { RenterId = userId }, token);
+
+        if (entity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "No invoice found",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Invoice found",
+            data = _mapper.Map<InvoiceDto>(entity)
+        });
+    }
+    
+    [SwaggerOperation(Summary = "[Authorize] Get Invoice by renter")]
+    [HttpGet("{id:int}/user/{userId:int}")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    public async Task<IActionResult> GetInvoiceRenterUsingId(int id, int userId, CancellationToken token)
+    {
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+        if (userCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "No user found",
+                data = ""
+            });
+        var entity = await _serviceWrapper.Invoices.GetInvoiceById(id);
 
         if (entity == null)
             return NotFound(new
