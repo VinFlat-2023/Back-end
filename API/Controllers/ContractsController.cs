@@ -64,7 +64,6 @@ public class ContractsController : ControllerBase
                 data = ""
             });
     }
-
     //TODO get contract by renter ID
 
     // GET: api/Contract/5

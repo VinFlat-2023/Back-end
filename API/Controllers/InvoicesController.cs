@@ -115,13 +115,14 @@ public class InvoicesController : ControllerBase
             data = _mapper.Map<InvoiceDto>(entity)
         });
     }
-    
+
     [SwaggerOperation(Summary = "[Authorize] Get Invoice by renter")]
-    [HttpGet("{id:int}/user/{userId:int}")]
+    [HttpGet("{invoiceId:int}/user/{userId:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    public async Task<IActionResult> GetInvoiceRenterUsingId(int id, int userId, CancellationToken token)
+    public async Task<IActionResult> GetInvoiceRenterUsingId(int invoiceId, int userId)
     {
         var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+
         if (userCheck == null)
             return NotFound(new
             {
@@ -129,7 +130,8 @@ public class InvoicesController : ControllerBase
                 message = "No user found",
                 data = ""
             });
-        var entity = await _serviceWrapper.Invoices.GetInvoiceById(id);
+
+        var entity = await _serviceWrapper.Invoices.GetInvoiceByRenterAndInvoiceId(userId, invoiceId);
 
         if (entity == null)
             return NotFound(new
@@ -138,6 +140,7 @@ public class InvoicesController : ControllerBase
                 message = "No invoice found",
                 data = ""
             });
+
         return Ok(new
         {
             status = "Success",
@@ -450,7 +453,7 @@ public class InvoicesController : ControllerBase
         return (start.Date - end.Date).Days + 1;
     }
 
-    private static double CalculateBillAmount(Invoice? invoice)
+    private static decimal CalculateBillAmount(Invoice? invoice)
     {
         if (invoice == null)
             return -1;

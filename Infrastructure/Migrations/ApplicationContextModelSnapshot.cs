@@ -226,10 +226,10 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("CoordinateX")
+                    b.Property<decimal>("CoordinateX")
                         .HasColumnType("float");
 
-                    b.Property<double>("CoordinateY")
+                    b.Property<decimal>("CoordinateY")
                         .HasColumnType("float");
 
                     b.Property<string>("Description")
@@ -406,7 +406,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("PeriodStart");
 
-                    b.Property<double>("Price")
+                    b.Property<decimal>("Price")
                         .HasColumnType("float");
 
                     b.Property<int>("RenterId")
@@ -857,7 +857,7 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InvoiceDetailId"), 1L, 1);
 
-                    b.Property<double>("Amount")
+                    b.Property<decimal>("Amount")
                         .HasColumnType("float");
 
                     b.Property<int>("InvoiceId")
@@ -1394,7 +1394,7 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceId"), 1L, 1);
 
-                    b.Property<double?>("Amount")
+                    b.Property<decimal?>("Amount")
                         .HasColumnType("float");
 
                     b.Property<int>("BuildingId")
@@ -1523,7 +1523,7 @@ namespace Infrastructure.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
-                    b.Property<double>("Amount")
+                    b.Property<decimal>("Amount")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("CreateDate")

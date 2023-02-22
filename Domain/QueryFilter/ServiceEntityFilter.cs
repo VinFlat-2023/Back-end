@@ -8,7 +8,7 @@ public class ServiceEntityFilter : PagingFilter
 
     public bool? Status { get; set; }
 
-    public double? Amount { get; set; }
+    public decimal? Amount { get; set; }
 
     public int? ServiceTypeId { get; set; }
 }

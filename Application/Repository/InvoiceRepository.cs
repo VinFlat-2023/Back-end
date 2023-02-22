@@ -65,11 +65,11 @@ public class InvoiceRepository : IInvoiceRepository
             .SingleOrDefaultAsync(e => e.InvoiceId == invoiceId);
     }
 
-    public async Task<Invoice?> GetInvoiceByRenter(int renterId)
+    public async Task<Invoice?> GetInvoiceByRenterAndInvoiceId(int renterId, int invoiceId)
     {
         return await _context.Invoices
-            .Where(x => x.Status == true)
-            .FirstOrDefaultAsync(x => x.RenterId == renterId);
+            .Where(x => x.Status == true && x.RenterId == renterId)
+            .FirstOrDefaultAsync(x => x.InvoiceId == invoiceId);
     }
 
     public async Task<Invoice?> GetUnpaidInvoiceByRenterAndMonth(int renterId, int month)

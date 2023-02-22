@@ -13,7 +13,7 @@ public interface IInvoiceRepository
     public Task<bool> DeleteInvoice(int invoiceId);
     public List<Invoice> GetUnpaidInvoice();
     public Task<Invoice?> GetInvoiceIncludeRenter(int invoiceId);
-    public Task<Invoice?> GetInvoiceByRenter(int renterId);
+    public Task<Invoice?> GetInvoiceByRenterAndInvoiceId(int renterId, int invoiceId);
     public Task<Invoice?> GetUnpaidInvoiceByRenterAndMonth(int renterId, int month);
     IEnumerable<Invoice> GetInvoiceListByMonth(int month);
     public Task<bool> BatchInsertInvoice(IEnumerable<MassInvoiceCreateRequest> invoices);

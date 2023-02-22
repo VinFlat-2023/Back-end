@@ -9,7 +9,7 @@ public class TicketFilter : PagingFilter
 
     public DateTime? SolveDate { get; set; }
 
-    public double? Amount { get; set; }
+    public decimal? Amount { get; set; }
     public string? Status { get; set; }
     public int? TicketTypeId { get; set; }
 }

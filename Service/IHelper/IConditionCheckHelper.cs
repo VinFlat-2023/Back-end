@@ -49,4 +49,6 @@ public interface IConditionCheckHelper
     public Task<Account?> AccountEmailCheck(string? email);
 
     public Task<Account?> AccountUsernameExist(string? username);
+
+    public Task<Room?> RoomCheck(int? roomId);
 }

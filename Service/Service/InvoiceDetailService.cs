@@ -24,7 +24,7 @@ public class InvoiceDetailService : IInvoiceDetailService
         return await _repositoryWrapper.InvoiceDetails.UpdateInvoiceDetail(invoiceDetail);
     }
 
-    public async Task<InvoiceDetail?> AddInvoiceDetail(InvoiceDetail? invoiceDetail)
+    public async Task<InvoiceDetail?> AddInvoiceDetail(InvoiceDetail invoiceDetail)
     {
         return await _repositoryWrapper.InvoiceDetails.AddInvoiceDetail(invoiceDetail);
     }

@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Utilities.MiddlewareExtension;
 using Utilities.ServiceExtensions;
-using Utilities.ServiceExtensions.Scheduler;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,7 +65,7 @@ builder.Services.AddAuthorizationService();
 builder.Services.Configure<PaginationOption>(config.GetSection("Pagination"));
 
 //Add Scheduler service
-builder.Services.AddSchedulerService(builder.Environment);
+//builder.Services.AddSchedulerService(builder.Environment);
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>

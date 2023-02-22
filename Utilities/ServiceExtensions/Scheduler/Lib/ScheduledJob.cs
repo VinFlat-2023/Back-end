@@ -2,12 +2,12 @@
 
 public class ScheduledJob
 {
-    public ScheduledJob(Type type, string scheduleExpession)
+    public ScheduledJob(Type type, string scheduleExpression)
     {
         Type = type;
-        ScheduleExpession = scheduleExpession;
+        ScheduleExpression = scheduleExpression;
     }
 
     public Type Type { get; }
-    public string ScheduleExpession { get; }
+    public string ScheduleExpression { get; }
 }

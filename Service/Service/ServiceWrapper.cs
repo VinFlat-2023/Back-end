@@ -14,9 +14,9 @@ namespace Service.Service;
 public class ServiceWrapper : IServiceWrapper
 {
     private readonly IConfiguration _configuration;
+    private readonly IWebHostEnvironment _env;
     private readonly IOptions<PaginationOption> _paginationOptions;
-    private readonly IWebHostEnvironment env;
-    private readonly IRepositoryWrapper repositories;
+    private readonly IRepositoryWrapper _repositories;
 
     public ServiceWrapper(IRepositoryWrapper? repositories,
         ApplicationContext? context, IConfiguration configuration,
@@ -25,7 +25,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         _paginationOptions = paginationOptions;
         _configuration = configuration;
-        this.env = env;
+        _env = env;
         if (repositories == null)
         {
             if (context == null)
@@ -35,7 +35,7 @@ public class ServiceWrapper : IServiceWrapper
         }
         else
         {
-            this.repositories = repositories;
+            _repositories = repositories;
         }
     }
 
@@ -43,7 +43,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_azureStorage == null) _azureStorage = new AzureStorageService(repositories);
+            if (_azureStorage == null) _azureStorage = new AzureStorageService(_repositories);
             return _azureStorage;
         }
     }
@@ -52,9 +52,9 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (tokens == null)
-                tokens = new TokenService(_configuration);
-            return tokens;
+            if (_tokens == null)
+                _tokens = new TokenService(_configuration);
+            return _tokens;
         }
     }
 
@@ -63,7 +63,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_account == null) _account = new AccountService(repositories, _paginationOptions);
+            if (_account == null) _account = new AccountService(_repositories, _paginationOptions);
             return _account;
         }
     }
@@ -72,7 +72,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_area == null) _area = new AreaService(repositories, _paginationOptions);
+            if (_area == null) _area = new AreaService(_repositories, _paginationOptions);
             return _area;
         }
     }
@@ -81,7 +81,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_building == null) _building = new BuildingService(repositories, _paginationOptions);
+            if (_building == null) _building = new BuildingService(_repositories, _paginationOptions);
             return _building;
         }
     }
@@ -90,7 +90,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_contracts == null) _contracts = new ContractService(repositories, _paginationOptions);
+            if (_contracts == null) _contracts = new ContractService(_repositories, _paginationOptions);
             return _contracts;
         }
     }
@@ -99,7 +99,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_feedback == null) _feedback = new FeedbackService(repositories, _paginationOptions);
+            if (_feedback == null) _feedback = new FeedbackService(_repositories, _paginationOptions);
             return _feedback;
         }
     }
@@ -108,7 +108,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_feedbackType == null) _feedbackType = new FeedbackTypeService(repositories, _paginationOptions);
+            if (_feedbackType == null) _feedbackType = new FeedbackTypeService(_repositories, _paginationOptions);
             return _feedbackType;
         }
     }
@@ -117,7 +117,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_flat == null) _flat = new FlatService(repositories, _paginationOptions);
+            if (_flat == null) _flat = new FlatService(_repositories, _paginationOptions);
             return _flat;
         }
     }
@@ -126,7 +126,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_flatType == null) _flatType = new FlatTypeService(repositories, _paginationOptions);
+            if (_flatType == null) _flatType = new FlatTypeService(_repositories, _paginationOptions);
             return _flatType;
         }
     }
@@ -135,7 +135,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_invoice == null) _invoice = new InvoiceService(repositories, _paginationOptions);
+            if (_invoice == null) _invoice = new InvoiceService(_repositories, _paginationOptions);
             return _invoice;
         }
     }
@@ -144,7 +144,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_major == null) _major = new MajorService(repositories, _paginationOptions);
+            if (_major == null) _major = new MajorService(_repositories, _paginationOptions);
             return _major;
         }
     }
@@ -153,7 +153,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_renter == null) _renter = new RenterService(repositories, _paginationOptions);
+            if (_renter == null) _renter = new RenterService(_repositories, _paginationOptions);
             return _renter;
         }
     }
@@ -162,7 +162,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_roles == null) _roles = new RoleService(repositories, _paginationOptions);
+            if (_roles == null) _roles = new RoleService(_repositories, _paginationOptions);
             return _roles;
         }
     }
@@ -171,7 +171,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_ticket == null) _ticket = new TicketService(repositories, _paginationOptions);
+            if (_ticket == null) _ticket = new TicketService(_repositories, _paginationOptions);
             return _ticket;
         }
     }
@@ -180,7 +180,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_ticketType == null) _ticketType = new TicketTypeService(repositories, _paginationOptions);
+            if (_ticketType == null) _ticketType = new TicketTypeService(_repositories, _paginationOptions);
             return _ticketType;
         }
     }
@@ -189,7 +189,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_serviceEntity == null) _serviceEntity = new ServiceEntityService(repositories, _paginationOptions);
+            if (_serviceEntity == null) _serviceEntity = new ServiceEntityService(_repositories, _paginationOptions);
             return _serviceEntity;
         }
     }
@@ -198,7 +198,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_serviceType == null) _serviceType = new ServiceTypeService(repositories, _paginationOptions);
+            if (_serviceType == null) _serviceType = new ServiceTypeService(_repositories, _paginationOptions);
             return _serviceType;
         }
     }
@@ -207,7 +207,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_universities == null) _universities = new UniversityService(repositories, _paginationOptions);
+            if (_universities == null) _universities = new UniversityService(_repositories, _paginationOptions);
             return _universities;
         }
     }
@@ -216,7 +216,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_wallets == null) _wallets = new WalletService(repositories);
+            if (_wallets == null) _wallets = new WalletService(_repositories);
             return _wallets;
         }
     }
@@ -225,7 +225,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_devices == null) _devices = new DeviceService(repositories);
+            if (_devices == null) _devices = new DeviceService(_repositories);
             return _devices;
         }
     }
@@ -234,7 +234,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_invoiceType == null) _invoiceType = new InvoiceTypeService(repositories, _paginationOptions);
+            if (_invoiceType == null) _invoiceType = new InvoiceTypeService(_repositories, _paginationOptions);
             return _invoiceType;
         }
     }
@@ -243,8 +243,18 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_invoiceDetail == null) _invoiceDetail = new InvoiceDetailService(repositories, _paginationOptions);
+            if (_invoiceDetail == null) _invoiceDetail = new InvoiceDetailService(_repositories, _paginationOptions);
             return _invoiceDetail;
+        }
+    }
+
+
+    public IRoomService Rooms
+    {
+        get
+        {
+            if (_room == null) _room = new RoomService(_repositories, _paginationOptions);
+            return _room;
         }
     }
 
@@ -252,10 +262,11 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_noti == null) _noti = new NotificationService(repositories, _paginationOptions);
+            if (_noti == null) _noti = new NotificationService(_repositories, _paginationOptions);
             return _noti;
         }
     }
+
 
     public ICustomeMailService Mails
     {
@@ -268,7 +279,7 @@ public class ServiceWrapper : IServiceWrapper
                 .GetSection("EmailConfiguration")
                 .Get<MailConfiguration>();
 
-            _mails = new CustomeMailService(env, emailConfig, repositories);
+            _mails = new CustomeMailService(_env, emailConfig, _repositories);
 
             return _mails;
         }
@@ -297,10 +308,11 @@ public class ServiceWrapper : IServiceWrapper
     private IServiceTypeService _serviceType;
     private IUniversityService _universities;
     private IWalletService _wallets;
-    private ITokenService tokens;
+    private ITokenService _tokens;
     private IDeviceService _devices;
     private ICustomeMailService _mails;
     private INotificationService _noti;
+    private IRoomService _room;
 
     #endregion
 }

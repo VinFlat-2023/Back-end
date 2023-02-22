@@ -134,6 +134,7 @@ public class BuildingsController : ControllerBase
             CoordinateX = building.CoordinateX ?? 0,
             CoordinateY = building.CoordinateY ?? 0,
             TotalRooms = 0,
+            AccountId = Convert.ToInt32(User.Identity?.Name),
             Status = building.Status,
             AreaId = building.AreaId
         };

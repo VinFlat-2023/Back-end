@@ -12,6 +12,12 @@ public class ContractHistoryFilterRequest : PagingFilter
 
     public string? ContractStatus { get; set; }
 
+    public decimal? PriceForWater { get; set; }
+
+    public decimal? PriceForElectricity { get; set; }
+
+    public decimal? PriceForService { get; set; }
+
     public DateTime? StartDate { get; set; }
 
     public DateTime? DateSigned { get; set; }

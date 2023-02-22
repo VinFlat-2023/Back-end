@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using API.Extension;
 using AutoMapper;
 using Domain.EntitiesDTO.RenterDTO;
@@ -74,6 +75,19 @@ public class RentersController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get renter by id")]
     public async Task<IActionResult> GetRenter(int id)
     {
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
+        if (userRole is not "Admin" or "Supervisor" || User.Identity?.Name != id.ToString())
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "You are not authorized to access this resource",
+                data = ""
+            });
+
         var entity = await _serviceWrapper.Renters.GetRenterById(id);
 
         return entity == null
@@ -98,6 +112,14 @@ public class RentersController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update renter by id")]
     public async Task<IActionResult> PutRenter([FromForm] RenterUpdateRequest renter, int id)
     {
+        if (User.Identity?.Name != id.ToString())
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "You are not authorized to access this resource",
+                data = ""
+            });
+
         var renterCheck = await _serviceWrapper.Renters.GetRenterById(id);
 
         if (renterCheck == null)
@@ -162,6 +184,7 @@ public class RentersController : ControllerBase
     // POST: api/Renters
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
+    [Authorize("Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Register a new renter")]
     public async Task<IActionResult> PostRenter([FromForm] RenterCreateRequest renter)
     {

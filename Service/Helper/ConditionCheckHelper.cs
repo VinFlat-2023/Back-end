@@ -124,6 +124,11 @@ public class ConditionCheckHelper : IConditionCheckHelper
         return await _serviceWrapper.Accounts.IsAccountUsernameExist(username) ?? null;
     }
 
+    public async Task<Room?> RoomCheck(int? roomId)
+    {
+        return await _serviceWrapper.Rooms.GetRoomById(roomId) ?? null;
+    }
+
     public async Task<Account?> AccountEmailCheck(string? email)
     {
         return await _serviceWrapper.Accounts.IsAccountEmailExist(email) ?? null;

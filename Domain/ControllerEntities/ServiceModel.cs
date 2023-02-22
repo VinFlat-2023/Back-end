@@ -4,5 +4,5 @@ public class ServiceModel
 {
     public int ServiceId { get; set; }
 
-    public double Amount { get; set; }
+    public decimal Amount { get; set; }
 }

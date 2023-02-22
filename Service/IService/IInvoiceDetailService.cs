@@ -7,7 +7,7 @@ namespace Service.IService;
 public interface IInvoiceDetailService
 {
     Task<InvoiceDetail?> UpdateInvoiceDetail(InvoiceDetail invoiceDetail);
-    Task<InvoiceDetail?> AddInvoiceDetail(InvoiceDetail? invoiceDetail);
+    Task<InvoiceDetail?> AddInvoiceDetail(InvoiceDetail invoiceDetail);
     Task<List<InvoiceDetail>> GetInvoiceDetailListByUserId(int id, CancellationToken token);
     Task<InvoiceDetail?> GetActiveInvoiceDetailByUserId(int id, CancellationToken token);
     Task<InvoiceDetail?> GetInvoiceDetailById(int? id);

@@ -16,9 +16,9 @@ public class BuildingDto
     public int? TotalRooms { get; set; }
     public string? ImageUrl { get; set; }
 
-    public double? CoordinateX { get; set; }
+    public decimal? CoordinateX { get; set; }
 
-    public double? CoordinateY { get; set; }
+    public decimal? CoordinateY { get; set; }
 
     public bool Status { get; set; }
 

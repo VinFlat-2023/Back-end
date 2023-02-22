@@ -276,8 +276,8 @@ namespace Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TotalRooms = table.Column<int>(type: "int", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CoordinateX = table.Column<double>(type: "float", nullable: false),
-                    CoordinateY = table.Column<double>(type: "float", nullable: false),
+                    CoordinateX = table.Column<decimal>(type: "float", nullable: false),
+                    CoordinateY = table.Column<decimal>(type: "float", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
                     AccountId = table.Column<int>(type: "int", nullable: false),
                     AreaId = table.Column<int>(type: "int", nullable: false)
@@ -378,7 +378,7 @@ namespace Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
-                    Amount = table.Column<double>(type: "float", nullable: true),
+                    Amount = table.Column<decimal>(type: "float", nullable: true),
                     BuildingId = table.Column<int>(type: "int", nullable: false),
                     ServiceTypeId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -463,7 +463,7 @@ namespace Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SolveDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Amount = table.Column<double>(type: "float", nullable: false),
+                    Amount = table.Column<decimal>(type: "float", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TicketTypeId = table.Column<int>(type: "int", nullable: false),
                     RenterId = table.Column<int>(type: "int", nullable: false),
@@ -560,7 +560,7 @@ namespace Infrastructure.Migrations
                     LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ContractStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Price = table.Column<double>(type: "float", nullable: false),
+                    Price = table.Column<decimal>(type: "float", nullable: false),
                     RenterId = table.Column<int>(type: "int", nullable: false),
                     FlatId = table.Column<int>(type: "int", nullable: false),
                     PeriodEnd = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -678,7 +678,7 @@ namespace Infrastructure.Migrations
                 {
                     InvoiceDetailId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Amount = table.Column<double>(type: "float", nullable: false),
+                    Amount = table.Column<decimal>(type: "float", nullable: false),
                     InvoiceId = table.Column<int>(type: "int", nullable: false),
                     ServiceId = table.Column<int>(type: "int", nullable: true),
                     TicketId = table.Column<int>(type: "int", nullable: true)

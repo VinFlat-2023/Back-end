@@ -24,8 +24,16 @@ public class ContractRepository : IContractRepository
         // TODO : Compare date time
         return _context.Contracts
             .Where(x =>
-                (filters.Description == null || x.Description.Contains(filters.Description))
-                && (filters.ContractStatus == null || x.ContractStatus == filters.ContractStatus))
+                (filters.ContractName == null || x.ContractName.Contains(filters.ContractName))
+                && (filters.Description == null || x.Description.Contains(filters.Description))
+                && (filters.PriceForWater == null || x.PriceForWater == filters.PriceForWater)
+                && (filters.PriceForElectricity == null || x.PriceForElectricity == filters.PriceForElectricity)
+                && (filters.PriceForService == null || x.PriceForService == filters.PriceForService)
+                && (filters.ContractStatus == null || x.ContractStatus == filters.ContractStatus)
+                && (filters.DateSigned == null || x.DateSigned == filters.DateSigned)
+                && (filters.EndDate == null || x.EndDate == filters.EndDate)
+                && (filters.StartDate == null || x.StartDate == filters.StartDate)
+                && (filters.LastUpdated == null || x.LastUpdated == filters.LastUpdated))
             .AsNoTracking();
     }
 
@@ -93,6 +101,9 @@ public class ContractRepository : IContractRepository
         contractData.EndDate = contract?.EndDate ?? contractData.EndDate;
         contractData.StartDate = contract?.StartDate ?? contractData.StartDate;
         contractData.ContractStatus = contract?.ContractStatus ?? contractData.ContractStatus;
+        contractData.PriceForElectricity = contract?.PriceForElectricity ?? contractData.PriceForElectricity;
+        contractData.PriceForService = contract?.PriceForService ?? contractData.PriceForService;
+        contractData.PriceForWater = contract?.PriceForWater ?? contractData.PriceForWater;
         contractData.Price = contract?.Price ?? contractData.Price;
         contractData.LastUpdated = DateTime.Now;
 

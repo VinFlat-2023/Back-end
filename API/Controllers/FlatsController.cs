@@ -346,40 +346,41 @@ public class FlatsController : ControllerBase
     {
         var result = await _serviceWrapper.Flats.GetFlatById(id);
 
-        switch (result)
+        return result switch
         {
-            case null:
-                return NotFound(new
-                {
-                    status = "Not Found",
-                    message = "Flat not found",
-                    data = ""
-                });
+            null => NotFound(new { status = "Not Found", message = "Flat not found", data = "" }),
+            { } when result.Rooms.Any(x => x.AvailableSlots == 0) => Ok(new
+            {
+                status = "Success", message = "This flat is not available", data = ""
+            }),
+            { } when result.Rooms.Any(x => x.AvailableSlots >= 1) => Ok(new
+            {
+                status = "Success", message = "This flat is still available", data = ""
+            }),
+            _ => BadRequest(new { status = "Success", message = "Flat service is unavailable", data = "" })
+        };
+    }
 
-            case { } when result.Rooms.Any(x => x.AvailableSlots == 0):
-                return Ok(new
-                {
-                    status = "Success",
-                    message = "This flat is not available",
-                    data = ""
-                });
+    [SwaggerOperation(Summary = "Move a renter in inside available slot in a room")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [HttpPost("{flatId:int}/room/{roomId:int}/slots")]
+    public async Task<IActionResult> MoveNewRenterIn(int flatId, int roomId, int renterId)
+    {
+        var entity = await _serviceWrapper.Flats.GetFlatById(flatId);
+        if (entity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Flat not found",
+                data = ""
+            });
+        //var roomEntity = await _serviceWrapper.Room.GetTotalRoomByFlatId(roomId);
 
-            case { } when result.Rooms.Any(x => x.AvailableSlots >= 1):
-                return Ok(
-                    new
-                    {
-                        status = "Success",
-                        message = "This flat is still available",
-                        data = ""
-                    });
-            default:
-                return BadRequest(
-                    new
-                    {
-                        status = "Success",
-                        message = "Flat service is unavailable",
-                        data = ""
-                    });
-        }
+        return Ok(new
+        {
+            status = "Success",
+            message = "Renter moved in",
+            data = ""
+        });
     }
 }

@@ -77,8 +77,8 @@ public static class MailTemplateHelper
         requesttable.Append("</thead>");
         requesttable.Append("<tbody>");
 
-        double serviceTotal = 0;
-        double requestTotal = 0;
+        decimal serviceTotal = 0;
+        decimal requestTotal = 0;
         var hasService = false;
         var hasRequest = false;
         foreach (var detail in invoice.InvoiceDetails)

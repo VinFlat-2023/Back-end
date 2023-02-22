@@ -17,7 +17,7 @@ public class OpenApiParameterIgnoreFilter : IOperationFilter
             return;
 
         var parametersToHide = context.ApiDescription.ParameterDescriptions
-            .Where(description => ParameterHasIgnoreAttribute(description))
+            .Where(ParameterHasIgnoreAttribute)
             .ToList();
 
         if (parametersToHide.Count == 0)

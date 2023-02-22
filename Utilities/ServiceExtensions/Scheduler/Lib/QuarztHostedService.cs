@@ -56,8 +56,8 @@ public class QuarztHostedService : IHostedService
         var type = scheduledJob.Type;
         Console.WriteLine($"Create {type.Name} Trigger");
         return TriggerBuilder.Create().WithIdentity($"{type.FullName}.trigger")
-            .WithCronSchedule(scheduledJob.ScheduleExpession)
-            .WithDescription(scheduledJob.ScheduleExpession)
+            .WithCronSchedule(scheduledJob.ScheduleExpression)
+            .WithDescription(scheduledJob.ScheduleExpression)
             .Build();
     }
 }

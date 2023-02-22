@@ -16,9 +16,15 @@ public class ContractDto
 
     public DateTime? LastUpdated { get; set; }
 
+    public decimal? PriceForWater { get; set; }
+
+    public decimal? PriceForElectricity { get; set; }
+
+    public decimal? PriceForService { get; set; }
+
     public string? ContractStatus { get; set; }
 
     public string? ImageUrl { get; set; }
 
-    public double? Price { get; set; }
+    public decimal? Price { get; set; }
 }

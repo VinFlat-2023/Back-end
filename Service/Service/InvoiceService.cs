@@ -56,9 +56,9 @@ public class InvoiceService : IInvoiceService
         return await _repositoryWrapper.Invoices.DeleteInvoice(invoiceId);
     }
 
-    public async Task<Invoice?> GetInvoiceByRenter(int renterId)
+    public async Task<Invoice?> GetInvoiceByRenterAndInvoiceId(int renterId, int invoiceId)
     {
-        return await _repositoryWrapper.Invoices.GetInvoiceByRenter(renterId);
+        return await _repositoryWrapper.Invoices.GetInvoiceByRenterAndInvoiceId(renterId, invoiceId);
     }
 
     //Run on 1st day of months , generate this month empty invoice
