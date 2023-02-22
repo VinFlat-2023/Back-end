@@ -9,19 +9,21 @@ namespace API.Controllers;
 public class MailController : ControllerBase
 {
     private readonly IMapper _mapper;
-    private readonly IWebHostEnvironment env;
-    private readonly ICustomeMailService mailService;
+    private readonly IWebHostEnvironment _env;
+    private readonly ICustomeMailService _mailService;
 
-    private readonly IServiceWrapper serviceWrapper;
+    private readonly IServiceWrapper _serviceWrapper;
 
     //private readonly IWebHostEnvironment env;
     public MailController( /*ICustomeMailService emailSender,*/ /*IWebHostEnvironment env,*/ IMapper mapper,
-        IServiceWrapper serviceWrapper)
+        IServiceWrapper serviceWrapper, ICustomeMailService mailService, IWebHostEnvironment env)
     {
         //mailService = emailSender;
         //this.env = env;
         _mapper = mapper;
-        this.serviceWrapper = serviceWrapper;
+        _serviceWrapper = serviceWrapper;
+        _mailService = mailService;
+        _env = env;
     }
 
 
@@ -29,21 +31,21 @@ public class MailController : ControllerBase
     public async Task<IActionResult> SendPaymentReminder()
     {
         //string rootPath = env.WebRootPath;
-        var result = await serviceWrapper.Mails.SendPaymentReminderAsync();
+        var result = await _serviceWrapper.Mails.SendPaymentReminderAsync();
 
         return result ? Ok("Send mail successfully") : BadRequest("Somthing went wrong");
     }
 
     [HttpPost]
-    public async Task<IActionResult> PostManyReceiversWithTemplate([FromBody] List<string> receivers,
-        [FromBody] string subject,
-        [FromBody] string content, [FromBody] IFormFileCollection attachments)
+    public async Task<IActionResult> PostManyReceiversWithTemplate([FromForm] List<string> receivers,
+        [FromForm] string subject,
+        [FromForm] string content, [FromForm] IFormFileCollection attachments)
     {
         //string rootPath = env.WebRootPath;
         //MailMessageEntity mail = new MailMessageEntity( receivers, subject, content, attachments);
         //var result = await mailService.SendEmailWithDefaultTemplateAsync(mail, rootPath);
         var result =
-            await serviceWrapper.Mails.SendEmailWithDefaultTemplateAsync(receivers, subject, content,
+            await _serviceWrapper.Mails.SendEmailWithDefaultTemplateAsync(receivers, subject, content,
                 attachments /*, rootPath*/);
 
         return result ? Ok("Send mail successfully") : BadRequest("Somthing went wrong");

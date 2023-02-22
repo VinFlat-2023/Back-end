@@ -68,8 +68,8 @@ public class ContractsController : ControllerBase
     //TODO get contract by renter ID
 
     // GET: api/Contract/5
-    [SwaggerOperation(Summary = "[Authorize] Get Contract")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Get Contract using id (For management)")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetContract(int id)
     {
@@ -88,11 +88,11 @@ public class ContractsController : ControllerBase
             data = _mapper.Map<ContractDto>(entity)
         });
     }
-    
-    [SwaggerOperation(Summary = "[Authorize] Get Contract based on user ID and contract ID")]
+
+    [SwaggerOperation(Summary = "[Authorize] Get active contract based on user ID(For management and renter)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    [HttpGet("{contractId:int}/user/{userId:int}")]
-    public async Task<IActionResult> GetContractBasedOnUserId(int contractId, int userId)
+    [HttpGet("user/{userId:int}/active")]
+    public async Task<IActionResult> GetContractBasedOnUserId(int userId)
     {
         var userRole = User.Identities
             .FirstOrDefault()?.Claims
@@ -106,7 +106,7 @@ public class ContractsController : ControllerBase
                 message = "You are not authorized to access this resource",
                 data = ""
             });
-        
+
         var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
 
         if (userCheck == null)
@@ -116,7 +116,7 @@ public class ContractsController : ControllerBase
                 message = "No user found",
                 data = ""
             });
-        
+
         var entity = await _serviceWrapper.Contracts.GetContractByUserId(userId);
         if (entity == null)
             return NotFound(new
@@ -134,7 +134,7 @@ public class ContractsController : ControllerBase
                 message = "Contract not found",
                 data = ""
             });
-        
+
         return Ok(new
         {
             status = "Success",
@@ -177,7 +177,6 @@ public class ContractsController : ControllerBase
             RenterId = contractEntity.RenterId,
             ImageUrl = (await _serviceWrapper.AzureStorage.UploadAsync(contract.Image, "Contract",
                 imageExtension))?.Blob.Uri,
-            //ImageUrl = contract.ImageUrl,
             Description = contract.Description ?? "No description"
         };
 
