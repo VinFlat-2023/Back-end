@@ -15,7 +15,7 @@ public class Contract
     public DateTime StartDate { get; set; }
     public string Description { get; set; } = null!;
     public DateTime? EndDate { get; set; }
-    public DateTime? LastUpdated { get; set; }
+    public DateTime LastUpdated { get; set; }
     public string ContractStatus { get; set; } = null!;
     public string? ImageUrl { get; set; }
 

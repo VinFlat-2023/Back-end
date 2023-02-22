@@ -226,7 +226,7 @@ namespace API.Controllers
 //          [HttpPost]
 //         [Route("registerqr")]
 //         [SwaggerOperation(Summary = "Register for User using QR")]
-//         public async Task<IActionResult> RegisterWithQr([FromForm] RegisterRequestQR request)
+//         public async Task<IActionResult> RegisterWithQr([FromBody] RegisterRequestQR request)
 //         {
 //             FirebaseToken token = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(request.AccessToken);
 //             Object email;

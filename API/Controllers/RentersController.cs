@@ -110,7 +110,7 @@ public class RentersController : ControllerBase
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Update renter by id")]
-    public async Task<IActionResult> PutRenter([FromForm] RenterUpdateRequest renter, int id)
+    public async Task<IActionResult> PutRenter([FromBody] RenterUpdateRequest renter, int id)
     {
         if (User.Identity?.Name != id.ToString())
             return BadRequest(new
@@ -186,7 +186,7 @@ public class RentersController : ControllerBase
     [HttpPost]
     [Authorize("Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Register a new renter")]
-    public async Task<IActionResult> PostRenter([FromForm] RenterCreateRequest renter)
+    public async Task<IActionResult> PostRenter([FromBody] RenterCreateRequest renter)
     {
         var imageExtension = ImageExtension.ImageExtensionChecker(renter.Image?.FileName);
 

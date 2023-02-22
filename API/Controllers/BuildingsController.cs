@@ -83,7 +83,7 @@ public class BuildingsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update Building info")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> PutBuilding(int id, [FromForm] BuildingUpdateRequest building)
+    public async Task<IActionResult> PutBuilding(int id, [FromBody] BuildingUpdateRequest building)
     {
         var updateBuilding = new Building
         {
@@ -125,7 +125,7 @@ public class BuildingsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create Building")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost]
-    public async Task<IActionResult> PostBuilding([FromForm] BuildingCreateRequest building)
+    public async Task<IActionResult> PostBuilding([FromBody] BuildingCreateRequest building)
     {
         var newBuilding = new Building
         {

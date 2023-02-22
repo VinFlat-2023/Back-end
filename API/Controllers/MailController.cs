@@ -35,9 +35,9 @@ public class MailController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> PostManyReceiversWithTemplate([FromForm] List<string> receivers,
-        [FromForm] string subject,
-        [FromForm] string content, [FromForm] IFormFileCollection attachments)
+    public async Task<IActionResult> PostManyReceiversWithTemplate([FromBody] List<string> receivers,
+        [FromBody] string subject,
+        [FromBody] string content, [FromBody] IFormFileCollection attachments)
     {
         //string rootPath = env.WebRootPath;
         //MailMessageEntity mail = new MailMessageEntity( receivers, subject, content, attachments);
@@ -70,9 +70,9 @@ public class MailController : ControllerBase
     //}
 
     //[HttpPost]
-    //public async Task<IActionResult> PostManyReceiversWithTemplate([FromForm] List<string> receivers,
-    //    [FromForm] string subject,
-    //    [FromForm] string content, [FromForm] IFormFileCollection attachments)
+    //public async Task<IActionResult> PostManyReceiversWithTemplate([FromBody] List<string> receivers,
+    //    [FromBody] string subject,
+    //    [FromBody] string content, [FromBody] IFormFileCollection attachments)
     //{
     //    var rootPath = env.WebRootPath;
     //    //MailMessageEntity mail = new MailMessageEntity( receivers, subject, content, attachments);

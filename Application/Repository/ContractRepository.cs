@@ -27,6 +27,7 @@ public class ContractRepository : IContractRepository
                 (filters.ContractName == null || x.ContractName.Contains(filters.ContractName))
                 && (filters.Description == null || x.Description.Contains(filters.Description))
                 && (filters.PriceForWater == null || x.PriceForWater == filters.PriceForWater)
+                && (filters.Price == null || x.Price == filters.Price)
                 && (filters.PriceForElectricity == null || x.PriceForElectricity == filters.PriceForElectricity)
                 && (filters.PriceForService == null || x.PriceForService == filters.PriceForService)
                 && (filters.ContractStatus == null || x.ContractStatus == filters.ContractStatus)
@@ -63,6 +64,12 @@ public class ContractRepository : IContractRepository
             .Where(x => x.ContractId == contractId);
     }
 
+    public IQueryable<Contract?> GetContractByUserId(int userId)
+    {
+        return _context.Contracts
+            .Where(x => x.RenterId == userId);    
+    }
+
     public IQueryable<Contract?> GetContractHistoryDetail(int contractId)
     {
         return _context.Contracts
@@ -75,7 +82,7 @@ public class ContractRepository : IContractRepository
     /// </summary>
     /// <param name="contract"></param>
     /// <returns></returns>
-    public async Task<Contract?> AddContract(Contract? contract)
+    public async Task<Contract?> AddContract(Contract contract)
     {
         await _context.Contracts.AddAsync(contract);
         await _context.SaveChangesAsync();

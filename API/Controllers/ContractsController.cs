@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using API.Extension;
 using AutoMapper;
 using Domain.EntitiesDTO.ContractDTO;
@@ -87,13 +88,67 @@ public class ContractsController : ControllerBase
             data = _mapper.Map<ContractDto>(entity)
         });
     }
+    
+    [SwaggerOperation(Summary = "[Authorize] Get Contract based on user ID and contract ID")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [HttpGet("{contractId:int}/user/{userId:int}")]
+    public async Task<IActionResult> GetContractBasedOnUserId(int contractId, int userId)
+    {
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
+        if (userRole is not "Admin" or "Supervisor" || User.Identity?.Name != userId.ToString())
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "You are not authorized to access this resource",
+                data = ""
+            });
+        
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+
+        if (userCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "No user found",
+                data = ""
+            });
+        
+        var entity = await _serviceWrapper.Contracts.GetContractByUserId(userId);
+        if (entity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "No contract found for this user",
+                data = ""
+            });
+
+        var contractEntity = await _serviceWrapper.Contracts.GetContractByIdWithActiveStatus(entity.ContractId);
+        if (contractEntity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Contract not found",
+                data = ""
+            });
+        
+        return Ok(new
+        {
+            status = "Success",
+            message = "Contract found",
+            data = _mapper.Map<ContractDto>(contractEntity)
+        });
+    }
 
     // PUT: api/Contract/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Update Contract info")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> PutContract(int id, [FromForm] ContractUpdateRequest contract)
+    public async Task<IActionResult> PutContract(int id, [FromBody] ContractUpdateRequest contract)
     {
         var imageExtension = ImageExtension.ImageExtensionChecker(contract.Image?.FileName);
 
@@ -116,6 +171,9 @@ public class ContractsController : ControllerBase
             LastUpdated = DateTime.UtcNow,
             ContractStatus = contract.ContractStatus ?? contractEntity.ContractStatus,
             Price = contract.Price ?? contractEntity.Price,
+            PriceForElectricity = contract.PriceForElectricity ?? contractEntity.PriceForElectricity,
+            PriceForWater = contract.PriceForWater ?? contractEntity.PriceForWater,
+            PriceForService = contract.PriceForService ?? contractEntity.PriceForService,
             RenterId = contractEntity.RenterId,
             ImageUrl = (await _serviceWrapper.AzureStorage.UploadAsync(contract.Image, "Contract",
                 imageExtension))?.Blob.Uri,
@@ -152,7 +210,7 @@ public class ContractsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create Contract")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost("sign")]
-    public async Task<IActionResult> PostContract([FromForm] ContractCreateRequest contract)
+    public async Task<IActionResult> PostContract([FromBody] ContractCreateRequest contract)
     {
         var imageExtension = ImageExtension.ImageExtensionChecker(contract.Image?.FileName);
 

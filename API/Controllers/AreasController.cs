@@ -89,7 +89,7 @@ public class AreasController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update Area info")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> PutArea(int id, [FromForm] AreaUpdateRequest area)
+    public async Task<IActionResult> PutArea(int id, [FromBody] AreaUpdateRequest area)
     {
         var updateArea = new Area
         {
@@ -128,7 +128,7 @@ public class AreasController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create Area")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost]
-    public async Task<IActionResult> PostArea([FromForm] AreaCreateRequest area)
+    public async Task<IActionResult> PostArea([FromBody] AreaCreateRequest area)
     {
         var newArea = new Area
         {

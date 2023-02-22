@@ -94,7 +94,7 @@ public class TicketsController : ControllerBase
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Update ticket (Not finished yet !!!)")]
-    public async Task<IActionResult> PutTicket(int id, [FromForm] TicketUpdateRequest ticketUpdateRequest)
+    public async Task<IActionResult> PutTicket(int id, [FromBody] TicketUpdateRequest ticketUpdateRequest)
     {
         /*
         var requestEntity = (await _serviceWrapper.Requests.GetRequestById(id));
@@ -135,7 +135,7 @@ public class TicketsController : ControllerBase
     [HttpPost]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Create request")]
-    public async Task<IActionResult> PostTicket([FromForm] TicketCreateRequest ticketCreateRequest)
+    public async Task<IActionResult> PostTicket([FromBody] TicketCreateRequest ticketCreateRequest)
     {
         var newRequest = new Ticket
         {
@@ -260,7 +260,7 @@ public class TicketsController : ControllerBase
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Update request type")]
     public async Task<IActionResult> PutTicketType(int id,
-        [FromForm] TicketTypeCreateRequest ticketTypeCreateRequestType)
+        [FromBody] TicketTypeCreateRequest ticketTypeCreateRequestType)
     {
         var updateRequestType = new TicketType
         {
@@ -302,7 +302,7 @@ public class TicketsController : ControllerBase
     [HttpPost("type/")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Create request type")]
-    public async Task<IActionResult> PostTicketType([FromForm] TicketTypeCreateRequest ticketTypeCreateRequestType)
+    public async Task<IActionResult> PostTicketType([FromBody] TicketTypeCreateRequest ticketTypeCreateRequestType)
     {
         var newRequestType = new TicketType
         {

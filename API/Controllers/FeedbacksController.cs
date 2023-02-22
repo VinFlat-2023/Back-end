@@ -66,7 +66,7 @@ public class FeedbacksController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update Feedback info")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> PutFeedback(int id, [FromForm] FeedbackUpdateRequest feedback)
+    public async Task<IActionResult> PutFeedback(int id, [FromBody] FeedbackUpdateRequest feedback)
     {
         if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User, feedback.RenterId))
             return BadRequest("You are not authorized to access this information");
@@ -100,7 +100,7 @@ public class FeedbacksController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create Feedback")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [HttpPost]
-    public async Task<IActionResult> PostFeedback([FromForm] FeedbackCreateRequest feedback)
+    public async Task<IActionResult> PostFeedback([FromBody] FeedbackCreateRequest feedback)
     {
         if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User))
             return BadRequest("You are not authorized to access this information");
@@ -192,7 +192,7 @@ public class FeedbacksController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update Feedback Type info")]
     [HttpPut("type/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    public async Task<IActionResult> PutFeedbackType(int id, [FromForm] FeedbackTypeUpdateRequest feedbackType)
+    public async Task<IActionResult> PutFeedbackType(int id, [FromBody] FeedbackTypeUpdateRequest feedbackType)
     {
         if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
             return BadRequest("You are not authorized to access this information");
@@ -218,7 +218,7 @@ public class FeedbacksController : ControllerBase
     [SwaggerOperation(Summary = "Create Feedback Type")]
     [HttpPost("type")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    public async Task<IActionResult> PostFeedbackType([FromForm] FeedbackTypeCreateRequest feedbackType)
+    public async Task<IActionResult> PostFeedbackType([FromBody] FeedbackTypeCreateRequest feedbackType)
     {
         if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
             return BadRequest("You are not authorized to access this information");

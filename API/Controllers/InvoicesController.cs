@@ -60,7 +60,12 @@ public class InvoicesController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Account list is empty");
+            : BadRequest(new
+            {
+                status = "Bad Request",
+                message = "List not found",
+                data = ""
+            });
     }
 
     // GET: api/Invoices/5
@@ -154,7 +159,7 @@ public class InvoicesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update Invoice info")]
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    public async Task<IActionResult> PutInvoice(int id, [FromForm] InvoiceUpdateRequest invoice)
+    public async Task<IActionResult> PutInvoice(int id, [FromBody] InvoiceUpdateRequest invoice)
     {
         var updateInvoice = new Invoice
         {
@@ -187,7 +192,7 @@ public class InvoicesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create Invoice")]
     [HttpPost]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    public async Task<IActionResult> PostInvoice([FromForm] InvoiceCreateRequest invoice)
+    public async Task<IActionResult> PostInvoice([FromBody] InvoiceCreateRequest invoice)
     {
         var addNewInvoice = new Invoice
         {
@@ -201,13 +206,28 @@ public class InvoicesController : ControllerBase
 
         var validation = await _validator.ValidateParams(addNewInvoice, null);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.Invoices.AddInvoice(addNewInvoice);
         if (result == null)
-            return NotFound("Invoice not found");
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Invoice failed to create",
+                data = ""
+            });
 
-        return Ok("Invoice created successfully");
+        return Ok(new
+        {
+            status = "Success",
+            message = "Invoice created",
+            data = ""
+        });
     }
 
     // DELETE: api/Invoices/5
@@ -218,9 +238,19 @@ public class InvoicesController : ControllerBase
     {
         var result = await _serviceWrapper.Invoices.DeleteInvoice(id);
         if (!result)
-            return NotFound("Invoice not found");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Invoice failed to delete",
+                data = ""
+            });
 
-        return Ok("Invoice deleted");
+        return Ok(new
+        {
+            status = "Success",
+            message = "Invoice deleted",
+            data = ""
+        });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get Invoice type")]
@@ -293,12 +323,27 @@ public class InvoicesController : ControllerBase
 
         var validation = await _validator.ValidateParams(newInvoiceType, null);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.InvoiceTypes.AddInvoiceType(newInvoiceType);
         return result == null
-            ? NotFound("Invoice type failed to create")
-            : Ok("Invoice type created successfully");
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Invoice type failed to create",
+                data = ""
+            })
+            : Ok(new
+            {
+                status = "Success",
+                message = "Invoice type created",
+                data = ""
+            });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Update Invoice")]
@@ -315,12 +360,27 @@ public class InvoicesController : ControllerBase
 
         var validation = await _validator.ValidateParams(updateInvoiceType, id);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.InvoiceTypes.UpdateInvoiceType(updateInvoiceType);
         return result == null
-            ? NotFound("Invoice type not found")
-            : Ok(_mapper.Map<InvoiceTypeDto>(result));
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Invoice type failed to update",
+                data = ""
+            })
+            : Ok(new
+            {
+                status = "Success",
+                message = "Invoice type updated",
+                data = _mapper.Map<InvoiceTypeDto>(result)
+            });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Delete invoice type")]
@@ -330,8 +390,18 @@ public class InvoicesController : ControllerBase
     {
         var result = await _serviceWrapper.InvoiceTypes.DeleteInvoiceType(id);
         return !result
-            ? NotFound("Invoice type failed to delete")
-            : Ok("Invoice type deleted successfully");
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Invoice type failed to delete",
+                data = ""
+            })
+            : Ok(new
+            {
+                status = "Success",
+                message = "Invoice type deleted",
+                data = ""
+            });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Delete invoice detail")]
@@ -373,7 +443,12 @@ public class InvoicesController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Invoice type is empty");
+            : BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Invoice detail list is empty",
+                data = ""
+            });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get Invoice detail by id")]
@@ -383,7 +458,12 @@ public class InvoicesController : ControllerBase
     {
         var entity = await _serviceWrapper.InvoiceDetails.GetInvoiceDetailById(id);
         return entity == null
-            ? NotFound("Invoice detail not found")
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Invoice detail not found",
+                data = ""
+            })
             : Ok(new
             {
                 status = "Success",
@@ -399,8 +479,18 @@ public class InvoicesController : ControllerBase
     {
         var result = await _serviceWrapper.InvoiceDetails.GetInvoiceDetailListByUserId(id, token);
         return !result.Any()
-            ? NotFound("Invoice detail list by this user not found")
-            : Ok(_mapper.Map<InvoiceDto>(result));
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Invoice detail list not found",
+                data = ""
+            })
+            : Ok(new
+            {
+                status = "Success",
+                message = "Invoice detail found",
+                data = _mapper.Map<InvoiceDto>(result)
+            });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get Invoice detail by user id with true")]

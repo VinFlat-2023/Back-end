@@ -88,7 +88,7 @@ public class MajorsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create Major")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost]
-    public async Task<IActionResult> PostMajor([FromForm] MajorCreateRequest major)
+    public async Task<IActionResult> PostMajor([FromBody] MajorCreateRequest major)
     {
         var addNewMajor = new Major
         {
@@ -121,7 +121,7 @@ public class MajorsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update Major info")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateMajor(int id, [FromForm] MajorUpdateRequest major)
+    public async Task<IActionResult> UpdateMajor(int id, [FromBody] MajorUpdateRequest major)
     {
         var updateMajor = new Major
         {

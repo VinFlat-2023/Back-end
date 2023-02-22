@@ -92,7 +92,7 @@ public class AccountsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create Account")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost("register")]
-    public async Task<IActionResult> CreateAccount([FromForm] AccountCreateRequest account)
+    public async Task<IActionResult> CreateAccount([FromBody] AccountCreateRequest account)
     {
         var newAccount = new Account
         {
@@ -152,7 +152,7 @@ public class AccountsController : ControllerBase
     [SwaggerOperation(Summary = "Update account info")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateAccount(int id, [FromForm] AccountUpdateRequest account)
+    public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountUpdateRequest account)
     {
         var updateAccount = new Account
         {

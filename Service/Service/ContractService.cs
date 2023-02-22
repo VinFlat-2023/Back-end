@@ -58,6 +58,18 @@ public class ContractService : IContractService
         return await _repositoryWrapper.Contracts.GetContractDetail(contractId)
             .FirstOrDefaultAsync();
     }
+    
+    public async Task<Contract?> GetContractByIdWithActiveStatus(int contractId)
+    {
+        return await _repositoryWrapper.Contracts.GetContractDetail(contractId)
+            .FirstOrDefaultAsync(x => x != null && x.ContractStatus == "Active");
+    }
+
+    public async Task<Contract?> GetContractByUserId(int renterId)
+    {
+        return await _repositoryWrapper.Contracts.GetContractByUserId(renterId)
+            .FirstOrDefaultAsync();
+    }
 
     public async Task<Contract?> GetContractHistoryById(int contractId)
     {
@@ -65,7 +77,7 @@ public class ContractService : IContractService
             .FirstOrDefaultAsync();
     }
 
-    public async Task<Contract?> AddContract(Contract? contract)
+    public async Task<Contract?> AddContract(Contract contract)
     {
         return await _repositoryWrapper.Contracts.AddContract(contract);
     }

@@ -98,7 +98,7 @@ public class RolesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get Role")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost]
-    public async Task<IActionResult> CreateRole([FromForm] RoleCreateRequest request)
+    public async Task<IActionResult> CreateRole([FromBody] RoleCreateRequest request)
     {
         // TODO : pass cancellation token
         if (await _jwtRoleCheckerHelper.IsManagementRoleAuthorized(User))
@@ -139,7 +139,7 @@ public class RolesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update Role info")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPut]
-    public async Task<IActionResult> UpdateRole(int id, [FromForm] RoleUpdateRequest role)
+    public async Task<IActionResult> UpdateRole(int id, [FromBody] RoleUpdateRequest role)
     {
         if (await _jwtRoleCheckerHelper.IsManagementRoleAuthorized(User))
             return BadRequest("You are not authorized to access this information");

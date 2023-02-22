@@ -22,7 +22,5 @@ public class ContractFilterRequest : PagingFilter
 
     public string? ContractStatus { get; set; }
 
-    public string? ImageUrl { get; set; }
-
     public decimal? Price { get; set; }
 }

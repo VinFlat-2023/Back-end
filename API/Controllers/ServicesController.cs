@@ -94,7 +94,7 @@ public class ServicesController : ControllerBase
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Update service by id")]
-    public async Task<IActionResult> PutServiceEntity(int id, [FromForm] ServiceUpdateRequest service)
+    public async Task<IActionResult> PutServiceEntity(int id, [FromBody] ServiceUpdateRequest service)
     {
         var updateService = new ServiceEntity
         {
@@ -139,7 +139,7 @@ public class ServicesController : ControllerBase
     [HttpPost]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Add new service")]
-    public async Task<IActionResult> PostServiceEntity([FromForm] ServiceCreateRequest service)
+    public async Task<IActionResult> PostServiceEntity([FromBody] ServiceCreateRequest service)
     {
         var newService = new ServiceEntity
         {

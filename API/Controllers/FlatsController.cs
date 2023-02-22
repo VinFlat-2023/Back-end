@@ -93,7 +93,7 @@ public class FlatsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update Flat info")]
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    public async Task<IActionResult> PutFlat(int id, [FromForm] FlatUpdateRequest flat)
+    public async Task<IActionResult> PutFlat(int id, [FromBody] FlatUpdateRequest flat)
     {
         var updateFlat = new Flat
         {
@@ -136,7 +136,7 @@ public class FlatsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create Flat")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost]
-    public async Task<IActionResult> PostFlat([FromForm] FlatCreateRequest flat)
+    public async Task<IActionResult> PostFlat([FromBody] FlatCreateRequest flat)
     {
         var newFlat = new Flat
         {
@@ -248,7 +248,7 @@ public class FlatsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update Flat Type info")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPut("type/{id:int}")]
-    public async Task<IActionResult> PutFlatType(int id, [FromForm] FlatTypeUpdateRequest flatType)
+    public async Task<IActionResult> PutFlatType(int id, [FromBody] FlatTypeUpdateRequest flatType)
     {
         var updateFlatType = new FlatType
         {
@@ -288,7 +288,7 @@ public class FlatsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create Flat Type")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost("type")]
-    public async Task<IActionResult> PostFlatType([FromForm] FlatTypeCreateRequest flatType)
+    public async Task<IActionResult> PostFlatType([FromBody] FlatTypeCreateRequest flatType)
     {
         var newFlatType = new FlatType
         {
