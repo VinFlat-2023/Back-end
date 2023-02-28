@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.IService;
 using Service.IValidator;
 using Swashbuckle.AspNetCore.Annotations;
+using static System.Int32;
 
 namespace API.Controllers;
 
@@ -68,12 +69,13 @@ public class ContractsController : ControllerBase
     //TODO get contract by renter ID
 
     // GET: api/Contract/5
-    [SwaggerOperation(Summary = "[Authorize] Get Contract using id (For management)")]
+    [SwaggerOperation(Summary = "[Authorize] Get Contract using id")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetContract(int id)
+    public async Task<IActionResult> GetContractManagement(int id)
     {
         var entity = await _serviceWrapper.Contracts.GetContractById(id);
+
         if (entity == null)
             return NotFound(new
             {
@@ -81,11 +83,41 @@ public class ContractsController : ControllerBase
                 message = "Contract not found",
                 data = ""
             });
+
         return Ok(new
         {
             status = "Success",
             message = "Contract found",
             data = _mapper.Map<ContractDto>(entity)
+        });
+    }
+
+    [SwaggerOperation(Summary = "[Authorize] Get Contract using contract id with renter id")]
+    [Authorize(Roles = "Renter")]
+    [HttpGet("{id:int}/user/{renterId:int}")]
+    public async Task<IActionResult> GetContract(int id, int renterId)
+    {
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
+        var entity = await _serviceWrapper.Contracts.GetContractById(id);
+
+        if ((entity != null && entity.RenterId == Parse(User.Identity.Name) && renterId == Parse(User.Identity.Name) &&
+             userRole == "Renter") || userRole is "Admin" or "Supervisor")
+            Ok(new
+            {
+                status = "Success",
+                message = "Contract found",
+                data = _mapper.Map<ContractDto>(entity)
+            });
+
+        return BadRequest(new
+        {
+            status = "Bad Request",
+            message = "You are not authorized to access this resource",
+            data = ""
         });
     }
 

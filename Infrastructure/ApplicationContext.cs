@@ -903,6 +903,24 @@ public class ApplicationContext : DbContext
                 Description = "Contract description for renter 2",
                 ImageUrl = "No image",
                 FlatId = 3
+            },
+            new Contract
+            {
+                ContractId = 3,
+                ContractName = "Contract for renter 3",
+                DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
+                StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
+                EndDate = null,
+                LastUpdated = DateTime.UtcNow,
+                ContractStatus = "Active",
+                Price = 2800000,
+                PriceForService = 10000,
+                PriceForWater = 1000,
+                PriceForElectricity = 120,
+                RenterId = 3,
+                Description = "Contract description for renter 3",
+                ImageUrl = "No image",
+                FlatId = 3
             }
         );
 

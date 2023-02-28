@@ -8,7 +8,6 @@ namespace Domain.EntityRequest.Invoice;
 public class InvoiceCreateRequest
 {
     public string Name { get; set; } = null!;
-    public int? Amount { get; set; }
     public bool? Status { get; set; }
     public DateTime? DueDate { get; set; }
     public string? Detail { get; set; }

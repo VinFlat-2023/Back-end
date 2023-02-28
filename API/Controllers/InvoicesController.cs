@@ -117,22 +117,27 @@ public class InvoicesController : ControllerBase
                 message = "No user found",
                 data = ""
             });
-        var entity = await _serviceWrapper.Invoices
+
+        var entities = await _serviceWrapper.Invoices
             .GetInvoiceList(new InvoiceFilter { RenterId = userId }, token);
 
-        if (entity == null)
-            return NotFound(new
+        var resultList = _mapper.Map<IEnumerable<InvoiceDto>>(entities);
+
+        return entities != null
+            ? Ok(new
+            {
+                status = "Success",
+                message = "List found",
+                data = resultList,
+                totalPage = entities.TotalPages,
+                totalCount = entities.TotalCount
+            })
+            : NotFound(new
             {
                 status = "Not Found",
                 message = "No invoice list found",
                 data = ""
             });
-        return Ok(new
-        {
-            status = "Success",
-            message = "Invoice found",
-            data = _mapper.Map<IEnumerable<InvoiceDto>>(entity)
-        });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get Invoice by renter for renter usage")]
@@ -317,7 +322,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice by id")]
+    [SwaggerOperation(Summary = "[Authorize] Get Invoice type by id")]
     [HttpGet("types/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceById(int id)
@@ -505,7 +510,9 @@ public class InvoicesController : ControllerBase
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceDetailListByUserId(int id, CancellationToken token)
     {
-        var result = await _serviceWrapper.InvoiceDetails.GetInvoiceDetailListByUserId(id, token);
+        var result = await _serviceWrapper.InvoiceDetails
+            .GetInvoiceDetailListByUserId(id, token);
+
         return !result.Any()
             ? NotFound(new
             {
@@ -540,7 +547,7 @@ public class InvoicesController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "[Authorize] Create Invoice based on renter")]
-    [HttpPut("create")]
+    [HttpPost("create")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> CreateManyInvoice([FromBody] List<MassInvoiceCreateRequest> invoices)
     {

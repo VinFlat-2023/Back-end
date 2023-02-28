@@ -71,7 +71,7 @@ public class RentersController : ControllerBase
 
     // GET: api/Renters/5
     [HttpGet("{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get renter by id")]
     public async Task<IActionResult> GetRenter(int id)
     {
@@ -80,7 +80,8 @@ public class RentersController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        if (userRole is not "Admin" or "Supervisor" || (User.Identity?.Name != id.ToString() && userRole is "Renter"))
+        if (userRole is not ("Admin" or "Supervisor") &&
+            (User.Identity?.Name != id.ToString() || userRole != "Renter"))
             return BadRequest(new
             {
                 status = "Bad Request",
@@ -112,13 +113,20 @@ public class RentersController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update renter by id")]
     public async Task<IActionResult> PutRenter([FromBody] RenterUpdateRequest renter, int id)
     {
-        if (User.Identity?.Name != id.ToString())
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
+        if (userRole is not ("Admin" or "Supervisor") &&
+            (User.Identity?.Name != id.ToString() || userRole != "Renter"))
             return BadRequest(new
             {
                 status = "Bad Request",
                 message = "You are not authorized to access this resource",
                 data = ""
             });
+
 
         var renterCheck = await _serviceWrapper.Renters.GetRenterById(id);
 
@@ -232,7 +240,8 @@ public class RentersController : ControllerBase
         if (!StringUtils.IsNotEmpty(renter.DeviceToken))
             return CreatedAtAction("GetRenter", new { id = result.RenterId }, result);
 
-        var userDeviceFound = await _serviceWrapper.Devices.GetUdByDeviceToken(renter.DeviceToken);
+        var userDeviceFound = await _serviceWrapper.Devices
+            .GetUdByDeviceToken(renter.DeviceToken);
 
         if (userDeviceFound.UserName == result.Username)
             return Ok(new
@@ -264,7 +273,12 @@ public class RentersController : ControllerBase
         var renter = await _serviceWrapper.Renters.GetRenterById(id);
 
         if (renter == null)
-            return BadRequest("Renter not found");
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Renter not found",
+                data = ""
+            });
 
         var listUserDevice = await _serviceWrapper.Devices.GetDeviceByUserName(renter.Username);
 

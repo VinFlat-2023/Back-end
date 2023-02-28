@@ -14,7 +14,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/services")]
 [ApiController]
 public class ServicesController : ControllerBase
 {
@@ -69,7 +69,7 @@ public class ServicesController : ControllerBase
 
     // GET: api/ServiceEntitys/5
     [HttpGet("{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get service by id")]
     public async Task<IActionResult> GetServiceEntity(int id)
     {

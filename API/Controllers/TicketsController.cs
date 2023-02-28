@@ -134,7 +134,7 @@ public class TicketsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Create request")]
+    [SwaggerOperation(Summary = "[Authorize] Create ticket")]
     public async Task<IActionResult> PostTicket([FromBody] TicketCreateRequest ticketCreateRequest)
     {
         var newRequest = new Ticket
@@ -173,7 +173,7 @@ public class TicketsController : ControllerBase
     // DELETE: api/Requests/5
     [HttpDelete("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Delete request (Not finished yet !!!)")]
+    [SwaggerOperation(Summary = "[Authorize] Delete ticket (Not finished yet !!!)")]
     public async Task<IActionResult> DeleteTicket(int id)
     {
         /*777
@@ -197,7 +197,7 @@ public class TicketsController : ControllerBase
     // GET: api/RequestTypes
     [HttpGet("type")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Get request list")]
+    [SwaggerOperation(Summary = "[Authorize] Get ticket list")]
     public async Task<IActionResult> GetTIcketTypes([FromQuery] TicketTypeFilterRequest request,
         CancellationToken token)
     {
@@ -235,7 +235,7 @@ public class TicketsController : ControllerBase
     // GET: api/RequestTypes/5
     [HttpGet("type/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Get request type by id")]
+    [SwaggerOperation(Summary = "[Authorize] Get ticket type by id")]
     public async Task<IActionResult> GetTicketType(int id)
     {
         var entity = await _serviceWrapper.TicketTypes.GetTicketTypeById(id);
@@ -258,7 +258,7 @@ public class TicketsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("type/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Update request type")]
+    [SwaggerOperation(Summary = "[Authorize] Update ticket type")]
     public async Task<IActionResult> PutTicketType(int id,
         [FromBody] TicketTypeCreateRequest ticketTypeCreateRequestType)
     {
@@ -301,7 +301,7 @@ public class TicketsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost("type/")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Create request type")]
+    [SwaggerOperation(Summary = "[Authorize] Create ticket type")]
     public async Task<IActionResult> PostTicketType([FromBody] TicketTypeCreateRequest ticketTypeCreateRequestType)
     {
         var newRequestType = new TicketType
@@ -334,7 +334,7 @@ public class TicketsController : ControllerBase
     // DELETE: api/RequestTypes/5
     [HttpDelete("type/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Delete request type")]
+    [SwaggerOperation(Summary = "[Authorize] Delete ticket type")]
     public async Task<IActionResult> DeleteTicketType(int id)
     {
         var result = await _serviceWrapper.TicketTypes.DeleteTicketType(id);
