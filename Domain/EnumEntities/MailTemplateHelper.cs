@@ -82,7 +82,6 @@ public static class MailTemplateHelper
         var hasService = false;
         var hasRequest = false;
         foreach (var detail in invoice.InvoiceDetails)
-        {
             if (detail.Service != null)
             {
                 serviceTable.Append("<tr>");
@@ -95,7 +94,7 @@ public static class MailTemplateHelper
                 hasService = true;
             }
 
-            /*
+        /*
             if (detail.Ticket != null)
             {
                 requesttable.Append("<tr>");
@@ -108,8 +107,6 @@ public static class MailTemplateHelper
                 hasRequest = true;
             }
             */
-        }
-
         if (hasService)
         {
             serviceTable.Append("<tr>");

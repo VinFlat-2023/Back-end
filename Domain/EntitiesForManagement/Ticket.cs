@@ -15,7 +15,7 @@ public class Ticket
     public DateTime? SolveDate { get; set; }
     public decimal Amount { get; set; }
     public string Status { get; set; } = null!;
-    
+
     // Contract
     // Management
     public int AccountId { get; set; }

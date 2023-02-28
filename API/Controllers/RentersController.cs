@@ -129,7 +129,7 @@ public class RentersController : ControllerBase
                 message = "Renters not found",
                 data = ""
             });
-        
+
         var imageExtension = ImageExtension.ImageExtensionChecker(renter.Image?.FileName);
 
         var fileNameUserImage = renterCheck.ImageUrl?.Split('/').Last();

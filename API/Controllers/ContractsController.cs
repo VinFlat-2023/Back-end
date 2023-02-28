@@ -99,7 +99,8 @@ public class ContractsController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        if (userRole is not "Admin" or "Supervisor" || User.Identity?.Name != userId.ToString())
+        if (userRole is not ("Admin" or "Supervisor") &&
+            (User.Identity?.Name != userId.ToString() || userRole != "Renter"))
             return BadRequest(new
             {
                 status = "Bad Request",
@@ -179,7 +180,6 @@ public class ContractsController : ControllerBase
                 imageExtension))?.Blob.Uri,
             Description = contract.Description ?? "No description",
             CreatedDate = contractEntity.CreatedDate
-                    
         };
 
         var validation = await _validator.ValidateParams(updateContract, id);

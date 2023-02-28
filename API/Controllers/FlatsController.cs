@@ -367,7 +367,7 @@ public class FlatsController : ControllerBase
     public async Task<IActionResult> MoveNewRenterIn(int flatId, int roomId, int renterId, CancellationToken token)
     {
         var entity = await _serviceWrapper.Flats.GetFlatById(flatId);
-        
+
         if (entity == null)
             return NotFound(new
             {

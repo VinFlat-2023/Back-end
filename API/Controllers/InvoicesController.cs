@@ -1,9 +1,9 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Domain.EntitiesDTO.InvoiceDTO;
 using Domain.EntitiesDTO.InvoiceTypeDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Invoice;
-using Domain.EntityRequest.InvoiceDetail;
 using Domain.EntityRequest.InvoiceType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
@@ -90,11 +90,25 @@ public class InvoicesController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice by renter")]
+    [SwaggerOperation(Summary = "[Authorize] Get Invoice list by renter ID")]
     [HttpGet("user/{userId:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetInvoiceRenter(int userId, CancellationToken token)
     {
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
+        if (userRole is not ("Admin" or "Supervisor") &&
+            (User.Identity?.Name != userId.ToString() || userRole != "Renter"))
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "You are not authorized to access this resource",
+                data = ""
+            });
+
         var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
         if (userCheck == null)
             return NotFound(new
@@ -110,22 +124,36 @@ public class InvoicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "No invoice found",
+                message = "No invoice list found",
                 data = ""
             });
         return Ok(new
         {
             status = "Success",
             message = "Invoice found",
-            data = _mapper.Map<InvoiceDto>(entity)
+            data = _mapper.Map<IEnumerable<InvoiceDto>>(entity)
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice by renter")]
+    [SwaggerOperation(Summary = "[Authorize] Get Invoice by renter for renter usage")]
     [HttpGet("{invoiceId:int}/user/{userId:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetInvoiceRenterUsingId(int invoiceId, int userId)
     {
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
+        if (userRole is not ("Admin" or "Supervisor") &&
+            (User.Identity?.Name != userId.ToString() || userRole != "Renter"))
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "You are not authorized to access this resource",
+                data = ""
+            });
+
         var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
 
         if (userCheck == null)
@@ -498,7 +526,9 @@ public class InvoicesController : ControllerBase
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceDetailByUserId(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.InvoiceDetails.GetActiveInvoiceDetailByUserId(id, token);
+        var entity = await _serviceWrapper.InvoiceDetails
+            .GetActiveInvoiceDetailByUserId(id, token);
+
         return entity == null
             ? NotFound("Invoice detail with active status by this user not found")
             : Ok(new
@@ -528,14 +558,6 @@ public class InvoicesController : ControllerBase
                 message = "Invoices created successfully",
                 data = ""
             });
-    }
-
-    [SwaggerOperation(Summary = "[Authorize] Update Invoice detail")]
-    [HttpPut("details/{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    public async Task<IActionResult> UpdateInvoiceDetail(int id, [FromBody] InvoiceDetailCreateRequest invoiceDetail)
-    {
-        return Ok("On development");
     }
 
     private static int DateRemainingCheck(DateTime start, DateTime end)

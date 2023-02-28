@@ -10,9 +10,11 @@ public class Contract
     {
         Tickets = new HashSet<Ticket>();
     }
+
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ContractId { get; set; }
+
     public string ContractName { get; set; } = null!;
     public DateTime DateSigned { get; set; }
     public DateTime StartDate { get; set; }

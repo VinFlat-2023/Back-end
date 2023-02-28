@@ -831,13 +831,13 @@ public class ApplicationContext : DbContext
             {
                 InvoiceDetailId = 3,
                 InvoiceId = 1,
-                Amount = 0,
+                Amount = 0
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 4,
                 InvoiceId = 2,
-                Amount = 0,
+                Amount = 0
             },
             new InvoiceDetail
             {
@@ -857,19 +857,19 @@ public class ApplicationContext : DbContext
             {
                 InvoiceDetailId = 7,
                 InvoiceId = 3,
-                Amount = 0,
+                Amount = 0
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 8,
                 InvoiceId = 3,
-                Amount = 0,
+                Amount = 0
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 9,
                 InvoiceId = 3,
-                Amount = 0,
+                Amount = 0
             }
         );
 

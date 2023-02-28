@@ -6,7 +6,6 @@ using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Service.IHelper;
 using Service.IService;
 using Service.IValidator;
 using Swashbuckle.AspNetCore.Annotations;
@@ -17,17 +16,15 @@ namespace API.Controllers;
 [ApiController]
 public class RolesController : ControllerBase
 {
-    private readonly IJwtRoleCheckerHelper _jwtRoleCheckerHelper;
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
     private readonly IRoleValidator _validator;
 
-    public RolesController(IMapper mapper, IServiceWrapper serviceWrapper, IJwtRoleCheckerHelper jwtRoleCheckHelper,
+    public RolesController(IMapper mapper, IServiceWrapper serviceWrapper,
         IRoleValidator validator)
     {
         _mapper = mapper;
         _serviceWrapper = serviceWrapper;
-        _jwtRoleCheckerHelper = jwtRoleCheckHelper;
         _validator = validator;
     }
 
@@ -36,10 +33,6 @@ public class RolesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetRoleList([FromQuery] RoleFilterRequest request, CancellationToken token)
     {
-        // TODO : pass cancellation token
-        if (await _jwtRoleCheckerHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var filter = _mapper.Map<RoleFilter>(request);
 
         var list = await _serviceWrapper.Roles.GetRoleList(filter, token);
@@ -75,10 +68,6 @@ public class RolesController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetRole(int id)
     {
-        // TODO : pass cancellation token
-        if (await _jwtRoleCheckerHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var entity = await _serviceWrapper.Roles.GetRoleById(id);
         return entity == null
             ? NotFound(new
@@ -100,10 +89,6 @@ public class RolesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateRole([FromBody] RoleCreateRequest request)
     {
-        // TODO : pass cancellation token
-        if (await _jwtRoleCheckerHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var newRole = new Role
         {
             RoleName = request.RoleName,
@@ -141,9 +126,6 @@ public class RolesController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdateRole(int id, [FromBody] RoleUpdateRequest role)
     {
-        if (await _jwtRoleCheckerHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var updateRole = new Role
         {
             RoleId = id,
