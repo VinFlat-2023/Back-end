@@ -80,7 +80,7 @@ public class RentersController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        if (userRole is not "Admin" or "Supervisor" || User.Identity?.Name != id.ToString())
+        if (userRole is not "Admin" or "Supervisor" || (User.Identity?.Name != id.ToString() && userRole is "Renter"))
             return BadRequest(new
             {
                 status = "Bad Request",
@@ -129,6 +129,7 @@ public class RentersController : ControllerBase
                 message = "Renters not found",
                 data = ""
             });
+        
         var imageExtension = ImageExtension.ImageExtensionChecker(renter.Image?.FileName);
 
         var fileNameUserImage = renterCheck.ImageUrl?.Split('/').Last();

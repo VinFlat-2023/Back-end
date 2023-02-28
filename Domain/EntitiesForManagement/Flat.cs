@@ -23,6 +23,8 @@ public class Flat
     public int? ElectricityMeterBefore { get; set; }
     public int? WaterMeterAfter { get; set; }
     public int? ElectricityMeterAfter { get; set; }
+    public int MaxRoom { get; set; }
+    public int AvailableRoom { get; set; }
     public int FlatTypeId { get; set; }
     public virtual FlatType FlatType { get; set; }
     public int BuildingId { get; set; }

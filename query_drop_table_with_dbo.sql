@@ -4,6 +4,17 @@ DECLARE @name VARCHAR(128)
 DECLARE @constraint VARCHAR(254)
 DECLARE @SQL VARCHAR(254)
 
+
+ALTER TABLE [dbo].[Contracts]  SET ( SYSTEM_VERSIONING = Off )
+
+drop table [dbo].[Contracts];
+drop table [dbo].[ContractsHistory]
+
+ALTER TABLE [dbo].[Invoices]  SET ( SYSTEM_VERSIONING = Off )
+
+drop table [dbo].[Invoices];
+drop table [dbo].[InvoicesHistory]
+
 SELECT @name = (SELECT TOP 1 TABLE_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE constraint_catalog=DB_NAME() AND CONSTRAINT_TYPE = 'FOREIGN KEY' ORDER BY TABLE_NAME)
 
 WHILE @name is not null

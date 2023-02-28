@@ -32,17 +32,6 @@ public class TicketValidator : BaseValidator, ITicketValidator
                         break;
                 }
 
-            switch (obj?.RenterId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Renter id is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.RenterCheck(obj.RenterId) == null)
-                        ValidatorResult.Failures.Add("Renter provided does not exist");
-                    break;
-            }
-
             switch (obj?.AccountId)
             {
                 case null:

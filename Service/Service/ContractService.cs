@@ -58,7 +58,7 @@ public class ContractService : IContractService
         return await _repositoryWrapper.Contracts.GetContractDetail(contractId)
             .FirstOrDefaultAsync();
     }
-    
+
     public async Task<Contract?> GetContractByIdWithActiveStatus(int contractId)
     {
         return await _repositoryWrapper.Contracts.GetContractDetail(contractId)

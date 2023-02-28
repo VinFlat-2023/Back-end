@@ -225,6 +225,15 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
+    public IRoomRepository Rooms
+    {
+        get
+        {
+            if (_room == null) _room = new RoomRepository(_context);
+            return _room;
+        }
+    }
+
     #region fields
 
     private IAzureStorageRepository _azureStorage;
@@ -250,6 +259,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IWalletRepository _wallets;
     private IDeviceRepository _devices;
     private INotificationRepository _notification;
+    private IRoomRepository _room;
 
     #endregion
 }

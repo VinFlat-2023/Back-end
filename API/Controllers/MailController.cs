@@ -8,9 +8,9 @@ namespace API.Controllers;
 [Route("mail")]
 public class MailController : ControllerBase
 {
-    private readonly IMapper _mapper;
     private readonly IWebHostEnvironment _env;
     private readonly ICustomeMailService _mailService;
+    private readonly IMapper _mapper;
 
     private readonly IServiceWrapper _serviceWrapper;
 

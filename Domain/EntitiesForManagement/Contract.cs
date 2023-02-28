@@ -6,13 +6,17 @@ namespace Domain.EntitiesForManagement;
 
 public class Contract
 {
+    public Contract()
+    {
+        Tickets = new HashSet<Ticket>();
+    }
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ContractId { get; set; }
-
     public string ContractName { get; set; } = null!;
     public DateTime DateSigned { get; set; }
     public DateTime StartDate { get; set; }
+    public DateTime CreatedDate { get; set; }
     public string Description { get; set; } = null!;
     public DateTime? EndDate { get; set; }
     public DateTime LastUpdated { get; set; }
@@ -28,4 +32,5 @@ public class Contract
     public virtual Renter Renter { get; set; } = null!;
     public int FlatId { get; set; }
     public virtual Flat Flat { get; set; } = null!;
+    public virtual ICollection<Ticket> Tickets { get; set; } = null!;
 }

@@ -152,18 +152,6 @@ public class InvoiceValidator : BaseValidator, IInvoiceValidator
                         break;
                 }
 
-            if (obj?.TicketId != null)
-                switch (obj.TicketId)
-                {
-                    case null:
-                        ValidatorResult.Failures.Add("Ticket is required");
-                        break;
-                    case not null:
-                        if (await _conditionCheckHelper.TicketCheck(obj.TicketId) == null)
-                            ValidatorResult.Failures.Add("Ticket provided does not exist");
-                        break;
-                }
-
             switch (obj?.Amount)
             {
                 case { } when obj.Amount < 0:

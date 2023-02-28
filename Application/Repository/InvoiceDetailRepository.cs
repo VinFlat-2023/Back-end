@@ -20,8 +20,8 @@ public class InvoiceDetailRepository : IInvoiceDetailRepository
         return _context.InvoiceDetails
             .Include(x => x.Service)
             .Where(x => x.ServiceId == x.Service.ServiceId)
-            .Include(x => x.Ticket)
-            .Where(x => x.TicketId == x.Ticket.TicketId)
+            //.Include(x => x.Ticket)
+            //.Where(x => x.TicketId == x.Ticket.TicketId)
             .Include(x => x.Invoice)
             .Where(x => x.InvoiceId == x.Invoice.InvoiceId)
             // Filter starts here
@@ -35,7 +35,7 @@ public class InvoiceDetailRepository : IInvoiceDetailRepository
     {
         return await _context.InvoiceDetails
             .Include(x => x.Service)
-            .Include(x => x.Ticket)
+            //.Include(x => x.Ticket)
             .FirstOrDefaultAsync(x => x.InvoiceId == id);
     }
 

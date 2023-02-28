@@ -177,7 +177,9 @@ public class ContractsController : ControllerBase
             RenterId = contractEntity.RenterId,
             ImageUrl = (await _serviceWrapper.AzureStorage.UploadAsync(contract.Image, "Contract",
                 imageExtension))?.Blob.Uri,
-            Description = contract.Description ?? "No description"
+            Description = contract.Description ?? "No description",
+            CreatedDate = contractEntity.CreatedDate
+                    
         };
 
         var validation = await _validator.ValidateParams(updateContract, id);
@@ -230,7 +232,11 @@ public class ContractsController : ControllerBase
             EndDate = contract.EndDate,
             LastUpdated = DateTime.UtcNow,
             ContractStatus = contract.ContractStatus ?? "Active",
+            CreatedDate = DateTime.UtcNow,
             Price = contract.Price,
+            PriceForElectricity = contract.PriceForElectricity,
+            PriceForWater = contract.PriceForWater,
+            PriceForService = contract.PriceForService,
             RenterId = renterEntity.RenterId,
             ImageUrl = (await _serviceWrapper.AzureStorage.UploadAsync(contract.Image, "Contract",
                 imageExtension))?.Blob.Uri,

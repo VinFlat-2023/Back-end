@@ -12,5 +12,6 @@ public class TicketCreateRequest
     public DateTime? SolveDate { get; set; }
     public decimal? Amount { get; set; }
     public string Status { get; set; } = null!;
+    public int ContractId { get; set; }
     [Required] public int TicketTypeId { get; set; }
 }

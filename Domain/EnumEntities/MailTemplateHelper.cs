@@ -95,6 +95,7 @@ public static class MailTemplateHelper
                 hasService = true;
             }
 
+            /*
             if (detail.Ticket != null)
             {
                 requesttable.Append("<tr>");
@@ -106,6 +107,7 @@ public static class MailTemplateHelper
                 requestTotal += detail.Amount * detail.Ticket.Amount;
                 hasRequest = true;
             }
+            */
         }
 
         if (hasService)

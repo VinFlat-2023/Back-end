@@ -39,10 +39,9 @@ public class ApplicationContext : DbContext
     public virtual DbSet<Notification> Notifications { get; set; } = null!;
 
     public virtual DbSet<NotificationType> NotificationTypes { get; set; } = null!;
+    public virtual DbSet<Room> Rooms { get; set; } = null!;
 
-    public virtual DbSet<Room> Rooms { get; set; }
-
-    public virtual DbSet<RoomType> RoomTypes { get; set; }
+    public virtual DbSet<RoomType> RoomTypes { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -757,57 +756,6 @@ public class ApplicationContext : DbContext
             }
         );
 
-        modelBuilder.Entity<Ticket>().HasData(
-            new Ticket
-            {
-                TicketId = 1,
-                TicketName = "Phàn nàn về dịch vụ nước 1",
-                Description = "Phàn nàn về dịch vụ nước 1",
-                CreateDate = DateTime.UtcNow,
-                Amount = 0,
-                Status = "Pending",
-                TicketTypeId = 1,
-                RenterId = 1,
-                AccountId = 4
-            },
-            new Ticket
-            {
-                TicketId = 2,
-                TicketName = "Phàn nàn về dịch vụ nước 2",
-                Description = "Phàn nàn về dịch vụ nước 2",
-                CreateDate = DateTime.UtcNow,
-                Amount = 0,
-                Status = "Pending",
-                TicketTypeId = 2,
-                RenterId = 1,
-                AccountId = 4
-            },
-            new Ticket
-            {
-                TicketId = 3,
-                TicketName = "Phàn nàn về dịch vụ nước 3",
-                Description = "Phàn nàn về dịch vụ nước 3",
-                CreateDate = DateTime.UtcNow,
-                Amount = 0,
-                Status = "Pending",
-                TicketTypeId = 1,
-                RenterId = 1,
-                AccountId = 4
-            },
-            new Ticket
-            {
-                TicketId = 4,
-                TicketName = "Phàn nàn về dịch vụ nước 4",
-                Description = "Phàn nàn về dịch vụ nước 4",
-                CreateDate = DateTime.UtcNow,
-                Amount = 0,
-                Status = "Pending",
-                TicketTypeId = 1,
-                RenterId = 1,
-                AccountId = 4
-            }
-        );
-
         modelBuilder.Entity<InvoiceType>().HasData(
             new InvoiceType
             {
@@ -884,14 +832,12 @@ public class ApplicationContext : DbContext
                 InvoiceDetailId = 3,
                 InvoiceId = 1,
                 Amount = 0,
-                TicketId = 1
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 4,
                 InvoiceId = 2,
                 Amount = 0,
-                TicketId = 2
             },
             new InvoiceDetail
             {
@@ -912,21 +858,18 @@ public class ApplicationContext : DbContext
                 InvoiceDetailId = 7,
                 InvoiceId = 3,
                 Amount = 0,
-                TicketId = 3
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 8,
                 InvoiceId = 3,
                 Amount = 0,
-                TicketId = 4
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 9,
                 InvoiceId = 3,
                 Amount = 0,
-                TicketId = 4
             }
         );
 

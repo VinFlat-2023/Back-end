@@ -1,39 +1,43 @@
 using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
-using Domain.Options;
-using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 using Service.IService;
 
 namespace Service.Service;
 
 public class RoomService : IRoomService
 {
-    private readonly PaginationOption _paginationOptions;
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public RoomService(IRepositoryWrapper repositoryWrapper, IOptions<PaginationOption> paginationOptions)
+    public RoomService(IRepositoryWrapper repositoryWrapper)
     {
         _repositoryWrapper = repositoryWrapper;
-        _paginationOptions = paginationOptions.Value;
     }
 
-    public Task<Room?> UpdateRoom(Room room)
+    public async Task<Room?> UpdateRoom(Room room)
     {
-        throw new NotImplementedException();
+        return await _repositoryWrapper.Rooms.UpdateRoom(room);
     }
 
-    public Task<Room?> AddRoom(Room room)
+    public async Task<RepositoryResponse> AddRoom(Room room, int flatId)
     {
-        throw new NotImplementedException();
+        return await _repositoryWrapper.Rooms.AddRoomToFlat(room, flatId);
     }
 
-    public Task<List<Room>> GetRoomListByFlatId(int id, CancellationToken token)
+    public async Task<List<Room>> GetRoomListByFlatId(int id, CancellationToken token)
     {
-        throw new NotImplementedException();
+        return await _repositoryWrapper.Rooms.GetRoomListInAFlat(id)
+            .ToListAsync(token);
     }
 
-    public Task<Room?> GetRoomById(int? id)
+    public async Task<Room?> GetRoomById(int? id)
     {
-        throw new NotImplementedException();
+        return await _repositoryWrapper.Rooms.GetRoomDetail(id);
+    }
+
+    public async Task<RepositoryResponse> DeleteRoom(int roomId)
+    {
+        return await _repositoryWrapper.Rooms.DeleteRoom(roomId);
     }
 }

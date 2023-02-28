@@ -361,12 +361,13 @@ public class FlatsController : ControllerBase
         };
     }
 
-    [SwaggerOperation(Summary = "Move a renter in inside available slot in a room")]
+    [SwaggerOperation(Summary = "Move a renter in inside available slot in a room (Not yet finished)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost("{flatId:int}/room/{roomId:int}/slots")]
-    public async Task<IActionResult> MoveNewRenterIn(int flatId, int roomId, int renterId)
+    public async Task<IActionResult> MoveNewRenterIn(int flatId, int roomId, int renterId, CancellationToken token)
     {
         var entity = await _serviceWrapper.Flats.GetFlatById(flatId);
+        
         if (entity == null)
             return NotFound(new
             {
@@ -374,7 +375,6 @@ public class FlatsController : ControllerBase
                 message = "Flat not found",
                 data = ""
             });
-        //var roomEntity = await _serviceWrapper.Room.GetTotalRoomByFlatId(roomId);
 
         return Ok(new
         {
