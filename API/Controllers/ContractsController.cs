@@ -104,21 +104,48 @@ public class ContractsController : ControllerBase
 
         var entity = await _serviceWrapper.Contracts.GetContractById(id);
 
-        if ((entity != null && entity.RenterId == Parse(User.Identity.Name) && renterId == Parse(User.Identity.Name) &&
-             userRole == "Renter") || userRole is "Admin" or "Supervisor")
-            Ok(new
-            {
-                status = "Success",
-                message = "Contract found",
-                data = _mapper.Map<ContractDto>(entity)
-            });
-
-        return BadRequest(new
+        switch (entity)
         {
-            status = "Bad Request",
-            message = "You are not authorized to access this resource",
-            data = ""
+            case { } when entity.RenterId != Parse(User.Identity.Name):
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "You are not authorized to access this resource due to invalid renter ID",
+                    data = ""
+                });
+            
+            case { } when renterId != Parse(User.Identity.Name):
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "You are not authorized to access this resource due to invalid token",
+                    data = ""
+                });
+            
+            case { } when userRole != "Renter":
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "You are not authorized to access this resource",
+                    data = ""
+                });
+            
+            case null: 
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Contract not found",
+                    data = ""
+                });
+        }
+      
+        return Ok(new
+        {
+            status = "Success",
+            message = "Contract found",
+            data = _mapper.Map<ContractDto>(entity)
         });
+
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get active contract based on user ID(For management and renter)")]
@@ -203,7 +230,7 @@ public class ContractsController : ControllerBase
             EndDate = contract.EndDate ?? contractEntity.EndDate,
             LastUpdated = DateTime.UtcNow,
             ContractStatus = contract.ContractStatus ?? contractEntity.ContractStatus,
-            Price = contract.Price ?? contractEntity.Price,
+            PriceForRent = contract.PriceForRent ?? contractEntity.PriceForRent,
             PriceForElectricity = contract.PriceForElectricity ?? contractEntity.PriceForElectricity,
             PriceForWater = contract.PriceForWater ?? contractEntity.PriceForWater,
             PriceForService = contract.PriceForService ?? contractEntity.PriceForService,
@@ -265,7 +292,7 @@ public class ContractsController : ControllerBase
             LastUpdated = DateTime.UtcNow,
             ContractStatus = contract.ContractStatus ?? "Active",
             CreatedDate = DateTime.UtcNow,
-            Price = contract.Price,
+            PriceForRent = contract.PriceForRent,
             PriceForElectricity = contract.PriceForElectricity,
             PriceForWater = contract.PriceForWater,
             PriceForService = contract.PriceForService,

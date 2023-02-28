@@ -26,7 +26,7 @@ public class Contract
     public string? ImageUrl { get; set; }
 
     [NotMapped] public IFormFile? Image { get; set; }
-    public decimal Price { get; set; }
+    public decimal PriceForRent { get; set; }
     public decimal PriceForWater { get; set; }
     public decimal PriceForElectricity { get; set; }
     public decimal PriceForService { get; set; }

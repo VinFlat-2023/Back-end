@@ -27,7 +27,7 @@ public class ContractRepository : IContractRepository
                 (filters.ContractName == null || x.ContractName.Contains(filters.ContractName))
                 && (filters.Description == null || x.Description.Contains(filters.Description))
                 && (filters.PriceForWater == null || x.PriceForWater == filters.PriceForWater)
-                && (filters.Price == null || x.Price == filters.Price)
+                && (filters.PriceForRent == null || x.PriceForRent == filters.PriceForRent)
                 && (filters.PriceForElectricity == null || x.PriceForElectricity == filters.PriceForElectricity)
                 && (filters.PriceForService == null || x.PriceForService == filters.PriceForService)
                 && (filters.ContractStatus == null || x.ContractStatus == filters.ContractStatus)
@@ -111,7 +111,7 @@ public class ContractRepository : IContractRepository
         contractData.PriceForElectricity = contract?.PriceForElectricity ?? contractData.PriceForElectricity;
         contractData.PriceForService = contract?.PriceForService ?? contractData.PriceForService;
         contractData.PriceForWater = contract?.PriceForWater ?? contractData.PriceForWater;
-        contractData.Price = contract?.Price ?? contractData.Price;
+        contractData.PriceForRent = contract?.PriceForRent ?? contractData.PriceForRent;
         contractData.LastUpdated = DateTime.Now;
 
         await _context.SaveChangesAsync();

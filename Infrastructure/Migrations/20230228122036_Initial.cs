@@ -537,7 +537,7 @@ namespace Infrastructure.Migrations
                     LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ContractStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PriceForRent = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PriceForWater = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PriceForElectricity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PriceForService = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -927,7 +927,7 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Contracts",
-                columns: new[] { "ContractId", "ContractName", "ContractStatus", "CreatedDate", "DateSigned", "Description", "EndDate", "FlatId", "ImageUrl", "LastUpdated", "Price", "PriceForElectricity", "PriceForService", "PriceForWater", "RenterId", "StartDate" },
+                columns: new[] { "ContractId", "ContractName", "ContractStatus", "CreatedDate", "DateSigned", "Description", "EndDate", "FlatId", "ImageUrl", "LastUpdated", "PriceForRent", "PriceForElectricity", "PriceForService", "PriceForWater", "RenterId", "StartDate" },
                 values: new object[,]
                 {
                     { 1, "Contract for renter 1", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 1, 29, 12, 20, 36, 526, DateTimeKind.Utc).AddTicks(4505), "Contract description for renter 1", null, 2, "No image", new DateTime(2023, 2, 28, 12, 20, 36, 526, DateTimeKind.Utc).AddTicks(4511), 1800000m, 0m, 0m, 0m, 1, new DateTime(2023, 2, 3, 12, 20, 36, 526, DateTimeKind.Utc).AddTicks(4511) },

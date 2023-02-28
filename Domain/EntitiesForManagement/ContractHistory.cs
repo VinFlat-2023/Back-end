@@ -10,7 +10,7 @@ public class ContractHistory
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ContractHistoryId { get; set; }
 
-    public decimal? Price { get; set; }
+    public decimal? PriceForRent { get; set; }
     public string Description { get; set; } = null!;
     public string? ContractHistoryStatus { get; set; }
 

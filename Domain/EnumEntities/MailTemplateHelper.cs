@@ -61,7 +61,7 @@ public static class MailTemplateHelper
         serviceTable.Append("<table class=\"service-table\">");
         serviceTable.Append("<thead>");
         serviceTable.Append("<th>Service</th>");
-        serviceTable.Append("<th>Price</th>");
+        serviceTable.Append("<th>PriceForRent</th>");
         serviceTable.Append("<th>Quantity</th>");
         serviceTable.Append("<th>Fee</th>");
         serviceTable.Append("</thead>");
@@ -71,7 +71,7 @@ public static class MailTemplateHelper
         requesttable.Append("<table class=\"service-table\">");
         requesttable.Append("<thead>");
         requesttable.Append("<th>Ticket</th>");
-        requesttable.Append("<th>Price</th>");
+        requesttable.Append("<th>PriceForRent</th>");
         requesttable.Append("<th>Quantity</th>");
         requesttable.Append("<th>Fee</th>");
         requesttable.Append("</thead>");

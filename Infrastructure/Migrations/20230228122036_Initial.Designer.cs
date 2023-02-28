@@ -411,7 +411,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("PeriodStart");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("PriceForRent")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("PriceForElectricity")
@@ -460,7 +460,7 @@ namespace Infrastructure.Migrations
                             FlatId = 2,
                             ImageUrl = "No image",
                             LastUpdated = new DateTime(2023, 2, 28, 12, 20, 36, 526, DateTimeKind.Utc).AddTicks(4511),
-                            Price = 1800000m,
+                            PriceForRent = 1800000m,
                             PriceForElectricity = 0m,
                             PriceForService = 0m,
                             PriceForWater = 0m,
@@ -478,7 +478,7 @@ namespace Infrastructure.Migrations
                             FlatId = 3,
                             ImageUrl = "No image",
                             LastUpdated = new DateTime(2023, 2, 28, 12, 20, 36, 526, DateTimeKind.Utc).AddTicks(4514),
-                            Price = 2800000m,
+                            PriceForRent = 2800000m,
                             PriceForElectricity = 0m,
                             PriceForService = 0m,
                             PriceForWater = 0m,
@@ -496,7 +496,7 @@ namespace Infrastructure.Migrations
                             FlatId = 3,
                             ImageUrl = "No image",
                             LastUpdated = new DateTime(2023, 2, 28, 12, 20, 36, 526, DateTimeKind.Utc).AddTicks(4516),
-                            Price = 2800000m,
+                            PriceForRent = 2800000m,
                             PriceForElectricity = 120m,
                             PriceForService = 10000m,
                             PriceForWater = 1000m,

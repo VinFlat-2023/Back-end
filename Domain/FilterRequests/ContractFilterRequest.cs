@@ -22,5 +22,5 @@ public class ContractFilterRequest : PagingFilter
 
     public string? ContractStatus { get; set; }
 
-    public decimal? Price { get; set; }
+    public decimal? PriceForRent { get; set; }
 }

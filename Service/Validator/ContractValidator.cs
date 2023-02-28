@@ -54,13 +54,13 @@ public class ContractValidator : BaseValidator, IContractValidator
             if (obj?.ContractStatus == null)
                 ValidatorResult.Failures.Add("Contract status is required");
 
-            switch (obj?.Price)
+            switch (obj?.PriceForRent)
             {
-                case { } when obj.Price <= 0:
-                    ValidatorResult.Failures.Add("Price must be greater than 0");
+                case { } when obj.PriceForRent <= 0:
+                    ValidatorResult.Failures.Add("PriceForRent must be greater than 0");
                     break;
                 case null:
-                    ValidatorResult.Failures.Add("Price is required");
+                    ValidatorResult.Failures.Add("PriceForRent is required");
                     break;
             }
         }

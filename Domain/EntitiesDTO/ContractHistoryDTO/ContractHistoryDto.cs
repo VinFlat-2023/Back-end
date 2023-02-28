@@ -7,7 +7,7 @@ public class ContractHistoryDto
 {
     public int ContractHistoryId { get; set; }
 
-    public decimal? Price { get; set; }
+    public decimal? PriceForRent { get; set; }
 
     public string Description { get; set; } = null!;
 
