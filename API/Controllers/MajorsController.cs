@@ -66,7 +66,7 @@ public class MajorsController : ControllerBase
     // GET: api/Majors/5
     [SwaggerOperation(Summary = "[Authorize] Get all majors by university id")]
     [Authorize(Roles = "SuperAdmin, Admin, Renter, Supervisor")]
-    [HttpGet("{id:int}")]
+    [HttpGet("university/{id:int}")]
     public async Task<IActionResult> GetMajor(int id)
     {
         var result = await _serviceWrapper.Majors.GetMajorListByUniversity(id);
@@ -82,6 +82,28 @@ public class MajorsController : ControllerBase
             status = "Success",
             message = "Major list found",
             data = _mapper.Map<IEnumerable<MajorDto>>(result)
+        });
+    }
+    
+    // GET: api/Majors/5
+    [SwaggerOperation(Summary = "[Authorize] Get major using id")]
+    [Authorize(Roles = "SuperAdmin, Admin, Renter, Supervisor")]
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetMajorDetail(int id)
+    {
+        var result = await _serviceWrapper.Majors.GetMajorById(id);
+        if (result == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Major list in this university is empty",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Major list found",
+            data = _mapper.Map<MajorDto>(result)
         });
     }
 

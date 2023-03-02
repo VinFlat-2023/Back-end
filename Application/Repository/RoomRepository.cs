@@ -18,8 +18,7 @@ public class RoomRepository : IRoomRepository
     public IQueryable<Room> GetRoomListInAFlat(int flatId)
     {
         return _context.Rooms
-            .Where(x => x.Flats
-                .Any(y => y.FlatId == flatId))
+            .Where(x => x.FlatId == flatId)
             .AsNoTracking();
     }
 
