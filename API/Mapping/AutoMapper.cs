@@ -52,6 +52,7 @@ using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.Responses;
 using Domain.Utils;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MimeKit;
 
 namespace API.Mapping;
@@ -75,7 +76,7 @@ public class AutoMapper : Profile
         MapInvoiceType();
         MapMajor();
         MapRenter();
-        MapRequest();
+        MapTicket();
         MapRequestType();
         MapRole();
         MapService();
@@ -85,7 +86,7 @@ public class AutoMapper : Profile
         MapMail();
         MapNotiAndNotiType();
     }
-
+    
     private void MapInvoiceType()
     {
         CreateMap<InvoiceType, InvoiceTypeDto>()
@@ -206,7 +207,7 @@ public class AutoMapper : Profile
             .ReverseMap();
     }
 
-    private void MapRequest()
+    private void MapTicket()
     {
         CreateMap<Ticket, TicketDto>()
             .ForAllMembers(o => o.ExplicitExpansion());
@@ -215,7 +216,11 @@ public class AutoMapper : Profile
         CreateMap<TicketCreateRequest, Ticket>()
             .ReverseMap();
         CreateMap<TicketUpdateRequest, Ticket>()
-            .ReverseMap();
+            .ForMember<DateTime>(e => e.CreateDate,
+                option => option.MapFrom(r=>r.CreateDate.ConvertToDateTime()))
+            .ForMember<DateTime?>(e => e.SolveDate,
+                option => option.MapFrom(r => r.SolveDate.ConvertToDateTime()));
+        //CreateMap<TicketUpdateRequest, Ticket>();
         CreateMap<TicketFilterRequest, TicketFilter>()
             .ReverseMap();
     }

@@ -32,7 +32,7 @@ public class TicketsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    //[Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get ticket list")]
     public async Task<IActionResult> GetTickets([FromQuery] TicketFilterRequest ticketFilterRequest,
         CancellationToken token)
@@ -62,7 +62,7 @@ public class TicketsController : ControllerBase
             : NotFound(new
             {
                 status = "Not Found",
-                message = "Service type list is empty",
+                message = "Ticket list is empty",
                 data = ""
             });
     }
@@ -92,8 +92,8 @@ public class TicketsController : ControllerBase
     // PUT: api/Requests/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Update ticket (Not finished yet !!!)")]
+   // [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [SwaggerOperation(Summary = "[Authorize] Update ticket (Not finished yet !!!)/n date format d/M/YYYY")]
     public async Task<IActionResult> PutTicket(int id, [FromBody] TicketUpdateRequest ticketUpdateRequest)
     {
         /*
@@ -125,8 +125,10 @@ public class TicketsController : ControllerBase
         var result = await _serviceWrapper.Requests.UpdateTicket(updateRequest);
         if (result == null)
             return NotFound("Request failed to update");
-        */
         return Ok("Request updated");
+        */
+        var updateTicket = _mapper.Map<Ticket>(ticketUpdateRequest);
+        return Ok(new { ticket = updateTicket, date1 = updateTicket.CreateDate.ToString("dd MMM yyyy") });
     }
 
 
