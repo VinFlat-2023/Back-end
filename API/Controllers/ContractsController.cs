@@ -40,17 +40,10 @@ public class ContractsController : ControllerBase
         var filter = _mapper.Map<ContractFilter>(request);
 
         var list = await _serviceWrapper.Contracts.GetContractList(filter, token);
-        if (list != null && !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "No contract available",
-                data = ""
-            });
 
         var resultList = _mapper.Map<IEnumerable<ContractDto>>(list);
 
-        return list != null
+        return list != null && !list.Any()
             ? Ok(new
             {
                 status = "Success",
@@ -113,7 +106,7 @@ public class ContractsController : ControllerBase
                     message = "You are not authorized to access this resource due to invalid renter ID",
                     data = ""
                 });
-            
+
             case { } when renterId != Parse(User.Identity.Name):
                 return BadRequest(new
                 {
@@ -121,7 +114,7 @@ public class ContractsController : ControllerBase
                     message = "You are not authorized to access this resource due to invalid token",
                     data = ""
                 });
-            
+
             case { } when userRole != "Renter":
                 return BadRequest(new
                 {
@@ -129,8 +122,8 @@ public class ContractsController : ControllerBase
                     message = "You are not authorized to access this resource",
                     data = ""
                 });
-            
-            case null: 
+
+            case null:
                 return NotFound(new
                 {
                     status = "Not Found",
@@ -138,14 +131,13 @@ public class ContractsController : ControllerBase
                     data = ""
                 });
         }
-      
+
         return Ok(new
         {
             status = "Success",
             message = "Contract found",
             data = _mapper.Map<ContractDto>(entity)
         });
-
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get active contract based on user ID(For management and renter)")]

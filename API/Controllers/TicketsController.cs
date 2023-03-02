@@ -40,17 +40,10 @@ public class TicketsController : ControllerBase
         var filter = _mapper.Map<TicketFilter>(ticketFilterRequest);
 
         var list = await _serviceWrapper.Tickets.GetTicketList(filter, token);
-        if (list != null && !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Ticket list is empty",
-                data = ""
-            });
 
         var resultList = _mapper.Map<IEnumerable<TicketDto>>(list);
 
-        return list != null
+        return list != null && !list.Any()
             ? Ok(new
             {
                 status = "Success",

@@ -40,17 +40,9 @@ public class AccountsController : ControllerBase
 
         var list = await _serviceWrapper.Accounts.GetAccountList(filter, token);
 
-        if (list != null && !list.Any())
-            return NotFound(new
-            {
-                status = "Success",
-                message = "Account list is empty",
-                data = ""
-            });
-
         var resultList = _mapper.Map<IEnumerable<AccountDto>>(list);
 
-        return list != null
+        return list != null && !list.Any()
             ? Ok(new
             {
                 status = "Success",

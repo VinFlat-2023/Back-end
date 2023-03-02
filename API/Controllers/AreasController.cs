@@ -36,17 +36,10 @@ public class AreasController : ControllerBase
         var filter = _mapper.Map<AreaFilter>(request);
 
         var list = await _serviceWrapper.Areas.GetAreaList(filter, token);
-        if (list != null && !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Area list is empty",
-                data = ""
-            });
 
         var resultList = _mapper.Map<IEnumerable<AreaDto>>(list);
 
-        return list != null
+        return list != null && !list.Any()
             ? Ok(new
             {
                 status = "Success",

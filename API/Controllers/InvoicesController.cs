@@ -41,17 +41,9 @@ public class InvoicesController : ControllerBase
 
         var list = await _serviceWrapper.Invoices.GetInvoiceList(filter, token);
 
-        if (list != null && !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "List is empty",
-                data = ""
-            });
-
         var resultList = _mapper.Map<IEnumerable<InvoiceDto>>(list);
 
-        return list != null
+        return list != null && !list.Any()
             ? Ok(new
             {
                 status = "Success",
@@ -60,10 +52,10 @@ public class InvoicesController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest(new
+            : NotFound(new
             {
                 status = "Bad Request",
-                message = "List not found",
+                message = "List is empty",
                 data = ""
             });
     }

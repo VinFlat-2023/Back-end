@@ -42,17 +42,9 @@ public class RentersController : ControllerBase
 
         var list = await _serviceWrapper.Renters.GetRenterList(filter, token);
 
-        if (list != null && !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Renter list is empty",
-                data = ""
-            });
-
         var resultList = _mapper.Map<IEnumerable<RenterDto>>(list);
 
-        return list != null
+        return list != null && !list.Any()
             ? Ok(new
             {
                 status = "Success",

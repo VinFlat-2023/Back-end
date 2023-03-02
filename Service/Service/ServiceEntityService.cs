@@ -57,4 +57,21 @@ public class ServiceEntityService : IServiceEntityService
     {
         return await _repositoryWrapper.ServiceEntities.DeleteService(serviceEntityId);
     }
+
+    public async Task<PagedList<ServiceEntity>?> GetServiceEntityList(ServiceEntityFilter filters, int buildingId,
+        CancellationToken token)
+    {
+        var queryable = _repositoryWrapper.ServiceEntities.GetServiceList(filters, buildingId);
+
+        if (!queryable.Any())
+            return null;
+
+        var page = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var size = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
+        var pagedList = await PagedList<ServiceEntity>
+            .Create(queryable, page, size, token);
+
+        return pagedList;
+    }
 }

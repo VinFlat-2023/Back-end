@@ -678,9 +678,10 @@ namespace Infrastructure.Migrations
                     SolveDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContractId = table.Column<int>(type: "int", nullable: false),
                     AccountId = table.Column<int>(type: "int", nullable: false),
                     TicketTypeId = table.Column<int>(type: "int", nullable: false),
-                    ContractId = table.Column<int>(type: "int", nullable: true)
+                    ContractId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -694,6 +695,12 @@ namespace Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_Tickets_Contracts_ContractId",
                         column: x => x.ContractId,
+                        principalTable: "Contracts",
+                        principalColumn: "ContractId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Tickets_Contracts_ContractId1",
+                        column: x => x.ContractId1,
                         principalTable: "Contracts",
                         principalColumn: "ContractId");
                     table.ForeignKey(
@@ -755,8 +762,8 @@ namespace Infrastructure.Migrations
                 columns: new[] { "RenterId", "Address", "BirthDate", "CitizenImageUrl", "CitizenNumber", "DeviceToken", "Email", "FullName", "Gender", "ImageUrl", "MajorId", "Password", "Phone", "Status", "UniversityId", "Username" },
                 values: new object[,]
                 {
-                    { 1, "HCM", new DateTime(2023, 3, 2, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(4686), null, "3214324523", "12321fdsg45adsa", "renter1@mail.com", "Nguyen Van A", "Male", null, null, "renter1", "0123543125", true, null, "renter1" },
-                    { 2, "Hue", new DateTime(2023, 3, 2, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(4691), null, "3214324523", "dsavvf", "renter2@mail.com", "Nguyen Van B", "Male", null, null, "renter2", "0123543125", true, null, "renter2" }
+                    { 1, "HCM", new DateTime(2023, 3, 2, 16, 28, 12, 19, DateTimeKind.Utc).AddTicks(4052), null, "3214324523", "12321fdsg45adsa", "renter1@mail.com", "Nguyen Van A", "Male", null, null, "renter1", "0123543125", true, null, "renter1" },
+                    { 2, "Hue", new DateTime(2023, 3, 2, 16, 28, 12, 19, DateTimeKind.Utc).AddTicks(4058), null, "3214324523", "dsavvf", "renter2@mail.com", "Nguyen Van B", "Male", null, null, "renter2", "0123543125", true, null, "renter2" }
                 });
 
             migrationBuilder.InsertData(
@@ -834,9 +841,9 @@ namespace Infrastructure.Migrations
                 columns: new[] { "RenterId", "Address", "BirthDate", "CitizenImageUrl", "CitizenNumber", "DeviceToken", "Email", "FullName", "Gender", "ImageUrl", "MajorId", "Password", "Phone", "Status", "UniversityId", "Username" },
                 values: new object[,]
                 {
-                    { 4, "HN", new DateTime(2023, 3, 2, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(4695), null, "3214324523", "ewasdv12344", "renter4@mail.com", "Nguyen Van D", "Female", null, null, "renter4", "0123543125", true, 1, "renter4" },
-                    { 5, "HCM", new DateTime(2023, 3, 2, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(4698), null, "3214324523", "ewasdv12344", "trankhaimnhkhoi10a3@mail.com", "Tran Minh Khoi", "Male", null, null, "123456789", "0123543125", true, 1, "minhkhoi10a3" },
-                    { 6, "HCM", new DateTime(2023, 3, 2, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(4699), null, "3214324523", "ewasdv12344", "trankhaimnhkhoi@mail.com", "Tran Minh Khoi", "Male", null, null, "123456789", "0123543125", true, 1, "minhkhoi" }
+                    { 4, "HN", new DateTime(2023, 3, 2, 16, 28, 12, 19, DateTimeKind.Utc).AddTicks(4062), null, "3214324523", "ewasdv12344", "renter4@mail.com", "Nguyen Van D", "Female", null, null, "renter4", "0123543125", true, 1, "renter4" },
+                    { 5, "HCM", new DateTime(2023, 3, 2, 16, 28, 12, 19, DateTimeKind.Utc).AddTicks(4064), null, "3214324523", "ewasdv12344", "trankhaimnhkhoi10a3@mail.com", "Tran Minh Khoi", "Male", null, null, "123456789", "0123543125", true, 1, "minhkhoi10a3" },
+                    { 6, "HCM", new DateTime(2023, 3, 2, 16, 28, 12, 19, DateTimeKind.Utc).AddTicks(4067), null, "3214324523", "ewasdv12344", "trankhaimnhkhoi@mail.com", "Tran Minh Khoi", "Male", null, null, "123456789", "0123543125", true, 1, "minhkhoi" }
                 });
 
             migrationBuilder.InsertData(
@@ -859,8 +866,8 @@ namespace Infrastructure.Migrations
                 columns: new[] { "InvoiceId", "AccountId", "Amount", "CreatedTime", "Detail", "DueDate", "ImageUrl", "InvoiceTypeId", "Name", "PaymentTime", "RenterId", "Status" },
                 values: new object[,]
                 {
-                    { 1, 2, 0, new DateTime(2023, 3, 2, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(5008), "Detail for invoice 1", null, null, 1, "Hoá đơn điện tử cho renter 1", null, 1, true },
-                    { 2, 3, 0, new DateTime(2023, 3, 2, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(5043), "Detail for invoice 2", null, null, 1, "Hoá đơn điện tử cho renter 2", null, 2, true }
+                    { 1, 2, 0, new DateTime(2023, 3, 2, 16, 28, 12, 20, DateTimeKind.Utc).AddTicks(5693), "Detail for invoice 1", null, null, 1, "Hoá đơn điện tử cho renter 1", null, 1, true },
+                    { 2, 3, 0, new DateTime(2023, 3, 2, 16, 28, 12, 20, DateTimeKind.Utc).AddTicks(5696), "Detail for invoice 2", null, null, 1, "Hoá đơn điện tử cho renter 2", null, 2, true }
                 });
 
             migrationBuilder.InsertData(
@@ -868,8 +875,8 @@ namespace Infrastructure.Migrations
                 columns: new[] { "RenterId", "Address", "BirthDate", "CitizenImageUrl", "CitizenNumber", "DeviceToken", "Email", "FullName", "Gender", "ImageUrl", "MajorId", "Password", "Phone", "Status", "UniversityId", "Username" },
                 values: new object[,]
                 {
-                    { 3, "DN", new DateTime(2023, 3, 2, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(4693), null, "3214324523", "123221ad145ad423sa", "renter3@mail.com", "Nguyen Van C", "Female", null, 2, "renter3", "0123543125", true, 1, "renter3" },
-                    { 7, "HCM", new DateTime(2023, 3, 2, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(4701), null, "3214324523", "ewasdv12344", "khoitkmse150850@fpt", "Tran Minh Khoi", "Male", null, 1, "123456789", "0123543125", true, 1, "minhkhoitkm" }
+                    { 3, "DN", new DateTime(2023, 3, 2, 16, 28, 12, 19, DateTimeKind.Utc).AddTicks(4060), null, "3214324523", "123221ad145ad423sa", "renter3@mail.com", "Nguyen Van C", "Female", null, 2, "renter3", "0123543125", true, 1, "renter3" },
+                    { 7, "HCM", new DateTime(2023, 3, 2, 16, 28, 12, 19, DateTimeKind.Utc).AddTicks(4069), null, "3214324523", "ewasdv12344", "khoitkmse150850@fpt", "Tran Minh Khoi", "Male", null, 1, "123456789", "0123543125", true, 1, "minhkhoitkm" }
                 });
 
             migrationBuilder.InsertData(
@@ -895,7 +902,7 @@ namespace Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "Invoices",
                 columns: new[] { "InvoiceId", "AccountId", "Amount", "CreatedTime", "Detail", "DueDate", "ImageUrl", "InvoiceTypeId", "Name", "PaymentTime", "RenterId", "Status" },
-                values: new object[] { 3, 4, 0, new DateTime(2023, 3, 2, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(5045), "Detail for invoice 3", null, null, 1, "Hoá đơn điện tử cho renter 3", null, 3, true });
+                values: new object[] { 3, 4, 0, new DateTime(2023, 3, 2, 16, 28, 12, 20, DateTimeKind.Utc).AddTicks(5698), "Detail for invoice 3", null, null, 1, "Hoá đơn điện tử cho renter 3", null, 3, true });
 
             migrationBuilder.InsertData(
                 table: "Services",
@@ -913,9 +920,9 @@ namespace Infrastructure.Migrations
                 columns: new[] { "ContractId", "ContractName", "ContractStatus", "CreatedDate", "DateSigned", "Description", "EndDate", "FlatId", "ImageUrl", "LastUpdated", "PriceForElectricity", "PriceForRent", "PriceForService", "PriceForWater", "RenterId", "StartDate" },
                 values: new object[,]
                 {
-                    { 1, "Contract for renter 1", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 1, 31, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(5080), "Contract description for renter 1", null, 2, "No image", new DateTime(2023, 3, 2, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(5087), 0m, 1800000m, 0m, 0m, 1, new DateTime(2023, 2, 5, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(5086) },
-                    { 2, "Contract for renter 2", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 2, 1, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(5089), "Contract description for renter 2", null, 3, "No image", new DateTime(2023, 3, 2, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(5091), 0m, 2800000m, 0m, 0m, 2, new DateTime(2023, 2, 3, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(5090) },
-                    { 3, "Contract for renter 3", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 2, 1, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(5092), "Contract description for renter 3", null, 3, "No image", new DateTime(2023, 3, 2, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(5093), 120m, 2800000m, 10000m, 1000m, 3, new DateTime(2023, 2, 3, 13, 55, 18, 827, DateTimeKind.Utc).AddTicks(5093) }
+                    { 1, "Contract for renter 1", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 1, 31, 16, 28, 12, 20, DateTimeKind.Utc).AddTicks(5754), "Contract description for renter 1", null, 2, "No image", new DateTime(2023, 3, 2, 16, 28, 12, 20, DateTimeKind.Utc).AddTicks(5764), 0m, 1800000m, 0m, 0m, 1, new DateTime(2023, 2, 5, 16, 28, 12, 20, DateTimeKind.Utc).AddTicks(5762) },
+                    { 2, "Contract for renter 2", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 2, 1, 16, 28, 12, 20, DateTimeKind.Utc).AddTicks(5768), "Contract description for renter 2", null, 3, "No image", new DateTime(2023, 3, 2, 16, 28, 12, 20, DateTimeKind.Utc).AddTicks(5769), 0m, 2800000m, 0m, 0m, 2, new DateTime(2023, 2, 3, 16, 28, 12, 20, DateTimeKind.Utc).AddTicks(5768) },
+                    { 3, "Contract for renter 3", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 2, 1, 16, 28, 12, 20, DateTimeKind.Utc).AddTicks(5770), "Contract description for renter 3", null, 3, "No image", new DateTime(2023, 3, 2, 16, 28, 12, 20, DateTimeKind.Utc).AddTicks(5771), 120m, 2800000m, 10000m, 1000m, 3, new DateTime(2023, 2, 3, 16, 28, 12, 20, DateTimeKind.Utc).AddTicks(5771) }
                 });
 
             migrationBuilder.InsertData(
@@ -1075,6 +1082,11 @@ namespace Infrastructure.Migrations
                 name: "IX_Tickets_ContractId",
                 table: "Tickets",
                 column: "ContractId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tickets_ContractId1",
+                table: "Tickets",
+                column: "ContractId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_TicketTypeId",

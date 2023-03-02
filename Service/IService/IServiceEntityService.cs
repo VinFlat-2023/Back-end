@@ -11,4 +11,7 @@ public interface IServiceEntityService
     public Task<ServiceEntity?> AddServiceEntity(ServiceEntity serviceEntity);
     public Task<ServiceEntity?> UpdateServiceEntity(ServiceEntity serviceEntity);
     public Task<bool> DeleteServiceEntity(int serviceEntityId);
+
+    public Task<PagedList<ServiceEntity>?> GetServiceEntityList(ServiceEntityFilter filters, int buildingId,
+        CancellationToken token);
 }

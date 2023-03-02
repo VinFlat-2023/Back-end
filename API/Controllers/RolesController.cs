@@ -36,17 +36,10 @@ public class RolesController : ControllerBase
         var filter = _mapper.Map<RoleFilter>(request);
 
         var list = await _serviceWrapper.Roles.GetRoleList(filter, token);
-        if (list != null && !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Role list is empty",
-                data = ""
-            });
 
         var resultList = _mapper.Map<IEnumerable<RoleDto>>(list);
 
-        return list != null
+        return list != null && !list.Any()
             ? Ok(new
             {
                 status = "Success",
