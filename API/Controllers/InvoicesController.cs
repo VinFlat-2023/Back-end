@@ -7,6 +7,7 @@ using Domain.EntityRequest.Invoice;
 using Domain.EntityRequest.InvoiceType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
+using Domain.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -199,7 +200,7 @@ public class InvoicesController : ControllerBase
             InvoiceId = id,
             Name = invoice.Name,
             Status = invoice.Status,
-            DueDate = invoice.DueDate,
+            DueDate = invoice.DueDate.ConvertToDateTime(),
             Detail = invoice.Detail,
             ImageUrl = invoice.ImageUrl,
             PaymentTime = null,

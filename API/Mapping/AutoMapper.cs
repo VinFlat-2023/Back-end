@@ -214,13 +214,17 @@ public class AutoMapper : Profile
         CreateMap<TicketDto, Ticket>()
             .ReverseMap();
         CreateMap<TicketCreateRequest, Ticket>()
-            .ReverseMap();
+            .ForMember<DateTime>(e => e.CreateDate,
+                option => option.MapFrom(r => r.CreateDate.ConvertToDateTime()))
+            .ForMember<DateTime?>(e => e.SolveDate,
+                option => option.MapFrom(r => r.SolveDate.ConvertToDateTime()));
+        CreateMap<Ticket, TicketCreateRequest>();                                   
         CreateMap<TicketUpdateRequest, Ticket>()
             .ForMember<DateTime>(e => e.CreateDate,
                 option => option.MapFrom(r=>r.CreateDate.ConvertToDateTime()))
             .ForMember<DateTime?>(e => e.SolveDate,
                 option => option.MapFrom(r => r.SolveDate.ConvertToDateTime()));
-        //CreateMap<TicketUpdateRequest, Ticket>();
+        CreateMap<Ticket, TicketUpdateRequest>();
         CreateMap<TicketFilterRequest, TicketFilter>()
             .ReverseMap();
     }
@@ -244,11 +248,19 @@ public class AutoMapper : Profile
         CreateMap<Invoice, InvoiceDto>()
             .ForAllMembers(o => o.ExplicitExpansion());
         CreateMap<InvoiceDto, Invoice>()
-            .ReverseMap();
+            .ReverseMap();                                                                               
         CreateMap<InvoiceCreateRequest, Invoice>()
-            .ReverseMap();
+            .ForMember<DateTime?>(e => e.DueDate,
+                option => option.MapFrom(r => r.DueDate.ConvertToDateTime()));
+        CreateMap<Invoice, InvoiceCreateRequest>();
         CreateMap<InvoiceUpdateRequest, Invoice>()
-            .ReverseMap();
+            .ForMember<DateTime?>(e => e.DueDate,
+                option => option.MapFrom(r => r.DueDate.ConvertToDateTime()))
+            .ForMember<DateTime?>(e => e.CreatedTime,
+                option => option.MapFrom(r => r.CreatedTime.ConvertToDateTime())) 
+            .ForMember<DateTime?>(e => e.PaymentTime,
+                option => option.MapFrom(r => r.PaymentTime.ConvertToDateTime()));
+        CreateMap<Invoice, InvoiceUpdateRequest>();
         CreateMap<InvoiceFilterRequest, InvoiceFilter>()
             .ReverseMap();
     }
@@ -329,9 +341,21 @@ public class AutoMapper : Profile
         CreateMap<ContractDto, Contract>()
             .ReverseMap();
         CreateMap<ContractCreateRequest, Contract>()
-            .ReverseMap();
+            .ForMember(c => c.DateSigned,
+                option => option.MapFrom(w => w.DateSigned.ConvertToDateTime()))
+            .ForMember(c => c.CreatedDate,
+                option => option.MapFrom(w => w.StartDate.ConvertToDateTime()))
+            .ForMember(c => c.EndDate,
+                option => option.MapFrom(w => w.EndDate.ConvertToDateTime()));
+        CreateMap<Contract, ContractCreateRequest>();
         CreateMap<ContractUpdateRequest, Contract>()
-            .ReverseMap();
+            .ForMember(c => c.DateSigned,
+                option => option.MapFrom(w => w.DateSigned.ConvertToDateTime()))
+            .ForMember(c => c.CreatedDate,
+                option => option.MapFrom(w => w.StartDate.ConvertToDateTime()))
+            .ForMember(c => c.EndDate,
+                option => option.MapFrom(w => w.EndDate.ConvertToDateTime()));
+        CreateMap<Contract, ContractUpdateRequest>();
         CreateMap<ContractFilterRequest, ContractFilter>()
             .ReverseMap();
     }

@@ -6,6 +6,7 @@ using Domain.EntityRequest.Ticket;
 using Domain.EntityRequest.TicketType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
+using Domain.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -92,7 +93,7 @@ public class TicketsController : ControllerBase
     // PUT: api/Requests/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
-   // [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Update ticket (Not finished yet !!!)/n date format d/M/YYYY")]
     public async Task<IActionResult> PutTicket(int id, [FromBody] TicketUpdateRequest ticketUpdateRequest)
     {
@@ -125,10 +126,10 @@ public class TicketsController : ControllerBase
         var result = await _serviceWrapper.Requests.UpdateTicket(updateRequest);
         if (result == null)
             return NotFound("Request failed to update");
-        return Ok("Request updated");
         */
-        var updateTicket = _mapper.Map<Ticket>(ticketUpdateRequest);
-        return Ok(new { ticket = updateTicket, date1 = updateTicket.CreateDate.ToString("dd MMM yyyy") });
+        return Ok("Request updated");           
+        //var updateTicket = _mapper.Map<Ticket>(ticketUpdateRequest);
+        //return Ok(new { ticket = updateTicket, date1 = updateTicket.CreateDate.ToString("dd MMM yyyy") });
     }
 
 
@@ -147,7 +148,7 @@ public class TicketsController : ControllerBase
             TicketTypeId = ticketCreateRequest.TicketTypeId,
             Status = ticketCreateRequest.Status,
             // TODO : Auto assign to active invoice -> invoice detail if not assigned manually
-            SolveDate = ticketCreateRequest.SolveDate ?? null,
+            SolveDate = ticketCreateRequest.SolveDate.ConvertToDateTime() ?? null,
             Amount = ticketCreateRequest.Amount ?? 0
         };
 
@@ -262,13 +263,13 @@ public class TicketsController : ControllerBase
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Update ticket type")]
     public async Task<IActionResult> PutTicketType(int id,
-        [FromBody] TicketTypeCreateRequest ticketTypeCreateRequestType)
+        [FromBody] TicketTypeUpdateRequest ticketTypeUpdateRequestType)
     {
         var updateRequestType = new TicketType
         {
             TicketTypeId = id,
-            Description = ticketTypeCreateRequestType.Description,
-            TicketTypeName = ticketTypeCreateRequestType.Name,
+            Description = ticketTypeUpdateRequestType.Description,
+            TicketTypeName = ticketTypeUpdateRequestType.Name,
             Status = true
         };
 

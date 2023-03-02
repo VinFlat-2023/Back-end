@@ -10,7 +10,7 @@ public class InvoiceUpdateRequest
     public string Name { get; set; }
     public int Amount { get; set; }
     public bool Status { get; set; }
-    public DateTime DueDate { get; set; }
+    public string DueDate { get; set; }
 
     public string Detail { get; set; }
 
@@ -24,9 +24,9 @@ public class InvoiceUpdateRequest
 
     public int ContractId { get; set; }
 
-    public DateTime PaymentTime { get; set; }
+    public string PaymentTime { get; set; }
 
-    public DateTime CreatedTime { get; set; }
+    public string CreatedTime { get; set; }
 
     public int RenterId { get; set; }
 
