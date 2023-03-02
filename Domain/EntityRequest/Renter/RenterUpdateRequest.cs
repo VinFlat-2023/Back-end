@@ -20,9 +20,9 @@ public class RenterUpdateRequest
 
     [MaxUploadedFileSize(1 * 1024 * 1024)]
     [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]
+    [DataType(DataType.Upload)]
     [NotMapped]
     public IFormFile? Image { get; set; }
-
     public string? CitizenNumber { get; set; }
 
     public string? CitizenImageUrl { get; set; }

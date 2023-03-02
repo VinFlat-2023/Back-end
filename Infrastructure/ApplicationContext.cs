@@ -191,6 +191,8 @@ public class ApplicationContext : DbContext
                 .IsUnique();
             entity.HasIndex(e => e.Email)
                 .IsUnique();
+            entity.HasIndex(e => e.MajorId)
+                .IsUnique(false);
         });
 
         modelBuilder.Entity<Renter>().HasData(
