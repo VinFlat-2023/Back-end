@@ -327,9 +327,13 @@ public class AutoMapper : Profile
         CreateMap<ContractHistoryDto, ContractHistory>()
             .ReverseMap();
         CreateMap<ContractHistoryCreateRequest, ContractHistory>()
-            .ReverseMap();
+            .ForMember(c => c.ContractExpiredDate,
+                option => option.MapFrom(w => w.ContractExpiredDate.ConvertToDateTime()));
+        CreateMap<ContractHistory, ContractHistoryCreateRequest>();
         CreateMap<ContractHistoryUpdateRequest, ContractHistory>()
-            .ReverseMap();
+            .ForMember(c => c.ContractExpiredDate,
+                option => option.MapFrom(w => w.ContractExpiredDate.ConvertToDateTime()));
+        CreateMap<ContractHistory, ContractHistoryUpdateRequest>();
         CreateMap<ContractHistoryFilterRequest, ContractHistoryFilter>()
             .ReverseMap();
     }
