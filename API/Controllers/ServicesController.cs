@@ -67,6 +67,57 @@ public class ServicesController : ControllerBase
             });
     }
 
+    [HttpGet("building/current")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Get service list based on current user building id")]
+    public async Task<IActionResult> GetServiceEntitiesBasedOnRenterId([FromQuery] ServiceFilterRequest request,
+        CancellationToken token)
+    {
+        var filter = _mapper.Map<ServiceEntityFilter>(request);
+
+        var userId = int.Parse(User.Identity?.Name);
+
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+        
+        if (userCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "User not found",
+                data = ""
+            });
+        
+        var list = await _serviceWrapper.ServicesEntity.GetServiceEntityList(filter, userCheck.RenterId, token);
+
+        if (list != null && !list.Any())
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Service list is empty",
+                data = ""
+            });
+
+        var resultList = _mapper.Map<IEnumerable<ServiceEntityDto>>(list);
+
+        return list != null
+            ? Ok(new
+            {
+                status = "Success",
+                message = "List found",
+                data = resultList,
+                totalPage = list.TotalPages,
+                totalCount = list.TotalCount
+            })
+            : NotFound(new
+            {
+                status = "Not Found",
+                message = "Service list is empty",
+                data = ""
+            });
+    }
+
+
+    
     [HttpGet("building/{buildingId:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get service list based on building id")]
