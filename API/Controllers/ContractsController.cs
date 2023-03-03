@@ -198,7 +198,7 @@ public class ContractsController : ControllerBase
 
     // PUT: api/Contract/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Update Contract info")]
+    [SwaggerOperation(Summary = "[Authorize] Update Contract info", Description = "date format d/M/YYYY")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutContract(int id, [FromBody] ContractUpdateRequest contract)
@@ -260,7 +260,7 @@ public class ContractsController : ControllerBase
 
     // POST: api/Contract
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Create Contract")]
+    [SwaggerOperation(Summary = "[Authorize] Create Contract", Description = "date format d/M/YYYY")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost("sign")]
     public async Task<IActionResult> PostContract([FromBody] ContractCreateRequest contract)

@@ -33,7 +33,7 @@ public class TicketsController : ControllerBase
     }
 
     [HttpGet]
-    //[Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get ticket list")]
     public async Task<IActionResult> GetTickets([FromQuery] TicketFilterRequest ticketFilterRequest,
         CancellationToken token)
@@ -87,7 +87,7 @@ public class TicketsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Update ticket (Not finished yet !!!)/n date format d/M/YYYY")]
+    [SwaggerOperation(Summary = "[Authorize] Update ticket (Not finished yet !!!)", Description = "date format d/M/YYYY")]
     public async Task<IActionResult> PutTicket(int id, [FromBody] TicketUpdateRequest ticketUpdateRequest)
     {
         /*
@@ -130,7 +130,7 @@ public class TicketsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Create ticket")]
+    [SwaggerOperation(Summary = "[Authorize] Create ticket", Description = "date format d/M/YYYY")]
     public async Task<IActionResult> PostTicket([FromBody] TicketCreateRequest ticketCreateRequest)
     {
         var newRequest = new Ticket

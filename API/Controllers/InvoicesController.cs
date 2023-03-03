@@ -182,7 +182,7 @@ public class InvoicesController : ControllerBase
 
     // PUT: api/Invoices/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Update Invoice info")]
+    [SwaggerOperation(Summary = "[Authorize] Update Invoice info", Description = "date format d/M/YYYY")]
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> PutInvoice(int id, [FromBody] InvoiceUpdateRequest invoice)
@@ -215,7 +215,7 @@ public class InvoicesController : ControllerBase
 
     // POST: api/Invoices
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Create Invoice")]
+    [SwaggerOperation(Summary = "[Authorize] Create Invoice", Description = "date format d/M/YYYY")]
     [HttpPost]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> PostInvoice([FromBody] InvoiceCreateRequest invoice)
