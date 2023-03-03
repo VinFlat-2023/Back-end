@@ -17,6 +17,10 @@ public class Ticket
     public string Status { get; set; } = null!;
 
     // Contract
+    public int ContractId { get; set; }
+
+    public virtual Contract Contract { get; set; } = null!;
+
     // Management
     public int AccountId { get; set; }
 

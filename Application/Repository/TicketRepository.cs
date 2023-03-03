@@ -51,7 +51,7 @@ internal class TicketRepository : ITicketRepository
     /// </summary>
     /// <param name="ticket"></param>
     /// <returns></returns>
-    public async Task<Ticket> CreateRequest(Ticket ticket)
+    public async Task<Ticket> CreateTicket(Ticket ticket)
     {
         await _context.Tickets.AddAsync(ticket);
         await _context.SaveChangesAsync();

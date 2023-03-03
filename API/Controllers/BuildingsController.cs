@@ -36,16 +36,10 @@ public class BuildingsController : ControllerBase
         var filter = _mapper.Map<BuildingFilter>(request);
 
         var list = await _serviceWrapper.Buildings.GetBuildingList(filter, token);
-        if (list != null && !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Building list is empty",
-                data = ""
-            });
+
         var resultList = _mapper.Map<IEnumerable<BuildingDto>>(list);
 
-        return list != null
+        return list != null && !list.Any()
             ? Ok(new
             {
                 status = "Success",
@@ -54,7 +48,12 @@ public class BuildingsController : ControllerBase
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
             })
-            : BadRequest("Building list is empty");
+            : NotFound(new
+            {
+                status = "Not Found",
+                message = "Building list is empty",
+                data = ""
+            });
     }
 
     // GET: api/Buildings/5

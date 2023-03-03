@@ -23,6 +23,7 @@ public class RenterUpdateRequest
     [DataType(DataType.Upload)]
     [NotMapped]
     public IFormFile? Image { get; set; }
+
     public string? CitizenNumber { get; set; }
 
     public string? CitizenImageUrl { get; set; }

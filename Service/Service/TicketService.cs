@@ -44,7 +44,7 @@ public class TicketService : ITicketService
 
     public async Task<Ticket?> AddTicket(Ticket ticket)
     {
-        return await _repositoryWrapper.Tickets.CreateRequest(ticket);
+        return await _repositoryWrapper.Tickets.CreateTicket(ticket);
     }
 
     public async Task<Ticket?> UpdateTicket(Ticket ticket)

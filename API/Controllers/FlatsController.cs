@@ -38,17 +38,10 @@ public class FlatsController : ControllerBase
     {
         var filter = _mapper.Map<FlatFilter>(request);
         var list = await _serviceWrapper.Flats.GetFlatList(filter, token);
-        if (list != null && !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Flat list is empty",
-                data = ""
-            });
 
         var resultList = _mapper.Map<IEnumerable<FlatDto>>(list);
 
-        return list != null
+        return list != null && !list.Any()
             ? Ok(new
             {
                 status = "Success",

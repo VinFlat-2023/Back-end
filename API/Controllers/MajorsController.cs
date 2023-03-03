@@ -37,16 +37,10 @@ public class MajorsController : ControllerBase
         var filter = _mapper.Map<MajorFilter>(request);
 
         var list = await _serviceWrapper.Majors.GetMajorList(filter, token);
-        if (list != null && !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Major list is empty",
-                data = ""
-            });
+
         var resultList = _mapper.Map<IEnumerable<MajorDto>>(list);
 
-        return list != null
+        return list != null && !list.Any()
             ? Ok(new
             {
                 status = "Success",
@@ -84,7 +78,7 @@ public class MajorsController : ControllerBase
             data = _mapper.Map<IEnumerable<MajorDto>>(result)
         });
     }
-    
+
     // GET: api/Majors/5
     [SwaggerOperation(Summary = "[Authorize] Get major using id")]
     [Authorize(Roles = "SuperAdmin, Admin, Renter, Supervisor")]

@@ -669,6 +669,11 @@ public class ApplicationContext : DbContext
             }
         );
 
+        modelBuilder.Entity<Ticket>()
+            .HasOne(x => x.Contract)
+            .WithMany()
+            .HasForeignKey(x => x.ContractId);
+
         modelBuilder.Entity<ServiceType>().HasData(
             new ServiceType
             {

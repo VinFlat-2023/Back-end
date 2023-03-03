@@ -33,6 +33,21 @@ internal class ServiceEntityRepository : IServiceEntityRepository
             .AsNoTracking();
     }
 
+    public IQueryable<ServiceEntity> GetServiceList(ServiceEntityFilter filters, int buildingId)
+    {
+        return _context.Services
+            .Include(x => x.ServiceType)
+            .Where(x => x.ServiceTypeId == x.ServiceType.ServiceTypeId)
+            .Where(x => x.BuildingId == buildingId)
+            // Filter starts here
+            .Where(x =>
+                (filters.Name == null || x.Name.Contains(filters.Name))
+                && (filters.Status == null || x.Status == filters.Status)
+                && (filters.ServiceTypeId == null || x.ServiceTypeId == filters.ServiceTypeId)
+                && (filters.Description == null || x.Description.Contains(filters.Description)))
+            .AsNoTracking();
+    }
+
     /// <summary>
     ///     Get serviceEntity by id
     /// </summary>
