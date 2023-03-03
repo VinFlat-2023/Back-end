@@ -5,7 +5,6 @@ using Domain.EntitiesDTO.AccountDTO;
 using Domain.EntitiesDTO.AreaDTO;
 using Domain.EntitiesDTO.BuildingDTO;
 using Domain.EntitiesDTO.ContractDTO;
-using Domain.EntitiesDTO.ContractHistoryDTO;
 using Domain.EntitiesDTO.FeedbackDTO;
 using Domain.EntitiesDTO.FeedbackTypeDTO;
 using Domain.EntitiesDTO.FlatDTO;
@@ -30,7 +29,6 @@ using Domain.EntityRequest.Account;
 using Domain.EntityRequest.Area;
 using Domain.EntityRequest.Building;
 using Domain.EntityRequest.Contract;
-using Domain.EntityRequest.ContractHistory;
 using Domain.EntityRequest.FeedBack;
 using Domain.EntityRequest.FeedbackType;
 using Domain.EntityRequest.Flat;
@@ -305,16 +303,18 @@ public class AutoMapper : Profile
 
     private void MapContractHistory()
     {
-        CreateMap<ContractHistory, ContractHistoryDto>()
-            .ForAllMembers(o => o.ExplicitExpansion());
-        CreateMap<ContractHistoryDto, ContractHistory>()
-            .ReverseMap();
-        CreateMap<ContractHistoryCreateRequest, ContractHistory>()
-            .ReverseMap();
-        CreateMap<ContractHistoryUpdateRequest, ContractHistory>()
-            .ReverseMap();
-        CreateMap<ContractHistoryFilterRequest, ContractHistoryFilter>()
-            .ReverseMap();
+        /*
+            CreateMap<ContractHistory, ContractHistoryDto>()
+                .ForAllMembers(o => o.ExplicitExpansion());
+            CreateMap<ContractHistoryDto, ContractHistory>()
+                .ReverseMap();
+            CreateMap<ContractHistoryCreateRequest, ContractHistory>()
+                .ReverseMap();
+            CreateMap<ContractHistoryUpdateRequest, ContractHistory>()
+                .ReverseMap();
+            CreateMap<ContractHistoryFilterRequest, ContractHistoryFilter>()
+                .ReverseMap();
+                */
     }
 
     private void MapContract()

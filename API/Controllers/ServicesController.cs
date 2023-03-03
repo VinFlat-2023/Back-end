@@ -78,7 +78,7 @@ public class ServicesController : ControllerBase
         var userId = int.Parse(User.Identity?.Name);
 
         var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
-        
+
         if (userCheck == null)
             return NotFound(new
             {
@@ -86,7 +86,7 @@ public class ServicesController : ControllerBase
                 message = "User not found",
                 data = ""
             });
-        
+
         var list = await _serviceWrapper.ServicesEntity.GetServiceEntityList(filter, userCheck.RenterId, token);
 
         if (list != null && !list.Any())
@@ -117,7 +117,6 @@ public class ServicesController : ControllerBase
     }
 
 
-    
     [HttpGet("building/{buildingId:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get service list based on building id")]

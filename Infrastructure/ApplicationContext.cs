@@ -673,7 +673,7 @@ public class ApplicationContext : DbContext
             .HasOne(x => x.Contract)
             .WithMany()
             .HasForeignKey(x => x.ContractId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<ServiceType>().HasData(
             new ServiceType
@@ -893,6 +893,7 @@ public class ApplicationContext : DbContext
                 ContractStatus = "Active",
                 PriceForRent = 1800000,
                 RenterId = 1,
+                BuildingId = 1,
                 Description = "Contract description for renter 1",
                 ImageUrl = "No image",
                 FlatId = 2
@@ -908,6 +909,7 @@ public class ApplicationContext : DbContext
                 ContractStatus = "Active",
                 PriceForRent = 2800000,
                 RenterId = 2,
+                BuildingId = 2,
                 Description = "Contract description for renter 2",
                 ImageUrl = "No image",
                 FlatId = 3
@@ -926,6 +928,7 @@ public class ApplicationContext : DbContext
                 PriceForWater = 1000,
                 PriceForElectricity = 120,
                 RenterId = 3,
+                BuildingId = 3,
                 Description = "Contract description for renter 3",
                 ImageUrl = "No image",
                 FlatId = 3

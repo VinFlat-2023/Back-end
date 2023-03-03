@@ -110,4 +110,9 @@ internal class ServiceEntityRepository : IServiceEntityRepository
         await _context.SaveChangesAsync();
         return true;
     }
+
+    public IQueryable<ServiceEntity> GetServiceListByRenter(ServiceEntityFilter filters, int renterId)
+    {
+        return null;
+    }
 }
