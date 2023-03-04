@@ -48,6 +48,36 @@ internal class ServiceEntityRepository : IServiceEntityRepository
             .AsNoTracking();
     }
 
+    private async Task<int?> GetBuildingId(int renterId)
+    {
+        var contract = await _context.Contracts.FirstOrDefaultAsync(x => x.RenterId == renterId);
+
+        if (contract == null)
+            return null;
+        
+        return await _context.Contracts
+            .Where(x => x.ContractId == contract.ContractId)
+            .Select(x => x.BuildingId)
+            .FirstOrDefaultAsync();
+    }
+
+    public IQueryable<ServiceEntity> GetServiceList(int renterId, ServiceEntityFilter filters)
+    {
+        var buildingId = GetBuildingId(renterId).Result;
+        
+        return _context.Services
+            .Include(x => x.ServiceType)
+            .Where(x => x.ServiceTypeId == x.ServiceType.ServiceTypeId)
+            .Where(x => x.BuildingId == buildingId)
+            // Filter starts here
+            .Where(x =>
+                (filters.Name == null || x.Name.Contains(filters.Name))
+                && (filters.Status == null || x.Status == filters.Status)
+                && (filters.ServiceTypeId == null || x.ServiceTypeId == filters.ServiceTypeId)
+                && (filters.Description == null || x.Description.Contains(filters.Description)))
+            .AsNoTracking();    
+    }
+
     /// <summary>
     ///     Get serviceEntity by id
     /// </summary>
@@ -111,8 +141,5 @@ internal class ServiceEntityRepository : IServiceEntityRepository
         return true;
     }
 
-    public IQueryable<ServiceEntity> GetServiceListByRenter(ServiceEntityFilter filters, int renterId)
-    {
-        return null;
-    }
+   
 }

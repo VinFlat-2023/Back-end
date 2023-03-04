@@ -7,6 +7,7 @@ public interface IServiceEntityRepository
 {
     public IQueryable<ServiceEntity> GetServiceList(ServiceEntityFilter filters);
     public IQueryable<ServiceEntity> GetServiceList(ServiceEntityFilter filters, int buildingId);
+    public IQueryable<ServiceEntity> GetServiceList(int renterId, ServiceEntityFilter filters);
     public IQueryable<ServiceEntity> GetServiceDetail(int? serviceId);
     public Task<ServiceEntity> AddService(ServiceEntity serviceEntity);
     public Task<ServiceEntity?> UpdateService(ServiceEntity serviceEntity);
