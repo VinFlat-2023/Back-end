@@ -42,7 +42,7 @@ public class AccountValidator : BaseValidator, IAccountValidator
                     ValidatorResult.Failures.Add("Username cannot exceed 100 characters");
                     break;
                 case { } when string.IsNullOrWhiteSpace(obj.Username):
-                    ValidatorResult.Failures.Add("Username max length reached");
+                    ValidatorResult.Failures.Add("Username is required");
                     break;
                 case not null:
                     /*

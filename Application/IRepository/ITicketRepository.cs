@@ -10,4 +10,5 @@ public interface ITicketRepository
     public Task<Ticket> CreateTicket(Ticket ticket);
     public Task<Ticket?> UpdateTicket(Ticket ticket);
     public Task<bool> DeleteTicket(int ticketId);
+    public IQueryable<Ticket> GetTicketDetail(int? ticketId, int? renterId);
 }

@@ -42,6 +42,12 @@ public class TicketService : ITicketService
             .FirstOrDefaultAsync();
     }
 
+    public async Task<Ticket?> GetTicketById(int? ticketId, int? renterId)
+    {
+        return await _repositoryWrapper.Tickets.GetTicketDetail(ticketId, renterId)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<Ticket?> AddTicket(Ticket ticket)
     {
         return await _repositoryWrapper.Tickets.CreateTicket(ticket);

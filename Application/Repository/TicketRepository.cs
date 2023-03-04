@@ -46,6 +46,15 @@ internal class TicketRepository : ITicketRepository
             .Where(x => x.TicketId == ticketId);
     }
 
+
+    public IQueryable<Ticket> GetTicketDetail(int? ticketId, int? renterId)
+    {
+        return _context.Tickets
+            .Include(x => x.TicketType)
+            .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
+            .Where(x => x.TicketId == ticketId && x.Contract.RenterId == renterId);
+    }
+
     /// <summary>
     ///     AddFeedback new ticket to database
     /// </summary>

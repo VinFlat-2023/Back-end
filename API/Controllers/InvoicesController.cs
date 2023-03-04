@@ -92,8 +92,8 @@ public class InvoicesController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        if (userRole is not ("Admin" or "Supervisor") &&
-            (User.Identity?.Name != userId.ToString() || userRole != "Renter"))
+        if (userRole is not ("Admin" or "Supervisor") ||
+            (User.Identity?.Name != userId.ToString() && userRole != "Renter"))
             return BadRequest(new
             {
                 status = "Bad Request",
@@ -142,8 +142,8 @@ public class InvoicesController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        if (userRole is not ("Admin" or "Supervisor") &&
-            (User.Identity?.Name != userId.ToString() || userRole != "Renter"))
+        if (userRole is not ("Admin" or "Supervisor") ||
+            (User.Identity?.Name != userId.ToString() && userRole != "Renter"))
             return BadRequest(new
             {
                 status = "Bad Request",

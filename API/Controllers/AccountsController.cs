@@ -146,14 +146,24 @@ public class AccountsController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountUpdateRequest account)
     {
+        var accountEntity = await _serviceWrapper.Accounts.GetAccountById(id);
+
+        if (accountEntity == null)
+            return NotFound(new
+            {
+                status = "Bad Request",
+                message = "This account does not exist",
+                data = ""
+            });
+
         var updateAccount = new Account
         {
             AccountId = id,
-            Username = account.Username,
-            Password = account.Password ?? string.Empty,
-            Email = account.Email,
-            Phone = account.Phone,
-            RoleId = account.RoleId
+            Username = account.Username ?? accountEntity.Username,
+            Password = account.Password ?? accountEntity.Password,
+            Email = account.Email ?? accountEntity.Email,
+            Phone = account.Phone ?? accountEntity.Phone,
+            FullName = account.Fullname ?? accountEntity.FullName
         };
 
         var validation = await _validator.ValidateParams(updateAccount, id, User);
@@ -166,6 +176,7 @@ public class AccountsController : ControllerBase
             });
 
         var result = await _serviceWrapper.Accounts.UpdateAccount(updateAccount);
+
         if (result == null)
             return NotFound(new
             {

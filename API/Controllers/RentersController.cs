@@ -72,8 +72,7 @@ public class RentersController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        if (userRole is not ("Admin" or "Supervisor") &&
-            (User.Identity?.Name != id.ToString() || userRole != "Renter"))
+        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
             return BadRequest(new
             {
                 status = "Bad Request",
@@ -110,8 +109,7 @@ public class RentersController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        if (userRole is not ("Admin" or "Supervisor") &&
-            (User.Identity?.Name != id.ToString() || userRole != "Renter"))
+        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
             return BadRequest(new
             {
                 status = "Bad Request",

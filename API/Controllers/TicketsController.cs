@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Domain.EntitiesDTO.TicketDTO;
 using Domain.EntitiesDTO.TicketTypeDTO;
 using Domain.EntitiesForManagement;
@@ -66,20 +67,70 @@ public class TicketsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get ticket by id")]
     public async Task<IActionResult> GetTicket(int id)
     {
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
         var entity = await _serviceWrapper.Tickets.GetTicketById(id);
-        return entity == null
-            ? NotFound(new
+
+        if (entity == null)
+            return NotFound(new
             {
                 status = "Not Found",
-                message = "Ticket not found",
+                message = "No ticket found",
                 data = ""
-            })
-            : Ok(new
-            {
-                status = "Success",
-                message = "Ticket found",
-                data = _mapper.Map<TicketDto>(entity)
             });
+
+        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "You are not authorized to access this resource",
+                data = ""
+            });
+
+        switch (userRole)
+        {
+            case "Admin" or "Supervisor":
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "Ticket found",
+                    data = entity
+                });
+
+            case "Renter" when User.Identity?.Name == entity.Contract.RenterId.ToString():
+                var renterTicketCheck = await _serviceWrapper.Tickets.GetTicketById(id, entity.Contract.RenterId);
+                if (renterTicketCheck == null)
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "No ticket with this id found with this user",
+                        data = ""
+                    });
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "Ticket found",
+                    data = entity
+                });
+            case null:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "No ticket found or no renter found",
+                    data = ""
+                });
+        }
+
+        return BadRequest(new
+        {
+            status = "Bad Request",
+            message = "Bad request !!!",
+            data = ""
+        });
     }
 
     // PUT: api/Requests/5
