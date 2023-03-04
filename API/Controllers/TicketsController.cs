@@ -137,7 +137,7 @@ public class TicketsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Update ticket (Not finished yet !!!)")]
+    [SwaggerOperation(Summary = "[Authorize] Update ticket by id")]
     public async Task<IActionResult> PutTicket(int id, [FromBody] TicketUpdateRequest ticketUpdateRequest)
     {
         /*
@@ -177,19 +177,59 @@ public class TicketsController : ControllerBase
     // POST: api/Requests
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Create ticket")]
+    [Authorize(Roles = "Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Create ticket (For renter)")]
     public async Task<IActionResult> PostTicket([FromBody] TicketCreateRequest ticketCreateRequest)
     {
+        var userId = int.Parse(User.Identity?.Name);
+
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+
+        if (userCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "User not found",
+                data = ""
+            });
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnRenter(userId);
+
+        if (buildingId == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Building not found",
+                data = ""
+            });
+
+        var managementAccountId = await _serviceWrapper.GetId.GetAccountIdBasedOnBuildingId(buildingId);
+        if (managementAccountId == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Management account not found",
+                data = ""
+            });
+
+        var contractId = await _serviceWrapper.GetId.GetContractIdBasedOnRenterId(managementAccountId);
+        if (contractId == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Contract not found for this renter, please contact management",
+                data = ""
+            });
+
         var newRequest = new Ticket
         {
             TicketName = ticketCreateRequest.TicketName,
             Description = ticketCreateRequest.Description,
             CreateDate = DateTime.UtcNow,
             TicketTypeId = ticketCreateRequest.TicketTypeId,
-            Status = ticketCreateRequest.Status,
-            // TODO : Auto assign to active invoice -> invoice detail if not assigned manually
-            SolveDate = ticketCreateRequest.SolveDate ?? null,
+            Status = ticketCreateRequest.Status ?? "Active",
+            ContractId = contractId.Value,
+            AccountId = managementAccountId.Value,
             Amount = ticketCreateRequest.Amount ?? 0
         };
 

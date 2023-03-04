@@ -26,4 +26,5 @@ public interface IRepositoryWrapper
     public IDeviceRepository Devices { get; }
     public INotificationRepository Notifications { get; }
     public IRoomRepository Rooms { get; }
+    public IGetIdRepository GetId { get; }
 }

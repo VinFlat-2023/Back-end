@@ -87,7 +87,9 @@ public class ServicesController : ControllerBase
                 data = ""
             });
 
-        var list = await _serviceWrapper.ServicesEntity.GetServiceEntityList(filter, userCheck.RenterId, token);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnRenter(userCheck.RenterId);
+
+        var list = await _serviceWrapper.ServicesEntity.GetServiceEntityList(filter, buildingId, token);
 
         if (list != null && !list.Any())
             return NotFound(new
@@ -116,12 +118,11 @@ public class ServicesController : ControllerBase
             });
     }
 
-
     [HttpGet("building/{buildingId:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get service list based on building id")]
     public async Task<IActionResult> GetServiceEntitiesByBuilding([FromQuery] ServiceFilterRequest request,
-        CancellationToken token, int buildingId)
+        int buildingId, CancellationToken token)
     {
         var filter = _mapper.Map<ServiceEntityFilter>(request);
 

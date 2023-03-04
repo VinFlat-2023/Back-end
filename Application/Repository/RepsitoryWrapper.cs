@@ -234,6 +234,15 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
+    public IGetIdRepository GetId
+    {
+        get
+        {
+            if (_getId == null) _getId = new GetIdRepository(_context);
+            return _getId;
+        }
+    }
+
     #region fields
 
     private IAzureStorageRepository _azureStorage;
@@ -260,6 +269,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IDeviceRepository _devices;
     private INotificationRepository _notification;
     private IRoomRepository _room;
+    private IGetIdRepository _getId;
 
     #endregion
 }

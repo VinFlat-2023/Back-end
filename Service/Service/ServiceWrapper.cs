@@ -258,6 +258,16 @@ public class ServiceWrapper : IServiceWrapper
         }
     }
 
+    public IGetIdService GetId
+    {
+        get
+        {
+            if (_getId == null) _getId = new GetIdService(_repositories);
+            return _getId;
+        }
+    }
+
+
     public INotificationService Notifications
     {
         get
@@ -313,6 +323,7 @@ public class ServiceWrapper : IServiceWrapper
     private ICustomeMailService _mails;
     private INotificationService _noti;
     private IRoomService _room;
+    private IGetIdService _getId;
 
     #endregion
 }
