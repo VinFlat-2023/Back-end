@@ -14,7 +14,7 @@ public interface IServiceEntityService
 
     public Task<PagedList<ServiceEntity>?> GetServiceEntityList(ServiceEntityFilter filters, int buildingId,
         CancellationToken token);
-    
+
     public Task<PagedList<ServiceEntity>?> GetServiceEntityList(int renterId, ServiceEntityFilter filters,
         CancellationToken token);
 }

@@ -48,23 +48,10 @@ internal class ServiceEntityRepository : IServiceEntityRepository
             .AsNoTracking();
     }
 
-    private async Task<int?> GetBuildingId(int renterId)
-    {
-        var contract = await _context.Contracts.FirstOrDefaultAsync(x => x.RenterId == renterId);
-
-        if (contract == null)
-            return null;
-        
-        return await _context.Contracts
-            .Where(x => x.ContractId == contract.ContractId)
-            .Select(x => x.BuildingId)
-            .FirstOrDefaultAsync();
-    }
-
     public IQueryable<ServiceEntity> GetServiceList(int renterId, ServiceEntityFilter filters)
     {
-        var buildingId = GetBuildingId(renterId).Result;
-        
+        var buildingId = GetBuildingId(renterId).GetAwaiter().GetResult();
+
         return _context.Services
             .Include(x => x.ServiceType)
             .Where(x => x.ServiceTypeId == x.ServiceType.ServiceTypeId)
@@ -75,7 +62,7 @@ internal class ServiceEntityRepository : IServiceEntityRepository
                 && (filters.Status == null || x.Status == filters.Status)
                 && (filters.ServiceTypeId == null || x.ServiceTypeId == filters.ServiceTypeId)
                 && (filters.Description == null || x.Description.Contains(filters.Description)))
-            .AsNoTracking();    
+            .AsNoTracking();
     }
 
     /// <summary>
@@ -141,5 +128,16 @@ internal class ServiceEntityRepository : IServiceEntityRepository
         return true;
     }
 
-   
+    private async Task<int?> GetBuildingId(int renterId)
+    {
+        var contract = await _context.Contracts.FirstOrDefaultAsync(x => x.RenterId == renterId);
+
+        if (contract == null)
+            return null;
+
+        return await _context.Contracts
+            .Where(x => x.ContractId == contract.ContractId)
+            .Select(x => x.BuildingId)
+            .FirstOrDefaultAsync();
+    }
 }
