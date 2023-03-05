@@ -32,7 +32,7 @@ public class InvoicesController : ControllerBase
         _validator = validator;
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice list")]
+    [SwaggerOperation(Summary = "[Authorize] Get Invoice list (For management)")]
     [HttpGet]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoices([FromQuery] InvoiceFilterRequest request, CancellationToken token)
@@ -61,7 +61,7 @@ public class InvoicesController : ControllerBase
     }
 
     // GET: api/Invoices/5
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice by management")]
+    [SwaggerOperation(Summary = "[Authorize] Get Invoice by Id (For management)")]
     [HttpGet("{id:int}/user")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceByManagement(int id)
@@ -82,7 +82,7 @@ public class InvoicesController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice list by renter ID")]
+    [SwaggerOperation(Summary = "[Authorize] Get Invoice list by renter Id (For renter and management)")]
     [HttpGet("user/{userId:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetInvoiceRenter(int userId, CancellationToken token)
@@ -132,7 +132,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice by renter for renter usage")]
+    [SwaggerOperation(Summary = "[Authorize] Get Invoice Id using renter Id (For renter and management)")]
     [HttpGet("{invoiceId:int}/user/{userId:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetInvoiceRenterUsingId(int invoiceId, int userId)
@@ -181,7 +181,7 @@ public class InvoicesController : ControllerBase
 
     // PUT: api/Invoices/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Update Invoice info")]
+    [SwaggerOperation(Summary = "[Authorize] Update Invoice info (For management)")]
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> PutInvoice(int id, [FromBody] InvoiceUpdateRequest invoice)
@@ -194,13 +194,10 @@ public class InvoicesController : ControllerBase
             DueDate = invoice.DueDate,
             Detail = invoice.Detail,
             ImageUrl = invoice.ImageUrl,
-            PaymentTime = null,
+            PaymentTime = invoice.PaymentTime,
             CreatedTime = DateTime.UtcNow,
-            AccountId = invoice.AccountId,
-            RenterId = invoice.RenterId,
-            InvoiceTypeId = invoice.InvoiceTypeId
         };
-
+        
         var validation = await _validator.ValidateParams(updateInvoice, id);
         if (!validation.IsValid)
             return BadRequest(validation.Failures.FirstOrDefault());
@@ -208,26 +205,62 @@ public class InvoicesController : ControllerBase
         var result = await _serviceWrapper.Invoices.UpdateInvoice(updateInvoice);
 
         if (result == null)
-            return NotFound("Invoice failed to update");
-        return Ok("Invoice updated");
+            return BadRequest(new
+            {
+                status = "Bad request",
+                message = "Invoice failed to update",
+                data = ""
+            });
+        
+        return Ok(new
+        {
+            status = "Success",
+            message = "Invoice updated",
+            data = _mapper.Map<InvoiceDto>(result)
+        });
     }
 
     // POST: api/Invoices
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Create Invoice")]
+    [SwaggerOperation(Summary = "[Authorize] Create Invoice (For management)")]
     [HttpPost]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> PostInvoice([FromBody] InvoiceCreateRequest invoice)
     {
+        var accountId = User.Identity?.Name;
+        
+        if (accountId == null)
+        {
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "You are not authorized to access this resource due to invalid token",
+                data = ""
+            });
+        }
+        
         var addNewInvoice = new Invoice
         {
             Name = invoice.Name,
-            ImageUrl = invoice.ImageUrl,
+            Status = true,
+            DueDate = invoice.DueDate,
             Detail = invoice.Detail,
-            AccountId = int.Parse(User.Identity.Name),
-            RenterId = invoice.RenterId,
-            InvoiceTypeId = invoice.InvoiceTypeId
+            ImageUrl = invoice.ImageUrl,
+            PaymentTime = null,
+            CreatedTime = DateTime.UtcNow,
+            InvoiceTypeId = invoice.InvoiceTypeId,
+            AccountId = int.Parse(accountId)
         };
+        
+        switch (addNewInvoice.InvoiceTypeId)
+        {
+            case 1 :
+                addNewInvoice.RenterId = invoice.RenterId;
+                break;
+            case 2 :
+                break;
+        }
+
 
         var validation = await _validator.ValidateParams(addNewInvoice, null);
         if (!validation.IsValid)

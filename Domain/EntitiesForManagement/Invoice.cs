@@ -15,7 +15,6 @@ public class Invoice
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int InvoiceId { get; set; }
-
     public string Name { get; set; } = null!;
     public int Amount { get; set; }
     public bool Status { get; set; }
@@ -34,8 +33,8 @@ public class Invoice
     public DateTime CreatedTime { get; set; }
 
     // Receiver account
-    public int RenterId { get; set; }
-    public virtual Renter Renter { get; set; }
+    public int? RenterId { get; set; }
+    public virtual Renter? Renter { get; set; }
 
     // Management account
     public int AccountId { get; set; }

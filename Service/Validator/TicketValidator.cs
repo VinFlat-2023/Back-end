@@ -31,18 +31,7 @@ public class TicketValidator : BaseValidator, ITicketValidator
                             ValidatorResult.Failures.Add("Ticket provided does not exist");
                         break;
                 }
-
-            switch (obj?.AccountId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Management account id is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.AccountCheck(obj.AccountId) == null)
-                        ValidatorResult.Failures.Add("Management account provided does not exist");
-                    break;
-            }
-
+            
             switch (obj?.TicketName)
             {
                 case { } when string.IsNullOrWhiteSpace(obj.TicketName):
@@ -62,6 +51,21 @@ public class TicketValidator : BaseValidator, ITicketValidator
                     ValidatorResult.Failures.Add("Ticket description cannot exceed 500 characters");
                     break;
             }
+            
+            if (obj?.CreateDate == null)
+                ValidatorResult.Failures.Add("Create date is required");
+            
+
+            switch (obj?.AccountId)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Management account id is required");
+                    break;
+                case not null:
+                    if (await _conditionCheckHelper.AccountCheck(obj.AccountId) == null)
+                        ValidatorResult.Failures.Add("Management account provided does not exist");
+                    break;
+            }
 
             if (obj?.CreateDate == null)
                 ValidatorResult.Failures.Add("Create date is required");
@@ -73,6 +77,16 @@ public class TicketValidator : BaseValidator, ITicketValidator
                     break;
                 case null:
                     ValidatorResult.Failures.Add("Invoice detail amount is required");
+                    break;
+            }
+
+            switch (obj?.ContractId)
+            {
+                case { } when obj.ContractId < 0:
+                    ValidatorResult.Failures.Add("Contract id cannot be negative");
+                    break;
+                case null:
+                    ValidatorResult.Failures.Add("Contract id is required");
                     break;
             }
 
