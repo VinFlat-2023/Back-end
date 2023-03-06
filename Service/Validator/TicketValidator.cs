@@ -31,7 +31,7 @@ public class TicketValidator : BaseValidator, ITicketValidator
                             ValidatorResult.Failures.Add("Ticket provided does not exist");
                         break;
                 }
-            
+
             switch (obj?.TicketName)
             {
                 case { } when string.IsNullOrWhiteSpace(obj.TicketName):
@@ -51,10 +51,10 @@ public class TicketValidator : BaseValidator, ITicketValidator
                     ValidatorResult.Failures.Add("Ticket description cannot exceed 500 characters");
                     break;
             }
-            
+
             if (obj?.CreateDate == null)
                 ValidatorResult.Failures.Add("Create date is required");
-            
+
 
             switch (obj?.AccountId)
             {

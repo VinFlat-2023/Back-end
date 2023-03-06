@@ -12,10 +12,12 @@ public class InvoiceUpdateRequest
     public DateTime DueDate { get; set; }
     public string? Detail { get; set; }
     public string? ImageUrl { get; set; }
+
     [MaxUploadedFileSize(1 * 1024 * 1024)]
     [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]
     [DataType(DataType.Upload)]
     [NotMapped]
     public IFormFile? Image { get; set; }
+
     public DateTime PaymentTime { get; set; }
 }

@@ -140,37 +140,41 @@ public class TicketsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update ticket by id")]
     public async Task<IActionResult> PutTicket(int id, [FromBody] TicketUpdateRequest ticketUpdateRequest)
     {
-        /*
-        var requestEntity = (await _serviceWrapper.Requests.GetRequestById(id));
+        var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id);
 
-        if (requestEntity == null)
+        if (ticketEntity == null)
             return NotFound("No requests found");
 
-        if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User, requestEntity.Value))
-            return BadRequest("You are not authorized to access this information");
-
-        var updateRequest = new Request
+        var updateTicket = new Ticket
         {
             TicketId = id,
-            TicketName = request.TicketName ?? null,
-            TicketTypeId = request.TicketTypeId ?? null,
-            Description = request.Description ?? null,
-            CreateDate = DateTime.UtcNow,
-            Status = request.Status,
-            // TODO : Auto assign to active invoice -> invoice detail if not assigned manually
-            SolveDate = request.SolveDate ?? null,
-            Amount = request.Amount ?? 0
+            TicketName = ticketUpdateRequest.TicketName ?? ticketEntity.TicketName,
+            Description = ticketUpdateRequest.Description ?? ticketEntity.Description,
+            TicketTypeId = ticketUpdateRequest.TicketTypeId ?? ticketEntity.TicketTypeId,
+            Status = ticketUpdateRequest.Status ?? "Active",
+            Amount = ticketUpdateRequest.Amount ?? ticketEntity.Amount,
+            SolveDate = ticketUpdateRequest.SolveDate ?? ticketEntity.SolveDate
         };
 
-        var validation = await _validator.ValidateParams(updateRequest, id);
+        var validation = await _validator.ValidateParams(updateTicket, id);
         if (!validation.IsValid)
             return BadRequest(validation.Failures.FirstOrDefault());
 
-        var result = await _serviceWrapper.Requests.UpdateTicket(updateRequest);
+        var result = await _serviceWrapper.Tickets.UpdateTicket(updateTicket);
         if (result == null)
-            return NotFound("Request failed to update");
-        */
-        return Ok("Request updated");
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Ticket failed to update",
+                data = ""
+            });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Ticket updated successfully",
+            data = ""
+        });
     }
 
 
@@ -255,27 +259,59 @@ public class TicketsController : ControllerBase
     }
 
     // DELETE: api/Requests/5
-    [HttpDelete("{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Delete ticket (Not finished yet !!!)")]
-    public async Task<IActionResult> DeleteTicket(int id)
+    [HttpDelete("{id:int}/user/{userId:int}")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Delete ticket by id (For management and renter)")]
+    public async Task<IActionResult> DeleteTicket(int id, int userId)
     {
-        /*777
-        var requestEntity = (await _serviceWrapper.Requests.GetRequestById(id))
-            ?.Invoices.FirstOrDefault()?.Renter?.RenterId;
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
 
-        if (requestEntity == null)
-            return NotFound("No requests found");
+        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "You are not authorized to access this resource",
+                data = ""
+            });
 
-        if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User, requestEntity.Value))
-            return BadRequest("You are not authorized to access this information");
+        var renterCheck = await _serviceWrapper.Renters.GetRenterById(userId);
 
-        var result = await _serviceWrapper.Requests.DeleteTicket(id);
+        if (renterCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "User not found",
+                data = ""
+            });
+
+        // pass renter Id and ticket Id to get, management can bypass restriction bound by token id
+        var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id, userId);
+
+        if (ticketEntity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Ticket not found",
+                data = ""
+            });
+
+        var result = await _serviceWrapper.Tickets.DeleteTicket(id);
         if (!result)
-            return NotFound("Request not found");
-            
-        */
-        return Ok("Request deleted");
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Ticket failed to delete",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Ticket deleted successfully",
+            data = ""
+        });
     }
 
     // GET: api/RequestTypes

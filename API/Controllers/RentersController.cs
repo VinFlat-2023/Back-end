@@ -117,7 +117,6 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
-
         var renterCheck = await _serviceWrapper.Renters.GetRenterById(id);
 
         if (renterCheck == null)

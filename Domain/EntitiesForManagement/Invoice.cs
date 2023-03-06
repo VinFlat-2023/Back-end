@@ -15,6 +15,7 @@ public class Invoice
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int InvoiceId { get; set; }
+
     public string Name { get; set; } = null!;
     public int Amount { get; set; }
     public bool Status { get; set; }

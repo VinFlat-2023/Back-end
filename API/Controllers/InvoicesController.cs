@@ -195,9 +195,9 @@ public class InvoicesController : ControllerBase
             Detail = invoice.Detail,
             ImageUrl = invoice.ImageUrl,
             PaymentTime = invoice.PaymentTime,
-            CreatedTime = DateTime.UtcNow,
+            CreatedTime = DateTime.UtcNow
         };
-        
+
         var validation = await _validator.ValidateParams(updateInvoice, id);
         if (!validation.IsValid)
             return BadRequest(validation.Failures.FirstOrDefault());
@@ -211,7 +211,7 @@ public class InvoicesController : ControllerBase
                 message = "Invoice failed to update",
                 data = ""
             });
-        
+
         return Ok(new
         {
             status = "Success",
@@ -228,17 +228,15 @@ public class InvoicesController : ControllerBase
     public async Task<IActionResult> PostInvoice([FromBody] InvoiceCreateRequest invoice)
     {
         var accountId = User.Identity?.Name;
-        
+
         if (accountId == null)
-        {
             return BadRequest(new
             {
                 status = "Bad Request",
                 message = "You are not authorized to access this resource due to invalid token",
                 data = ""
             });
-        }
-        
+
         var addNewInvoice = new Invoice
         {
             Name = invoice.Name,
@@ -251,13 +249,20 @@ public class InvoicesController : ControllerBase
             InvoiceTypeId = invoice.InvoiceTypeId,
             AccountId = int.Parse(accountId)
         };
-        
+
         switch (addNewInvoice.InvoiceTypeId)
         {
-            case 1 :
+            case 1:
                 addNewInvoice.RenterId = invoice.RenterId;
                 break;
-            case 2 :
+            case 2:
+            case 3:
+                if (addNewInvoice.RenterId != null)
+                    return BadRequest(new
+                    {
+                        status = "Bad Request",
+                        message = "This invoice type is not for renter usage"
+                    });
                 break;
         }
 
@@ -443,7 +448,7 @@ public class InvoicesController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Delete invoice type")]
     [HttpDelete("types/{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "SuperAdmin, Admin")]
     public async Task<IActionResult> DeleteInvoiceType(int id)
     {
         var result = await _serviceWrapper.InvoiceTypes.DeleteInvoiceType(id);
@@ -571,7 +576,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Create Invoice based on renter")]
+    [SwaggerOperation(Summary = "[Authorize] Create Invoice based on list of renter id")]
     [HttpPost("create")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> CreateManyInvoice([FromBody] List<MassInvoiceCreateRequest> invoices)
