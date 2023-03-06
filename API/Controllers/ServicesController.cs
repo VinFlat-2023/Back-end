@@ -147,6 +147,52 @@ public class ServicesController : ControllerBase
             });
     }
 
+    [HttpPut("select")]
+    [Authorize(Roles = "Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Select services to consume")]
+    public async Task<IActionResult> SelectServices(List<int> serviceId)
+    {
+        var userId = int.Parse(User.Identity?.Name);
+
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+
+        if (userCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "User not found",
+                data = ""
+            });
+
+        var invoiceId = await _serviceWrapper.Invoices.GetLatestUnpaidInvoiceByRenter(userId);
+
+        if (invoiceId == 0)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Invoice not found for this user",
+                data = ""
+            });
+
+        var invoiceEntity = await _serviceWrapper.Invoices.AddServiceToLastInvoice(invoiceId, serviceId);
+
+        return invoiceEntity switch
+        {
+            { IsSuccess: true } => Ok(new
+            {
+                status = "Success", message = invoiceEntity.Message, data = ""
+            }),
+            { IsSuccess: false } => BadRequest(new
+            {
+                status = "Bad Request", message = invoiceEntity.Message, data = ""
+            }),
+            null => NotFound(new
+            {
+                status = "Not Found", message = "Invoice not found for this user or service(s) not found", data = ""
+            })
+        };
+    }
+
     // GET: api/ServiceEntitys/5
     [HttpGet("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
@@ -184,8 +230,6 @@ public class ServicesController : ControllerBase
             Status = service.Status,
             ServiceTypeId = service.ServiceTypeId,
             Amount = service.Amount ?? 0
-            // TODO : Auto get latest invoice detail ID with corresponding Invoice with active status
-            // TODO : In invoice controller, auto generate invoice detail id
         };
 
         var validation = await _validator.ValidateParams(updateService, id);

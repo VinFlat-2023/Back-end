@@ -39,7 +39,7 @@ public class RoomRepository : IRoomRepository
                     return new RepositoryResponse
                     {
                         IsSuccess = false,
-                        ErrorMessage = "Failed to add new room to flat"
+                        Message = "Failed to add new room to flat"
                     };
                 }
 
@@ -51,21 +51,21 @@ public class RoomRepository : IRoomRepository
                 return new RepositoryResponse
                 {
                     IsSuccess = true,
-                    ErrorMessage = ""
+                    Message = ""
                 };
 
             case { AvailableRoom: <= 0 }:
                 return new RepositoryResponse
                 {
                     IsSuccess = false,
-                    ErrorMessage = "No available room slots left"
+                    Message = "No available room slots left"
                 };
 
             case null:
                 return new RepositoryResponse
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Room not found or does not exist"
+                    Message = "Room not found or does not exist"
                 };
         }
     }
@@ -101,13 +101,13 @@ public class RoomRepository : IRoomRepository
                 return new RepositoryResponse
                 {
                     IsSuccess = false,
-                    ErrorMessage = "There is / are room still in rental"
+                    Message = "There is / are room still in rental"
                 };
             case null:
                 return new RepositoryResponse
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Room not found or does not exist"
+                    Message = "Room not found or does not exist"
                 };
             case not null:
                 _context.Rooms.Remove(roomFound);
@@ -115,7 +115,7 @@ public class RoomRepository : IRoomRepository
                 return new RepositoryResponse
                 {
                     IsSuccess = true,
-                    ErrorMessage = ""
+                    Message = ""
                 };
         }
     }

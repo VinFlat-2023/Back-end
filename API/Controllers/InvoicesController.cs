@@ -582,19 +582,30 @@ public class InvoicesController : ControllerBase
     public async Task<IActionResult> CreateManyInvoice([FromBody] List<MassInvoiceCreateRequest> invoices)
     {
         var result = await _serviceWrapper.Invoices.BatchInsertInvoice(invoices);
-        return !result
-            ? NotFound(new
-            {
-                status = "Not Found",
-                message = "Invoices failed to create",
-                data = ""
-            })
-            : Ok(new
-            {
-                status = "Success",
-                message = "Invoices created successfully",
-                data = ""
-            });
+        switch (result)
+        {
+            case { IsSuccess: true }:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = result.Message,
+                    data = ""
+                });
+            case { IsSuccess: false }:
+                return Ok(new
+                {
+                    status = "Success",
+                    message = result.Message,
+                    data = ""
+                });
+            case null:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Invoice failed to create",
+                    data = ""
+                });
+        }
     }
 
     private static int DateRemainingCheck(DateTime start, DateTime end)
