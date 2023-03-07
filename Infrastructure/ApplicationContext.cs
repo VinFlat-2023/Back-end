@@ -57,10 +57,18 @@ public class ApplicationContext : DbContext
         modelBuilder.Entity<Contract>()
             .ToTable("Contracts",
                 b => b.IsTemporal());
-
+        
         modelBuilder.Entity<Invoice>()
             .ToTable("Invoices",
                 b => b.IsTemporal());
+
+        modelBuilder.Entity<Contract>()
+            .HasMany(c => c.Tickets);
+
+        modelBuilder.Entity<Ticket>()
+            .HasOne(x => x.Contract)
+            .WithMany(x => x.Tickets)
+            .OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<Notification>(entity =>
         {
@@ -669,12 +677,6 @@ public class ApplicationContext : DbContext
             }
         );
 
-        modelBuilder.Entity<Ticket>()
-            .HasOne(x => x.Contract)
-            .WithMany()
-            .HasForeignKey(x => x.ContractId)
-            .OnDelete(DeleteBehavior.NoAction);
-
         modelBuilder.Entity<ServiceType>().HasData(
             new ServiceType
             {
@@ -880,8 +882,9 @@ public class ApplicationContext : DbContext
                 Amount = 0
             }
         );
-
-        modelBuilder.Entity<Contract>().HasData(
+        
+        modelBuilder.Entity<Contract>()
+            .HasData(
             new Contract
             {
                 ContractId = 1,

@@ -6,4 +6,6 @@ public class Room
     public int AvailableSlots { get; set; }
     public int FlatId { get; set; }
     public virtual Flat Flat { get; set; }
+    public int RoomTypeId { get; set; }
+    public virtual RoomType RoomType { get; set; }
 }

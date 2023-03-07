@@ -14,20 +14,13 @@ public class Ticket
     public DateTime CreateDate { get; set; }
     public DateTime? SolveDate { get; set; }
     public decimal? Amount { get; set; }
-
     public string Status { get; set; } = null!;
-
     // Contract
     public int ContractId { get; set; }
-
     public virtual Contract Contract { get; set; } = null!;
-
     // Management
     public int AccountId { get; set; }
-
     public virtual Account Account { get; set; } = null!;
-
-    //public virtual ICollection<InvoiceDetail> InvoiceDetails { get; set; } = null!;
     public int TicketTypeId { get; set; }
     public virtual TicketType TicketType { get; set; } = null!;
 }
