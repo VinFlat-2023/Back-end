@@ -32,7 +32,7 @@ public class FlatsController : ControllerBase
     }
 
     [HttpGet]
-    [SwaggerOperation(Summary = "[Authorize] Get Flat list by filter")]
+    [SwaggerOperation(Summary = "[Authorize] Get flat list by filter request (For management and renter)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetFlats([FromQuery] FlatFilterRequest request, CancellationToken token)
     {
@@ -59,7 +59,7 @@ public class FlatsController : ControllerBase
     }
 
     // GET: api/Flats/5
-    [SwaggerOperation(Summary = "[Authorize] Get Flat")]
+    [SwaggerOperation(Summary = "[Authorize] Get flat (For management and renter)")]
     [HttpGet("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetFlat(int id)
@@ -83,7 +83,7 @@ public class FlatsController : ControllerBase
 
     // PUT: api/Flats/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Update Flat info")]
+    [SwaggerOperation(Summary = "[Authorize] Update flat info (For management)")]
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> PutFlat(int id, [FromBody] FlatUpdateRequest flat)
@@ -126,7 +126,7 @@ public class FlatsController : ControllerBase
 
     // POST: api/Flats
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Create Flat")]
+    [SwaggerOperation(Summary = "[Authorize] Create flat (For management)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost]
     public async Task<IActionResult> PostFlat([FromBody] FlatCreateRequest flat)
@@ -164,7 +164,7 @@ public class FlatsController : ControllerBase
     }
 
     // DELETE: api/Flats/5
-    [SwaggerOperation(Summary = "[Authorize] Remove Flat")]
+    [SwaggerOperation(Summary = "[Authorize] Remove flat (For management)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteFlat(int id)
@@ -185,7 +185,7 @@ public class FlatsController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Flat Type List")]
+    [SwaggerOperation(Summary = "[Authorize] Get flat type list by filter request (For management and renter)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [HttpGet("type")]
     public async Task<IActionResult> GetFlatTypes([FromQuery] FlatTypeFilterRequest request, CancellationToken token)
@@ -215,7 +215,7 @@ public class FlatsController : ControllerBase
     }
 
     // GET: api/FlatTypes/5
-    [SwaggerOperation(Summary = "[Authorize] Get Flat Type")]
+    [SwaggerOperation(Summary = "[Authorize] Get flat type by id (For management and renter)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [HttpGet("type/{id:int}")]
     public async Task<IActionResult> GetFlatType(int id)
@@ -238,7 +238,7 @@ public class FlatsController : ControllerBase
 
     // PUT: api/FlatTypes/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Update Flat Type info")]
+    [SwaggerOperation(Summary = "[Authorize] Update flat type info (For management)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPut("type/{id:int}")]
     public async Task<IActionResult> PutFlatType(int id, [FromBody] FlatTypeUpdateRequest flatType)
@@ -278,7 +278,7 @@ public class FlatsController : ControllerBase
 
     // POST: api/FlatTypes
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Create Flat Type")]
+    [SwaggerOperation(Summary = "[Authorize] Create flat type (For management)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost("type")]
     public async Task<IActionResult> PostFlatType([FromBody] FlatTypeCreateRequest flatType)
@@ -310,7 +310,7 @@ public class FlatsController : ControllerBase
     }
 
     // DELETE: api/FlatTypes/5
-    [SwaggerOperation(Summary = "Remove Flat Type")]
+    [SwaggerOperation(Summary = "[Authorize] Remove flat type (For management)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpDelete("type/{id:int}")]
     public async Task<IActionResult> DeleteFlatType(int id)
@@ -332,7 +332,7 @@ public class FlatsController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "Check total available slots")]
+    [SwaggerOperation(Summary = "[Authorize] Check total available slots in a flat (For management)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpDelete("room/{id:int}/slot-available")]
     public async Task<IActionResult> GetTotalAvailableRoom(int id)
@@ -354,7 +354,7 @@ public class FlatsController : ControllerBase
         };
     }
 
-    [SwaggerOperation(Summary = "Move a renter in inside available slot in a room (Not yet finished)")]
+    [SwaggerOperation(Summary = "[Authorize] Move a renter in inside available slot in a room (Not yet finished)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost("{flatId:int}/room/{roomId:int}/slots")]
     public async Task<IActionResult> MoveNewRenterIn(int flatId, int roomId, int renterId, CancellationToken token)

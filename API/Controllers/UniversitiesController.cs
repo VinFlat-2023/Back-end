@@ -29,9 +29,9 @@ public class UniversitiesController : ControllerBase
     }
 
     // GET: api/Universities
-    [Authorize(Roles = "SuperAdmin, Admin, Employee, Renter, Supervisor")]
+    [Authorize(Roles = "SuperAdmin, Admin, Renter, Supervisor")]
     [HttpGet]
-    [SwaggerOperation(Summary = "[Authorize] Get university list")]
+    [SwaggerOperation(Summary = "[Authorize] Get university list with pagination and filter (For management and renter)")]
     public async Task<IActionResult> GetUniversity([FromQuery] UniversityFilterRequest request, CancellationToken token)
     {
         var filter = _mapper.Map<UniversityFilter>(request);
@@ -58,9 +58,9 @@ public class UniversitiesController : ControllerBase
     }
 
     // GET: api/Universities/5
-    [Authorize(Roles = "SuperAdmin, Admin, Employee, Renter, Supervisor")]
+    [Authorize(Roles = "SuperAdmin, Admin, Renter, Supervisor")]
     [HttpGet("{id:int}")]
-    [SwaggerOperation(Summary = "[Authorize] Get university by id")]
+    [SwaggerOperation(Summary = "[Authorize] Get university by id (For management and renter)")]
     public async Task<IActionResult> GetUniversity(int id)
     {
         var entity = await _serviceWrapper.Universities.GetUniversityById(id);
@@ -79,7 +79,7 @@ public class UniversitiesController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPut("{id:int}")]
-    [SwaggerOperation(Summary = "[Authorize] Update university")]
+    [SwaggerOperation(Summary = "[Authorize] Update university by id (For management)")]
     public async Task<IActionResult> PutUniversity(int id, UniversityUpdateRequest university)
     {
         var updateUniversity = new University
@@ -119,7 +119,7 @@ public class UniversitiesController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost]
-    [SwaggerOperation(Summary = "[Authorize] Create university")]
+    [SwaggerOperation(Summary = "[Authorize] Create university (For management)")]
     public async Task<IActionResult> PostUniversity([FromBody] UniversityCreateRequest university)
     {
         var addNewUniversity = new University
@@ -152,7 +152,7 @@ public class UniversitiesController : ControllerBase
     // DELETE: api/Universities/5
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpDelete("{id:int}")]
-    [SwaggerOperation(Summary = "[Authorize] Delete university")]
+    [SwaggerOperation(Summary = "[Authorize] Delete university by id (For management)")]
     public async Task<IActionResult> DeleteUniversity(int id)
     {
         var result = await _serviceWrapper.Universities.DeleteUniversity(id);

@@ -28,7 +28,7 @@ public class RolesController : ControllerBase
         _validator = validator;
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Role list")]
+    [SwaggerOperation(Summary = "[Authorize] Get role list with pagination and filter (For management)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpGet]
     public async Task<IActionResult> GetRoleList([FromQuery] RoleFilterRequest request, CancellationToken token)
@@ -56,7 +56,7 @@ public class RolesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Role")]
+    [SwaggerOperation(Summary = "[Authorize] Get role by id (For management)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetRole(int id)
@@ -77,7 +77,7 @@ public class RolesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Role")]
+    [SwaggerOperation(Summary = "[Authorize] Create role (For management)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost]
     public async Task<IActionResult> CreateRole([FromBody] RoleCreateRequest request)
@@ -114,7 +114,7 @@ public class RolesController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Update Role info")]
+    [SwaggerOperation(Summary = "[Authorize] Update role info (For management)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPut]
     public async Task<IActionResult> UpdateRole(int id, [FromBody] RoleUpdateRequest role)

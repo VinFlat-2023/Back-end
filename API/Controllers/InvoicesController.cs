@@ -32,7 +32,7 @@ public class InvoicesController : ControllerBase
         _validator = validator;
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice list (For management)")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice list (For management)")]
     [HttpGet]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoices([FromQuery] InvoiceFilterRequest request, CancellationToken token)
@@ -61,7 +61,7 @@ public class InvoicesController : ControllerBase
     }
 
     // GET: api/Invoices/5
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice by Id (For management)")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice by Id (For management)")]
     [HttpGet("{id:int}/user")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceByManagement(int id)
@@ -82,7 +82,7 @@ public class InvoicesController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice list by renter Id (For renter and management)")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice list by renter Id (For renter and management)")]
     [HttpGet("user/{userId:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetInvoiceRenter(int userId, CancellationToken token)
@@ -132,7 +132,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice Id using renter Id (For renter and management)")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice Id using renter Id (For renter and management)")]
     [HttpGet("{invoiceId:int}/user/{userId:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetInvoiceRenterUsingId(int invoiceId, int userId)
@@ -181,7 +181,7 @@ public class InvoicesController : ControllerBase
 
     // PUT: api/Invoices/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Update Invoice info (For management)")]
+    [SwaggerOperation(Summary = "[Authorize] Update invoice info (For management)")]
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> PutInvoice(int id, [FromBody] InvoiceUpdateRequest invoice)
@@ -222,7 +222,7 @@ public class InvoicesController : ControllerBase
 
     // POST: api/Invoices
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Create Invoice (For management)")]
+    [SwaggerOperation(Summary = "[Authorize] Create invoice (For management)")]
     [HttpPost]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> PostInvoice([FromBody] InvoiceCreateRequest invoice)
@@ -294,7 +294,7 @@ public class InvoicesController : ControllerBase
     }
 
     // DELETE: api/Invoices/5
-    [SwaggerOperation(Summary = "[Authorize] Delete Invoice")]
+    [SwaggerOperation(Summary = "[Authorize] Delete invoice (For management)")]
     [HttpDelete("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> DeleteInvoice(int id)
@@ -316,7 +316,7 @@ public class InvoicesController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice type")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice type list (For management)")]
     [HttpGet("types")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceTypes([FromQuery] InvoiceTypeFilterRequest request,
@@ -352,7 +352,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice type by id")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice type by id (For management)")]
     [HttpGet("types/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceById(int id)
@@ -373,7 +373,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Create Invoice")]
+    [SwaggerOperation(Summary = "[Authorize] Create invoice type (For management)")]
     [HttpPost("types")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> CreateNewInvoiceType([FromBody] InvoiceTypeCreateRequest invoiceType)
@@ -409,7 +409,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Update Invoice")]
+    [SwaggerOperation(Summary = "[Authorize] Update invoice type (For management)")]
     [HttpPut("types/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> UpdateInvoiceType(int id, [FromBody] InvoiceTypeUpdateRequest invoiceType)
@@ -446,7 +446,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Delete invoice type")]
+    [SwaggerOperation(Summary = "[Authorize] Delete invoice type (For management)")]
     [HttpDelete("types/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin")]
     public async Task<IActionResult> DeleteInvoiceType(int id)
@@ -467,7 +467,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Delete invoice detail")]
+    [SwaggerOperation(Summary = "[Authorize] Delete invoice detail (For management)")]
     [HttpDelete("details/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> DeleteInvoiceDetail(int id)
@@ -478,7 +478,7 @@ public class InvoicesController : ControllerBase
             : Ok("Invoice detail deleted successfully");
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get invoice detail")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice detail list (For management)")]
     [HttpGet("details")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceDetails([FromQuery] InvoiceDetailFilterRequest request,
@@ -514,7 +514,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice detail by id")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice detail by id (For management)")]
     [HttpGet("details/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceDetailById(int id)
@@ -535,7 +535,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice detail by user id with true")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice detail by user id with true (For management)")]
     [HttpGet("details/user/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceDetailListByUserId(int id, CancellationToken token)
@@ -558,7 +558,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice detail by user id with true")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice detail by user id with true (For management)")]
     [HttpGet("details/user/{id:int}/active")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceDetailByUserId(int id, CancellationToken token)
@@ -576,7 +576,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Create Invoice based on list of renter id")]
+    [SwaggerOperation(Summary = "[Authorize] Create invoice based on list of renter id (For management)")]
     [HttpPost("create")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> CreateManyInvoice([FromBody] List<MassInvoiceCreateRequest> invoices)

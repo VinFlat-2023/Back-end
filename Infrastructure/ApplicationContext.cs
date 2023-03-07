@@ -31,16 +31,12 @@ public class ApplicationContext : DbContext
     public virtual DbSet<University> University { get; set; } = null!;
     public virtual DbSet<Wallet> Wallets { get; set; } = null!;
     public virtual DbSet<WalletType> WalletTypes { get; set; } = null!;
-
     public virtual DbSet<Transaction> Transactions { get; set; } = null!;
     public virtual DbSet<UserDevice> UserDevices { get; set; } = null!;
-
     public virtual DbSet<DatabaseException> DatabaseExceptions { get; set; } = null!;
     public virtual DbSet<Notification> Notifications { get; set; } = null!;
-
     public virtual DbSet<NotificationType> NotificationTypes { get; set; } = null!;
     public virtual DbSet<Room> Rooms { get; set; } = null!;
-
     public virtual DbSet<RoomType> RoomTypes { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -34,7 +34,7 @@ public class TicketsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Get ticket list")]
+    [SwaggerOperation(Summary = "[Authorize] Get ticket list with pagination and filter (For management and renter))")]
     public async Task<IActionResult> GetTickets([FromQuery] TicketFilterRequest ticketFilterRequest,
         CancellationToken token)
     {
@@ -64,7 +64,7 @@ public class TicketsController : ControllerBase
     // GET: api/Requests/5
     [HttpGet("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Get ticket by id")]
+    [SwaggerOperation(Summary = "[Authorize] Get ticket by id (For management and renter)")]
     public async Task<IActionResult> GetTicket(int id)
     {
         var userRole = User.Identities
@@ -137,7 +137,7 @@ public class TicketsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Update ticket by id")]
+    [SwaggerOperation(Summary = "[Authorize] Update ticket by id (For management)")]
     public async Task<IActionResult> PutTicket(int id, [FromBody] TicketUpdateRequest ticketUpdateRequest)
     {
         var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id);
@@ -317,7 +317,7 @@ public class TicketsController : ControllerBase
     // GET: api/RequestTypes
     [HttpGet("type")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Get ticket list")]
+    [SwaggerOperation(Summary = "[Authorize] Get ticket list (For management)")]
     public async Task<IActionResult> GetTIcketTypes([FromQuery] TicketTypeFilterRequest request,
         CancellationToken token)
     {
@@ -355,7 +355,7 @@ public class TicketsController : ControllerBase
     // GET: api/RequestTypes/5
     [HttpGet("type/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Get ticket type by id")]
+    [SwaggerOperation(Summary = "[Authorize] Get ticket type by id (For management)")]
     public async Task<IActionResult> GetTicketType(int id)
     {
         var entity = await _serviceWrapper.TicketTypes.GetTicketTypeById(id);
@@ -378,7 +378,7 @@ public class TicketsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("type/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Update ticket type")]
+    [SwaggerOperation(Summary = "[Authorize] Update ticket type by id (For management)")]
     public async Task<IActionResult> PutTicketType(int id,
         [FromBody] TicketTypeCreateRequest ticketTypeCreateRequestType)
     {
@@ -421,7 +421,7 @@ public class TicketsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost("type/")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Create ticket type")]
+    [SwaggerOperation(Summary = "[Authorize] Create ticket type (For management)")]
     public async Task<IActionResult> PostTicketType([FromBody] TicketTypeCreateRequest ticketTypeCreateRequestType)
     {
         var newRequestType = new TicketType
@@ -454,7 +454,7 @@ public class TicketsController : ControllerBase
     // DELETE: api/RequestTypes/5
     [HttpDelete("type/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Delete ticket type")]
+    [SwaggerOperation(Summary = "[Authorize] Delete ticket type by id (For management)")]
     public async Task<IActionResult> DeleteTicketType(int id)
     {
         var result = await _serviceWrapper.TicketTypes.DeleteTicketType(id);
