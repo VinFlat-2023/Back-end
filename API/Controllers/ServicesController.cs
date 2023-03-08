@@ -69,7 +69,8 @@ public class ServicesController : ControllerBase
 
     [HttpGet("building/current")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Get service list based on current user building id (For management and renter)")]
+    [SwaggerOperation(Summary =
+        "[Authorize] Get service list based on current user building id (For management and renter)")]
     public async Task<IActionResult> GetServiceEntitiesBasedOnRenterId([FromQuery] ServiceFilterRequest request,
         CancellationToken token)
     {

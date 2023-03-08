@@ -11,7 +11,7 @@ public static class AuthorizationService
             o.AddPolicy("SuperAdmin", policy => policy.RequireClaim("SuperAdmin"));
             o.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
             o.AddPolicy("Supervisor", policy => policy.RequireClaim("Supervisor"));
-            o.AddPolicy("Employee", policy => policy.RequireClaim("Employee"));
+            o.AddPolicy("Technician", policy => policy.RequireClaim("Technician"));
             o.AddPolicy("Renter", policy => policy.RequireClaim("Renter"));
         });
         return services;

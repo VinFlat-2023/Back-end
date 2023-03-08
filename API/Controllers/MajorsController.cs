@@ -30,7 +30,7 @@ public class MajorsController : ControllerBase
 
     // GET: api/Majors
     [Authorize(Roles = "SuperAdmin, Admin, Renter, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Get major list with pagination and filter (For management)")] 
+    [SwaggerOperation(Summary = "[Authorize] Get major list with pagination and filter (For management)")]
     [HttpGet]
     public async Task<IActionResult> GetMajors([FromQuery] MajorFilterRequest request, CancellationToken token)
     {

@@ -14,6 +14,7 @@ public class Contract
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ContractId { get; set; }
+
     public string ContractName { get; set; } = null!;
     public DateTime DateSigned { get; set; }
     public DateTime StartDate { get; set; }
@@ -30,11 +31,13 @@ public class Contract
     public decimal PriceForService { get; set; }
     public int? BuildingId { get; set; }
     public int? RoomId { get; set; }
-    [ForeignKey("RenterId")]
-    public int RenterId { get; set; }
+
+    [ForeignKey("RenterId")] public int RenterId { get; set; }
+
     public virtual Renter Renter { get; set; } = null!;
-    [ForeignKey("FlatId")]
-    public int FlatId { get; set; }
+
+    [ForeignKey("FlatId")] public int FlatId { get; set; }
+
     public virtual Flat Flat { get; set; } = null!;
     public virtual ICollection<Ticket> Tickets { get; set; }
 }

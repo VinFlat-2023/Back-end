@@ -31,7 +31,8 @@ public class UniversitiesController : ControllerBase
     // GET: api/Universities
     [Authorize(Roles = "SuperAdmin, Admin, Renter, Supervisor")]
     [HttpGet]
-    [SwaggerOperation(Summary = "[Authorize] Get university list with pagination and filter (For management and renter)")]
+    [SwaggerOperation(Summary =
+        "[Authorize] Get university list with pagination and filter (For management and renter)")]
     public async Task<IActionResult> GetUniversity([FromQuery] UniversityFilterRequest request, CancellationToken token)
     {
         var filter = _mapper.Map<UniversityFilter>(request);

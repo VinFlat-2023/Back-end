@@ -132,7 +132,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get invoice Id using renter Id (For renter and management)")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice using invoice Id and renter Id (For renter and management)")]
     [HttpGet("{invoiceId:int}/user/{userId:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetInvoiceRenterUsingId(int invoiceId, int userId)

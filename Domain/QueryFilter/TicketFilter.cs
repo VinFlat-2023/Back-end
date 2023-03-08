@@ -12,4 +12,6 @@ public class TicketFilter : PagingFilter
     public decimal? Amount { get; set; }
     public string? Status { get; set; }
     public int? TicketTypeId { get; set; }
+    public int? ContractId { get; set; }
+    public int? AccountId { get; set; }
 }

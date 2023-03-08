@@ -39,7 +39,7 @@ public class TokenService : ITokenService
             _configuration["JwtToken:Issuer"],
             _configuration["JwtToken:Audience"],
             claims,
-            expires: DateTime.UtcNow.AddDays(1),
+            expires: DateTime.UtcNow.AddDays(21),
             signingCredentials: credential);
 
         return tokenHandler.WriteToken(token);
@@ -66,7 +66,7 @@ public class TokenService : ITokenService
             _configuration["JwtToken:Issuer"],
             _configuration["JwtToken:Audience"],
             claims,
-            expires: DateTime.UtcNow.AddDays(1),
+            expires: DateTime.UtcNow.AddDays(21),
             signingCredentials: credential);
 
         return tokenHandler.WriteToken(token);

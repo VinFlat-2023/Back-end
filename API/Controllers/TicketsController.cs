@@ -38,27 +38,99 @@ public class TicketsController : ControllerBase
     public async Task<IActionResult> GetTickets([FromQuery] TicketFilterRequest ticketFilterRequest,
         CancellationToken token)
     {
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
         var filter = _mapper.Map<TicketFilter>(ticketFilterRequest);
 
         var list = await _serviceWrapper.Tickets.GetTicketList(filter, token);
 
-        var resultList = _mapper.Map<IEnumerable<TicketDto>>(list);
-
-        return list != null && !list.Any()
-            ? Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
-            })
-            : NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
-                message = "Service type list is empty",
+                message = "No ticket found",
                 data = ""
             });
+
+
+        var resultList = _mapper.Map<IEnumerable<TicketDto>>(list);
+
+        switch (userRole)
+        {
+            case "Admin":
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "List found",
+                    data = resultList,
+                    totalPage = list.TotalPages,
+                    totalCount = list.TotalCount
+                });
+
+            case "Supervisor":
+                var supervisorId = int.Parse(User.Identity?.Name);
+
+                // TODO : searching based on renter ID for management
+                var supervisorTicketCheck =
+                    await _serviceWrapper.Tickets.GetTicketList(filter, supervisorId, true, token);
+
+                if (supervisorTicketCheck == null)
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "No ticket list found with this user",
+                        data = ""
+                    });
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "List found",
+                    data = resultList,
+                    totalPage = list.TotalPages,
+                    totalCount = list.TotalCount
+                });
+
+            case "Renter":
+                var renterId = int.Parse(User.Identity?.Name);
+
+                var renterTicketCheck = await _serviceWrapper.Tickets.GetTicketList(filter, renterId, false, token);
+
+                if (renterTicketCheck == null)
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "No ticket list found with this user",
+                        data = ""
+                    });
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "List found",
+                    data = resultList,
+                    totalPage = list.TotalPages,
+                    totalCount = list.TotalCount
+                });
+
+            case null:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "No ticket found or no renter found",
+                    data = ""
+                });
+        }
+
+        return BadRequest(new
+        {
+            status = "Bad Request",
+            message = "Bad request with ticket controller !!!",
+            data = ""
+        });
     }
 
     // GET: api/Requests/5
