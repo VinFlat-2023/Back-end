@@ -88,6 +88,7 @@ public class InvoicesController : ControllerBase
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetInvoiceRenter(int userId, CancellationToken token)
     {
+        /*
         var userRole = User.Identities
             .FirstOrDefault()?.Claims
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
@@ -101,6 +102,7 @@ public class InvoicesController : ControllerBase
                 message = "You are not authorized to access this resource",
                 data = ""
             });
+        */
 
         var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
         if (userCheck == null)
@@ -138,6 +140,7 @@ public class InvoicesController : ControllerBase
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetInvoiceRenterUsingId(int invoiceId, int userId)
     {
+        /*
         var userRole = User.Identities
             .FirstOrDefault()?.Claims
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
@@ -151,6 +154,7 @@ public class InvoicesController : ControllerBase
                 message = "You are not authorized to access this resource",
                 data = ""
             });
+            */
 
         var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
 

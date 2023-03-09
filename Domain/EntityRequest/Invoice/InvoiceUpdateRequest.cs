@@ -9,10 +9,7 @@ public class InvoiceUpdateRequest
 {
     public string Name { get; set; } = null!;
     public bool Status { get; set; }
-    public string DueDate { get; set; }
-    public string Detail { get; set; }
-    public string ImageUrl { get; set; }
-    public DateTime DueDate { get; set; }
+    public string? DueDate { get; set; }
     public string? Detail { get; set; }
     public string? ImageUrl { get; set; }
     [MaxUploadedFileSize(1 * 1024 * 1024)]
@@ -21,10 +18,8 @@ public class InvoiceUpdateRequest
     [NotMapped]
     public IFormFile? Image { get; set; }
     public int ContractId { get; set; }
-    public string PaymentTime { get; set; }
-    public string CreatedTime { get; set; }
+    public string? PaymentTime { get; set; }
     public int RenterId { get; set; }
     public int AccountId { get; set; }
     public int InvoiceTypeId { get; set; }
-    public DateTime PaymentTime { get; set; }
 }

@@ -2,13 +2,14 @@
 
 public static class DateTimeUtils
 {
-    private static readonly TimeZoneInfo Asia_Standar_Time =
+    private static readonly TimeZoneInfo AsiaStandardTime =
         TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
 
     public static DateTime GetCurrentDateTime()
     {
-        return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, Asia_Standar_Time);
+        return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, AsiaStandardTime);
     }
+    
     public static DateTime? ConvertToDateTime(this string dateString)
     {
         Console.WriteLine(dateString+"//////////////////////////////////////////////////");

@@ -29,6 +29,7 @@ using Domain.EntityRequest.Account;
 using Domain.EntityRequest.Area;
 using Domain.EntityRequest.Building;
 using Domain.EntityRequest.Contract;
+using Domain.EntityRequest.ContractHistory;
 using Domain.EntityRequest.FeedBack;
 using Domain.EntityRequest.FeedbackType;
 using Domain.EntityRequest.Flat;
@@ -254,8 +255,6 @@ public class AutoMapper : Profile
         CreateMap<InvoiceUpdateRequest, Invoice>()
             .ForMember<DateTime?>(e => e.DueDate,
                 option => option.MapFrom(r => r.DueDate.ConvertToDateTime()))
-            .ForMember<DateTime?>(e => e.CreatedTime,
-                option => option.MapFrom(r => r.CreatedTime.ConvertToDateTime())) 
             .ForMember<DateTime?>(e => e.PaymentTime,
                 option => option.MapFrom(r => r.PaymentTime.ConvertToDateTime()));
         CreateMap<Invoice, InvoiceUpdateRequest>();
@@ -320,6 +319,7 @@ public class AutoMapper : Profile
 
     private void MapContractHistory()
     {
+        /*
         CreateMap<ContractHistory, ContractHistoryDto>()
             .ForAllMembers(o => o.ExplicitExpansion());
         CreateMap<ContractHistoryDto, ContractHistory>()
@@ -334,7 +334,7 @@ public class AutoMapper : Profile
         CreateMap<ContractHistory, ContractHistoryUpdateRequest>();
         CreateMap<ContractHistoryFilterRequest, ContractHistoryFilter>()
             .ReverseMap();
-        /*
+
             CreateMap<ContractHistory, ContractHistoryDto>()
                 .ForAllMembers(o => o.ExplicitExpansion());
             CreateMap<ContractHistoryDto, ContractHistory>()

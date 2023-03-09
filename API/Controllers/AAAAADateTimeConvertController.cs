@@ -20,7 +20,7 @@ namespace API.Controllers
                 //  5/8/2009 14:40:52
                 //  yyyy-MM-dd HH:mm:ss,fff
                 string[] formats = { "d/M/yyyy HH:mm:ss", "d/M/yyyy" };
-                DateTime myDate = DateTime.ParseExact(dateString, formats,
+                var myDate = DateTime.ParseExact(dateString, formats,
                                 System.Globalization.CultureInfo.InvariantCulture);
                 return Ok(new { Class= myDate.GetType() ,Value=myDate.ToString("d MMM yyyy HH:mm:ss"),
                                 NewVal=dateString.ConvertToDateTime()});

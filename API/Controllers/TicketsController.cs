@@ -236,7 +236,6 @@ public class TicketsController : ControllerBase
         var result = await _serviceWrapper.Tickets.UpdateTicket(updateTicket);
         if (result == null)
             return NotFound("Request failed to update");
-        */
         return Ok("Request updated");           
         //var updateTicket = _mapper.Map<Ticket>(ticketUpdateRequest);
         //return Ok(new { ticket = updateTicket, date1 = updateTicket.CreateDate.ToString("dd MMM yyyy") });
@@ -309,7 +308,6 @@ public class TicketsController : ControllerBase
             Description = ticketCreateRequest.Description,
             CreateDate = DateTime.UtcNow,
             TicketTypeId = ticketCreateRequest.TicketTypeId,
-            Status = ticketCreateRequest.Status,
             // TODO : Auto assign to active invoice -> invoice detail if not assigned manually
             SolveDate = ticketCreateRequest.SolveDate.ConvertToDateTime() ?? null,
             Status = ticketCreateRequest.Status ?? "Active",
