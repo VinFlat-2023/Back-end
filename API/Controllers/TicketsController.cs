@@ -210,7 +210,8 @@ public class TicketsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Update ticket by id (For management)", Description = "date format d/M/YYYY")]
+    [SwaggerOperation(Summary = "[Authorize] Update ticket by id (For management)",
+        Description = "date format d/M/YYYY")]
     public async Task<IActionResult> PutTicket(int id, [FromBody] TicketUpdateRequest ticketUpdateRequest)
     {
         var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id);
@@ -236,15 +237,15 @@ public class TicketsController : ControllerBase
         var result = await _serviceWrapper.Tickets.UpdateTicket(updateTicket);
         if (result == null)
             return NotFound("Request failed to update");
-        return Ok("Request updated");           
+        return Ok("Request updated");
         //var updateTicket = _mapper.Map<Ticket>(ticketUpdateRequest);
         //return Ok(new { ticket = updateTicket, date1 = updateTicket.CreateDate.ToString("dd MMM yyyy") });
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Ticket failed to update",
-                data = ""
-            });
+        return BadRequest(new
+        {
+            status = "Bad Request",
+            message = "Ticket failed to update",
+            data = ""
+        });
 
         return Ok(new
         {

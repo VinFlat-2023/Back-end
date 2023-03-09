@@ -29,7 +29,6 @@ using Domain.EntityRequest.Account;
 using Domain.EntityRequest.Area;
 using Domain.EntityRequest.Building;
 using Domain.EntityRequest.Contract;
-using Domain.EntityRequest.ContractHistory;
 using Domain.EntityRequest.FeedBack;
 using Domain.EntityRequest.FeedbackType;
 using Domain.EntityRequest.Flat;
@@ -51,7 +50,6 @@ using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.Responses;
 using Domain.Utils;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MimeKit;
 
 namespace API.Mapping;
@@ -85,7 +83,7 @@ public class AutoMapper : Profile
         MapMail();
         MapNotiAndNotiType();
     }
-    
+
     private void MapInvoiceType()
     {
         CreateMap<InvoiceType, InvoiceTypeDto>()
@@ -213,15 +211,15 @@ public class AutoMapper : Profile
         CreateMap<TicketDto, Ticket>()
             .ReverseMap();
         CreateMap<TicketCreateRequest, Ticket>()
-            .ForMember<DateTime>(e => e.CreateDate,
+            .ForMember(e => e.CreateDate,
                 option => option.MapFrom(r => r.CreateDate.ConvertToDateTime()))
-            .ForMember<DateTime?>(e => e.SolveDate,
+            .ForMember(e => e.SolveDate,
                 option => option.MapFrom(r => r.SolveDate.ConvertToDateTime()));
-        CreateMap<Ticket, TicketCreateRequest>();                                   
+        CreateMap<Ticket, TicketCreateRequest>();
         CreateMap<TicketUpdateRequest, Ticket>()
-            .ForMember<DateTime>(e => e.CreateDate,
-                option => option.MapFrom(r=>r.CreateDate.ConvertToDateTime()))
-            .ForMember<DateTime?>(e => e.SolveDate,
+            .ForMember(e => e.CreateDate,
+                option => option.MapFrom(r => r.CreateDate.ConvertToDateTime()))
+            .ForMember(e => e.SolveDate,
                 option => option.MapFrom(r => r.SolveDate.ConvertToDateTime()));
         CreateMap<Ticket, TicketUpdateRequest>();
         CreateMap<TicketFilterRequest, TicketFilter>()
@@ -247,15 +245,15 @@ public class AutoMapper : Profile
         CreateMap<Invoice, InvoiceDto>()
             .ForAllMembers(o => o.ExplicitExpansion());
         CreateMap<InvoiceDto, Invoice>()
-            .ReverseMap();                                                                               
+            .ReverseMap();
         CreateMap<InvoiceCreateRequest, Invoice>()
-            .ForMember<DateTime?>(e => e.DueDate,
+            .ForMember(e => e.DueDate,
                 option => option.MapFrom(r => r.DueDate.ConvertToDateTime()));
         CreateMap<Invoice, InvoiceCreateRequest>();
         CreateMap<InvoiceUpdateRequest, Invoice>()
-            .ForMember<DateTime?>(e => e.DueDate,
+            .ForMember(e => e.DueDate,
                 option => option.MapFrom(r => r.DueDate.ConvertToDateTime()))
-            .ForMember<DateTime?>(e => e.PaymentTime,
+            .ForMember(e => e.PaymentTime,
                 option => option.MapFrom(r => r.PaymentTime.ConvertToDateTime()));
         CreateMap<Invoice, InvoiceUpdateRequest>();
         CreateMap<InvoiceFilterRequest, InvoiceFilter>()

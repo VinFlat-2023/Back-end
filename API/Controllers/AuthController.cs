@@ -40,16 +40,7 @@ public class AuthController : ControllerBase
         if (StringUtils.IsNotEmpty(loginModel.DeviceToken))
         {
             var userDeviceFound = await _serviceWrapper.Devices.GetUdByDeviceToken(loginModel.DeviceToken);
-            if (userDeviceFound == null)
-            {
-                var userDevice = new UserDevice
-                {
-                    DeviceToken = loginModel.DeviceToken,
-                    UserName = account.Username
-                };
-                await _serviceWrapper.Devices.AddUserDeviceInfo(userDevice);
-            }
-            else if (userDeviceFound.UserName != account.Username)
+            if (userDeviceFound.UserName != account.Username)
             {
                 userDeviceFound.UserName = account.Username;
                 await _serviceWrapper.Devices.UpdateUserDeviceInfo(userDeviceFound);
@@ -92,16 +83,7 @@ public class AuthController : ControllerBase
         if (StringUtils.IsNotEmpty(loginModel.DeviceToken))
         {
             var userDeviceFound = await _serviceWrapper.Devices.GetUdByDeviceToken(loginModel.DeviceToken);
-            if (userDeviceFound == null)
-            {
-                var userDevice = new UserDevice
-                {
-                    DeviceToken = loginModel.DeviceToken,
-                    UserName = renter.Username
-                };
-                await _serviceWrapper.Devices.AddUserDeviceInfo(userDevice);
-            }
-            else if (userDeviceFound.UserName != renter.Username)
+            if (userDeviceFound.UserName != renter.Username)
             {
                 userDeviceFound.UserName = renter.Username;
                 await _serviceWrapper.Devices.UpdateUserDeviceInfo(userDeviceFound);

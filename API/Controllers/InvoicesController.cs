@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using Domain.EntitiesDTO.InvoiceDTO;
 using Domain.EntitiesDTO.InvoiceTypeDTO;
 using Domain.EntitiesForManagement;
@@ -186,7 +185,8 @@ public class InvoicesController : ControllerBase
 
     // PUT: api/Invoices/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Update Invoice info  (For management)", Description = "date format d/M/YYYY")]
+    [SwaggerOperation(Summary = "[Authorize] Update Invoice info  (For management)",
+        Description = "date format d/M/YYYY")]
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> PutInvoice(int id, [FromBody] InvoiceUpdateRequest invoice)
@@ -199,7 +199,7 @@ public class InvoicesController : ControllerBase
             DueDate = invoice.DueDate.ConvertToDateTime(),
             Detail = invoice.Detail,
             ImageUrl = invoice.ImageUrl,
-            PaymentTime = invoice.PaymentTime.ConvertToDateTime() ?? null,
+            PaymentTime = invoice.PaymentTime.ConvertToDateTime() ?? null
         };
 
         var validation = await _validator.ValidateParams(updateInvoice, id);

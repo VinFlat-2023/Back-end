@@ -110,7 +110,7 @@ public class RentersController : ControllerBase
             .FirstOrDefault()?.Claims
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
-        
+
         Console.WriteLine(userRole);
 
         if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
@@ -120,7 +120,7 @@ public class RentersController : ControllerBase
                 message = "You are not authorized to access this resource",
                 data = ""
             });
-        
+
         var renterCheck = await _serviceWrapper.Renters.GetRenterById(id);
 
         if (renterCheck == null)

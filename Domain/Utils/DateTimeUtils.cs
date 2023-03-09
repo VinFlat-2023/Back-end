@@ -1,4 +1,6 @@
-﻿namespace Domain.Utils;
+﻿using System.Globalization;
+
+namespace Domain.Utils;
 
 public static class DateTimeUtils
 {
@@ -9,23 +11,25 @@ public static class DateTimeUtils
     {
         return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, AsiaStandardTime);
     }
-    
+
     public static DateTime? ConvertToDateTime(this string? dateString)
     {
-        Console.WriteLine(dateString+"//////////////////////////////////////////////////");
+        Console.WriteLine(dateString + "//////////////////////////////////////////////////");
         try
         {
             //  2009-05-08 14:40:52,531
             //  5/8/2009 14:40:52
             //  yyyy-MM-dd HH:mm:ss,fff
 
-            string[] formats = {
+            string[] formats =
+            {
                 "d/M/yyyy HH:mm:ss", "d/M/yyyy",
-                                "d/M/yyyy HH:mm: ss", "d / M / yyyy"};
-            DateTime myDate = DateTime.ParseExact(dateString, formats,
-                            System.Globalization.CultureInfo.InvariantCulture);
+                "d/M/yyyy HH:mm: ss", "d / M / yyyy"
+            };
+            var myDate = DateTime.ParseExact(dateString, formats,
+                CultureInfo.InvariantCulture);
             return DateTime.ParseExact(dateString, formats,
-                            System.Globalization.CultureInfo.InvariantCulture);
+                CultureInfo.InvariantCulture);
         }
         catch (Exception ex)
         {

@@ -127,7 +127,7 @@ public class AccountsController : ControllerBase
                 message = "Device token generated successfully",
                 data = ""
             });
-        
+
         userDeviceFound.UserName = result.Username;
 
         await _serviceWrapper.Devices.UpdateUserDeviceInfo(userDeviceFound);

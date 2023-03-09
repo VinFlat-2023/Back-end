@@ -12,11 +12,13 @@ public class InvoiceUpdateRequest
     public string? DueDate { get; set; }
     public string? Detail { get; set; }
     public string? ImageUrl { get; set; }
+
     [MaxUploadedFileSize(1 * 1024 * 1024)]
     [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]
     [DataType(DataType.Upload)]
     [NotMapped]
     public IFormFile? Image { get; set; }
+
     public int ContractId { get; set; }
     public string? PaymentTime { get; set; }
     public int RenterId { get; set; }
