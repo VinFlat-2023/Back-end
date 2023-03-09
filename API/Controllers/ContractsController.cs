@@ -6,6 +6,7 @@ using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Contract;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
+using Domain.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -197,7 +198,7 @@ public class ContractsController : ControllerBase
 
     // PUT: api/Contract/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Update Contract info (For management)")]
+    [SwaggerOperation(Summary = "[Authorize] Update Contract info (For management)", Description = "date format d/M/YYYY")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutContract(int id, [FromBody] ContractUpdateRequest contract)
@@ -217,9 +218,9 @@ public class ContractsController : ControllerBase
         {
             ContractId = id,
             ContractName = contract.ContractName ?? "Contract for " + contractEntity.RenterId,
-            DateSigned = contract.DateSigned ?? contractEntity.DateSigned,
-            StartDate = contract.StartDate ?? contractEntity.StartDate,
-            EndDate = contract.EndDate ?? contractEntity.EndDate,
+            DateSigned = contract.DateSigned.ConvertToDateTime() ?? contractEntity.DateSigned,
+            StartDate = contract.StartDate.ConvertToDateTime() ?? contractEntity.StartDate,
+            EndDate = contract.EndDate.ConvertToDateTime() ?? contractEntity.EndDate,
             LastUpdated = DateTime.UtcNow,
             ContractStatus = contract.ContractStatus ?? contractEntity.ContractStatus,
             PriceForRent = contract.PriceForRent ?? contractEntity.PriceForRent,
@@ -259,7 +260,7 @@ public class ContractsController : ControllerBase
 
     // POST: api/Contract
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Create contract (For management)")]
+    [SwaggerOperation(Summary = "[Authorize] Create Contract (For management)", Description = "date format d/M/YYYY")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost("sign")]
     public async Task<IActionResult> PostContract([FromBody] ContractCreateRequest contract)
@@ -278,9 +279,9 @@ public class ContractsController : ControllerBase
         var newContract = new Contract
         {
             ContractName = contract.ContractName ?? "Contract for " + renterEntity.FullName,
-            DateSigned = contract.DateSigned,
-            StartDate = contract.StartDate,
-            EndDate = contract.EndDate,
+            DateSigned = contract.DateSigned.ConvertToDateTime()??DateTimeUtils.GetCurrentDateTime(),
+            StartDate = contract.StartDate.ConvertToDateTime() ?? DateTimeUtils.GetCurrentDateTime(),
+            EndDate = contract.EndDate.ConvertToDateTime(),
             LastUpdated = DateTime.UtcNow,
             ContractStatus = contract.ContractStatus ?? "Active",
             CreatedDate = DateTime.UtcNow,

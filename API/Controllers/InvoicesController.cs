@@ -7,6 +7,7 @@ using Domain.EntityRequest.Invoice;
 using Domain.EntityRequest.InvoiceType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
+using Domain.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -181,7 +182,7 @@ public class InvoicesController : ControllerBase
 
     // PUT: api/Invoices/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Update invoice info (For management)")]
+    [SwaggerOperation(Summary = "[Authorize] Update Invoice info  (For management)", Description = "date format d/M/YYYY")]
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> PutInvoice(int id, [FromBody] InvoiceUpdateRequest invoice)
@@ -191,7 +192,7 @@ public class InvoicesController : ControllerBase
             InvoiceId = id,
             Name = invoice.Name,
             Status = invoice.Status,
-            DueDate = invoice.DueDate,
+            DueDate = invoice.DueDate.ConvertToDateTime(),
             Detail = invoice.Detail,
             ImageUrl = invoice.ImageUrl,
             PaymentTime = invoice.PaymentTime,
@@ -222,7 +223,7 @@ public class InvoicesController : ControllerBase
 
     // POST: api/Invoices
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Create invoice (For management)")]
+    [SwaggerOperation(Summary = "[Authorize] Create Invoice (For management)", Description = "date format d/M/YYYY")]
     [HttpPost]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> PostInvoice([FromBody] InvoiceCreateRequest invoice)

@@ -12,7 +12,7 @@ public class ContractHistoryUpdateRequest
     [MaxLength(20, ErrorMessage = "Status length must less than 20")]
     public string ContractHistoryStatus { get; set; } = null!;
 
-    public DateTime ContractExpiredDate { get; set; }
+    public string ContractExpiredDate { get; set; }
 
     public int RenterId { get; set; }
 

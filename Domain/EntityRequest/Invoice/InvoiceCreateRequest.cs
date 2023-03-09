@@ -9,7 +9,7 @@ public class InvoiceCreateRequest
 {
     public string Name { get; set; } = null!;
     public bool? Status { get; set; }
-    public DateTime? DueDate { get; set; }
+    public string? DueDate { get; set; }
     public string? Detail { get; set; }
     public string? ImageUrl { get; set; }
 

@@ -7,6 +7,7 @@ using Domain.EntityRequest.Ticket;
 using Domain.EntityRequest.TicketType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
+using Domain.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -51,7 +52,7 @@ public class TicketsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "No ticket found",
+                message = "Ticket list is empty",
                 data = ""
             });
 
@@ -209,7 +210,7 @@ public class TicketsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Update ticket by id (For management)")]
+    [SwaggerOperation(Summary = "[Authorize] Update ticket by id (For management)", Description = "date format d/M/YYYY"))]
     public async Task<IActionResult> PutTicket(int id, [FromBody] TicketUpdateRequest ticketUpdateRequest)
     {
         var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id);
@@ -234,6 +235,11 @@ public class TicketsController : ControllerBase
 
         var result = await _serviceWrapper.Tickets.UpdateTicket(updateTicket);
         if (result == null)
+            return NotFound("Request failed to update");
+        */
+        return Ok("Request updated");           
+        //var updateTicket = _mapper.Map<Ticket>(ticketUpdateRequest);
+        //return Ok(new { ticket = updateTicket, date1 = updateTicket.CreateDate.ToString("dd MMM yyyy") });
             return BadRequest(new
             {
                 status = "Bad Request",
@@ -254,7 +260,7 @@ public class TicketsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     [Authorize(Roles = "Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Create ticket (For renter)")]
+    [SwaggerOperation(Summary = "[Authorize] Create ticket (For renter)", Description = "date format d/M/YYYY")]
     public async Task<IActionResult> PostTicket([FromBody] TicketCreateRequest ticketCreateRequest)
     {
         var userId = int.Parse(User.Identity?.Name);
@@ -303,6 +309,9 @@ public class TicketsController : ControllerBase
             Description = ticketCreateRequest.Description,
             CreateDate = DateTime.UtcNow,
             TicketTypeId = ticketCreateRequest.TicketTypeId,
+            Status = ticketCreateRequest.Status,
+            // TODO : Auto assign to active invoice -> invoice detail if not assigned manually
+            SolveDate = ticketCreateRequest.SolveDate.ConvertToDateTime() ?? null,
             Status = ticketCreateRequest.Status ?? "Active",
             ContractId = contractId.Value,
             AccountId = managementAccountId.Value,
@@ -452,13 +461,13 @@ public class TicketsController : ControllerBase
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Update ticket type by id (For management)")]
     public async Task<IActionResult> PutTicketType(int id,
-        [FromBody] TicketTypeCreateRequest ticketTypeCreateRequestType)
+        [FromBody] TicketTypeUpdateRequest ticketTypeUpdateRequestType)
     {
         var updateRequestType = new TicketType
         {
             TicketTypeId = id,
-            Description = ticketTypeCreateRequestType.Description,
-            TicketTypeName = ticketTypeCreateRequestType.Name,
+            Description = ticketTypeUpdateRequestType.Description,
+            TicketTypeName = ticketTypeUpdateRequestType.Name,
             Status = true
         };
 
