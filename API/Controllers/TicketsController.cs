@@ -210,7 +210,7 @@ public class TicketsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Update ticket by id (For management)", Description = "date format d/M/YYYY"))]
+    [SwaggerOperation(Summary = "[Authorize] Update ticket by id (For management)", Description = "date format d/M/YYYY")]
     public async Task<IActionResult> PutTicket(int id, [FromBody] TicketUpdateRequest ticketUpdateRequest)
     {
         var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id);
@@ -226,7 +226,7 @@ public class TicketsController : ControllerBase
             TicketTypeId = ticketUpdateRequest.TicketTypeId ?? ticketEntity.TicketTypeId,
             Status = ticketUpdateRequest.Status ?? "Active",
             Amount = ticketUpdateRequest.Amount ?? ticketEntity.Amount,
-            SolveDate = ticketUpdateRequest.SolveDate ?? ticketEntity.SolveDate
+            SolveDate = ticketUpdateRequest.SolveDate.ConvertToDateTime() ?? ticketEntity.SolveDate
         };
 
         var validation = await _validator.ValidateParams(updateTicket, id);

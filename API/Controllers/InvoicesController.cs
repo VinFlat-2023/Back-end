@@ -199,8 +199,7 @@ public class InvoicesController : ControllerBase
             DueDate = invoice.DueDate.ConvertToDateTime(),
             Detail = invoice.Detail,
             ImageUrl = invoice.ImageUrl,
-            PaymentTime = invoice.PaymentTime,
-            CreatedTime = DateTime.UtcNow
+            PaymentTime = invoice.PaymentTime.ConvertToDateTime() ?? null,
         };
 
         var validation = await _validator.ValidateParams(updateInvoice, id);
@@ -246,7 +245,7 @@ public class InvoicesController : ControllerBase
         {
             Name = invoice.Name,
             Status = true,
-            DueDate = invoice.DueDate,
+            DueDate = invoice.DueDate.ConvertToDateTime() ?? null,
             Detail = invoice.Detail,
             ImageUrl = invoice.ImageUrl,
             PaymentTime = null,

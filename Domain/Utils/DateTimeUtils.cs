@@ -10,7 +10,7 @@ public static class DateTimeUtils
         return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, AsiaStandardTime);
     }
     
-    public static DateTime? ConvertToDateTime(this string dateString)
+    public static DateTime? ConvertToDateTime(this string? dateString)
     {
         Console.WriteLine(dateString+"//////////////////////////////////////////////////");
         try
