@@ -33,7 +33,7 @@ internal class ServiceEntityRepository : IServiceEntityRepository
             .AsNoTracking();
     }
 
-    public IQueryable<ServiceEntity> GetServiceList(ServiceEntityFilter filters, int buildingId)
+    public IQueryable<ServiceEntity> GetServiceList(ServiceEntityFilter filters, int? buildingId)
     {
         return _context.Services
             .Include(x => x.ServiceType)

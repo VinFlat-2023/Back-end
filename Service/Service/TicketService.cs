@@ -36,9 +36,32 @@ public class TicketService : ITicketService
         return pagedList;
     }
 
+    public async Task<PagedList<Ticket>?> GetTicketList(TicketFilter filters, int id, bool isManagement,
+        CancellationToken token)
+    {
+        var queryable = _repositoryWrapper.Tickets.GetTicketList(filters, id, isManagement);
+
+        if (!queryable.Any())
+            return null;
+
+        var page = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var size = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
+        var pagedList = await PagedList<Ticket>
+            .Create(queryable, page, size, token);
+
+        return pagedList;
+    }
+
     public async Task<Ticket?> GetTicketById(int? ticketId)
     {
         return await _repositoryWrapper.Tickets.GetTicketDetail(ticketId)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<Ticket?> GetTicketById(int? ticketId, int? renterId)
+    {
+        return await _repositoryWrapper.Tickets.GetTicketDetail(ticketId, renterId)
             .FirstOrDefaultAsync();
     }
 

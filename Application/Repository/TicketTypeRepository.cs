@@ -34,7 +34,7 @@ internal class TicketTypeRepository : ITicketTypeRepository
     /// </summary>
     /// <param name="ticketTypeId"></param>
     /// <returns></returns>
-    public IQueryable<TicketType> GetRequestTypeDetail(int? ticketTypeId)
+    public IQueryable<TicketType> GetTicketTypeDetail(int? ticketTypeId)
     {
         return _context.TicketTypes
             .Where(x => x.TicketTypeId == ticketTypeId);

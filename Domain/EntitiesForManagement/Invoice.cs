@@ -34,8 +34,8 @@ public class Invoice
     public DateTime CreatedTime { get; set; }
 
     // Receiver account
-    public int RenterId { get; set; }
-    public virtual Renter Renter { get; set; }
+    public int? RenterId { get; set; }
+    public virtual Renter? Renter { get; set; }
 
     // Management account
     public int AccountId { get; set; }

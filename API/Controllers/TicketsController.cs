@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Domain.EntitiesDTO.TicketDTO;
 using Domain.EntitiesDTO.TicketTypeDTO;
 using Domain.EntitiesForManagement;
@@ -34,105 +35,274 @@ public class TicketsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Get ticket list")]
+    [SwaggerOperation(Summary = "[Authorize] Get ticket list with pagination and filter (For management and renter))")]
     public async Task<IActionResult> GetTickets([FromQuery] TicketFilterRequest ticketFilterRequest,
         CancellationToken token)
     {
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
         var filter = _mapper.Map<TicketFilter>(ticketFilterRequest);
 
         var list = await _serviceWrapper.Tickets.GetTicketList(filter, token);
 
-        var resultList = _mapper.Map<IEnumerable<TicketDto>>(list);
-
-        return list != null && !list.Any()
-            ? Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
-            })
-            : NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "Ticket list is empty",
                 data = ""
             });
+
+
+        var resultList = _mapper.Map<IEnumerable<TicketDto>>(list);
+
+        switch (userRole)
+        {
+            case "Admin":
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "List found",
+                    data = resultList,
+                    totalPage = list.TotalPages,
+                    totalCount = list.TotalCount
+                });
+
+            case "Supervisor":
+                var supervisorId = int.Parse(User.Identity?.Name);
+
+                // TODO : searching based on renter ID for management
+                var supervisorTicketCheck =
+                    await _serviceWrapper.Tickets.GetTicketList(filter, supervisorId, true, token);
+
+                if (supervisorTicketCheck == null)
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "No ticket list found with this user",
+                        data = ""
+                    });
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "List found",
+                    data = resultList,
+                    totalPage = list.TotalPages,
+                    totalCount = list.TotalCount
+                });
+
+            case "Renter":
+                var renterId = int.Parse(User.Identity?.Name);
+
+                var renterTicketCheck = await _serviceWrapper.Tickets.GetTicketList(filter, renterId, false, token);
+
+                if (renterTicketCheck == null)
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "No ticket list found with this user",
+                        data = ""
+                    });
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "List found",
+                    data = resultList,
+                    totalPage = list.TotalPages,
+                    totalCount = list.TotalCount
+                });
+
+            case null:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "No ticket found or no renter found",
+                    data = ""
+                });
+        }
+
+        return BadRequest(new
+        {
+            status = "Bad Request",
+            message = "Bad request with ticket controller !!!",
+            data = ""
+        });
     }
 
     // GET: api/Requests/5
     [HttpGet("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Get ticket by id")]
+    [SwaggerOperation(Summary = "[Authorize] Get ticket by id (For management and renter)")]
     public async Task<IActionResult> GetTicket(int id)
     {
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
         var entity = await _serviceWrapper.Tickets.GetTicketById(id);
-        return entity == null
-            ? NotFound(new
+
+        if (entity == null)
+            return NotFound(new
             {
                 status = "Not Found",
-                message = "Ticket not found",
+                message = "No ticket found",
                 data = ""
-            })
-            : Ok(new
-            {
-                status = "Success",
-                message = "Ticket found",
-                data = _mapper.Map<TicketDto>(entity)
             });
+
+        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "You are not authorized to access this resource",
+                data = ""
+            });
+
+        switch (userRole)
+        {
+            case "Admin" or "Supervisor":
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "Ticket found",
+                    data = entity
+                });
+
+            case "Renter" when User.Identity?.Name == entity.Contract.RenterId.ToString():
+                var renterTicketCheck = await _serviceWrapper.Tickets.GetTicketById(id, entity.Contract.RenterId);
+                if (renterTicketCheck == null)
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "No ticket with this id found with this user",
+                        data = ""
+                    });
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "Ticket found",
+                    data = entity
+                });
+            case null:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "No ticket found or no renter found",
+                    data = ""
+                });
+        }
+
+        return BadRequest(new
+        {
+            status = "Bad Request",
+            message = "Bad request !!!",
+            data = ""
+        });
     }
 
     // PUT: api/Requests/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Update ticket (Not finished yet !!!)", Description = "date format d/M/YYYY")]
+    [SwaggerOperation(Summary = "[Authorize] Update ticket by id (For management)", Description = "date format d/M/YYYY"))]
     public async Task<IActionResult> PutTicket(int id, [FromBody] TicketUpdateRequest ticketUpdateRequest)
     {
-        /*
-        var requestEntity = (await _serviceWrapper.Requests.GetRequestById(id));
+        var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id);
 
-        if (requestEntity == null)
+        if (ticketEntity == null)
             return NotFound("No requests found");
 
-        if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User, requestEntity.Value))
-            return BadRequest("You are not authorized to access this information");
-
-        var updateRequest = new Request
+        var updateTicket = new Ticket
         {
             TicketId = id,
-            TicketName = request.TicketName ?? null,
-            TicketTypeId = request.TicketTypeId ?? null,
-            Description = request.Description ?? null,
-            CreateDate = DateTime.UtcNow,
-            Status = request.Status,
-            // TODO : Auto assign to active invoice -> invoice detail if not assigned manually
-            SolveDate = request.SolveDate ?? null,
-            Amount = request.Amount ?? 0
+            TicketName = ticketUpdateRequest.TicketName ?? ticketEntity.TicketName,
+            Description = ticketUpdateRequest.Description ?? ticketEntity.Description,
+            TicketTypeId = ticketUpdateRequest.TicketTypeId ?? ticketEntity.TicketTypeId,
+            Status = ticketUpdateRequest.Status ?? "Active",
+            Amount = ticketUpdateRequest.Amount ?? ticketEntity.Amount,
+            SolveDate = ticketUpdateRequest.SolveDate ?? ticketEntity.SolveDate
         };
 
-        var validation = await _validator.ValidateParams(updateRequest, id);
+        var validation = await _validator.ValidateParams(updateTicket, id);
         if (!validation.IsValid)
             return BadRequest(validation.Failures.FirstOrDefault());
 
-        var result = await _serviceWrapper.Requests.UpdateTicket(updateRequest);
+        var result = await _serviceWrapper.Tickets.UpdateTicket(updateTicket);
         if (result == null)
             return NotFound("Request failed to update");
         */
         return Ok("Request updated");           
         //var updateTicket = _mapper.Map<Ticket>(ticketUpdateRequest);
         //return Ok(new { ticket = updateTicket, date1 = updateTicket.CreateDate.ToString("dd MMM yyyy") });
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Ticket failed to update",
+                data = ""
+            });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Ticket updated successfully",
+            data = ""
+        });
     }
 
 
     // POST: api/Requests
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Create ticket", Description = "date format d/M/YYYY")]
+    [Authorize(Roles = "Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Create ticket (For renter)", Description = "date format d/M/YYYY")]
     public async Task<IActionResult> PostTicket([FromBody] TicketCreateRequest ticketCreateRequest)
     {
+        var userId = int.Parse(User.Identity?.Name);
+
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+
+        if (userCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "User not found",
+                data = ""
+            });
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnRenter(userId);
+
+        if (buildingId == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Building not found",
+                data = ""
+            });
+
+        var managementAccountId = await _serviceWrapper.GetId.GetAccountIdBasedOnBuildingId(buildingId);
+        if (managementAccountId == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Management account not found",
+                data = ""
+            });
+
+        var contractId = await _serviceWrapper.GetId.GetContractIdBasedOnRenterId(managementAccountId);
+        if (contractId == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Contract not found for this renter, please contact management",
+                data = ""
+            });
+
         var newRequest = new Ticket
         {
             TicketName = ticketCreateRequest.TicketName,
@@ -142,6 +312,9 @@ public class TicketsController : ControllerBase
             Status = ticketCreateRequest.Status,
             // TODO : Auto assign to active invoice -> invoice detail if not assigned manually
             SolveDate = ticketCreateRequest.SolveDate.ConvertToDateTime() ?? null,
+            Status = ticketCreateRequest.Status ?? "Active",
+            ContractId = contractId.Value,
+            AccountId = managementAccountId.Value,
             Amount = ticketCreateRequest.Amount ?? 0
         };
 
@@ -167,33 +340,65 @@ public class TicketsController : ControllerBase
     }
 
     // DELETE: api/Requests/5
-    [HttpDelete("{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Delete ticket (Not finished yet !!!)")]
-    public async Task<IActionResult> DeleteTicket(int id)
+    [HttpDelete("{id:int}/user/{userId:int}")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Delete ticket by id (For management and renter)")]
+    public async Task<IActionResult> DeleteTicket(int id, int userId)
     {
-        /*777
-        var requestEntity = (await _serviceWrapper.Requests.GetRequestById(id))
-            ?.Invoices.FirstOrDefault()?.Renter?.RenterId;
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
 
-        if (requestEntity == null)
-            return NotFound("No requests found");
+        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "You are not authorized to access this resource",
+                data = ""
+            });
 
-        if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User, requestEntity.Value))
-            return BadRequest("You are not authorized to access this information");
+        var renterCheck = await _serviceWrapper.Renters.GetRenterById(userId);
 
-        var result = await _serviceWrapper.Requests.DeleteTicket(id);
+        if (renterCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "User not found",
+                data = ""
+            });
+
+        // pass renter Id and ticket Id to get, management can bypass restriction bound by token id
+        var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id, userId);
+
+        if (ticketEntity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Ticket not found",
+                data = ""
+            });
+
+        var result = await _serviceWrapper.Tickets.DeleteTicket(id);
         if (!result)
-            return NotFound("Request not found");
-            
-        */
-        return Ok("Request deleted");
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Ticket failed to delete",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Ticket deleted successfully",
+            data = ""
+        });
     }
 
     // GET: api/RequestTypes
     [HttpGet("type")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Get ticket list")]
+    [SwaggerOperation(Summary = "[Authorize] Get ticket list (For management)")]
     public async Task<IActionResult> GetTIcketTypes([FromQuery] TicketTypeFilterRequest request,
         CancellationToken token)
     {
@@ -231,7 +436,7 @@ public class TicketsController : ControllerBase
     // GET: api/RequestTypes/5
     [HttpGet("type/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Get ticket type by id")]
+    [SwaggerOperation(Summary = "[Authorize] Get ticket type by id (For management)")]
     public async Task<IActionResult> GetTicketType(int id)
     {
         var entity = await _serviceWrapper.TicketTypes.GetTicketTypeById(id);
@@ -254,7 +459,7 @@ public class TicketsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("type/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Update ticket type")]
+    [SwaggerOperation(Summary = "[Authorize] Update ticket type by id (For management)")]
     public async Task<IActionResult> PutTicketType(int id,
         [FromBody] TicketTypeUpdateRequest ticketTypeUpdateRequestType)
     {
@@ -297,7 +502,7 @@ public class TicketsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost("type/")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Create ticket type")]
+    [SwaggerOperation(Summary = "[Authorize] Create ticket type (For management)")]
     public async Task<IActionResult> PostTicketType([FromBody] TicketTypeCreateRequest ticketTypeCreateRequestType)
     {
         var newRequestType = new TicketType
@@ -330,7 +535,7 @@ public class TicketsController : ControllerBase
     // DELETE: api/RequestTypes/5
     [HttpDelete("type/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Delete ticket type")]
+    [SwaggerOperation(Summary = "[Authorize] Delete ticket type by id (For management)")]
     public async Task<IActionResult> DeleteTicketType(int id)
     {
         var result = await _serviceWrapper.TicketTypes.DeleteTicketType(id);

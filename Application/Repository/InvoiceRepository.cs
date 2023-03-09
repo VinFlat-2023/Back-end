@@ -1,4 +1,5 @@
 ﻿using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Invoice;
 using Domain.QueryFilter;
@@ -49,9 +50,17 @@ public class InvoiceRepository : IInvoiceRepository
         return await _context.Invoices
             .Include(x => x.Account)
             .Include(x => x.Renter)
-            .Where(x => x.RenterId == x.Renter.RenterId)
-            .Where(x => x.AccountId == x.Account.AccountId)
             .FirstOrDefaultAsync(x => x.InvoiceId == invoiceId);
+    }
+
+    public async Task<int> GetLatestUnpaidInvoiceByRenter(int renterId)
+    {
+        return await _context.Invoices
+            // false = unpaid invoice
+            .Where(x => x.RenterId == renterId && x.Status == false)
+            .OrderByDescending(x => x.CreatedTime)
+            .Select(x => x.InvoiceId)
+            .FirstOrDefaultAsync();
     }
 
     /// <summary>
@@ -62,7 +71,7 @@ public class InvoiceRepository : IInvoiceRepository
     public async Task<Invoice?> GetInvoiceIncludeRenter(int invoiceId)
     {
         return await _context.Invoices.Include(e => e.Renter)
-            .SingleOrDefaultAsync(e => e.InvoiceId == invoiceId);
+            .FirstOrDefaultAsync(e => e.InvoiceId == invoiceId);
     }
 
     public async Task<Invoice?> GetInvoiceByRenterAndInvoiceId(int renterId, int invoiceId)
@@ -127,6 +136,7 @@ public class InvoiceRepository : IInvoiceRepository
             .FirstOrDefaultAsync(x => x.InvoiceId == invoiceId);
         if (invoiceFound == null)
             return false;
+
         _context.Invoices.Remove(invoiceFound);
         await _context.SaveChangesAsync();
         return true;
@@ -154,35 +164,79 @@ public class InvoiceRepository : IInvoiceRepository
         //.Where(x.CreatedTime.Month == month);
     }
 
-    public async Task<bool> BatchInsertInvoice(IEnumerable<MassInvoiceCreateRequest> invoices)
+    public async Task<RepositoryResponse> AddServiceToLastInvoice(int invoiceId,
+        IEnumerable<int> serviceId)
+    {
+        await using
+            var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            foreach (var service in serviceId)
+            {
+                var serviceEntity = new InvoiceDetail
+                {
+                    InvoiceId = invoiceId,
+                    ServiceId = service
+                };
+
+                _context.InvoiceDetails.Add(serviceEntity);
+            }
+
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Service(s) added to invoice"
+            };
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Service(s) not added to invoice"
+            };
+        }
+    }
+
+    public async Task<RepositoryResponse> BatchInsertInvoice(IEnumerable<MassInvoiceCreateRequest> invoices)
     {
         await using
             var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
             foreach (var invoiceEntity in invoices
-                         .Select(
-                             invoice => new Invoice
-                             {
-                                 Name = invoice.Name,
-                                 DueDate = DateTime.Now.AddMonths(1),
-                                 Status = true,
-                                 Detail = invoice.Detail,
-                                 AccountId = invoice.AccountId,
-                                 RenterId = invoice.RenterId,
-                                 InvoiceTypeId = invoice.InvoiceTypeId,
-                                 CreatedTime = DateTime.Now
-                             }))
+                         .Select(invoice => new Invoice
+                         {
+                             Name = invoice.Name,
+                             DueDate = DateTime.Now.AddMonths(1),
+                             Status = true,
+                             Detail = invoice.Detail,
+                             AccountId = invoice.AccountId,
+                             RenterId = invoice.RenterId,
+                             InvoiceTypeId = invoice.InvoiceTypeId,
+                             CreatedTime = DateTime.Now
+                         }))
                 _context.Invoices.Add(invoiceEntity);
 
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
-            return true;
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Batch inserted invoice successfully"
+            };
         }
-        catch (Exception e)
+        catch
         {
             await transaction.RollbackAsync();
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Batch inserted invoice failed"
+            };
         }
     }
 }

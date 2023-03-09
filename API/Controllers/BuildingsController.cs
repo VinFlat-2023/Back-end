@@ -29,7 +29,8 @@ public class BuildingsController : ControllerBase
     }
 
     // GET: api/Buildings
-    [SwaggerOperation(Summary = "Get Building List")]
+    [SwaggerOperation(Summary = "[Authorize] Get building list (For management and renter)")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [HttpGet]
     public async Task<IActionResult> GetBuildings([FromQuery] BuildingFilterRequest request, CancellationToken token)
     {
@@ -57,7 +58,8 @@ public class BuildingsController : ControllerBase
     }
 
     // GET: api/Buildings/5
-    [SwaggerOperation(Summary = "Get Building")]
+    [SwaggerOperation(Summary = "[Authorize] Get building info (For management and renter)")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetBuilding(int id)
     {
@@ -79,7 +81,7 @@ public class BuildingsController : ControllerBase
 
     // PUT: api/Buildings/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Update Building info")]
+    [SwaggerOperation(Summary = "[Authorize] Update Building info (For management)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutBuilding(int id, [FromBody] BuildingUpdateRequest building)
@@ -121,7 +123,7 @@ public class BuildingsController : ControllerBase
 
     // POST: api/Buildings
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Create Building")]
+    [SwaggerOperation(Summary = "[Authorize] Create building (For management)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost]
     public async Task<IActionResult> PostBuilding([FromBody] BuildingCreateRequest building)
@@ -159,7 +161,7 @@ public class BuildingsController : ControllerBase
     }
 
     // DELETE: api/Buildings/5
-    [SwaggerOperation(Summary = "[Authorize] Remove Building")]
+    [SwaggerOperation(Summary = "[Authorize] Remove building (For management)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteBuilding(int id)

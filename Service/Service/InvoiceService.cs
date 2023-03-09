@@ -105,7 +105,18 @@ public class InvoiceService : IInvoiceService
         return true;
     }
 
-    public async Task<bool> BatchInsertInvoice(IEnumerable<MassInvoiceCreateRequest> invoices)
+    public async Task<int> GetLatestUnpaidInvoiceByRenter(int renterId)
+    {
+        return await _repositoryWrapper.Invoices.GetLatestUnpaidInvoiceByRenter(renterId);
+    }
+
+    public async Task<RepositoryResponse> AddServiceToLastInvoice(int invoiceId,
+        IEnumerable<int> serviceId)
+    {
+        return await _repositoryWrapper.Invoices.AddServiceToLastInvoice(invoiceId, serviceId);
+    }
+
+    public async Task<RepositoryResponse> BatchInsertInvoice(IEnumerable<MassInvoiceCreateRequest> invoices)
     {
         return await _repositoryWrapper.Invoices.BatchInsertInvoice(invoices);
     }

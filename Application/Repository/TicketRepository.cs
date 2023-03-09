@@ -33,6 +33,41 @@ internal class TicketRepository : ITicketRepository
             .AsNoTracking();
     }
 
+    public IQueryable<Ticket> GetTicketList(TicketFilter filters, int id, bool isManagement)
+    {
+        return isManagement switch
+        {
+            true => _context.Tickets.Include(x => x.TicketType)
+                .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
+                .Where(x => x.AccountId == id)
+                // Filter starts here
+                .Where(x => (filters.TicketName == null || x.TicketName.Contains(filters.TicketName)) &&
+                            (filters.Status == null || x.Status == filters.Status) &&
+                            (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId) &&
+                            (filters.Description == null || (x.Description.Contains(filters.Description) &&
+                                                             (filters.CreateDate == null ||
+                                                              x.CreateDate == filters.CreateDate) &&
+                                                             (filters.Amount == null || x.Amount == filters.Amount) &&
+                                                             (filters.SolveDate == null ||
+                                                              x.SolveDate == filters.SolveDate))))
+                .AsNoTracking(),
+            false => _context.Tickets.Include(x => x.TicketType)
+                .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
+                .Where(x => x.Contract.RenterId == id)
+                // Filter starts here
+                .Where(x => (filters.TicketName == null || x.TicketName.Contains(filters.TicketName)) &&
+                            (filters.Status == null || x.Status == filters.Status) &&
+                            (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId) &&
+                            (filters.Description == null || (x.Description.Contains(filters.Description) &&
+                                                             (filters.CreateDate == null ||
+                                                              x.CreateDate == filters.CreateDate) &&
+                                                             (filters.Amount == null || x.Amount == filters.Amount) &&
+                                                             (filters.SolveDate == null ||
+                                                              x.SolveDate == filters.SolveDate))))
+                .AsNoTracking()
+        };
+    }
+
     /// <summary>
     ///     Get ticket by id
     /// </summary>
@@ -44,6 +79,15 @@ internal class TicketRepository : ITicketRepository
             .Include(x => x.TicketType)
             .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
             .Where(x => x.TicketId == ticketId);
+    }
+
+
+    public IQueryable<Ticket> GetTicketDetail(int? ticketId, int? renterId)
+    {
+        return _context.Tickets
+            .Include(x => x.TicketType)
+            .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
+            .Where(x => x.TicketId == ticketId && x.Contract.RenterId == renterId);
     }
 
     /// <summary>

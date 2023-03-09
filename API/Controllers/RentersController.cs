@@ -35,7 +35,7 @@ public class RentersController : ControllerBase
     // GET: api/Renters
     [HttpGet]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Get renter list")]
+    [SwaggerOperation(Summary = "[Authorize] Get renter list with pagination and filter (For management)")]
     public async Task<IActionResult> GetRenters([FromQuery] RenterFilterRequest request, CancellationToken token)
     {
         var filter = _mapper.Map<RenterFilter>(request);
@@ -64,7 +64,7 @@ public class RentersController : ControllerBase
     // GET: api/Renters/5
     [HttpGet("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Get renter by id")]
+    [SwaggerOperation(Summary = "[Authorize] Get renter by id (For management and renter)")]
     public async Task<IActionResult> GetRenter(int id)
     {
         var userRole = User.Identities
@@ -72,8 +72,7 @@ public class RentersController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        if (userRole is not ("Admin" or "Supervisor") &&
-            (User.Identity?.Name != id.ToString() || userRole != "Renter"))
+        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
             return BadRequest(new
             {
                 status = "Bad Request",
@@ -102,7 +101,7 @@ public class RentersController : ControllerBase
     // To protect from over posting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Update renter by id")]
+    [SwaggerOperation(Summary = "[Authorize] Update renter by id (For management and renter)")]
     public async Task<IActionResult> PutRenter([FromBody] RenterUpdateRequest renter, int id)
     {
         var userRole = User.Identities
@@ -110,15 +109,13 @@ public class RentersController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        if (userRole is not ("Admin" or "Supervisor") &&
-            (User.Identity?.Name != id.ToString() || userRole != "Renter"))
+        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
             return BadRequest(new
             {
                 status = "Bad Request",
                 message = "You are not authorized to access this resource",
                 data = ""
             });
-
 
         var renterCheck = await _serviceWrapper.Renters.GetRenterById(id);
 
@@ -186,7 +183,7 @@ public class RentersController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     [Authorize("Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Register a new renter")]
+    [SwaggerOperation(Summary = "[Authorize] Register a new renter (For management)")]
     public async Task<IActionResult> PostRenter([FromBody] RenterCreateRequest renter)
     {
         var imageExtension = ImageExtension.ImageExtensionChecker(renter.Image?.FileName);
@@ -259,7 +256,7 @@ public class RentersController : ControllerBase
     // DELETE: api/Renters/5
     [HttpDelete("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Disable renter")]
+    [SwaggerOperation(Summary = "[Authorize] Disable renter by id (For management)")]
     public async Task<IActionResult> DeleteRenter(int id)
     {
         var renter = await _serviceWrapper.Renters.GetRenterById(id);

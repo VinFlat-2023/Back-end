@@ -28,4 +28,5 @@ public interface IServiceWrapper
     public ICustomeMailService Mails { get; }
     public INotificationService Notifications { get; }
     public IRoomService Rooms { get; }
+    public IGetIdService GetId { get; }
 }

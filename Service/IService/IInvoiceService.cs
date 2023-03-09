@@ -15,5 +15,7 @@ public interface IInvoiceService
     public Task<Invoice?> GetInvoiceByRenterAndInvoiceId(int renterId, int invoiceId);
     public Task<bool> AutoGenerateEmptyInvoice();
     public Task<bool> AutoFinishInvoice();
-    public Task<bool> BatchInsertInvoice(IEnumerable<MassInvoiceCreateRequest> invoices);
+    public Task<int> GetLatestUnpaidInvoiceByRenter(int renterId);
+    public Task<RepositoryResponse> AddServiceToLastInvoice(int invoiceId, IEnumerable<int> serviceId);
+    public Task<RepositoryResponse> BatchInsertInvoice(IEnumerable<MassInvoiceCreateRequest> invoices);
 }

@@ -33,7 +33,7 @@ public class InvoicesController : ControllerBase
         _validator = validator;
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice list")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice list (For management)")]
     [HttpGet]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoices([FromQuery] InvoiceFilterRequest request, CancellationToken token)
@@ -62,7 +62,7 @@ public class InvoicesController : ControllerBase
     }
 
     // GET: api/Invoices/5
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice by management")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice by Id (For management)")]
     [HttpGet("{id:int}/user")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceByManagement(int id)
@@ -83,7 +83,7 @@ public class InvoicesController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice list by renter ID")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice list by renter Id (For renter and management)")]
     [HttpGet("user/{userId:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetInvoiceRenter(int userId, CancellationToken token)
@@ -93,8 +93,8 @@ public class InvoicesController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        if (userRole is not ("Admin" or "Supervisor") &&
-            (User.Identity?.Name != userId.ToString() || userRole != "Renter"))
+        if (userRole is not ("Admin" or "Supervisor") ||
+            (User.Identity?.Name != userId.ToString() && userRole != "Renter"))
             return BadRequest(new
             {
                 status = "Bad Request",
@@ -133,7 +133,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice by renter for renter usage")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice using invoice Id and renter Id (For renter and management)")]
     [HttpGet("{invoiceId:int}/user/{userId:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetInvoiceRenterUsingId(int invoiceId, int userId)
@@ -143,8 +143,8 @@ public class InvoicesController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        if (userRole is not ("Admin" or "Supervisor") &&
-            (User.Identity?.Name != userId.ToString() || userRole != "Renter"))
+        if (userRole is not ("Admin" or "Supervisor") ||
+            (User.Identity?.Name != userId.ToString() && userRole != "Renter"))
             return BadRequest(new
             {
                 status = "Bad Request",
@@ -182,7 +182,7 @@ public class InvoicesController : ControllerBase
 
     // PUT: api/Invoices/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Update Invoice info", Description = "date format d/M/YYYY")]
+    [SwaggerOperation(Summary = "[Authorize] Update Invoice info  (For management)", Description = "date format d/M/YYYY")]
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> PutInvoice(int id, [FromBody] InvoiceUpdateRequest invoice)
@@ -195,11 +195,8 @@ public class InvoicesController : ControllerBase
             DueDate = invoice.DueDate.ConvertToDateTime(),
             Detail = invoice.Detail,
             ImageUrl = invoice.ImageUrl,
-            PaymentTime = null,
-            CreatedTime = DateTime.UtcNow,
-            AccountId = invoice.AccountId,
-            RenterId = invoice.RenterId,
-            InvoiceTypeId = invoice.InvoiceTypeId
+            PaymentTime = invoice.PaymentTime,
+            CreatedTime = DateTime.UtcNow
         };
 
         var validation = await _validator.ValidateParams(updateInvoice, id);
@@ -209,26 +206,67 @@ public class InvoicesController : ControllerBase
         var result = await _serviceWrapper.Invoices.UpdateInvoice(updateInvoice);
 
         if (result == null)
-            return NotFound("Invoice failed to update");
-        return Ok("Invoice updated");
+            return BadRequest(new
+            {
+                status = "Bad request",
+                message = "Invoice failed to update",
+                data = ""
+            });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Invoice updated",
+            data = _mapper.Map<InvoiceDto>(result)
+        });
     }
 
     // POST: api/Invoices
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Create Invoice", Description = "date format d/M/YYYY")]
+    [SwaggerOperation(Summary = "[Authorize] Create Invoice (For management)", Description = "date format d/M/YYYY")]
     [HttpPost]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> PostInvoice([FromBody] InvoiceCreateRequest invoice)
     {
+        var accountId = User.Identity?.Name;
+
+        if (accountId == null)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "You are not authorized to access this resource due to invalid token",
+                data = ""
+            });
+
         var addNewInvoice = new Invoice
         {
             Name = invoice.Name,
-            ImageUrl = invoice.ImageUrl,
+            Status = true,
+            DueDate = invoice.DueDate,
             Detail = invoice.Detail,
-            AccountId = int.Parse(User.Identity.Name),
-            RenterId = invoice.RenterId,
-            InvoiceTypeId = invoice.InvoiceTypeId
+            ImageUrl = invoice.ImageUrl,
+            PaymentTime = null,
+            CreatedTime = DateTime.UtcNow,
+            InvoiceTypeId = invoice.InvoiceTypeId,
+            AccountId = int.Parse(accountId)
         };
+
+        switch (addNewInvoice.InvoiceTypeId)
+        {
+            case 1:
+                addNewInvoice.RenterId = invoice.RenterId;
+                break;
+            case 2:
+            case 3:
+                if (addNewInvoice.RenterId != null)
+                    return BadRequest(new
+                    {
+                        status = "Bad Request",
+                        message = "This invoice type is not for renter usage"
+                    });
+                break;
+        }
+
 
         var validation = await _validator.ValidateParams(addNewInvoice, null);
         if (!validation.IsValid)
@@ -257,7 +295,7 @@ public class InvoicesController : ControllerBase
     }
 
     // DELETE: api/Invoices/5
-    [SwaggerOperation(Summary = "[Authorize] Delete Invoice")]
+    [SwaggerOperation(Summary = "[Authorize] Delete invoice (For management)")]
     [HttpDelete("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> DeleteInvoice(int id)
@@ -279,7 +317,7 @@ public class InvoicesController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice type")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice type list (For management)")]
     [HttpGet("types")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceTypes([FromQuery] InvoiceTypeFilterRequest request,
@@ -315,7 +353,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice type by id")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice type by id (For management)")]
     [HttpGet("types/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceById(int id)
@@ -336,7 +374,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Create Invoice")]
+    [SwaggerOperation(Summary = "[Authorize] Create invoice type (For management)")]
     [HttpPost("types")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> CreateNewInvoiceType([FromBody] InvoiceTypeCreateRequest invoiceType)
@@ -372,7 +410,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Update Invoice")]
+    [SwaggerOperation(Summary = "[Authorize] Update invoice type (For management)")]
     [HttpPut("types/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> UpdateInvoiceType(int id, [FromBody] InvoiceTypeUpdateRequest invoiceType)
@@ -409,9 +447,9 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Delete invoice type")]
+    [SwaggerOperation(Summary = "[Authorize] Delete invoice type (For management)")]
     [HttpDelete("types/{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "SuperAdmin, Admin")]
     public async Task<IActionResult> DeleteInvoiceType(int id)
     {
         var result = await _serviceWrapper.InvoiceTypes.DeleteInvoiceType(id);
@@ -430,7 +468,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Delete invoice detail")]
+    [SwaggerOperation(Summary = "[Authorize] Delete invoice detail (For management)")]
     [HttpDelete("details/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> DeleteInvoiceDetail(int id)
@@ -441,7 +479,7 @@ public class InvoicesController : ControllerBase
             : Ok("Invoice detail deleted successfully");
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get invoice detail")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice detail list (For management)")]
     [HttpGet("details")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceDetails([FromQuery] InvoiceDetailFilterRequest request,
@@ -477,7 +515,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice detail by id")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice detail by id (For management)")]
     [HttpGet("details/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceDetailById(int id)
@@ -498,7 +536,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice detail by user id with true")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice detail by user id with true (For management)")]
     [HttpGet("details/user/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceDetailListByUserId(int id, CancellationToken token)
@@ -521,7 +559,7 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Invoice detail by user id with true")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice detail by user id with true (For management)")]
     [HttpGet("details/user/{id:int}/active")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceDetailByUserId(int id, CancellationToken token)
@@ -539,25 +577,36 @@ public class InvoicesController : ControllerBase
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Create Invoice based on renter")]
+    [SwaggerOperation(Summary = "[Authorize] Create invoice based on list of renter id (For management)")]
     [HttpPost("create")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> CreateManyInvoice([FromBody] List<MassInvoiceCreateRequest> invoices)
     {
         var result = await _serviceWrapper.Invoices.BatchInsertInvoice(invoices);
-        return !result
-            ? NotFound(new
-            {
-                status = "Not Found",
-                message = "Invoices failed to create",
-                data = ""
-            })
-            : Ok(new
-            {
-                status = "Success",
-                message = "Invoices created successfully",
-                data = ""
-            });
+        switch (result)
+        {
+            case { IsSuccess: true }:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = result.Message,
+                    data = ""
+                });
+            case { IsSuccess: false }:
+                return Ok(new
+                {
+                    status = "Success",
+                    message = result.Message,
+                    data = ""
+                });
+            case null:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Invoice failed to create",
+                    data = ""
+                });
+        }
     }
 
     private static int DateRemainingCheck(DateTime start, DateTime end)

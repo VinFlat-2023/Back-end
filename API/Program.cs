@@ -10,7 +10,6 @@ using Utilities.ServiceExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 //AddExpenseHistory odata to api
 builder.Services.AddControllers(options =>
 {

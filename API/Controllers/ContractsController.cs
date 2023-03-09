@@ -33,7 +33,7 @@ public class ContractsController : ControllerBase
     }
 
     // GET: api/Contract
-    [SwaggerOperation(Summary = "Get Contract List")]
+    [SwaggerOperation(Summary = "Get contract list (For management)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpGet]
     public async Task<IActionResult> GetContracts([FromQuery] ContractFilterRequest request, CancellationToken token)
@@ -63,7 +63,7 @@ public class ContractsController : ControllerBase
     //TODO get contract by renter ID
 
     // GET: api/Contract/5
-    [SwaggerOperation(Summary = "[Authorize] Get Contract using id")]
+    [SwaggerOperation(Summary = "[Authorize] Get Contract using id (For management)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetContractManagement(int id)
@@ -86,7 +86,7 @@ public class ContractsController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get Contract using contract id with renter id")]
+    [SwaggerOperation(Summary = "[Authorize] Get Contract using contract id with renter id (For renter)")]
     [Authorize(Roles = "Renter")]
     [HttpGet("{id:int}/user/{renterId:int}")]
     public async Task<IActionResult> GetContract(int id, int renterId)
@@ -141,7 +141,7 @@ public class ContractsController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get active contract based on user ID(For management and renter)")]
+    [SwaggerOperation(Summary = "[Authorize] Get active contract based on user Id (For management and renter)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [HttpGet("user/{userId:int}/active")]
     public async Task<IActionResult> GetContractBasedOnUserId(int userId)
@@ -151,8 +151,8 @@ public class ContractsController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        if (userRole is not ("Admin" or "Supervisor") &&
-            (User.Identity?.Name != userId.ToString() || userRole != "Renter"))
+        if (userRole is not ("Admin" or "Supervisor") ||
+            (User.Identity?.Name != userId.ToString() && userRole != "Renter"))
             return BadRequest(new
             {
                 status = "Bad Request",
@@ -198,7 +198,7 @@ public class ContractsController : ControllerBase
 
     // PUT: api/Contract/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Update Contract info", Description = "date format d/M/YYYY")]
+    [SwaggerOperation(Summary = "[Authorize] Update Contract info (For management)", Description = "date format d/M/YYYY")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutContract(int id, [FromBody] ContractUpdateRequest contract)
@@ -260,7 +260,7 @@ public class ContractsController : ControllerBase
 
     // POST: api/Contract
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Create Contract", Description = "date format d/M/YYYY")]
+    [SwaggerOperation(Summary = "[Authorize] Create Contract (For management)", Description = "date format d/M/YYYY")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpPost("sign")]
     public async Task<IActionResult> PostContract([FromBody] ContractCreateRequest contract)
@@ -317,7 +317,7 @@ public class ContractsController : ControllerBase
     }
 
     // DELETE: api/Contract/5
-    [SwaggerOperation(Summary = "[Authorize] Remove Contract")]
+    [SwaggerOperation(Summary = "[Authorize] Remove contract (For management)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteContract(int id)

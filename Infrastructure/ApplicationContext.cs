@@ -31,16 +31,12 @@ public class ApplicationContext : DbContext
     public virtual DbSet<University> University { get; set; } = null!;
     public virtual DbSet<Wallet> Wallets { get; set; } = null!;
     public virtual DbSet<WalletType> WalletTypes { get; set; } = null!;
-
     public virtual DbSet<Transaction> Transactions { get; set; } = null!;
     public virtual DbSet<UserDevice> UserDevices { get; set; } = null!;
-
     public virtual DbSet<DatabaseException> DatabaseExceptions { get; set; } = null!;
     public virtual DbSet<Notification> Notifications { get; set; } = null!;
-
     public virtual DbSet<NotificationType> NotificationTypes { get; set; } = null!;
     public virtual DbSet<Room> Rooms { get; set; } = null!;
-
     public virtual DbSet<RoomType> RoomTypes { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -61,6 +57,14 @@ public class ApplicationContext : DbContext
         modelBuilder.Entity<Invoice>()
             .ToTable("Invoices",
                 b => b.IsTemporal());
+
+        modelBuilder.Entity<Contract>()
+            .HasMany(c => c.Tickets);
+
+        modelBuilder.Entity<Ticket>()
+            .HasOne(x => x.Contract)
+            .WithMany(x => x.Tickets)
+            .OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<Notification>(entity =>
         {
@@ -669,12 +673,6 @@ public class ApplicationContext : DbContext
             }
         );
 
-        modelBuilder.Entity<Ticket>()
-            .HasOne(x => x.Contract)
-            .WithMany()
-            .HasForeignKey(x => x.ContractId)
-            .OnDelete(DeleteBehavior.Restrict);
-
         modelBuilder.Entity<ServiceType>().HasData(
             new ServiceType
             {
@@ -811,11 +809,23 @@ public class ApplicationContext : DbContext
                 InvoiceId = 3,
                 Name = "Hoá đơn điện tử cho renter 3",
                 Amount = 0,
-                Status = true,
+                Status = false,
                 Detail = "Detail for invoice 3",
                 CreatedTime = DateTime.UtcNow,
                 RenterId = 3,
                 AccountId = 4,
+                InvoiceTypeId = 1
+            },
+            new Invoice
+            {
+                InvoiceId = 4,
+                Name = "Hoá đơn điện tử cho renter 3 (2)",
+                Amount = 0,
+                Status = true,
+                Detail = "Detail for invoice 3 (2)",
+                CreatedTime = DateTime.UtcNow,
+                RenterId = 3,
+                AccountId = 2,
                 InvoiceTypeId = 1
             }
         );
@@ -850,14 +860,14 @@ public class ApplicationContext : DbContext
             new InvoiceDetail
             {
                 InvoiceDetailId = 5,
-                InvoiceId = 2,
+                InvoiceId = 4,
                 Amount = 0,
                 ServiceId = 3
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 6,
-                InvoiceId = 2,
+                InvoiceId = 4,
                 Amount = 0,
                 ServiceId = 3
             },
@@ -870,67 +880,71 @@ public class ApplicationContext : DbContext
             new InvoiceDetail
             {
                 InvoiceDetailId = 8,
-                InvoiceId = 3,
+                InvoiceId = 4,
                 Amount = 0
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 9,
-                InvoiceId = 3,
+                InvoiceId = 4,
                 Amount = 0
             }
         );
 
-        modelBuilder.Entity<Contract>().HasData(
-            new Contract
-            {
-                ContractId = 1,
-                ContractName = "Contract for renter 1",
-                DateSigned = DateTime.UtcNow - TimeSpan.FromDays(30),
-                StartDate = DateTime.UtcNow - TimeSpan.FromDays(25),
-                EndDate = null,
-                LastUpdated = DateTime.UtcNow,
-                ContractStatus = "Active",
-                PriceForRent = 1800000,
-                RenterId = 1,
-                Description = "Contract description for renter 1",
-                ImageUrl = "No image",
-                FlatId = 2
-            },
-            new Contract
-            {
-                ContractId = 2,
-                ContractName = "Contract for renter 2",
-                DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
-                StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
-                EndDate = null,
-                LastUpdated = DateTime.UtcNow,
-                ContractStatus = "Active",
-                PriceForRent = 2800000,
-                RenterId = 2,
-                Description = "Contract description for renter 2",
-                ImageUrl = "No image",
-                FlatId = 3
-            },
-            new Contract
-            {
-                ContractId = 3,
-                ContractName = "Contract for renter 3",
-                DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
-                StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
-                EndDate = null,
-                LastUpdated = DateTime.UtcNow,
-                ContractStatus = "Active",
-                PriceForRent = 2800000,
-                PriceForService = 10000,
-                PriceForWater = 1000,
-                PriceForElectricity = 120,
-                RenterId = 3,
-                Description = "Contract description for renter 3",
-                ImageUrl = "No image",
-                FlatId = 3
-            }
-        );
+        modelBuilder.Entity<Contract>()
+            .HasData(
+                new Contract
+                {
+                    ContractId = 1,
+                    ContractName = "Contract for renter 1",
+                    DateSigned = DateTime.UtcNow - TimeSpan.FromDays(30),
+                    StartDate = DateTime.UtcNow - TimeSpan.FromDays(25),
+                    EndDate = null,
+                    LastUpdated = DateTime.UtcNow,
+                    ContractStatus = "Active",
+                    PriceForRent = 1800000,
+                    RenterId = 1,
+                    BuildingId = 1,
+                    Description = "Contract description for renter 1",
+                    ImageUrl = "No image",
+                    FlatId = 2
+                },
+                new Contract
+                {
+                    ContractId = 2,
+                    ContractName = "Contract for renter 2",
+                    DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
+                    StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
+                    EndDate = null,
+                    LastUpdated = DateTime.UtcNow,
+                    ContractStatus = "Active",
+                    PriceForRent = 2800000,
+                    RenterId = 2,
+                    BuildingId = 2,
+                    Description = "Contract description for renter 2",
+                    ImageUrl = "No image",
+                    FlatId = 3
+                },
+                new Contract
+                {
+                    ContractId = 3,
+                    ContractName = "Contract for renter 3",
+                    DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
+                    StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
+                    EndDate = null,
+                    LastUpdated = DateTime.UtcNow,
+                    ContractStatus = "Active",
+                    PriceForRent = 2800000,
+                    PriceForService = 10000,
+                    PriceForWater = 1000,
+                    PriceForElectricity = 120,
+                    RenterId = 3,
+                    BuildingId = 3,
+                    Description = "Contract description for renter 3",
+                    ImageUrl = "No image",
+                    FlatId = 3
+                }
+            );
 
         modelBuilder.Entity<Wallet>(entity =>
         {

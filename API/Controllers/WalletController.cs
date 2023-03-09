@@ -27,7 +27,7 @@ public class WalletController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "SuperAdmin, Admin, Employee, Renter, Supervisor")]
+    [Authorize(Roles = "SuperAdmin, Admin, Renter, Supervisor")]
     [Route("wallets")]
     [SwaggerOperation(Summary = "[Authorize] Get Wallet By authorized renter")]
     public async Task<IActionResult> GetWalletByAccountId()
@@ -43,7 +43,7 @@ public class WalletController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "SuperAdmin, Admin, Employee, Renter, Supervisor")]
+    [Authorize(Roles = "SuperAdmin, Admin, Renter, Supervisor")]
     [Route("wallets")]
     [SwaggerOperation(Summary = "[Authorize] Create a Wallet")]
     public async Task<IActionResult> CreateWallet(WalletCreateRequest request)
