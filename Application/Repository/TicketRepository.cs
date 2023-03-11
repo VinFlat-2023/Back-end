@@ -23,13 +23,18 @@ internal class TicketRepository : ITicketRepository
     {
         return _context.Tickets
             .Include(x => x.TicketType)
+            .Include(x => x.Contract)
             .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
             // Filter starts here
-            .Where(x =>
-                (filters.TicketName == null || x.TicketName.Contains(filters.TicketName))
-                && (filters.Status == null || x.Status == filters.Status)
-                && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
-                && (filters.Description == null || x.Description.Contains(filters.Description)))
+            .Where(x => (filters.TicketName == null || x.TicketName.Contains(filters.TicketName)) &&
+                        (filters.Status == null || x.Status == filters.Status) &&
+                        (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId) &&
+                        (filters.Description == null || (x.Description.Contains(filters.Description) &&
+                                                         (filters.CreateDate == null ||
+                                                          x.CreateDate == filters.CreateDate) &&
+                                                         (filters.Amount == null || x.Amount == filters.Amount) &&
+                                                         (filters.SolveDate == null ||
+                                                          x.SolveDate == filters.SolveDate))))
             .AsNoTracking();
     }
 
@@ -37,7 +42,8 @@ internal class TicketRepository : ITicketRepository
     {
         return isManagement switch
         {
-            true => _context.Tickets.Include(x => x.TicketType)
+            true => _context.Tickets
+                .Include(x => x.TicketType)
                 .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
                 .Where(x => x.AccountId == id)
                 // Filter starts here
@@ -51,7 +57,9 @@ internal class TicketRepository : ITicketRepository
                                                              (filters.SolveDate == null ||
                                                               x.SolveDate == filters.SolveDate))))
                 .AsNoTracking(),
-            false => _context.Tickets.Include(x => x.TicketType)
+            false => _context.Tickets
+                .Include(x => x.TicketType)
+                .Include(x => x.Contract)
                 .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
                 .Where(x => x.Contract.RenterId == id)
                 // Filter starts here
@@ -86,6 +94,7 @@ internal class TicketRepository : ITicketRepository
     {
         return _context.Tickets
             .Include(x => x.TicketType)
+            .Include(x => x.Contract)
             .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
             .Where(x => x.TicketId == ticketId && x.Contract.RenterId == renterId);
     }

@@ -56,7 +56,6 @@ public class TicketsController : ControllerBase
                 data = ""
             });
 
-
         var resultList = _mapper.Map<IEnumerable<TicketDto>>(list);
 
         switch (userRole)
@@ -70,7 +69,6 @@ public class TicketsController : ControllerBase
                     totalPage = list.TotalPages,
                     totalCount = list.TotalCount
                 });
-
             case "Supervisor":
                 var supervisorId = int.Parse(User.Identity?.Name);
 
@@ -82,7 +80,7 @@ public class TicketsController : ControllerBase
                     return NotFound(new
                     {
                         status = "Not Found",
-                        message = "No ticket list found with this user",
+                        message = "No ticket list found for this management",
                         data = ""
                     });
 
@@ -90,21 +88,22 @@ public class TicketsController : ControllerBase
                 {
                     status = "Success",
                     message = "List found",
-                    data = resultList,
-                    totalPage = list.TotalPages,
-                    totalCount = list.TotalCount
+                    data = supervisorTicketCheck,
+                    totalPage = supervisorTicketCheck.TotalPages,
+                    totalCount = supervisorTicketCheck.TotalCount
                 });
 
             case "Renter":
                 var renterId = int.Parse(User.Identity?.Name);
 
-                var renterTicketCheck = await _serviceWrapper.Tickets.GetTicketList(filter, renterId, false, token);
+                var renterTicketCheck =
+                    await _serviceWrapper.Tickets.GetTicketList(filter, renterId, false, token);
 
                 if (renterTicketCheck == null)
                     return NotFound(new
                     {
                         status = "Not Found",
-                        message = "No ticket list found with this user",
+                        message = "No ticket list found with this renter",
                         data = ""
                     });
 
@@ -112,9 +111,9 @@ public class TicketsController : ControllerBase
                 {
                     status = "Success",
                     message = "List found",
-                    data = resultList,
-                    totalPage = list.TotalPages,
-                    totalCount = list.TotalCount
+                    data = renterTicketCheck,
+                    totalPage = renterTicketCheck.TotalPages,
+                    totalCount = renterTicketCheck.TotalCount
                 });
 
             case null:
@@ -155,6 +154,8 @@ public class TicketsController : ControllerBase
                 data = ""
             });
 
+        /*
+
         if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
             return BadRequest(new
             {
@@ -162,6 +163,8 @@ public class TicketsController : ControllerBase
                 message = "You are not authorized to access this resource",
                 data = ""
             });
+
+        */
 
         switch (userRole)
         {
@@ -175,6 +178,7 @@ public class TicketsController : ControllerBase
 
             case "Renter" when User.Identity?.Name == entity.Contract.RenterId.ToString():
                 var renterTicketCheck = await _serviceWrapper.Tickets.GetTicketById(id, entity.Contract.RenterId);
+
                 if (renterTicketCheck == null)
                     return NotFound(new
                     {
@@ -226,27 +230,27 @@ public class TicketsController : ControllerBase
             Description = ticketUpdateRequest.Description ?? ticketEntity.Description,
             TicketTypeId = ticketUpdateRequest.TicketTypeId ?? ticketEntity.TicketTypeId,
             Status = ticketUpdateRequest.Status ?? "Active",
-            Amount = ticketUpdateRequest.Amount ?? ticketEntity.Amount,
+            Amount = ticketUpdateRequest.Amount ?? ticketEntity.Amount ?? 0,
             SolveDate = ticketUpdateRequest.SolveDate.ConvertToDateTime() ?? ticketEntity.SolveDate
         };
 
         var validation = await _validator.ValidateParams(updateTicket, id);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.Tickets.UpdateTicket(updateTicket);
         if (result == null)
-            return NotFound("Request failed to update");
-        return Ok("Request updated");
-        //var updateTicket = _mapper.Map<Ticket>(ticketUpdateRequest);
-        //return Ok(new { ticket = updateTicket, date1 = updateTicket.CreateDate.ToString("dd MMM yyyy") });
-        return BadRequest(new
-        {
-            status = "Bad Request",
-            message = "Ticket failed to update",
-            data = ""
-        });
-
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Ticket failed to update",
+                data = ""
+            });
         return Ok(new
         {
             status = "Success",
@@ -294,7 +298,7 @@ public class TicketsController : ControllerBase
                 data = ""
             });
 
-        var contractId = await _serviceWrapper.GetId.GetContractIdBasedOnRenterId(managementAccountId);
+        var contractId = await _serviceWrapper.GetId.GetContractIdBasedOnRenterId(userId);
         if (contractId == null)
             return NotFound(new
             {
@@ -303,21 +307,20 @@ public class TicketsController : ControllerBase
                 data = ""
             });
 
-        var newRequest = new Ticket
+        var newTicket = new Ticket
         {
             TicketName = ticketCreateRequest.TicketName,
             Description = ticketCreateRequest.Description,
             CreateDate = DateTime.UtcNow,
             TicketTypeId = ticketCreateRequest.TicketTypeId,
             // TODO : Auto assign to active invoice -> invoice detail if not assigned manually
-            SolveDate = ticketCreateRequest.SolveDate.ConvertToDateTime() ?? null,
-            Status = ticketCreateRequest.Status ?? "Active",
+            Status = "Active",
+            Amount = 0,
             ContractId = contractId.Value,
-            AccountId = managementAccountId.Value,
-            Amount = ticketCreateRequest.Amount ?? 0
+            AccountId = managementAccountId.Value
         };
 
-        var validation = await _validator.ValidateParams(newRequest, null);
+        var validation = await _validator.ValidateParams(newTicket, null);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -326,16 +329,21 @@ public class TicketsController : ControllerBase
                 data = ""
             });
 
-        var result = await _serviceWrapper.Tickets.AddTicket(newRequest);
+        var result = await _serviceWrapper.Tickets.AddTicket(newTicket);
         if (result == null)
             return BadRequest(new
             {
                 status = "Bad Request",
-                message = "Request failed to create",
+                message = "Ticket failed to create",
                 data = ""
             });
 
-        return CreatedAtAction("GetTicket", new { id = result.TicketId }, result);
+        return Ok(new
+        {
+            status = "Success",
+            message = "Ticket created successfully",
+            data = ""
+        });
     }
 
     // DELETE: api/Requests/5
@@ -396,7 +404,7 @@ public class TicketsController : ControllerBase
 
     // GET: api/RequestTypes
     [HttpGet("type")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get ticket list (For management)")]
     public async Task<IActionResult> GetTIcketTypes([FromQuery] TicketTypeFilterRequest request,
         CancellationToken token)

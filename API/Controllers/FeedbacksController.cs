@@ -1,7 +1,21 @@
-﻿namespace API.Controllers;
+﻿using AutoMapper;
+using Domain.EntitiesDTO.FeedbackDTO;
+using Domain.EntitiesDTO.FeedbackTypeDTO;
+using Domain.EntitiesForManagement;
+using Domain.EntityRequest.FeedBack;
+using Domain.EntityRequest.FeedbackType;
+using Domain.FilterRequests;
+using Domain.QueryFilter;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Service.IHelper;
+using Service.IService;
+using Service.IValidator;
+using Swashbuckle.AspNetCore.Annotations;
 
-/*
-[Route("api/feedbacks")]
+namespace API.Controllers;
+
+[Microsoft.AspNetCore.Components.Route("api/feedbacks")]
 [ApiController]
 public class FeedbacksController : ControllerBase
 {
@@ -203,7 +217,7 @@ public class FeedbacksController : ControllerBase
             Name = feedbackType.Name
         };
 
-        var validation = await _validator.ValidateParams(updateFeedBackType, feedbackType.FeedbackTypeId);
+        var validation = await _validator.ValidateParams(updateFeedBackType, null);
         if (!validation.IsValid)
             return BadRequest(validation.Failures.FirstOrDefault());
 
@@ -248,4 +262,3 @@ public class FeedbacksController : ControllerBase
         return Ok("Feedback type deleted");
     }
 }
-*/

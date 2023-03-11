@@ -21,8 +21,6 @@ public class RenterRepository : IRenterRepository
             .Include(x => x.University)
             .ThenInclude(x => x.Majors)
             .Include(x => x.Major)
-            .Where(x => x.MajorId == x.Major.MajorId)
-            .Where(x => x.UniversityId == x.University.UniversityId)
             // Filter starts here
             .Where(x =>
                 (filters.Username == null || x.Username.Contains(filters.Username))

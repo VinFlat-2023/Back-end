@@ -63,7 +63,7 @@ public class RenterService : IRenterService
         return await _repositoryWrapper.Renters.RenterEmailCheck(email);
     }
 
-    public async Task<Renter> RenterDetailWithAccountId(int userId)
+    public async Task<Renter?> RenterDetailWithAccountId(int userId)
     {
         return await _repositoryWrapper.Renters.GetRenterDetailWithContractId(userId)
             .FirstOrDefaultAsync();

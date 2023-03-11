@@ -67,9 +67,6 @@ public class TicketValidator : BaseValidator, ITicketValidator
                     break;
             }
 
-            if (obj?.CreateDate == null)
-                ValidatorResult.Failures.Add("Create date is required");
-
             switch (obj?.Amount)
             {
                 case { } when obj.Amount < 0:

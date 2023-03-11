@@ -31,13 +31,9 @@ public class Contract
     public decimal PriceForService { get; set; }
     public int? BuildingId { get; set; }
     public int? RoomId { get; set; }
-
-    [ForeignKey("RenterId")] public int RenterId { get; set; }
-
+    public int RenterId { get; set; }
     public virtual Renter Renter { get; set; } = null!;
-
-    [ForeignKey("FlatId")] public int FlatId { get; set; }
-
+    public int FlatId { get; set; }
     public virtual Flat Flat { get; set; } = null!;
     public virtual ICollection<Ticket> Tickets { get; set; }
 }

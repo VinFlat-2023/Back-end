@@ -40,30 +40,23 @@ public class ServicesController : ControllerBase
         var filter = _mapper.Map<ServiceEntityFilter>(request);
 
         var list = await _serviceWrapper.ServicesEntity.GetServiceEntityList(filter, token);
-        if (list != null && !list.Any())
-            return NotFound(new
+
+        var resultList = _mapper.Map<IEnumerable<ServiceEntityDto>>(list);
+
+        return list != null && !list.Any()
+            ? NotFound(new
             {
                 status = "Not Found",
                 message = "Service list is empty",
                 data = ""
-            });
-
-        var resultList = _mapper.Map<IEnumerable<ServiceEntityDto>>(list);
-
-        return list != null
-            ? Ok(new
+            })
+            : Ok(new
             {
                 status = "Success",
                 message = "List found",
                 data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
-            })
-            : NotFound(new
-            {
-                status = "Not Found",
-                message = "Service list is empty",
-                data = ""
             });
     }
 

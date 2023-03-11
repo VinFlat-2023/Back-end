@@ -23,7 +23,6 @@ public class AccountRepository : IAccountRepository
     {
         return _context.Accounts
             .Include(x => x.Role)
-            .Where(x => x.RoleId == x.Role.RoleId)
             // Filter starts here
             .Where(x =>
                 (filters.Username == null || x.Username.Contains(filters.Username))

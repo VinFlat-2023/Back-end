@@ -44,19 +44,19 @@ public class InvoicesController : ControllerBase
         var resultList = _mapper.Map<IEnumerable<InvoiceDto>>(list);
 
         return list != null && !list.Any()
-            ? Ok(new
+            ? NotFound(new
+            {
+                status = "Bad Request",
+                message = "List is empty",
+                data = ""
+            })
+            : Ok(new
             {
                 status = "Success",
                 message = "List found",
                 data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
-            })
-            : NotFound(new
-            {
-                status = "Bad Request",
-                message = "List is empty",
-                data = ""
             });
     }
 

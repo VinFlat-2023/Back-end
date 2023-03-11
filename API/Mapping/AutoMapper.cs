@@ -210,11 +210,6 @@ public class AutoMapper : Profile
             .ForAllMembers(o => o.ExplicitExpansion());
         CreateMap<TicketDto, Ticket>()
             .ReverseMap();
-        CreateMap<TicketCreateRequest, Ticket>()
-            .ForMember(e => e.CreateDate,
-                option => option.MapFrom(r => r.CreateDate.ConvertToDateTime()))
-            .ForMember(e => e.SolveDate,
-                option => option.MapFrom(r => r.SolveDate.ConvertToDateTime()));
         CreateMap<Ticket, TicketCreateRequest>();
         CreateMap<TicketUpdateRequest, Ticket>()
             .ForMember(e => e.CreateDate,

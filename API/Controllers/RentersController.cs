@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using API.Extension;
 using AutoMapper;
 using Domain.EntitiesDTO.RenterDTO;
@@ -106,6 +105,7 @@ public class RentersController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update renter by id (For management and renter)")]
     public async Task<IActionResult> PutRenter([FromBody] RenterUpdateRequest renter, int id)
     {
+        /*
         var userRole = User.Identities
             .FirstOrDefault()?.Claims
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
@@ -120,6 +120,7 @@ public class RentersController : ControllerBase
                 message = "You are not authorized to access this resource",
                 data = ""
             });
+        */
 
         var renterCheck = await _serviceWrapper.Renters.GetRenterById(id);
 
@@ -139,7 +140,6 @@ public class RentersController : ControllerBase
         var finalizeUpdate = new Renter
         {
             RenterId = id,
-            Username = renter.Username,
             Email = renter.Email,
             Password = renter.Password,
             Phone = renter.Phone,
@@ -147,9 +147,11 @@ public class RentersController : ControllerBase
             BirthDate = renter.BirthDate ?? null,
             ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(renter.Image, fileNameUserImage,
                 "User", imageExtension))?.Blob.Uri,
+            /*
             CitizenNumber = renter.CitizenNumber,
             CitizenImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(renter.CitizenImage, fileNameCitizenImage,
                 "Citizen", imageExtension))?.Blob.Uri,
+            */
             Address = renter.Address,
             Gender = renter.Gender,
             UniversityId = renter.UniversityId ?? null,

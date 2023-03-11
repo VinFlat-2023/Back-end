@@ -37,24 +37,25 @@ public class FlatsController : ControllerBase
     public async Task<IActionResult> GetFlats([FromQuery] FlatFilterRequest request, CancellationToken token)
     {
         var filter = _mapper.Map<FlatFilter>(request);
+
         var list = await _serviceWrapper.Flats.GetFlatList(filter, token);
 
         var resultList = _mapper.Map<IEnumerable<FlatDto>>(list);
 
         return list != null && !list.Any()
-            ? Ok(new
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Flat list is empty",
+                data = ""
+            })
+            : Ok(new
             {
                 status = "Success",
                 message = "List found",
                 data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
-            })
-            : NotFound(new
-            {
-                status = "Not Found",
-                message = "Flat list is empty",
-                data = ""
             });
     }
 

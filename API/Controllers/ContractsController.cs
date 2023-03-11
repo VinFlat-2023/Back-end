@@ -45,19 +45,19 @@ public class ContractsController : ControllerBase
         var resultList = _mapper.Map<IEnumerable<ContractDto>>(list);
 
         return list != null && !list.Any()
-            ? Ok(new
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "No contract available",
+                data = ""
+            })
+            : Ok(new
             {
                 status = "Success",
                 message = "Contract list found",
                 data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
-            })
-            : NotFound(new
-            {
-                status = "Not Found",
-                message = "No contract available",
-                data = ""
             });
     }
     //TODO get contract by renter ID
@@ -98,47 +98,27 @@ public class ContractsController : ControllerBase
 
         var entity = await _serviceWrapper.Contracts.GetContractById(id);
 
-        switch (entity)
+        return entity switch
         {
-            case { } when entity.RenterId != Parse(User.Identity.Name):
-                return BadRequest(new
-                {
-                    status = "Bad Request",
-                    message = "You are not authorized to access this resource due to invalid renter ID",
-                    data = ""
-                });
-
-            case { } when renterId != Parse(User.Identity.Name):
-                return BadRequest(new
-                {
-                    status = "Bad Request",
-                    message = "You are not authorized to access this resource due to invalid token",
-                    data = ""
-                });
-
-            case { } when userRole != "Renter":
-                return BadRequest(new
-                {
-                    status = "Bad Request",
-                    message = "You are not authorized to access this resource",
-                    data = ""
-                });
-
-            case null:
-                return NotFound(new
-                {
-                    status = "Not Found",
-                    message = "Contract not found",
-                    data = ""
-                });
-        }
-
-        return Ok(new
-        {
-            status = "Success",
-            message = "Contract found",
-            data = _mapper.Map<ContractDto>(entity)
-        });
+            { } when userRole is "Renter" && entity.RenterId != Parse(User.Identity.Name) => BadRequest(new
+            {
+                status = "Bad Request",
+                message = "You are not authorized to access this resource due to invalid renter ID",
+                data = ""
+            }),
+            { } when userRole is "Renter" && renterId != Parse(User.Identity.Name) => BadRequest(new
+            {
+                status = "Bad Request",
+                message = "You are not authorized to access this resource due to invalid token",
+                data = ""
+            }),
+            { } when userRole != "Renter" => BadRequest(new
+            {
+                status = "Bad Request", message = "You are not authorized to access this resource", data = ""
+            }),
+            null => NotFound(new { status = "Not Found", message = "Contract not found", data = "" }),
+            _ => Ok(new { status = "Success", message = "Contract found", data = _mapper.Map<ContractDto>(entity) })
+        };
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get active contract based on user Id (For management and renter)")]
@@ -146,6 +126,7 @@ public class ContractsController : ControllerBase
     [HttpGet("user/{userId:int}/active")]
     public async Task<IActionResult> GetContractBasedOnUserId(int userId)
     {
+        /*
         var userRole = User.Identities
             .FirstOrDefault()?.Claims
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
@@ -159,6 +140,7 @@ public class ContractsController : ControllerBase
                 message = "You are not authorized to access this resource",
                 data = ""
             });
+        */
 
         var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
 

@@ -18,5 +18,5 @@ public interface IRenterService
     public Task<Renter?> GetRenterByUsername(string username);
     public Task<Renter?> RenterUsernameCheck(string? username);
     public Task<Renter?> RenterEmailCheck(string? email);
-    public Task<Renter> RenterDetailWithAccountId(int userId);
+    public Task<Renter?> RenterDetailWithAccountId(int userId);
 }

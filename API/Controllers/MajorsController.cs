@@ -41,19 +41,19 @@ public class MajorsController : ControllerBase
         var resultList = _mapper.Map<IEnumerable<MajorDto>>(list);
 
         return list != null && !list.Any()
-            ? Ok(new
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Major list is empty",
+                data = ""
+            })
+            : Ok(new
             {
                 status = "Success",
                 message = "List found",
                 data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
-            })
-            : NotFound(new
-            {
-                status = "Not Found",
-                message = "Major list is empty",
-                data = ""
             });
     }
 

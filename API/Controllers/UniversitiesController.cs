@@ -42,19 +42,19 @@ public class UniversitiesController : ControllerBase
         var resultList = _mapper.Map<IEnumerable<UniversityDto>>(list);
 
         return list != null && !list.Any()
-            ? Ok(new
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "University list is empty",
+                data = ""
+            })
+            : Ok(new
             {
                 status = "Success",
                 message = "List found",
                 data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
-            })
-            : NotFound(new
-            {
-                status = "Not Found",
-                message = "University list is empty",
-                data = ""
             });
     }
 

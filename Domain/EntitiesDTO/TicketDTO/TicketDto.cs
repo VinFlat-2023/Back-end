@@ -1,40 +1,29 @@
+using System.Text.Json.Serialization;
 using Domain.EntitiesDTO.AccountDTO;
-using Domain.EntitiesDTO.InvoiceDetailDTO;
-using Domain.EntitiesDTO.RenterDTO;
+using Domain.EntitiesDTO.ContractDTO;
 using Domain.EntitiesDTO.TicketTypeDTO;
-using Newtonsoft.Json;
 
 namespace Domain.EntitiesDTO.TicketDTO;
 
 public class TicketDto
 {
-    public int RequestId { get; set; }
-
-    public string? RequestName { get; set; }
-
-    public string? Description { get; set; }
-
+    public int TicketId { get; set; }
+    public string TicketName { get; set; } = null!;
+    public string Description { get; set; } = null!;
     public DateTime CreateDate { get; set; }
-
     public DateTime? SolveDate { get; set; }
-
     public decimal? Amount { get; set; }
 
     public string Status { get; set; } = null!;
 
-    public int? RequestTypeId { get; set; }
+    // Contract
+    public int ContractId { get; set; }
 
-    // Renter
-    public int RenterId { get; set; }
-
-    [JsonIgnore] public virtual RenterDto Renter { get; set; } = null!;
+    [JsonIgnore] public virtual ContractDto Contract { get; set; } = null!;
 
     // Management
     public int AccountId { get; set; }
-
     [JsonIgnore] public virtual AccountDto Account { get; set; } = null!;
-
-    [JsonIgnore] public virtual ICollection<InvoiceDetailDto> InvoiceDetails { get; set; } = null!;
-
+    public int TicketTypeId { get; set; }
     [JsonIgnore] public virtual TicketTypeDto TicketType { get; set; } = null!;
 }
