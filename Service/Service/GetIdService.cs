@@ -26,4 +26,14 @@ public class GetIdService : IGetIdService
     {
         return await _repositoryWrapper.GetId.GetContractIdBasedOnRenterId(renterId);
     }
+
+    public async Task<int?> GetActiveContractIdBasedOnRenterId(int? renterId)
+    {
+        return await _repositoryWrapper.GetId.GetActiveContractIdBasedOnRenterId(renterId);
+    }
+
+    public async Task<int?> GetRoomIdBasedOnFlatId(int? flatId)
+    {
+        return await _repositoryWrapper.GetId.GetRoomIdBasedOnFlatId(flatId);
+    }
 }

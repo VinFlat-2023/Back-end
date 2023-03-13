@@ -134,6 +134,61 @@ public class InvoicesController : ControllerBase
             });
     }
 
+    [SwaggerOperation(Summary = "[Authorize] Get invoice list by renter Id (For renter and management)")]
+    [HttpGet("user/{userId:int}/status/{status:bool}")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    public async Task<IActionResult> GetInvoiceListRenterWithStatus(int userId, bool status, CancellationToken token)
+    {
+        /*
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
+        if (userRole is not ("Admin" or "Supervisor") ||
+            (User.Identity?.Name != userId.ToString() && userRole != "Renter"))
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "You are not authorized to access this resource",
+                data = ""
+            });
+        */
+
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+        if (userCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "No user found",
+                data = ""
+            });
+
+        var entities = await _serviceWrapper.Invoices
+            .GetInvoiceList(new InvoiceFilter { RenterId = userId, Status = status }, token);
+
+        // false = paid, true = unpaid
+
+        var resultList = _mapper.Map<IEnumerable<InvoiceDto>>(entities);
+
+        return entities != null
+            ? Ok(new
+            {
+                status = "Success",
+                message = "List found",
+                data = resultList,
+                totalPage = entities.TotalPages,
+                totalCount = entities.TotalCount
+            })
+            : NotFound(new
+            {
+                status = "Not Found",
+                message = "No invoice list found",
+                data = ""
+            });
+    }
+
+
     [SwaggerOperation(Summary = "[Authorize] Get invoice using invoice Id and renter Id (For renter and management)")]
     [HttpGet("{invoiceId:int}/user/{userId:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
@@ -269,7 +324,6 @@ public class InvoicesController : ControllerBase
                     });
                 break;
         }
-
 
         var validation = await _validator.ValidateParams(addNewInvoice, null);
         if (!validation.IsValid)

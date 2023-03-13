@@ -405,7 +405,7 @@ public class TicketsController : ControllerBase
     // GET: api/RequestTypes
     [HttpGet("type")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Get ticket list (For management)")]
+    [SwaggerOperation(Summary = "[Authorize] Get ticket type list (For management and renter)")]
     public async Task<IActionResult> GetTIcketTypes([FromQuery] TicketTypeFilterRequest request,
         CancellationToken token)
     {
@@ -413,30 +413,22 @@ public class TicketsController : ControllerBase
 
         var list = await _serviceWrapper.TicketTypes.GetTicketTypeList(filter, token);
 
-        if (list != null && !list.Any())
-            return NotFound(new
+        var resultList = _mapper.Map<IEnumerable<TicketTypeDto>>(list);
+
+        return list != null && !list.Any()
+            ? NotFound(new
             {
                 status = "Not Found",
                 message = "List not found",
                 data = ""
-            });
-
-        var resultList = _mapper.Map<IEnumerable<TicketTypeDto>>(list);
-
-        return list != null
-            ? Ok(new
+            })
+            : Ok(new
             {
                 status = "Success",
                 message = "List found",
                 data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
-            })
-            : BadRequest(new
-            {
-                status = "Bad Request",
-                message = "List not found",
-                data = ""
             });
     }
 
@@ -461,6 +453,8 @@ public class TicketsController : ControllerBase
                 data = _mapper.Map<TicketTypeDto>(entity)
             });
     }
+
+    /*
 
     // PUT: api/RequestTypes/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -504,6 +498,8 @@ public class TicketsController : ControllerBase
             data = _mapper.Map<TicketTypeDto>(result)
         });
     }
+    
+    */
 
     // POST: api/RequestTypes
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

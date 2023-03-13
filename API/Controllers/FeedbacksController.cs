@@ -8,28 +8,25 @@ using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Service.IHelper;
 using Service.IService;
 using Service.IValidator;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace API.Controllers;
 
-[Microsoft.AspNetCore.Components.Route("api/feedbacks")]
+[Route("api/feedbacks")]
 [ApiController]
 public class FeedbacksController : ControllerBase
 {
-    private readonly IJwtRoleCheckerHelper _jwtRoleCheckHelper;
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
     private readonly IFeedbackValidator _validator;
 
-    public FeedbacksController(IMapper mapper, IServiceWrapper serviceWrapper, IJwtRoleCheckerHelper jwtRoleCheckHelper,
+    public FeedbacksController(IMapper mapper, IServiceWrapper serviceWrapper,
         IFeedbackValidator validator)
     {
         _mapper = mapper;
         _serviceWrapper = serviceWrapper;
-        _jwtRoleCheckHelper = jwtRoleCheckHelper;
         _validator = validator;
     }
 
@@ -39,12 +36,10 @@ public class FeedbacksController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetFeedbacks([FromQuery] FeedbackFilterRequest request, CancellationToken token)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var filter = _mapper.Map<FeedbackFilter>(request);
 
         var list = await _serviceWrapper.Feedbacks.GetFeedbackList(filter, token);
+
         if (list != null && !list.Any())
             return NotFound("No Feedback available");
 
@@ -66,9 +61,6 @@ public class FeedbacksController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetFeedback(int id)
     {
-        if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var entity = await _serviceWrapper.Feedbacks.GetFeedbackById(id);
         if (entity == null)
             return NotFound("Feedback not found");
@@ -82,9 +74,6 @@ public class FeedbacksController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutFeedback(int id, [FromBody] FeedbackUpdateRequest feedback)
     {
-        if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User, feedback.RenterId))
-            return BadRequest("You are not authorized to access this information");
-
         var updateFeedback = new Feedback
         {
             FeedbackId = id,
@@ -116,9 +105,6 @@ public class FeedbacksController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> PostFeedback([FromBody] FeedbackCreateRequest feedback)
     {
-        if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var addNewFeedback = new Feedback
         {
             FeedbackTypeId = feedback.FeedbackTypeId,
@@ -147,9 +133,6 @@ public class FeedbacksController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteFeedback(int id)
     {
-        if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var result = await _serviceWrapper.Feedbacks.DeleteFeedback(id);
         if (!result)
             return NotFound("Feedback not found");
@@ -163,9 +146,6 @@ public class FeedbacksController : ControllerBase
     public async Task<IActionResult> GetFeedbackTypes([FromQuery] FeedbackTypeFilterRequest request,
         CancellationToken token)
     {
-        if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var filter = _mapper.Map<FeedbackTypeFilter>(request);
 
         var list = await _serviceWrapper.FeedbackTypes.GetFeedbackTypeList(filter, token);
@@ -190,9 +170,6 @@ public class FeedbacksController : ControllerBase
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetFeedbackType(int id)
     {
-        if (await _jwtRoleCheckHelper.IsRenterRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var entity = await _serviceWrapper.FeedbackTypes
             .GetFeedbackTypeById(id);
         if (entity == null)
@@ -208,9 +185,6 @@ public class FeedbacksController : ControllerBase
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> PutFeedbackType(int id, [FromBody] FeedbackTypeUpdateRequest feedbackType)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var updateFeedBackType = new FeedbackType
         {
             FeedbackTypeId = id,
@@ -234,9 +208,6 @@ public class FeedbacksController : ControllerBase
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> PostFeedbackType([FromBody] FeedbackTypeCreateRequest feedbackType)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var newFeedbackType = new FeedbackType
         {
             Name = feedbackType.Name
@@ -253,9 +224,6 @@ public class FeedbacksController : ControllerBase
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> DeleteFeedbackType(int id)
     {
-        if (await _jwtRoleCheckHelper.IsManagementRoleAuthorized(User))
-            return BadRequest("You are not authorized to access this information");
-
         var result = await _serviceWrapper.Feedbacks.DeleteFeedback(id);
         if (!result)
             return NotFound("Feedback type not found");

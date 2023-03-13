@@ -1,5 +1,6 @@
 using API.Extension;
 using AutoMapper;
+using Domain.CustomEntities.RentalEntity;
 using Domain.EntitiesDTO.RenterDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Renter;
@@ -44,19 +45,19 @@ public class RentersController : ControllerBase
         var resultList = _mapper.Map<IEnumerable<RenterDto>>(list);
 
         return list != null && !list.Any()
-            ? Ok(new
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Renter list is empty",
+                data = ""
+            })
+            : Ok(new
             {
                 status = "Success",
                 message = "List found",
                 data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
-            })
-            : NotFound(new
-            {
-                status = "Not Found",
-                message = "Renter list is empty",
-                data = ""
             });
     }
 
@@ -97,6 +98,79 @@ public class RentersController : ControllerBase
                 data = _mapper.Map<RenterDto>(entity)
             });
     }
+
+    [HttpGet("rental")]
+    [Authorize(Roles = "Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Get current renter rental (For renter)")]
+    public async Task<IActionResult> GetRental()
+    {
+        var userId = int.Parse(User.Identity?.Name);
+
+        var userEntity = await _serviceWrapper.Renters.GetRenterById(userId);
+
+        if (userEntity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "This user does not exist in our system",
+                data = ""
+            });
+
+        var rentalCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+
+        if (rentalCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "This renter does not exist in our system",
+                data = ""
+            });
+
+        var contract = await _serviceWrapper.Contracts.GetContractByIdWithActiveStatus(rentalCheck.RenterId);
+
+        if (contract == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "This renter does not have any active contract",
+                data = ""
+            });
+
+        var building = await _serviceWrapper.Buildings.GetBuildingById(contract.BuildingId);
+
+        if (building == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "This building does not exist in our system",
+                data = ""
+            });
+
+        var flatDetail = new FlatRentalEntity
+        {
+            WaterMeterAfter = contract.Flat.WaterMeterAfter,
+            ElectricityMeterAfter = contract.Flat.ElectricityMeterAfter
+        };
+
+        var rentalDetailEntity = new RentalDetailEntity
+        {
+            FlatName = contract.Flat.Name,
+            BuildingName = building.BuildingName,
+            PriceForRent = contract.PriceForRent,
+            PriceForWater = contract.PriceForWater,
+            PriceForElectricity = contract.PriceForElectricity,
+            PriceForService = contract.PriceForService,
+            FlatRentalEntity = flatDetail
+        };
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Rental found",
+            data = rentalDetailEntity
+        });
+    }
+
 
     // PUT: api/Renters/5
     // To protect from over posting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

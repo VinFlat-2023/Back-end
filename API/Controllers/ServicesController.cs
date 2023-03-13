@@ -85,30 +85,22 @@ public class ServicesController : ControllerBase
 
         var list = await _serviceWrapper.ServicesEntity.GetServiceEntityList(filter, buildingId, token);
 
-        if (list != null && !list.Any())
-            return NotFound(new
+        var resultList = _mapper.Map<IEnumerable<ServiceEntityDto>>(list);
+
+        return list != null && !list.Any()
+            ? NotFound(new
             {
                 status = "Not Found",
                 message = "Service list is empty",
                 data = ""
-            });
-
-        var resultList = _mapper.Map<IEnumerable<ServiceEntityDto>>(list);
-
-        return list != null
-            ? Ok(new
+            })
+            : Ok(new
             {
                 status = "Success",
                 message = "List found",
                 data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
-            })
-            : NotFound(new
-            {
-                status = "Not Found",
-                message = "Service list is empty",
-                data = ""
             });
     }
 
@@ -125,19 +117,19 @@ public class ServicesController : ControllerBase
         var resultList = _mapper.Map<IEnumerable<ServiceEntityDto>>(list);
 
         return list != null && !list.Any()
-            ? Ok(new
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Service list in this building is empty",
+                data = ""
+            })
+            : Ok(new
             {
                 status = "Success",
                 message = "List found",
                 data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
-            })
-            : NotFound(new
-            {
-                status = "Not Found",
-                message = "Service list in this building is empty",
-                data = ""
             });
     }
 

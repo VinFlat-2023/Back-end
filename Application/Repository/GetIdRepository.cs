@@ -44,8 +44,24 @@ public class GetIdRepository : IGetIdRepository
     public async Task<int?> GetContractIdBasedOnRenterId(int? renterId)
     {
         return await _context.Contracts
+            .Where(x => x.RenterId == renterId)
+            .Select(x => x.ContractId)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<int?> GetActiveContractIdBasedOnRenterId(int? renterId)
+    {
+        return await _context.Contracts
             .Where(x => x.RenterId == renterId && x.ContractStatus == "Active")
             .Select(x => x.ContractId)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<int?> GetRoomIdBasedOnFlatId(int? flatId)
+    {
+        return await _context.Rooms
+            .Where(x => x.FlatId == flatId)
+            .Select(x => x.RoomId)
             .FirstOrDefaultAsync();
     }
 }

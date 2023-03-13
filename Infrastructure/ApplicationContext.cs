@@ -625,7 +625,8 @@ public class ApplicationContext : DbContext
                 WaterMeterAfter = 0,
                 ElectricityMeterAfter = 0,
                 FlatTypeId = 2,
-                BuildingId = 2
+                BuildingId = 2,
+                AvailableRoom = 0
             },
             new Flat
             {
@@ -642,12 +643,68 @@ public class ApplicationContext : DbContext
             }
         );
 
+        modelBuilder.Entity<Room>().HasData(
+            new Room
+            {
+                RoomId = 1,
+                RoomName = "Room 1 for flat 1",
+                AvailableSlots = 2,
+                RoomTypeId = 1,
+                FlatId = 1
+            },
+            new Room
+            {
+                RoomId = 2,
+                RoomName = "Room 1 for flat 3",
+                AvailableSlots = 1,
+                RoomTypeId = 1,
+                FlatId = 3
+            },
+            new Room
+            {
+                RoomId = 3,
+                RoomName = "Room 2 for flat 3",
+                AvailableSlots = 2,
+                RoomTypeId = 2,
+                FlatId = 3
+            },
+            new Room
+            {
+                RoomId = 4,
+                RoomName = "Room 3 for flat 3",
+                AvailableSlots = 2,
+                RoomTypeId = 3,
+                FlatId = 3
+            }
+        );
+
+        modelBuilder.Entity<RoomType>().HasData(
+            new RoomType
+            {
+                RoomTypeId = 1,
+                Description = "Room type id 1 : 2 slots",
+                NumberOfSlots = 2
+            },
+            new RoomType
+            {
+                RoomTypeId = 2,
+                Description = "Room type id 2 : 2 slots",
+                NumberOfSlots = 2
+            },
+            new RoomType
+            {
+                RoomTypeId = 3,
+                Description = "Room type id 3 : 2 slots",
+                NumberOfSlots = 2
+            }
+        );
+
         modelBuilder.Entity<TicketType>().HasData(
             new TicketType
             {
                 TicketTypeId = 1,
-                TicketTypeName = "Repair",
-                Description = "Repair",
+                TicketTypeName = "Sự cố",
+                Description = "Sự cố",
                 Status = true
             },
             new TicketType
@@ -660,15 +717,15 @@ public class ApplicationContext : DbContext
             new TicketType
             {
                 TicketTypeId = 3,
-                TicketTypeName = "Khác",
-                Description = "Khác",
+                TicketTypeName = "Phàn nàn",
+                Description = "Phàn nàn",
                 Status = true
             },
             new TicketType
             {
                 TicketTypeId = 4,
-                TicketTypeName = "Phàn nàn",
-                Description = "Phàn nàn",
+                TicketTypeName = "Khác",
+                Description = "Khác",
                 Status = true
             }
         );
@@ -735,12 +792,34 @@ public class ApplicationContext : DbContext
             new ServiceEntity
             {
                 ServiceId = 4,
-                Name = "Cung cấp nước 4",
-                Description = "Cung cấp nước 4",
+                Name = "Cung cấp 4 cho toa nha 3",
+                Description = "Cung cấp 4 cho toa nha 3",
                 Status = true,
                 Amount = 0,
                 ServiceTypeId = 2,
-                BuildingId = 4
+                BuildingId = 3
+            }
+            ,
+            new ServiceEntity
+            {
+                ServiceId = 5,
+                Name = "Cung cấp 5 cho toa nha 3",
+                Description = "Cung cấp 5 cho toa nha 3",
+                Status = true,
+                Amount = 0,
+                ServiceTypeId = 2,
+                BuildingId = 3
+            }
+            ,
+            new ServiceEntity
+            {
+                ServiceId = 6,
+                Name = "Cung cấp 6 cho toa nha 3",
+                Description = "Cung cấp 6 cho toa nha 3",
+                Status = true,
+                Amount = 0,
+                ServiceTypeId = 2,
+                BuildingId = 3
             }
         );
 
@@ -748,7 +827,7 @@ public class ApplicationContext : DbContext
             new FeedbackType
             {
                 FeedbackTypeId = 1,
-                Name = "Complaint"
+                Name = "Rating"
             },
             new FeedbackType
             {
@@ -821,8 +900,44 @@ public class ApplicationContext : DbContext
                 InvoiceId = 4,
                 Name = "Hoá đơn điện tử cho renter 3 (2)",
                 Amount = 0,
-                Status = true,
+                Status = false,
                 Detail = "Detail for invoice 3 (2)",
+                CreatedTime = DateTime.UtcNow,
+                RenterId = 3,
+                AccountId = 2,
+                InvoiceTypeId = 1
+            },
+            new Invoice
+            {
+                InvoiceId = 5,
+                Name = "Hoá đơn điện tử cho renter 3 (3)",
+                Amount = 0,
+                Status = false,
+                Detail = "Detail for invoice 3 (3)",
+                CreatedTime = DateTime.UtcNow,
+                RenterId = 3,
+                AccountId = 2,
+                InvoiceTypeId = 1
+            },
+            new Invoice
+            {
+                InvoiceId = 6,
+                Name = "Hoá đơn điện tử cho renter 3 (4)",
+                Amount = 0,
+                Status = true,
+                Detail = "Detail for invoice 3 (4)",
+                CreatedTime = DateTime.UtcNow,
+                RenterId = 3,
+                AccountId = 2,
+                InvoiceTypeId = 1
+            },
+            new Invoice
+            {
+                InvoiceId = 7,
+                Name = "Hoá đơn điện tử cho renter 3 (5)",
+                Amount = 0,
+                Status = true,
+                Detail = "Detail for invoice 3 (5)",
                 CreatedTime = DateTime.UtcNow,
                 RenterId = 3,
                 AccountId = 2,
@@ -862,32 +977,84 @@ public class ApplicationContext : DbContext
                 InvoiceDetailId = 5,
                 InvoiceId = 4,
                 Amount = 0,
-                ServiceId = 3
+                ServiceId = 4
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 6,
                 InvoiceId = 4,
                 Amount = 0,
-                ServiceId = 3
+                ServiceId = 4
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 7,
-                InvoiceId = 3,
-                Amount = 0
+                InvoiceId = 5,
+                Amount = 0,
+                ServiceId = 4
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 8,
-                InvoiceId = 4,
-                Amount = 0
+                InvoiceId = 5,
+                Amount = 0,
+                ServiceId = 5
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 9,
-                InvoiceId = 4,
-                Amount = 0
+                InvoiceId = 5,
+                Amount = 0,
+                ServiceId = 5
+            },
+            new InvoiceDetail
+            {
+                InvoiceDetailId = 10,
+                InvoiceId = 6,
+                Amount = 0,
+                ServiceId = 6
+            },
+            new InvoiceDetail
+            {
+                InvoiceDetailId = 11,
+                InvoiceId = 6,
+                Amount = 0,
+                ServiceId = 5
+            },
+            new InvoiceDetail
+            {
+                InvoiceDetailId = 12,
+                InvoiceId = 6,
+                Amount = 0,
+                ServiceId = 6
+            },
+            new InvoiceDetail
+            {
+                InvoiceDetailId = 13,
+                InvoiceId = 7,
+                Amount = 0,
+                ServiceId = 3
+            },
+            new InvoiceDetail
+            {
+                InvoiceDetailId = 14,
+                InvoiceId = 7,
+                Amount = 0,
+                ServiceId = 3
+            },
+            new InvoiceDetail
+            {
+                InvoiceDetailId = 15,
+                InvoiceId = 7,
+                Amount = 0,
+                ServiceId = 4
+            },
+            new InvoiceDetail
+            {
+                InvoiceDetailId = 16,
+                InvoiceId = 7,
+                Amount = 0,
+                ServiceId = 5
             }
         );
 
@@ -907,7 +1074,8 @@ public class ApplicationContext : DbContext
                     BuildingId = 1,
                     Description = "Contract description for renter 1",
                     ImageUrl = "No image",
-                    FlatId = 2
+                    FlatId = 2,
+                    RoomId = 1
                 },
                 new Contract
                 {
@@ -923,7 +1091,8 @@ public class ApplicationContext : DbContext
                     BuildingId = 2,
                     Description = "Contract description for renter 2",
                     ImageUrl = "No image",
-                    FlatId = 3
+                    FlatId = 3,
+                    RoomId = 1
                 },
                 new Contract
                 {
@@ -942,7 +1111,8 @@ public class ApplicationContext : DbContext
                     BuildingId = 3,
                     Description = "Contract description for renter 3",
                     ImageUrl = "No image",
-                    FlatId = 3
+                    FlatId = 3,
+                    RoomId = 2
                 }
             );
 
