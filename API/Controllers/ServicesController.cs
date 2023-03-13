@@ -105,12 +105,22 @@ public class ServicesController : ControllerBase
     }
 
     [HttpGet("building/{buildingId:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Get service list based on building id (For management and renter)")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [SwaggerOperation(Summary = "[Authorize] Get service list based on building id (For management)d)")]
     public async Task<IActionResult> GetServiceEntitiesByBuilding([FromQuery] ServiceFilterRequest request,
         int buildingId, CancellationToken token)
     {
         var filter = _mapper.Map<ServiceEntityFilter>(request);
+
+        var buildingCheck = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
+        
+        if (buildingCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Building not found",
+                data = ""
+            });
 
         var list = await _serviceWrapper.ServicesEntity.GetServiceEntityList(filter, buildingId, token);
 
