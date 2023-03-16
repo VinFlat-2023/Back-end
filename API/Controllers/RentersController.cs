@@ -148,18 +148,18 @@ public class RentersController : ControllerBase
 
         var flatDetail = new FlatRentalEntity
         {
+            PriceForRent = contract.PriceForRent,
+            PriceForWater = contract.PriceForWater,
+            PriceForElectricity = contract.PriceForElectricity,
+            PriceForService = contract.PriceForService,
             WaterMeterAfter = contract.Flat.WaterMeterAfter,
             ElectricityMeterAfter = contract.Flat.ElectricityMeterAfter
         };
 
         var rentalDetailEntity = new RentalDetailEntity
         {
-            FlatName = contract.Flat.Name,
             BuildingName = building.BuildingName,
-            PriceForRent = contract.PriceForRent,
-            PriceForWater = contract.PriceForWater,
-            PriceForElectricity = contract.PriceForElectricity,
-            PriceForService = contract.PriceForService,
+            FlatName = contract.Flat.Name,
             FlatRentalEntity = flatDetail
         };
 

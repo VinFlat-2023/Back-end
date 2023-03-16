@@ -113,7 +113,7 @@ public class ServicesController : ControllerBase
         var filter = _mapper.Map<ServiceEntityFilter>(request);
 
         var buildingCheck = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
-        
+
         if (buildingCheck == null)
             return NotFound(new
             {

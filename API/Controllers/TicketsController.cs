@@ -406,7 +406,7 @@ public class TicketsController : ControllerBase
     [HttpGet("type")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get ticket type list (For management and renter)")]
-    public async Task<IActionResult> GetTIcketTypes([FromQuery] TicketTypeFilterRequest request,
+    public async Task<IActionResult> GetTicketTypes([FromQuery] TicketTypeFilterRequest request,
         CancellationToken token)
     {
         var filter = _mapper.Map<TicketTypeFilter>(request);
@@ -434,8 +434,8 @@ public class TicketsController : ControllerBase
 
     // GET: api/RequestTypes/5
     [HttpGet("type/{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [SwaggerOperation(Summary = "[Authorize] Get ticket type by id (For management)")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Get ticket type by id (For management and renter)")]
     public async Task<IActionResult> GetTicketType(int id)
     {
         var entity = await _serviceWrapper.TicketTypes.GetTicketTypeById(id);

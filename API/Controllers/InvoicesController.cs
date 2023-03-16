@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain.EntitiesDTO.InvoiceDetailDTO;
 using Domain.EntitiesDTO.InvoiceDTO;
 using Domain.EntitiesDTO.InvoiceTypeDTO;
 using Domain.EntitiesForManagement;
@@ -545,30 +546,23 @@ public class InvoicesController : ControllerBase
         var filter = _mapper.Map<InvoiceDetailFilter>(request);
 
         var list = await _serviceWrapper.InvoiceDetails.GetInvoiceDetails(filter, token);
-        if (list != null && !list.Any())
-            return NotFound(new
+
+        var resultList = _mapper.Map<IEnumerable<InvoiceDetailDto>>(list);
+
+        return list != null && !list.Any()
+            ? NotFound(new
             {
-                status = "Success",
-                message = "List found",
+                status = "Not Found",
+                message = "Invoice detail list is empty",
                 data = ""
-            });
-
-        var resultList = _mapper.Map<IEnumerable<InvoiceTypeDto>>(list);
-
-        return list != null
-            ? Ok(new
+            })
+            : Ok(new
             {
                 status = "Success",
                 message = "List found",
                 data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
-            })
-            : BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Invoice detail list is empty",
-                data = ""
             });
     }
 
