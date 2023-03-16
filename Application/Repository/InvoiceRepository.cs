@@ -26,8 +26,6 @@ public class InvoiceRepository : IInvoiceRepository
         return _context.Invoices
             .Include(x => x.Account)
             .Include(x => x.Renter)
-            .Where(x => x.AccountId == x.Account.AccountId)
-            .Where(x => x.RenterId == x.Renter.RenterId)
             // Filter starts here
             .Where(x =>
                 (filter.Name == null || x.Name.Contains(filter.Name))
@@ -77,8 +75,8 @@ public class InvoiceRepository : IInvoiceRepository
     public async Task<Invoice?> GetInvoiceByRenterAndInvoiceId(int renterId, int invoiceId)
     {
         return await _context.Invoices
-            .Where(x => x.Status == true && x.RenterId == renterId)
-            .FirstOrDefaultAsync(x => x.InvoiceId == invoiceId);
+            .Include(x => x.Renter)
+            .FirstOrDefaultAsync(x => x.InvoiceId == invoiceId && x.RenterId == renterId);
     }
 
     public async Task<Invoice?> GetUnpaidInvoiceByRenterAndMonth(int renterId, int month)

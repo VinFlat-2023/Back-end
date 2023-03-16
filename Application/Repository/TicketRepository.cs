@@ -57,9 +57,11 @@ internal class TicketRepository : ITicketRepository
                                                              (filters.SolveDate == null ||
                                                               x.SolveDate == filters.SolveDate))))
                 .AsNoTracking(),
+
             false => _context.Tickets
                 .Include(x => x.TicketType)
                 .Include(x => x.Contract)
+                .ThenInclude(x => x.Renter)
                 .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
                 .Where(x => x.Contract.RenterId == id)
                 // Filter starts here

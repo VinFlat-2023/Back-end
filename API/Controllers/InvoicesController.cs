@@ -63,7 +63,7 @@ public class InvoicesController : ControllerBase
 
     // GET: api/Invoices/5
     [SwaggerOperation(Summary = "[Authorize] Get invoice by Id (For management)")]
-    [HttpGet("{id:int}/user")]
+    [HttpGet("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceByManagement(int id)
     {
@@ -83,28 +83,13 @@ public class InvoicesController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get invoice list by renter Id (For renter and management)")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice list by renter Id (For management)")]
     [HttpGet("user/{userId:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceRenter(int userId, CancellationToken token)
     {
-        /*
-        var userRole = User.Identities
-            .FirstOrDefault()?.Claims
-            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
-            ?.Value ?? string.Empty;
-
-        if (userRole is not ("Admin" or "Supervisor") ||
-            (User.Identity?.Name != userId.ToString() && userRole != "Renter"))
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "You are not authorized to access this resource",
-                data = ""
-            });
-        */
-
         var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+
         if (userCheck == null)
             return NotFound(new
             {
@@ -113,25 +98,64 @@ public class InvoicesController : ControllerBase
                 data = ""
             });
 
-        var entities = await _serviceWrapper.Invoices
+        var list = await _serviceWrapper.Invoices
             .GetInvoiceList(new InvoiceFilter { RenterId = userId }, token);
 
-        var resultList = _mapper.Map<IEnumerable<InvoiceDto>>(entities);
+        var resultList = _mapper.Map<IEnumerable<InvoiceDto>>(list);
 
-        return entities != null
-            ? Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = entities.TotalPages,
-                totalCount = entities.TotalCount
-            })
-            : NotFound(new
+        return list != null && !list.Any()
+            ? NotFound(new
             {
                 status = "Not Found",
                 message = "No invoice list found",
                 data = ""
+            })
+            : Ok(new
+            {
+                status = "Success",
+                message = "List found",
+                data = resultList,
+                totalPage = list.TotalPages,
+                totalCount = list.TotalCount
+            });
+    }
+
+    [SwaggerOperation(Summary = "[Authorize] Get invoice list by renter (For renter)")]
+    [HttpGet("user/all")]
+    [Authorize(Roles = "Renter")]
+    public async Task<IActionResult> GetInvoiceRenter(CancellationToken token)
+    {
+        var userId = int.Parse(User.Identity?.Name);
+
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+
+        if (userCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "No user found",
+                data = ""
+            });
+
+        var list = await _serviceWrapper.Invoices
+            .GetInvoiceList(new InvoiceFilter { RenterId = userId }, token);
+
+        var resultList = _mapper.Map<IEnumerable<InvoiceDto>>(list);
+
+        return list != null && !list.Any()
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "No invoice list found",
+                data = ""
+            })
+            : Ok(new
+            {
+                status = "Success",
+                message = "List found",
+                data = resultList,
+                totalPage = list.TotalPages,
+                totalCount = list.TotalCount
             });
     }
 
@@ -190,10 +214,10 @@ public class InvoicesController : ControllerBase
     }
 
 
-    [SwaggerOperation(Summary = "[Authorize] Get invoice using invoice Id and renter Id (For renter and management)")]
-    [HttpGet("{invoiceId:int}/user/{userId:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    public async Task<IActionResult> GetInvoiceRenterUsingId(int invoiceId, int userId)
+    [SwaggerOperation(Summary = "[Authorize] Get invoice using invoice Id (For renter)")]
+    [HttpGet("{invoiceId:int}/user")]
+    [Authorize(Roles = "Renter")]
+    public async Task<IActionResult> GetInvoiceRenterUsingId(int invoiceId)
     {
         /*
         var userRole = User.Identities
@@ -209,7 +233,9 @@ public class InvoicesController : ControllerBase
                 message = "You are not authorized to access this resource",
                 data = ""
             });
-            */
+        */
+
+        var userId = int.Parse(User.Identity?.Name);
 
         var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
 

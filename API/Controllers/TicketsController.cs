@@ -35,7 +35,7 @@ public class TicketsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Get ticket list with pagination and filter (For management and renter))")]
+    [SwaggerOperation(Summary = "[Authorize] Get ticket list with pagination and filter (For management and renter)")]
     public async Task<IActionResult> GetTickets([FromQuery] TicketFilterRequest ticketFilterRequest,
         CancellationToken token)
     {
@@ -46,21 +46,21 @@ public class TicketsController : ControllerBase
 
         var filter = _mapper.Map<TicketFilter>(ticketFilterRequest);
 
-        var list = await _serviceWrapper.Tickets.GetTicketList(filter, token);
-
-        if (list == null || !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Ticket list is empty",
-                data = ""
-            });
-
-        var resultList = _mapper.Map<IEnumerable<TicketDto>>(list);
-
         switch (userRole)
         {
             case "Admin":
+                var list = await _serviceWrapper.Tickets.GetTicketList(filter, token);
+
+                if (list == null || !list.Any())
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "Ticket list is empty",
+                        data = ""
+                    });
+
+                var resultList = _mapper.Map<IEnumerable<TicketDto>>(list);
+
                 return Ok(new
                 {
                     status = "Success",
@@ -69,6 +69,7 @@ public class TicketsController : ControllerBase
                     totalPage = list.TotalPages,
                     totalCount = list.TotalCount
                 });
+
             case "Supervisor":
                 var supervisorId = int.Parse(User.Identity?.Name);
 
