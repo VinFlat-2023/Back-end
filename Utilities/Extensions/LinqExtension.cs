@@ -25,11 +25,8 @@ public static class LinqExtension
     )
         where TEntity : class
     {
-        foreach (var nextProperty in nextProperties)
-            source = source.Include(navigationPropertyPath)
-                .ThenInclude(nextProperty);
-
-        return source;
+        return nextProperties.Aggregate(source, (current, nextProperty) => current.Include(navigationPropertyPath)
+            .ThenInclude(nextProperty));
     }
 
     /// <summary>
@@ -47,10 +44,7 @@ public static class LinqExtension
         [NotNull] params Expression<Func<TProperty, object>>[] nextProperties)
         where TEntity : class
     {
-        foreach (var nextProperty in nextProperties)
-            source = source.Include(navigationPropertyPath)
-                .ThenInclude(nextProperty);
-
-        return source;
+        return nextProperties.Aggregate(source, (current, nextProperty) => current.Include(navigationPropertyPath)
+            .ThenInclude(nextProperty));
     }
 }

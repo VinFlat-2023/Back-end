@@ -11,4 +11,5 @@ public interface IFlatService
     public Task<Flat?> AddFlat(Flat flat);
     public Task<Flat?> UpdateFlat(Flat flat);
     public Task<bool> DeleteFlat(int flatId);
+    public Task<RepositoryResponse> GetRoomInAFlat(int flatId);
 }

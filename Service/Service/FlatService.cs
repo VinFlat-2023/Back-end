@@ -56,4 +56,9 @@ public class FlatService : IFlatService
     {
         return await _repositoryWrapper.Flats.DeleteFlat(flatId);
     }
+
+    public async Task<RepositoryResponse> GetRoomInAFlat(int flatId)
+    {
+        return await _repositoryWrapper.Flats.GetRoomInAFlat(flatId);
+    }
 }

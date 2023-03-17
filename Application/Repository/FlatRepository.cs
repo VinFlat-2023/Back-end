@@ -1,4 +1,5 @@
 using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -24,9 +25,9 @@ public class FlatRepository : IFlatRepository
         return _context.Flats
             .Include(x => x.Building)
             .ThenInclude(x => x.Area)
-            .Where(x => x.BuildingId == x.Building.BuildingId)
+            //.Where(x => x.BuildingId == x.Building.BuildingId)
             .Include(x => x.FlatType)
-            .Where(x => x.FlatTypeId == x.FlatType.FlatTypeId)
+            //.Where(x => x.FlatTypeId == x.FlatType.FlatTypeId)
             // Filter starts here
             .Where(f =>
                 (filters.Name == null || f.Name.Contains(filters.Name))
@@ -46,6 +47,53 @@ public class FlatRepository : IFlatRepository
     {
         return _context.Flats
             .Where(x => x.FlatId == flatId);
+    }
+
+    public async Task<RepositoryResponse> GetRoomInAFlat(int flatId)
+    {
+        var roomInFlat = await _context.Flats
+            .Where(x => x.FlatId == flatId)
+            .FirstOrDefaultAsync();
+
+        if (roomInFlat == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "This flat is not available"
+            };
+
+        switch (roomInFlat)
+        {
+            case { } when roomInFlat.Rooms.Any(x => x.AvailableSlots == 0) :
+                return new RepositoryResponse
+                {
+                    IsSuccess = false,
+                    Message = "This flat's room is not available"
+                }; 
+            
+            case { } when roomInFlat.Rooms.Any(x => x.AvailableSlots >= 1) :
+            {
+                return new RepositoryResponse
+                {
+                    IsSuccess = true,
+                    Message = "This flat's room is still available"
+                };
+            }
+            
+            case null :
+            case { } when roomInFlat.Rooms.Any(_ => false) :
+                return new RepositoryResponse
+                {
+                    IsSuccess = false,
+                    Message = "Flat service is unavailable"
+                };
+        }
+
+        return new RepositoryResponse
+        {
+            IsSuccess = false,
+            Message = "Internal server error for flat services"
+        };
     }
 
     /// <summary>

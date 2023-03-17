@@ -156,9 +156,15 @@ public class RentersController : ControllerBase
             ElectricityMeterAfter = contract.Flat.ElectricityMeterAfter
         };
 
-        var rentalDetailEntity = new RentalDetailEntity
+        var buildingDetail = new BuildingRentalEntity
         {
             BuildingName = building.BuildingName,
+            BuildingManager = building.Account.FullName,
+        };
+
+        var rentalDetailEntity = new RentalDetailEntity
+        {
+            BuildingRentalEntity = buildingDetail,
             FlatName = contract.Flat.Name,
             FlatRentalEntity = flatDetail
         };

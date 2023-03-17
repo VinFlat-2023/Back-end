@@ -1,3 +1,4 @@
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 
@@ -7,6 +8,7 @@ public interface IFlatRepository
 {
     public IQueryable<Flat> GetFlatList(FlatFilter filters);
     public IQueryable<Flat> GetFlatDetail(int? flatId);
+    public Task<RepositoryResponse> GetRoomInAFlat(int flatId);
     public Task<Flat> AddFlat(Flat flat);
     public Task<Flat?> UpdateFlat(Flat flat);
     public Task<bool> DeleteFlat(int flatId);

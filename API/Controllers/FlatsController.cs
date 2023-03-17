@@ -338,20 +338,12 @@ public class FlatsController : ControllerBase
     [HttpDelete("room/{id:int}/slot-available")]
     public async Task<IActionResult> GetTotalAvailableRoom(int id)
     {
-        var result = await _serviceWrapper.Flats.GetFlatById(id);
+        var result = await _serviceWrapper.Flats.GetRoomInAFlat(id);
 
-        return result switch
+        return result.IsSuccess switch
         {
-            null => NotFound(new { status = "Not Found", message = "Flat not found", data = "" }),
-            { } when result.Rooms.Any(x => x.AvailableSlots == 0) => Ok(new
-            {
-                status = "Success", message = "This flat is not available", data = ""
-            }),
-            { } when result.Rooms.Any(x => x.AvailableSlots >= 1) => Ok(new
-            {
-                status = "Success", message = "This flat is still available", data = ""
-            }),
-            _ => BadRequest(new { status = "Success", message = "Flat service is unavailable", data = "" })
+            true => Ok(new { status = "Success", message = result.Message, data = "" }),
+            false => BadRequest(new { status = "Bad Request", message = result.Message, data = "" })
         };
     }
 
