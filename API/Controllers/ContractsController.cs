@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.IService;
 using Service.IValidator;
 using Swashbuckle.AspNetCore.Annotations;
+using Utilities.Extensions;
 using static System.Int32;
 
 namespace API.Controllers;
@@ -160,9 +161,31 @@ public class ContractsController : ControllerBase
                     BuildingNumber = building.BuildingPhoneNumber
                 };
 
+
+                var contractDetailView = new ContractEntity
+                {
+                    ContractId = entity.ContractId,
+                    ContractName = entity.ContractName,
+                    DateSigned = entity.DateSigned,
+                    StartDate = entity.StartDate,
+                    CreatedDate = entity.CreatedDate,
+                    Description = entity.Description,
+                    EndDate = entity.EndDate,
+                    LastUpdated = entity.LastUpdated,
+                    ContractStatus = entity.ContractStatus,
+                    ImageUrl = entity.ImageUrl,
+                    PriceForRent = entity.PriceForRent.DecimalToString(),
+                    PriceForService = entity.PriceForService.DecimalToString(),
+                    PriceForWater = entity.PriceForWater.DecimalToString(),
+                    PriceForElectricity = entity.PriceForElectricity.DecimalToString(),
+                    //BuildingId = entity.BuildingId,
+                    RoomId = entity.RoomId,
+                    //RenterId = entity.RenterId,
+                };
+
                 var contractViewModel = new ContractDetailEntity
                 {
-                    Contract = _mapper.Map<ContractEntity>(entity),
+                    Contract = contractDetailView,
                     Building = buildingManager,
                     Renter = _mapper.Map<RenterProfileEntity>(renter)
                 };

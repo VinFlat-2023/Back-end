@@ -15,6 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 using Service.IService;
 using Service.IValidator;
 using Swashbuckle.AspNetCore.Annotations;
+using Utilities.Extensions;
 
 namespace API.Controllers;
 
@@ -150,10 +151,10 @@ public class RentersController : ControllerBase
 
         var flatDetail = new FlatDetailEntity
         {
-            PriceForRent = contract.PriceForRent,
-            PriceForWater = contract.PriceForWater,
-            PriceForElectricity = contract.PriceForElectricity,
-            PriceForService = contract.PriceForService,
+            PriceForRent = contract.PriceForRent.DecimalToString(),
+            PriceForWater = contract.PriceForWater.DecimalToString(),
+            PriceForElectricity = contract.PriceForElectricity.DecimalToString(),
+            PriceForService = contract.PriceForService.DecimalToString(),
             WaterMeterAfter = contract.Flat.WaterMeterAfter,
             ElectricityMeterAfter = contract.Flat.ElectricityMeterAfter
         };
