@@ -20,7 +20,7 @@ public class Building
     public string ImageUrl { get; set; }
     public decimal CoordinateX { get; set; }
     public decimal CoordinateY { get; set; }
-
+    public string BuildingPhoneNumber { get; set; }
     public bool Status { get; set; }
 
     // Management Company

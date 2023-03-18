@@ -32,16 +32,6 @@ public class TicketValidator : BaseValidator, ITicketValidator
                         break;
                 }
 
-            switch (obj?.TicketName)
-            {
-                case { } when string.IsNullOrWhiteSpace(obj.TicketName):
-                    ValidatorResult.Failures.Add("Ticket name is required");
-                    break;
-                case { } when obj.TicketName.Length > 500:
-                    ValidatorResult.Failures.Add("Ticket name cannot exceed 100 characters");
-                    break;
-            }
-
             switch (obj?.Description)
             {
                 case { } when string.IsNullOrWhiteSpace(obj.Description):

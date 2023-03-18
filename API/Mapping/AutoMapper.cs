@@ -1,6 +1,8 @@
 using AutoMapper;
 using Domain.CustomEntities.Mail;
 using Domain.CustomEntities.MomoEntities;
+using Domain.CustomEntities.ViewModel.ContractEntity;
+using Domain.CustomEntities.ViewModel.RenterEntity;
 using Domain.EntitiesDTO.AccountDTO;
 using Domain.EntitiesDTO.AreaDTO;
 using Domain.EntitiesDTO.BuildingDTO;
@@ -365,6 +367,10 @@ public class AutoMapper : Profile
         CreateMap<Contract, ContractUpdateRequest>();
         CreateMap<ContractFilterRequest, ContractFilter>()
             .ReverseMap();
+        CreateMap<Contract, ContractEntity>()
+            .ForAllMembers(o => o.ExplicitExpansion());
+        CreateMap<ContractEntity, Contract>()
+            .ReverseMap();
     }
 
     private void MapArea()
@@ -392,6 +398,10 @@ public class AutoMapper : Profile
         CreateMap<RenterUpdateRequest, Renter>().ReverseMap()
             .ReverseMap();
         CreateMap<RenterFilterRequest, RenterFilter>()
+            .ReverseMap();
+        CreateMap<Renter, RenterProfileEntity>()
+            .ForAllMembers(o => o.ExplicitExpansion());
+        CreateMap<RenterProfileEntity, Renter>()
             .ReverseMap();
     }
 

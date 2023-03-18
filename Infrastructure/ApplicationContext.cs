@@ -466,7 +466,8 @@ public class ApplicationContext : DbContext
                 CoordinateY = 324,
                 AreaId = 1,
                 AccountId = 5,
-                ImageUrl = ""
+                ImageUrl = "",
+                BuildingPhoneNumber = "012323123"
             },
             new Building
             {
@@ -478,7 +479,8 @@ public class ApplicationContext : DbContext
                 CoordinateY = 334,
                 AreaId = 1,
                 AccountId = 2,
-                ImageUrl = ""
+                ImageUrl = "",
+                BuildingPhoneNumber = "012323123"
             },
             new Building
             {
@@ -490,7 +492,8 @@ public class ApplicationContext : DbContext
                 CoordinateY = 3214,
                 AreaId = 2,
                 AccountId = 2,
-                ImageUrl = ""
+                ImageUrl = "",
+                BuildingPhoneNumber = "012323123"
             },
             new Building
             {
@@ -502,7 +505,8 @@ public class ApplicationContext : DbContext
                 CoordinateY = 314,
                 AreaId = 2,
                 AccountId = 4,
-                ImageUrl = ""
+                ImageUrl = "",
+                BuildingPhoneNumber = "012323123"
             },
             new Building
             {
@@ -514,7 +518,8 @@ public class ApplicationContext : DbContext
                 CoordinateY = 3245,
                 AreaId = 3,
                 AccountId = 3,
-                ImageUrl = ""
+                ImageUrl = "",
+                BuildingPhoneNumber = "012323123"
             },
             new Building
             {
@@ -526,7 +531,8 @@ public class ApplicationContext : DbContext
                 CoordinateY = 334,
                 AreaId = 3,
                 AccountId = 3,
-                ImageUrl = ""
+                ImageUrl = "",
+                BuildingPhoneNumber = "012323123"
             },
             new Building
             {
@@ -538,7 +544,8 @@ public class ApplicationContext : DbContext
                 CoordinateY = 3214,
                 AreaId = 4,
                 AccountId = 3,
-                ImageUrl = ""
+                ImageUrl = "",
+                BuildingPhoneNumber = "012323123"
             },
             new Building
             {
@@ -550,7 +557,8 @@ public class ApplicationContext : DbContext
                 CoordinateY = 31454,
                 AreaId = 4,
                 AccountId = 3,
-                ImageUrl = ""
+                ImageUrl = "",
+                BuildingPhoneNumber = "012323123"
             }
         );
 
@@ -727,6 +735,53 @@ public class ApplicationContext : DbContext
                 TicketTypeName = "Khác",
                 Description = "Khác",
                 Status = true
+            }
+        );
+
+        modelBuilder.Entity<Ticket>().HasData(
+            new Ticket
+            {
+                TicketId = 1,
+                Description = "Sự cố 1",
+                CreateDate = DateTime.UtcNow,
+                Status = "Active",
+                SolveDate = null,
+                TicketTypeId = 1,
+                AccountId = 2,
+                ContractId = 3
+            },
+            new Ticket
+            {
+                TicketId = 2,
+                Description = "Sự cố 2",
+                CreateDate = DateTime.UtcNow,
+                Status = "Processing",
+                SolveDate = null,
+                TicketTypeId = 2,
+                AccountId = 2,
+                ContractId = 3
+            },
+            new Ticket
+            {
+                TicketId = 3,
+                Description = "Sự cố 3",
+                CreateDate = DateTime.UtcNow,
+                Status = "Completed",
+                SolveDate = null,
+                TicketTypeId = 3,
+                AccountId = 2,
+                ContractId = 3
+            },
+            new Ticket
+            {
+                TicketId = 4,
+                Description = "Sự cố 4",
+                CreateDate = DateTime.UtcNow,
+                Status = "Active",
+                SolveDate = null,
+                TicketTypeId = 1,
+                AccountId = 2,
+                ContractId = 3
             }
         );
 

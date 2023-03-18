@@ -36,7 +36,8 @@ public class BuildingRepository : IBuildingRepository
                 && (filter.AreaId == null || x.AreaId == filter.AreaId)
                 && (filter.AccountId == null || x.AccountId == filter.AccountId)
                 && (filter.Username == null || x.Account.Username == filter.Username)
-                && (filter.AreaName == null || x.Area.Name == filter.AreaName))
+                && (filter.AreaName == null || x.Area.Name == filter.AreaName)
+                && (filter.BuildingPhoneNumber == null || x.BuildingPhoneNumber == filter.BuildingPhoneNumber))
             .AsNoTracking();
     }
 
@@ -92,6 +93,7 @@ public class BuildingRepository : IBuildingRepository
         buildingData.ImageUrl = building?.ImageUrl ?? buildingData.ImageUrl;
         buildingData.TotalRooms = count;
         buildingData.BuildingName = building?.BuildingName ?? buildingData.BuildingName;
+        buildingData.BuildingPhoneNumber = building?.BuildingPhoneNumber ?? buildingData.BuildingPhoneNumber;
 
         await _context.SaveChangesAsync();
 

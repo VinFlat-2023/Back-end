@@ -1,6 +1,8 @@
 using API.Extension;
 using AutoMapper;
-using Domain.CustomEntities.RentalEntity;
+using Domain.CustomEntities.ViewModel.BuildingEntity;
+using Domain.CustomEntities.ViewModel.FlatEntity;
+using Domain.CustomEntities.ViewModel.RentalEntity;
 using Domain.EntitiesDTO.RenterDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Renter;
@@ -146,7 +148,7 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
-        var flatDetail = new FlatRentalEntity
+        var flatDetail = new FlatDetailEntity
         {
             PriceForRent = contract.PriceForRent,
             PriceForWater = contract.PriceForWater,
@@ -156,17 +158,18 @@ public class RentersController : ControllerBase
             ElectricityMeterAfter = contract.Flat.ElectricityMeterAfter
         };
 
-        var buildingDetail = new BuildingRentalEntity
+        var buildingDetail = new BuildingManagerEntity
         {
             BuildingName = building.BuildingName,
             BuildingManager = building.Account.FullName,
+            BuildingNumber = building.BuildingPhoneNumber
         };
 
         var rentalDetailEntity = new RentalDetailEntity
         {
-            BuildingRentalEntity = buildingDetail,
+            BuildingManagerEntity = buildingDetail,
             FlatName = contract.Flat.Name,
-            FlatRentalEntity = flatDetail
+            FlatEntity = flatDetail
         };
 
         return Ok(new
@@ -264,6 +267,71 @@ public class RentersController : ControllerBase
                 data = ""
             });
     }
+
+    [HttpPut("{id:int}/change-password")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Update renter by id (For management and renter)")]
+    public async Task<IActionResult> ChangePassword([FromBody] RenterUpdateRequest renter, int id)
+    {
+        /*
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
+        Console.WriteLine(userRole);
+
+        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "You are not authorized to access this resource",
+                data = ""
+            });
+        */
+
+        var renterCheck = await _serviceWrapper.Renters.GetRenterById(id);
+
+        if (renterCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Renters not found",
+                data = ""
+            });
+
+        var finalizeUpdate = new Renter
+        {
+            Password = renter.Password
+        };
+
+        var validation = await _validator.ValidateParams(finalizeUpdate, id);
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
+        var result = await _serviceWrapper.Renters.UpdateRenter(finalizeUpdate);
+        if (result == null)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Renter failed to update",
+                data = ""
+            });
+
+        return Ok(
+            new
+            {
+                status = "Success",
+                message = "Renter updated",
+                data = ""
+            });
+    }
+
 
     // POST: api/Renters
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

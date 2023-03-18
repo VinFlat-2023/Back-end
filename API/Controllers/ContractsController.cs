@@ -1,6 +1,9 @@
 using System.Security.Claims;
 using API.Extension;
 using AutoMapper;
+using Domain.CustomEntities.ViewModel.BuildingEntity;
+using Domain.CustomEntities.ViewModel.ContractEntity;
+using Domain.CustomEntities.ViewModel.RenterEntity;
 using Domain.EntitiesDTO.ContractDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Contract;
@@ -98,27 +101,79 @@ public class ContractsController : ControllerBase
 
         var entity = await _serviceWrapper.Contracts.GetContractById(id);
 
-        return entity switch
+        switch (entity)
         {
-            { } when userRole is "Renter" && entity.RenterId != Parse(User.Identity.Name) => BadRequest(new
-            {
-                status = "Bad Request",
-                message = "You are not authorized to access this resource due to invalid renter ID",
-                data = ""
-            }),
-            { } when userRole is "Renter" && renterId != Parse(User.Identity.Name) => BadRequest(new
-            {
-                status = "Bad Request",
-                message = "You are not authorized to access this resource due to invalid token",
-                data = ""
-            }),
-            { } when userRole != "Renter" => BadRequest(new
-            {
-                status = "Bad Request", message = "You are not authorized to access this resource", data = ""
-            }),
-            null => NotFound(new { status = "Not Found", message = "Contract not found", data = "" }),
-            _ => Ok(new { status = "Success", message = "Contract found", data = _mapper.Map<ContractDto>(entity) })
-        };
+            case { } when userRole is "Renter" && entity.RenterId != Parse(User.Identity.Name):
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "You are not authorized to access this resource due to invalid renter ID",
+                    data = ""
+                });
+
+            case { } when userRole is "Renter" && renterId != Parse(User.Identity.Name):
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "You are not authorized to access this resource due to invalid token",
+                    data = ""
+                });
+
+            case { } when userRole != "Renter":
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "You are not authorized to access this resource",
+                    data = ""
+                });
+
+            case null:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Contract not found",
+                    data = ""
+                });
+            default:
+                var building = await _serviceWrapper.Buildings.GetBuildingById(entity.BuildingId);
+                var renter = await _serviceWrapper.Renters.GetRenterById(entity.RenterId);
+                if (renter == null)
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "Renter not found",
+                        data = ""
+                    });
+
+                if (building == null)
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "Building not found",
+                        data = ""
+                    });
+
+                var buildingManager = new BuildingManagerEntity
+                {
+                    BuildingName = building.BuildingName,
+                    BuildingManager = building.Account.FullName,
+                    BuildingNumber = building.BuildingPhoneNumber
+                };
+
+                var contractViewModel = new ContractDetailEntity
+                {
+                    Contract = _mapper.Map<ContractEntity>(entity),
+                    Building = buildingManager,
+                    Renter = _mapper.Map<RenterProfileEntity>(renter)
+                };
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "Contract found",
+                    data = contractViewModel
+                });
+        }
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get active contract based on user Id (For management and renter)")]

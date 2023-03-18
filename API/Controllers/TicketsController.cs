@@ -222,15 +222,20 @@ public class TicketsController : ControllerBase
         var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id);
 
         if (ticketEntity == null)
-            return NotFound("No requests found");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "No ticket found",
+                data = ""
+            });
 
         var updateTicket = new Ticket
         {
             TicketId = id,
-            TicketName = ticketUpdateRequest.TicketName ?? ticketEntity.TicketName,
             Description = ticketUpdateRequest.Description ?? ticketEntity.Description,
             TicketTypeId = ticketUpdateRequest.TicketTypeId ?? ticketEntity.TicketTypeId,
             Status = ticketUpdateRequest.Status ?? "Active",
+            ImageUrl = ticketUpdateRequest.ImageUrl ?? ticketEntity.ImageUrl,
             Amount = ticketUpdateRequest.Amount ?? ticketEntity.Amount ?? 0,
             SolveDate = ticketUpdateRequest.SolveDate.ConvertToDateTime() ?? ticketEntity.SolveDate
         };
@@ -310,12 +315,12 @@ public class TicketsController : ControllerBase
 
         var newTicket = new Ticket
         {
-            TicketName = ticketCreateRequest.TicketName,
             Description = ticketCreateRequest.Description,
             CreateDate = DateTime.UtcNow,
             TicketTypeId = ticketCreateRequest.TicketTypeId,
             // TODO : Auto assign to active invoice -> invoice detail if not assigned manually
             Status = "Active",
+            ImageUrl = ticketCreateRequest.ImageUrl,
             Amount = 0,
             ContractId = contractId.Value,
             AccountId = managementAccountId.Value

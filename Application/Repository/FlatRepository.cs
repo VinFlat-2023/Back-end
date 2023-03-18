@@ -64,14 +64,14 @@ public class FlatRepository : IFlatRepository
 
         switch (roomInFlat)
         {
-            case { } when roomInFlat.Rooms.Any(x => x.AvailableSlots == 0) :
+            case { } when roomInFlat.Rooms.Any(x => x.AvailableSlots == 0):
                 return new RepositoryResponse
                 {
                     IsSuccess = false,
                     Message = "This flat's room is not available"
-                }; 
-            
-            case { } when roomInFlat.Rooms.Any(x => x.AvailableSlots >= 1) :
+                };
+
+            case { } when roomInFlat.Rooms.Any(x => x.AvailableSlots >= 1):
             {
                 return new RepositoryResponse
                 {
@@ -79,9 +79,9 @@ public class FlatRepository : IFlatRepository
                     Message = "This flat's room is still available"
                 };
             }
-            
-            case null :
-            case { } when roomInFlat.Rooms.Any(_ => false) :
+
+            case null:
+            case { } when roomInFlat.Rooms.Any(_ => false):
                 return new RepositoryResponse
                 {
                     IsSuccess = false,

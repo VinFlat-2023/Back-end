@@ -61,9 +61,12 @@ public class ContractRepository : IContractRepository
     public IQueryable<Contract?> GetContractDetail(int contractId)
     {
         return _context.Contracts
+            .Include(x => x.Flat)
+            .ThenInclude(x => x.Rooms)
             .Where(x => x.ContractId == contractId)
             .Include(x => x.Flat)
-            .ThenInclude(x => x.Rooms);
+            .ThenInclude(x => x.Building)
+            .ThenInclude(x => x.Account);
     }
 
     public IQueryable<Contract?> GetContractByUserId(int userId)

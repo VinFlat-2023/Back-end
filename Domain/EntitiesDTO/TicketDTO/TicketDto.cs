@@ -8,13 +8,14 @@ namespace Domain.EntitiesDTO.TicketDTO;
 public class TicketDto
 {
     public int TicketId { get; set; }
-    public string TicketName { get; set; } = null!;
     public string Description { get; set; } = null!;
     public DateTime CreateDate { get; set; }
     public DateTime? SolveDate { get; set; }
     public decimal? Amount { get; set; }
 
     public string Status { get; set; } = null!;
+
+    public string? ImageUrl { get; set; }
 
     // Contract
     public int ContractId { get; set; }

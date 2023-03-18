@@ -1,6 +1,6 @@
-namespace Domain.CustomEntities.RentalEntity;
+namespace Domain.CustomEntities.ViewModel.FlatEntity;
 
-public class FlatRentalEntity
+public class FlatDetailEntity
 {
     public int? WaterMeterAfter { get; set; }
     public int? ElectricityMeterAfter { get; set; }
