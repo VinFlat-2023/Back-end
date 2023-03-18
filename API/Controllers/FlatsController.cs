@@ -6,6 +6,8 @@ using Domain.EntityRequest.Flat;
 using Domain.EntityRequest.FlatType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
+using Domain.ViewModel.FlatEntity;
+using Domain.ViewModel.FlatTypeEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -40,7 +42,7 @@ public class FlatsController : ControllerBase
 
         var list = await _serviceWrapper.Flats.GetFlatList(filter, token);
 
-        var resultList = _mapper.Map<IEnumerable<FlatDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<FlatDetailEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
@@ -78,7 +80,7 @@ public class FlatsController : ControllerBase
             {
                 status = "Success",
                 message = "Flat found",
-                data = _mapper.Map<FlatDto>(entity)
+                data = _mapper.Map<FlatDetailEntity>(entity)
             });
     }
 
@@ -161,7 +163,12 @@ public class FlatsController : ControllerBase
                 message = "Flat failed to create",
                 data = ""
             });
-        return CreatedAtAction("GetFlat", new { id = result.FlatId }, result);
+        return Ok(new
+        {
+            status = "Success",
+            message = "Flat created",
+            data = ""
+        });
     }
 
     // DELETE: api/Flats/5
@@ -192,26 +199,25 @@ public class FlatsController : ControllerBase
     public async Task<IActionResult> GetFlatTypes([FromQuery] FlatTypeFilterRequest request, CancellationToken token)
     {
         var filter = _mapper.Map<FlatTypeFilter>(request);
+        
         var list = await _serviceWrapper.FlatTypes.GetFlatTypeList(filter, token);
-        if (list != null && !list.Any())
-            return NotFound("Flat type list is empty!");
 
-        var resultList = _mapper.Map<IEnumerable<FlatTypeDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<FlatTypeDetailEntity>>(list);
 
-        return list != null
-            ? Ok(new
+        return list != null && !list.Any()
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Flat type list is empty",
+                data = ""
+            })
+            : Ok(new
             {
                 status = "Success",
                 message = "List found",
                 data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
-            })
-            : BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Flat type list is empty",
-                data = ""
             });
     }
 
@@ -233,7 +239,7 @@ public class FlatsController : ControllerBase
             {
                 status = "Success",
                 message = "Flat type found",
-                data = _mapper.Map<FlatTypeDto>(entity)
+                data = _mapper.Map<FlatTypeDetailEntity>(entity)
             });
     }
 
@@ -307,7 +313,12 @@ public class FlatsController : ControllerBase
                 message = "Flat type not found",
                 data = ""
             });
-        return CreatedAtAction("GetFlatType", new { id = result.FlatTypeId }, result);
+        return Ok(new
+        {
+            status = "Success",
+            message = "Flat type created",
+            data = ""
+        });
     }
 
     // DELETE: api/FlatTypes/5

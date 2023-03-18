@@ -149,7 +149,7 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
-        var flatDetail = new FlatDetailEntity
+        var flatDetail = new FlatMeterDetailEntity
         {
             PriceForRent = contract.PriceForRent.DecimalToString(),
             PriceForWater = contract.PriceForWater.DecimalToString(),
@@ -176,7 +176,7 @@ public class RentersController : ControllerBase
         {
             BuildingDetailEntity = buildingDetail,
             FlatName = contract.Flat.Name,
-            FlatEntity = flatDetail
+            FlatMeterEntity = flatDetail
         };
 
         return Ok(new

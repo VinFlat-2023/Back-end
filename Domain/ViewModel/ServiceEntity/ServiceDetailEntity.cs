@@ -9,6 +9,6 @@ public class ServiceDetailEntity
     public string Description { get; set; }
     public bool Status { get; set; }
     public decimal? Amount { get; set; }
-    public BuildingServiceDetailEntity Building { get; set; }
+    public BuildingBasicDetailEntity Building { get; set; }
     public ServiceTypeDetailEntity ServiceType { get; set; }
 }

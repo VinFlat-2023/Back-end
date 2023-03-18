@@ -46,6 +46,8 @@ public class FlatRepository : IFlatRepository
     public IQueryable<Flat> GetFlatDetail(int? flatId)
     {
         return _context.Flats
+            .Include(x => x.Building)
+            .Include(x => x.FlatType)
             .Where(x => x.FlatId == flatId);
     }
 

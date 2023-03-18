@@ -13,7 +13,6 @@ public class FlatType
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int FlatTypeId { get; set; }
-
     public int? RoomCapacity { get; set; }
     public string? Status { get; set; }
     public virtual ICollection<Flat> Flats { get; set; }

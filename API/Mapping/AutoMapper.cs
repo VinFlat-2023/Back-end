@@ -52,6 +52,8 @@ using Domain.Responses;
 using Domain.Utils;
 using Domain.ViewModel.BuildingEntity;
 using Domain.ViewModel.ContractEntity;
+using Domain.ViewModel.FlatEntity;
+using Domain.ViewModel.FlatTypeEntity;
 using Domain.ViewModel.MajorEntity;
 using Domain.ViewModel.RenterEntity;
 using Domain.ViewModel.ServiceEntity;
@@ -288,6 +290,10 @@ public class AutoMapper : Profile
         CreateMap<FlatTypeUpdateRequest, FlatType>()
             .ReverseMap();
         CreateMap<FlatTypeFilterRequest, FlatTypeFilter>();
+        CreateMap<FlatType, FlatTypeDetailEntity>()
+            .ForAllMembers(o => o.ExplicitExpansion());
+        CreateMap<FlatTypeDetailEntity, FlatType>()
+            .ReverseMap();
     }
 
     private void MapFlat()
@@ -301,6 +307,10 @@ public class AutoMapper : Profile
         CreateMap<FlatUpdateRequest, Flat>()
             .ReverseMap();
         CreateMap<FlatFilterRequest, FlatFilter>()
+            .ReverseMap();
+        CreateMap<Flat, FlatDetailEntity>()
+            .ForAllMembers(o => o.ExplicitExpansion());
+        CreateMap<FlatDetailEntity, Flat>()
             .ReverseMap();
     }
 
@@ -463,9 +473,9 @@ public class AutoMapper : Profile
             .ForAllMembers(o => o.ExplicitExpansion());
         CreateMap<BuildingManagerDetailEntity, Building>()
             .ReverseMap();
-        CreateMap<Building, BuildingServiceDetailEntity>()
+        CreateMap<Building, BuildingBasicDetailEntity>()
             .ForAllMembers(o => o.ExplicitExpansion());
-        CreateMap<BuildingServiceDetailEntity, Building>()
+        CreateMap<BuildingBasicDetailEntity, Building>()
             .ReverseMap();
     }
 

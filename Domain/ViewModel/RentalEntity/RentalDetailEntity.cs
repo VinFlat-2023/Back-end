@@ -7,5 +7,5 @@ public class RentalDetailEntity
 {
     public string FlatName { get; set; }
     public BuildingDetailEntity BuildingDetailEntity { get; set; }
-    public FlatDetailEntity FlatEntity { get; set; }
+    public FlatMeterDetailEntity FlatMeterEntity { get; set; }
 }
