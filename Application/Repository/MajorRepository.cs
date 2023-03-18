@@ -23,7 +23,6 @@ internal class MajorRepository : IMajorRepository
     {
         return _context.Majors
             .Include(x => x.University)
-            .Where(x => x.UniversityId == x.University.UniversityId)
             // Filter starts here
             .Where(x =>
                 (filters.Name == null || x.Name.Contains(filters.Name))
@@ -64,10 +63,10 @@ internal class MajorRepository : IMajorRepository
     /// </summary>
     /// <param name="major"></param>
     /// <returns></returns>
-    public async Task<Major?> UpdateMajor(Major? major)
+    public async Task<Major?> UpdateMajor(Major major)
     {
         var majorData = await _context.Majors
-            .FirstOrDefaultAsync(x => x.MajorId == major!.MajorId);
+            .FirstOrDefaultAsync(x => x.MajorId == major.MajorId);
         if (majorData == null)
             return null;
 

@@ -4,6 +4,7 @@ using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Major;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
+using Domain.ViewModel.MajorEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -38,7 +39,7 @@ public class MajorsController : ControllerBase
 
         var list = await _serviceWrapper.Majors.GetMajorList(filter, token);
 
-        var resultList = _mapper.Map<IEnumerable<MajorDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<MajorDetailEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
@@ -75,7 +76,7 @@ public class MajorsController : ControllerBase
         {
             status = "Success",
             message = "Major list found",
-            data = _mapper.Map<IEnumerable<MajorDto>>(result)
+            data = _mapper.Map<IEnumerable<MajorDetailEntity>>(result)
         });
     }
 
@@ -97,7 +98,7 @@ public class MajorsController : ControllerBase
         {
             status = "Success",
             message = "Major list found",
-            data = _mapper.Map<MajorDto>(result)
+            data = _mapper.Map<MajorDetailEntity>(result)
         });
     }
 
@@ -129,7 +130,12 @@ public class MajorsController : ControllerBase
                 message = "Major failed to create",
                 data = ""
             });
-        return CreatedAtAction("GetMajor", new { id = result.MajorId }, result);
+        return Ok(new
+        {
+            status = "Success",
+            message = "Major created",
+            data = ""
+        });
     }
 
     // PUT: api/Majors/5

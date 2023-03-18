@@ -52,9 +52,11 @@ using Domain.Responses;
 using Domain.Utils;
 using Domain.ViewModel.BuildingEntity;
 using Domain.ViewModel.ContractEntity;
+using Domain.ViewModel.MajorEntity;
 using Domain.ViewModel.RenterEntity;
 using Domain.ViewModel.ServiceEntity;
 using Domain.ViewModel.ServiceTypeEntity;
+using Domain.ViewModel.UniversityEntity;
 using MimeKit;
 
 namespace API.Mapping;
@@ -143,6 +145,10 @@ public class AutoMapper : Profile
             .ReverseMap();
         CreateMap<UniversityFilterRequest, UniversityFilter>()
             .ReverseMap();
+        CreateMap<University, UniversityDetailEntity>()
+            .ReverseMap();
+        CreateMap<UniversityDetailEntity, University>()
+            .ForAllMembers(o => o.ExplicitExpansion());
     }
 
     private void MapServiceType()
@@ -244,6 +250,10 @@ public class AutoMapper : Profile
         CreateMap<MajorUpdateRequest, Major>()
             .ReverseMap();
         CreateMap<MajorFilterRequest, MajorFilter>()
+            .ReverseMap();
+        CreateMap<MajorDetailEntity, Major>()
+            .ForAllMembers(o => o.ExplicitExpansion());
+        CreateMap<Major, MajorDetailEntity>()
             .ReverseMap();
     }
 

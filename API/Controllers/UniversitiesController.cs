@@ -4,6 +4,7 @@ using Domain.EntitiesForManagement;
 using Domain.EntityRequest.University;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
+using Domain.ViewModel.UniversityEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -39,7 +40,7 @@ public class UniversitiesController : ControllerBase
 
         var list = await _serviceWrapper.Universities.GetUniversityList(filter, token);
 
-        var resultList = _mapper.Map<IEnumerable<UniversityDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<UniversityDetailEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
@@ -72,7 +73,7 @@ public class UniversitiesController : ControllerBase
             {
                 status = "Success",
                 message = "University found",
-                data = _mapper.Map<UniversityDto>(entity)
+                data = _mapper.Map<UniversityDetailEntity>(entity)
             });
     }
 
@@ -112,7 +113,7 @@ public class UniversitiesController : ControllerBase
         {
             status = "Success",
             message = "University updated",
-            data = _mapper.Map<UniversityDto>(result)
+            data = _mapper.Map<UniversityDetailEntity>(result)
         });
     }
 
@@ -147,7 +148,12 @@ public class UniversitiesController : ControllerBase
                 message = "University failed to create",
                 data = ""
             });
-        return CreatedAtAction("GetUniversity", new { id = result.UniversityId }, result);
+        return Ok(new
+        {
+            status = "Success",
+            message = "University created",
+            data = ""
+        });
     }
 
     // DELETE: api/Universities/5

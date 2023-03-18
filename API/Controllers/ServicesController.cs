@@ -7,6 +7,7 @@ using Domain.EntityRequest.ServiceType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.ViewModel.ServiceEntity;
+using Domain.ViewModel.ServiceTypeEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -125,7 +126,7 @@ public class ServicesController : ControllerBase
 
         var list = await _serviceWrapper.ServicesEntity.GetServiceEntityList(filter, buildingId, token);
 
-        var resultList = _mapper.Map<IEnumerable<ServiceEntityDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<ServiceDetailEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
@@ -333,7 +334,7 @@ public class ServicesController : ControllerBase
                 data = ""
             });
 
-        var resultList = _mapper.Map<IEnumerable<ServiceTypeDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<ServiceTypeDetailEntity>>(list);
 
         return list != null
             ? Ok(new
@@ -370,7 +371,7 @@ public class ServicesController : ControllerBase
             {
                 status = "Success",
                 message = "Service type found",
-                data = _mapper.Map<ServiceTypeDto>(entity)
+                data = _mapper.Map<ServiceTypeDetailEntity>(entity)
             });
     }
 
@@ -443,7 +444,12 @@ public class ServicesController : ControllerBase
                 message = "Service type failed to create",
                 data = ""
             });
-        return CreatedAtAction("GetServiceType", new { id = result.ServiceTypeId }, result);
+        return Ok(new
+        {
+            status = "Success",
+            message = "Service type created",
+            data = ""
+        });
     }
 
     // DELETE: api/ServiceTypes/5
