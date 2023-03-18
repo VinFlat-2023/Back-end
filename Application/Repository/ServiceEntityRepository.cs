@@ -23,7 +23,8 @@ internal class ServiceEntityRepository : IServiceEntityRepository
     {
         return _context.Services
             .Include(x => x.ServiceType)
-            .Where(x => x.ServiceTypeId == x.ServiceType.ServiceTypeId)
+            .Include(x => x.Building)
+            .ThenInclude(x => x.Account)
             // Filter starts here
             .Where(x =>
                 (filters.Name == null || x.Name.Contains(filters.Name))
@@ -36,8 +37,8 @@ internal class ServiceEntityRepository : IServiceEntityRepository
     public IQueryable<ServiceEntity> GetServiceList(ServiceEntityFilter filters, int? buildingId)
     {
         return _context.Services
+            .Include(x => x.Building)
             .Include(x => x.ServiceType)
-            .Where(x => x.ServiceTypeId == x.ServiceType.ServiceTypeId)
             .Where(x => x.BuildingId == buildingId)
             // Filter starts here
             .Where(x =>

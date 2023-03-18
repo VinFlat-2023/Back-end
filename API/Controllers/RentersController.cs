@@ -1,14 +1,14 @@
 using API.Extension;
 using AutoMapper;
-using Domain.CustomEntities.ViewModel.BuildingEntity;
-using Domain.CustomEntities.ViewModel.FlatEntity;
-using Domain.CustomEntities.ViewModel.RentalEntity;
 using Domain.EntitiesDTO.RenterDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Renter;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.Utils;
+using Domain.ViewModel.BuildingEntity;
+using Domain.ViewModel.FlatEntity;
+using Domain.ViewModel.RentalEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -159,16 +159,22 @@ public class RentersController : ControllerBase
             ElectricityMeterAfter = contract.Flat.ElectricityMeterAfter
         };
 
-        var buildingDetail = new BuildingManagerEntity
+        var buildingManager = new BuildingManagerDetailEntity
+        {
+            FullName = building.Account.FullName,
+            Phone = building.Account.Phone
+        };
+
+        var buildingDetail = new BuildingDetailEntity
         {
             BuildingName = building.BuildingName,
-            BuildingManager = building.Account.FullName,
-            BuildingNumber = building.BuildingPhoneNumber
+            BuildingPhoneNumber = building.BuildingPhoneNumber,
+            BuildingManager = buildingManager
         };
 
         var rentalDetailEntity = new RentalDetailEntity
         {
-            BuildingManagerEntity = buildingDetail,
+            BuildingDetailEntity = buildingDetail,
             FlatName = contract.Flat.Name,
             FlatEntity = flatDetail
         };

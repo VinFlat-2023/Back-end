@@ -1,4 +1,4 @@
-namespace Domain.CustomEntities.ViewModel.FlatEntity;
+namespace Domain.ViewModel.FlatEntity;
 
 public class FlatDetailEntity
 {

@@ -19,7 +19,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="CustomEntities\RentalEntity"/>
+        <Folder Include="ViewModel\ManagementDetailEntity"/>
+        <Folder Include="ViewModel\RoomEntity"/>
     </ItemGroup>
 
 </Project>

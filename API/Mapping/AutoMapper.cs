@@ -1,8 +1,6 @@
 using AutoMapper;
 using Domain.CustomEntities.Mail;
 using Domain.CustomEntities.MomoEntities;
-using Domain.CustomEntities.ViewModel.ContractEntity;
-using Domain.CustomEntities.ViewModel.RenterEntity;
 using Domain.EntitiesDTO.AccountDTO;
 using Domain.EntitiesDTO.AreaDTO;
 using Domain.EntitiesDTO.BuildingDTO;
@@ -52,6 +50,11 @@ using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.Responses;
 using Domain.Utils;
+using Domain.ViewModel.BuildingEntity;
+using Domain.ViewModel.ContractEntity;
+using Domain.ViewModel.RenterEntity;
+using Domain.ViewModel.ServiceEntity;
+using Domain.ViewModel.ServiceTypeEntity;
 using MimeKit;
 
 namespace API.Mapping;
@@ -158,6 +161,10 @@ public class AutoMapper : Profile
             .ReverseMap();
         CreateMap<ServiceTypeFilterRequest, ServiceTypeFilter>()
             .ReverseMap();
+        CreateMap<ServiceTypeDetailEntity, ServiceType>()
+            .ForAllMembers(o => o.ExplicitExpansion());
+        CreateMap<ServiceType, ServiceTypeDetailEntity>()
+            .ReverseMap();
     }
 
     private void MapService()
@@ -175,6 +182,9 @@ public class AutoMapper : Profile
         CreateMap<ServiceUpdateRequest, ServiceEntity>()
             .ReverseMap();
         CreateMap<ServiceFilterRequest, ServiceEntityFilter>()
+            .ReverseMap();
+        CreateMap<ServiceEntity, ServiceDetailEntity>().ForAllMembers(o => o.ExplicitExpansion());
+        CreateMap<ServiceDetailEntity, ServiceEntity>()
             .ReverseMap();
     }
 
@@ -417,6 +427,10 @@ public class AutoMapper : Profile
             .ReverseMap();
         CreateMap<AccountFilterRequest, AccountFilter>()
             .ReverseMap();
+        CreateMap<Account, BuildingManagerDetailEntity>()
+            .ForAllMembers(o => o.ExplicitExpansion());
+        CreateMap<BuildingManagerDetailEntity, Account>()
+            .ReverseMap();
     }
 
     private void MapBuilding()
@@ -430,6 +444,18 @@ public class AutoMapper : Profile
         CreateMap<BuildingUpdateRequest, Building>()
             .ReverseMap();
         CreateMap<BuildingFilterRequest, BuildingFilter>()
+            .ReverseMap();
+        CreateMap<Building, BuildingDetailEntity>()
+            .ForAllMembers(o => o.ExplicitExpansion());
+        CreateMap<BuildingDetailEntity, Building>()
+            .ReverseMap();
+        CreateMap<Building, BuildingManagerDetailEntity>()
+            .ForAllMembers(o => o.ExplicitExpansion());
+        CreateMap<BuildingManagerDetailEntity, Building>()
+            .ReverseMap();
+        CreateMap<Building, BuildingServiceDetailEntity>()
+            .ForAllMembers(o => o.ExplicitExpansion());
+        CreateMap<BuildingServiceDetailEntity, Building>()
             .ReverseMap();
     }
 

@@ -1,15 +1,15 @@
 using System.Security.Claims;
 using API.Extension;
 using AutoMapper;
-using Domain.CustomEntities.ViewModel.BuildingEntity;
-using Domain.CustomEntities.ViewModel.ContractEntity;
-using Domain.CustomEntities.ViewModel.RenterEntity;
 using Domain.EntitiesDTO.ContractDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Contract;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.Utils;
+using Domain.ViewModel.BuildingEntity;
+using Domain.ViewModel.ContractEntity;
+using Domain.ViewModel.RenterEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -86,7 +86,26 @@ public class ContractsController : ControllerBase
         {
             status = "Success",
             message = "Contract found",
-            data = _mapper.Map<ContractDto>(entity)
+            data = new ContractEntity
+            {
+                ContractId = entity.ContractId,
+                ContractName = entity.ContractName,
+                DateSigned = entity.DateSigned,
+                StartDate = entity.StartDate,
+                CreatedDate = entity.CreatedDate,
+                Description = entity.Description,
+                EndDate = entity.EndDate,
+                LastUpdated = entity.LastUpdated,
+                ContractStatus = entity.ContractStatus,
+                ImageUrl = entity.ImageUrl,
+                PriceForRent = entity.PriceForRent.DecimalToString(),
+                PriceForService = entity.PriceForService.DecimalToString(),
+                PriceForWater = entity.PriceForWater.DecimalToString(),
+                PriceForElectricity = entity.PriceForElectricity.DecimalToString(),
+                //BuildingId = entity.BuildingId,
+                RoomId = entity.RoomId
+                //RenterId = entity.RenterId,
+            }
         });
     }
 
@@ -154,13 +173,11 @@ public class ContractsController : ControllerBase
                         data = ""
                     });
 
-                var buildingManager = new BuildingManagerEntity
+                var buildingDetail = new BuildingDetailEntity
                 {
                     BuildingName = building.BuildingName,
-                    BuildingManager = building.Account.FullName,
-                    BuildingNumber = building.BuildingPhoneNumber
+                    BuildingPhoneNumber = building.BuildingPhoneNumber
                 };
-
 
                 var contractDetailView = new ContractEntity
                 {
@@ -179,14 +196,14 @@ public class ContractsController : ControllerBase
                     PriceForWater = entity.PriceForWater.DecimalToString(),
                     PriceForElectricity = entity.PriceForElectricity.DecimalToString(),
                     //BuildingId = entity.BuildingId,
-                    RoomId = entity.RoomId,
+                    RoomId = entity.RoomId
                     //RenterId = entity.RenterId,
                 };
 
                 var contractViewModel = new ContractDetailEntity
                 {
                     Contract = contractDetailView,
-                    Building = buildingManager,
+                    Building = buildingDetail,
                     Renter = _mapper.Map<RenterProfileEntity>(renter)
                 };
 
@@ -252,7 +269,26 @@ public class ContractsController : ControllerBase
         {
             status = "Success",
             message = "Contract found",
-            data = _mapper.Map<ContractDto>(contractEntity)
+            data = new ContractEntity
+            {
+                ContractId = entity.ContractId,
+                ContractName = entity.ContractName,
+                DateSigned = entity.DateSigned,
+                StartDate = entity.StartDate,
+                CreatedDate = entity.CreatedDate,
+                Description = entity.Description,
+                EndDate = entity.EndDate,
+                LastUpdated = entity.LastUpdated,
+                ContractStatus = entity.ContractStatus,
+                ImageUrl = entity.ImageUrl,
+                PriceForRent = entity.PriceForRent.DecimalToString(),
+                PriceForService = entity.PriceForService.DecimalToString(),
+                PriceForWater = entity.PriceForWater.DecimalToString(),
+                PriceForElectricity = entity.PriceForElectricity.DecimalToString(),
+                //BuildingId = entity.BuildingId,
+                RoomId = entity.RoomId
+                //RenterId = entity.RenterId,
+            }
         });
     }
 

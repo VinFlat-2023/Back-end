@@ -1,4 +1,4 @@
-namespace Domain.CustomEntities.ViewModel.RenterEntity;
+namespace Domain.ViewModel.RenterEntity;
 
 public class RenterProfileEntity
 {

@@ -6,6 +6,7 @@ using Domain.EntityRequest.Service;
 using Domain.EntityRequest.ServiceType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
+using Domain.ViewModel.ServiceEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -41,7 +42,7 @@ public class ServicesController : ControllerBase
 
         var list = await _serviceWrapper.ServicesEntity.GetServiceEntityList(filter, token);
 
-        var resultList = _mapper.Map<IEnumerable<ServiceEntityDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<ServiceDetailEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
@@ -85,7 +86,7 @@ public class ServicesController : ControllerBase
 
         var list = await _serviceWrapper.ServicesEntity.GetServiceEntityList(filter, buildingId, token);
 
-        var resultList = _mapper.Map<IEnumerable<ServiceEntityDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<ServiceDetailEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
