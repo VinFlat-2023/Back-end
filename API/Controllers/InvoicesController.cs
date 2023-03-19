@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
-using Domain.EntitiesDTO.InvoiceDetailDTO;
-using Domain.EntitiesDTO.InvoiceDTO;
-using Domain.EntitiesDTO.InvoiceTypeDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Invoice;
 using Domain.EntityRequest.InvoiceType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.Utils;
+using Domain.ViewModel.InvoiceDetailEntity;
+using Domain.ViewModel.InvoiceEntity;
+using Domain.ViewModel.InvoiceTypeEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -42,7 +42,7 @@ public class InvoicesController : ControllerBase
 
         var list = await _serviceWrapper.Invoices.GetInvoiceList(filter, token);
 
-        var resultList = _mapper.Map<IEnumerable<InvoiceDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<InvoiceRenterDetailEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
@@ -79,7 +79,7 @@ public class InvoicesController : ControllerBase
         {
             status = "Success",
             message = "Invoice found",
-            data = _mapper.Map<InvoiceDto>(entity)
+            data = _mapper.Map<InvoiceRenterDetailEntity>(entity)
         });
     }
 
@@ -101,7 +101,7 @@ public class InvoicesController : ControllerBase
         var list = await _serviceWrapper.Invoices
             .GetInvoiceList(new InvoiceFilter { RenterId = userId }, token);
 
-        var resultList = _mapper.Map<IEnumerable<InvoiceDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<InvoiceRenterDetailEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
@@ -140,7 +140,7 @@ public class InvoicesController : ControllerBase
         var list = await _serviceWrapper.Invoices
             .GetInvoiceList(new InvoiceFilter { RenterId = userId }, token);
 
-        var resultList = _mapper.Map<IEnumerable<InvoiceDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<InvoiceDataDetailEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
@@ -194,7 +194,7 @@ public class InvoicesController : ControllerBase
 
         // false = paid, true = unpaid
 
-        var resultList = _mapper.Map<IEnumerable<InvoiceDto>>(entities);
+        var resultList = _mapper.Map<IEnumerable<InvoiceDataDetailEntity>>(entities);
 
         return entities != null
             ? Ok(new
@@ -261,13 +261,13 @@ public class InvoicesController : ControllerBase
         {
             status = "Success",
             message = "Invoice found",
-            data = _mapper.Map<InvoiceDto>(entity)
+            data = _mapper.Map<InvoiceDataDetailEntity>(entity)
         });
     }
 
     // PUT: api/Invoices/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "[Authorize] Update Invoice info  (For management)",
+    [SwaggerOperation(Summary = "[Authorize] Update Invoice info (For management)",
         Description = "date format d/M/YYYY")]
     [HttpPut("{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
@@ -302,7 +302,7 @@ public class InvoicesController : ControllerBase
         {
             status = "Success",
             message = "Invoice updated",
-            data = _mapper.Map<InvoiceDto>(result)
+            data = _mapper.Map<InvoiceRenterDetailEntity>(result)
         });
     }
 
@@ -418,7 +418,7 @@ public class InvoicesController : ControllerBase
                 data = ""
             });
 
-        var resultList = _mapper.Map<IEnumerable<InvoiceTypeDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<InvoiceTypeDetailEntity>>(list);
 
         return list != null
             ? Ok(new
@@ -454,7 +454,7 @@ public class InvoicesController : ControllerBase
             {
                 status = "Success",
                 message = "Invoice type found",
-                data = _mapper.Map<InvoiceTypeDto>(entity)
+                data = _mapper.Map<InvoiceTypeDetailEntity>(entity)
             });
     }
 
@@ -527,7 +527,7 @@ public class InvoicesController : ControllerBase
             {
                 status = "Success",
                 message = "Invoice type updated",
-                data = _mapper.Map<InvoiceTypeDto>(result)
+                data = ""
             });
     }
 
@@ -573,7 +573,7 @@ public class InvoicesController : ControllerBase
 
         var list = await _serviceWrapper.InvoiceDetails.GetInvoiceDetails(filter, token);
 
-        var resultList = _mapper.Map<IEnumerable<InvoiceDetailDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<InvoiceDataDetailEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
@@ -609,7 +609,7 @@ public class InvoicesController : ControllerBase
             {
                 status = "Success",
                 message = "Invoice detail found",
-                data = _mapper.Map<InvoiceDto>(entity)
+                data = _mapper.Map<InvoiceDataDetailEntity>(entity)
             });
     }
 
@@ -632,7 +632,7 @@ public class InvoicesController : ControllerBase
             {
                 status = "Success",
                 message = "Invoice detail found",
-                data = _mapper.Map<InvoiceDto>(result)
+                data = _mapper.Map<InvoiceDataDetailEntity>(result)
             });
     }
 
@@ -650,7 +650,7 @@ public class InvoicesController : ControllerBase
             {
                 status = "Success",
                 message = "Invoice detail found",
-                data = _mapper.Map<InvoiceDto>(entity)
+                data = _mapper.Map<InvoiceDataDetailEntity>(entity)
             });
     }
 

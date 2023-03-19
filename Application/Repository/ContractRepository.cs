@@ -23,6 +23,7 @@ public class ContractRepository : IContractRepository
     {
         // TODO : Compare date time
         return _context.Contracts
+            .Include(x => x.Renter)
             .Where(x =>
                 (filters.ContractName == null || x.ContractName.Contains(filters.ContractName))
                 && (filters.Description == null || x.Description.Contains(filters.Description))
@@ -61,6 +62,7 @@ public class ContractRepository : IContractRepository
     public IQueryable<Contract?> GetContractDetail(int contractId)
     {
         return _context.Contracts
+            .Include(x => x.Renter)
             .Include(x => x.Flat)
             .ThenInclude(x => x.Rooms)
             .Where(x => x.ContractId == contractId)

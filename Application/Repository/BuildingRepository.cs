@@ -25,9 +25,6 @@ public class BuildingRepository : IBuildingRepository
             .Include(x => x.Area)
             .Include(x => x.Account)
             .ThenInclude(x => x.Role)
-            .Where(x => x.AreaId == x.Area.AreaId)
-            .Where(x => x.AccountId == x.Account.AccountId)
-            .Where(x => x.Account.RoleId == x.Account.Role.RoleId)
             // Filter starts here
             .Where(x =>
                 (filter.BuildingName == null || x.BuildingName.Contains(filter.BuildingName))

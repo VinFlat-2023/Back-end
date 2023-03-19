@@ -1,9 +1,9 @@
 using AutoMapper;
-using Domain.EntitiesDTO.RoleDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Role;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
+using Domain.ViewModel.RoleEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -37,7 +37,7 @@ public class RolesController : ControllerBase
 
         var list = await _serviceWrapper.Roles.GetRoleList(filter, token);
 
-        var resultList = _mapper.Map<IEnumerable<RoleDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<RoleDetailEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
@@ -73,7 +73,7 @@ public class RolesController : ControllerBase
             {
                 status = "Success",
                 message = "Role found",
-                data = _mapper.Map<RoleDto>(entity)
+                data = _mapper.Map<RoleDetailEntity>(entity)
             });
     }
 
@@ -109,8 +109,8 @@ public class RolesController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "Account deleted",
-            data = _mapper.Map<RoleDto>(result)
+            message = "Role deleted",
+            data = _mapper.Map<RoleDetailEntity>(result)
         });
     }
 

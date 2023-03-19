@@ -26,6 +26,7 @@ public class InvoiceRepository : IInvoiceRepository
         return _context.Invoices
             .Include(x => x.Account)
             .Include(x => x.Renter)
+            .Include(x => x.InvoiceDetails)
             // Filter starts here
             .Where(x =>
                 (filter.Name == null || x.Name.Contains(filter.Name))
@@ -48,6 +49,7 @@ public class InvoiceRepository : IInvoiceRepository
         return await _context.Invoices
             .Include(x => x.Account)
             .Include(x => x.Renter)
+            .Include(x => x.InvoiceDetails)
             .FirstOrDefaultAsync(x => x.InvoiceId == invoiceId);
     }
 

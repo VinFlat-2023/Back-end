@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using API.Extension;
 using AutoMapper;
-using Domain.EntitiesDTO.ContractDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Contract;
 using Domain.FilterRequests;
@@ -46,7 +45,7 @@ public class ContractsController : ControllerBase
 
         var list = await _serviceWrapper.Contracts.GetContractList(filter, token);
 
-        var resultList = _mapper.Map<IEnumerable<ContractDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
@@ -86,7 +85,7 @@ public class ContractsController : ControllerBase
         {
             status = "Success",
             message = "Contract found",
-            data = new ContractEntity
+            data = new ContractMeterDetailEntity
             {
                 ContractId = entity.ContractId,
                 ContractName = entity.ContractName,
@@ -179,7 +178,7 @@ public class ContractsController : ControllerBase
                     BuildingPhoneNumber = building.BuildingPhoneNumber
                 };
 
-                var contractDetailView = new ContractEntity
+                var contractDetailView = new ContractMeterDetailEntity
                 {
                     ContractId = entity.ContractId,
                     ContractName = entity.ContractName,
@@ -202,7 +201,7 @@ public class ContractsController : ControllerBase
 
                 var contractViewModel = new ContractDetailEntity
                 {
-                    Contract = contractDetailView,
+                    ContractMeterDetail = contractDetailView,
                     Building = buildingDetail,
                     Renter = _mapper.Map<RenterProfileEntity>(renter)
                 };
@@ -269,7 +268,7 @@ public class ContractsController : ControllerBase
         {
             status = "Success",
             message = "Contract found",
-            data = new ContractEntity
+            data = new ContractMeterDetailEntity
             {
                 ContractId = entity.ContractId,
                 ContractName = entity.ContractName,

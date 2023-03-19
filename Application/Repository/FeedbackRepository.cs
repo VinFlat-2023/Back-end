@@ -22,6 +22,9 @@ internal class FeedbackRepository : IFeedbackRepository
     public IQueryable<Feedback> GetFeedbackList(FeedbackFilter filters)
     {
         return _context.Feedbacks
+            .Include(x => x.Flat)
+            .Include(x => x.Renter)
+            .Include(x => x.FeedbackType)
             .Where(x =>
                 (filters.FeedbackTitle == null || x.FeedbackTitle.Contains(filters.FeedbackTitle))
                 && (filters.Status == null || x.Status == filters.Status)
@@ -40,6 +43,9 @@ internal class FeedbackRepository : IFeedbackRepository
     public IQueryable<Feedback> GetFeedbackDetail(int? feedbackId)
     {
         return _context.Feedbacks
+            .Include(x => x.Flat)
+            .Include(x => x.Renter)
+            .Include(x => x.FeedbackType)
             .Where(x => x.FeedbackId == feedbackId);
     }
 

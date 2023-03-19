@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Domain.EntitiesDTO.ServiceDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Service;
 using Domain.EntityRequest.ServiceType;
@@ -208,7 +207,7 @@ public class ServicesController : ControllerBase
             {
                 status = "Success",
                 message = "Service found",
-                data = _mapper.Map<ServiceEntityDto>(entity)
+                data = _mapper.Map<ServiceDetailEntity>(entity)
             });
     }
 
@@ -291,7 +290,12 @@ public class ServicesController : ControllerBase
                 data = ""
             });
 
-        return CreatedAtAction("GetServiceEntity", new { id = result.ServiceId }, result);
+        return Ok(new
+        {
+            status = "Success",
+            message = "Service added",
+            data = ""
+        });
     }
 
     // DELETE: api/ServiceEntitys/5

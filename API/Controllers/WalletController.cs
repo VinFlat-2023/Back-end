@@ -1,6 +1,5 @@
-﻿using AutoMapper;
-using Domain.EntitiesDTO.WalletDTO;
-using Domain.EntitiesDTO.WalletTypeDTO;
+﻿/*
+using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Wallet;
 using Domain.EnumEntities;
@@ -154,3 +153,5 @@ public class WalletController : ControllerBase
         return Ok(_mapper.Map<WalletDto>(walletFound));
     }
 }
+*/
+

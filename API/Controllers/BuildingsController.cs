@@ -1,9 +1,9 @@
 using AutoMapper;
-using Domain.EntitiesDTO.BuildingDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Building;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
+using Domain.ViewModel.BuildingEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -38,7 +38,7 @@ public class BuildingsController : ControllerBase
 
         var list = await _serviceWrapper.Buildings.GetBuildingList(filter, token);
 
-        var resultList = _mapper.Map<IEnumerable<BuildingDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<BuildingDetailEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
@@ -75,7 +75,7 @@ public class BuildingsController : ControllerBase
         {
             status = "Success",
             message = "Building found",
-            data = _mapper.Map<BuildingDto>(entity)
+            data = _mapper.Map<BuildingDetailEntity>(entity)
         });
     }
 
@@ -157,7 +157,12 @@ public class BuildingsController : ControllerBase
                 data = ""
             });
 
-        return CreatedAtAction("GetBuilding", new { id = result.BuildingId }, result);
+        return Ok(new
+        {
+            status = "Success",
+            message = "Building created",
+            data = ""
+        });
     }
 
     // DELETE: api/Buildings/5

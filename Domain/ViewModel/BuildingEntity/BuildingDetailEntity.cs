@@ -12,8 +12,8 @@ public class BuildingDetailEntity
     public decimal? CoordinateX { get; set; }
     public decimal? CoordinateY { get; set; }
     public bool Status { get; set; }
-    public int AreaId { get; set; }
     public int AccountId { get; set; }
-    public virtual BuildingManagerDetailEntity Account { get; set; } = null!;
-    public virtual AreaDetail Area { get; set; } = null!;
+    public AccountBuildingDetailEntity Account { get; set; }
+    public int AreaId { get; set; }
+    public AreaDetailEntity Area { get; set; }
 }

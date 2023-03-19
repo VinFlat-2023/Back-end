@@ -1,13 +1,13 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
-using Domain.EntitiesDTO.TicketDTO;
-using Domain.EntitiesDTO.TicketTypeDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Ticket;
 using Domain.EntityRequest.TicketType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.Utils;
+using Domain.ViewModel.TicketEntity;
+using Domain.ViewModel.TicketTypeEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -59,7 +59,7 @@ public class TicketsController : ControllerBase
                         data = ""
                     });
 
-                var resultList = _mapper.Map<IEnumerable<TicketDto>>(list);
+                var resultList = _mapper.Map<IEnumerable<TicketDetailEntity>>(list);
 
                 return Ok(new
                 {
@@ -419,7 +419,7 @@ public class TicketsController : ControllerBase
 
         var list = await _serviceWrapper.TicketTypes.GetTicketTypeList(filter, token);
 
-        var resultList = _mapper.Map<IEnumerable<TicketTypeDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<TicketTypeDetailEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
@@ -456,7 +456,7 @@ public class TicketsController : ControllerBase
             {
                 status = "Success",
                 message = "Ticket type found",
-                data = _mapper.Map<TicketTypeDto>(entity)
+                data = _mapper.Map<TicketTypeDetailEntity>(entity)
             });
     }
 
@@ -538,7 +538,12 @@ public class TicketsController : ControllerBase
                 message = "Request type not found",
                 data = ""
             });
-        return CreatedAtAction("GetTicketType", new { id = result.TicketTypeId }, result);
+        return Ok(new
+        {
+            status = "Success",
+            message = "Request type created",
+            data = ""
+        });
     }
 
     // DELETE: api/RequestTypes/5

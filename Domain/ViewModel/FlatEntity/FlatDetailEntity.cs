@@ -11,6 +11,8 @@ public class FlatDetailEntity
     public string Status { get; set; }
     public int MaxRoom { get; set; }
     public int AvailableRoom { get; set; }
+    public int FlatTypeId { get; set; }
     public FlatTypeDetailEntity FlatType { get; set; }
+    public int BuildingId { get; set; }
     public BuildingBasicDetailEntity Building { get; set; }
 }

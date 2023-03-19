@@ -1,6 +1,5 @@
 using API.Extension;
 using AutoMapper;
-using Domain.EntitiesDTO.RenterDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Renter;
 using Domain.FilterRequests;
@@ -9,6 +8,7 @@ using Domain.Utils;
 using Domain.ViewModel.BuildingEntity;
 using Domain.ViewModel.FlatEntity;
 using Domain.ViewModel.RentalEntity;
+using Domain.ViewModel.RenterEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -45,7 +45,7 @@ public class RentersController : ControllerBase
 
         var list = await _serviceWrapper.Renters.GetRenterList(filter, token);
 
-        var resultList = _mapper.Map<IEnumerable<RenterDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<RenterProfileEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
@@ -98,7 +98,7 @@ public class RentersController : ControllerBase
             {
                 status = "Success",
                 message = "Renter found",
-                data = _mapper.Map<RenterDto>(entity)
+                data = _mapper.Map<RenterProfileEntity>(entity)
             });
     }
 
@@ -159,7 +159,7 @@ public class RentersController : ControllerBase
             ElectricityMeterAfter = contract.Flat.ElectricityMeterAfter
         };
 
-        var buildingManager = new BuildingManagerDetailEntity
+        var buildingManager = new AccountBuildingDetailEntity
         {
             FullName = building.Account.FullName,
             Phone = building.Account.Phone
@@ -170,7 +170,7 @@ public class RentersController : ControllerBase
             BuildingId = building.BuildingId,
             BuildingName = building.BuildingName,
             BuildingPhoneNumber = building.BuildingPhoneNumber,
-            BuildingManager = buildingManager
+            Account = buildingManager
         };
 
         var rentalDetailEntity = new RentalDetailEntity
@@ -196,6 +196,7 @@ public class RentersController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update renter by id (For management and renter)")]
     public async Task<IActionResult> PutRenter([FromBody] RenterUpdateRequest renter, int id)
     {
+        // TODO : implement back jwt validator here
         /*
         var userRole = User.Identities
             .FirstOrDefault()?.Claims

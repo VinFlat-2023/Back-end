@@ -1,10 +1,10 @@
 using AutoMapper;
-using Domain.EntitiesDTO.AccountDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Account;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.Utils;
+using Domain.ViewModel.AccountEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -40,7 +40,7 @@ public class AccountsController : ControllerBase
 
         var list = await _serviceWrapper.Accounts.GetAccountList(filter, token);
 
-        var resultList = _mapper.Map<IEnumerable<AccountDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<AccountDetailEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
@@ -77,7 +77,7 @@ public class AccountsController : ControllerBase
             {
                 status = "Success",
                 message = "Account found",
-                data = _mapper.Map<AccountDto>(entity)
+                data = _mapper.Map<AccountDetailEntity>(entity)
             });
     }
 

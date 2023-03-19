@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Domain.EntitiesDTO.AreaDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Area;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
+using Domain.ViewModel.AreaEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -38,7 +38,7 @@ public class AreasController : ControllerBase
 
         var list = await _serviceWrapper.Areas.GetAreaList(filter, token);
 
-        var resultList = _mapper.Map<IEnumerable<AreaDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<AreaDetailEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
@@ -75,7 +75,7 @@ public class AreasController : ControllerBase
         {
             status = "Success",
             message = "Area found",
-            data = _mapper.Map<AreaDto>(entity)
+            data = _mapper.Map<AreaDetailEntity>(entity)
         });
     }
 
@@ -114,7 +114,7 @@ public class AreasController : ControllerBase
         {
             status = "Success",
             message = "Area updated",
-            data = _mapper.Map<AreaDto>(result)
+            data = ""
         });
     }
 
@@ -148,7 +148,12 @@ public class AreasController : ControllerBase
                 message = "Area failed to create",
                 data = ""
             });
-        return CreatedAtAction("GetArea", new { id = result.AreaId }, result);
+        return Ok(new
+        {
+            status = "Success",
+            message = "Area created",
+            data = ""
+        });
     }
 
     // DELETE: api/Areas/5

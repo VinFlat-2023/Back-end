@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Domain.EntitiesDTO.FeedbackDTO;
-using Domain.EntitiesDTO.FeedbackTypeDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.FeedBack;
 using Domain.EntityRequest.FeedbackType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
+using Domain.ViewModel.FeedbackEntity;
+using Domain.ViewModel.FeedbackTypeDetail;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -43,7 +43,7 @@ public class FeedbacksController : ControllerBase
         if (list != null && !list.Any())
             return NotFound("No Feedback available");
 
-        var resultList = _mapper.Map<IEnumerable<FeedbackDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<FeedbackDetailEntity>>(list);
 
         return list != null
             ? Ok(new
@@ -63,8 +63,18 @@ public class FeedbacksController : ControllerBase
     {
         var entity = await _serviceWrapper.Feedbacks.GetFeedbackById(id);
         if (entity == null)
-            return NotFound("Feedback not found");
-        return Ok(_mapper.Map<FeedbackDto>(entity));
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Feedback not found",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Feedback found",
+            data = _mapper.Map<FeedbackDetailEntity>(entity)
+        });
     }
 
     // PUT: api/Feedbacks/5
@@ -91,9 +101,19 @@ public class FeedbacksController : ControllerBase
 
         var result = await _serviceWrapper.Feedbacks.UpdateFeedback(updateFeedback);
         if (result == null)
-            return NotFound("Feedback not found");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Feedback not found",
+                data = ""
+            });
 
-        return Ok("Feedback updated");
+        return Ok(new
+        {
+            status = "Success",
+            message = "Feedback updated",
+            data = ""
+        });
     }
 
     //TODO : get feedback from renter ID
@@ -118,13 +138,28 @@ public class FeedbacksController : ControllerBase
 
         var validation = await _validator.ValidateParams(addNewFeedback, null);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.Feedbacks.AddFeedback(addNewFeedback);
         if (result == null)
-            return BadRequest();
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Feedback not found",
+                data = ""
+            });
 
-        return CreatedAtAction("GetFeedback", new { id = result.FeedbackId }, result);
+        return Ok(new
+        {
+            status = "Success",
+            message = "Feedback created",
+            data = ""
+        });
     }
 
     // DELETE: api/Feedbacks/5
@@ -135,9 +170,19 @@ public class FeedbacksController : ControllerBase
     {
         var result = await _serviceWrapper.Feedbacks.DeleteFeedback(id);
         if (!result)
-            return NotFound("Feedback not found");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Feedback not found",
+                data = ""
+            });
 
-        return Ok("Feedback deleted");
+        return Ok(new
+        {
+            status = "Success",
+            message = "Feedback deleted",
+            data = ""
+        });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get Feedback Type List")]
@@ -149,19 +194,24 @@ public class FeedbacksController : ControllerBase
         var filter = _mapper.Map<FeedbackTypeFilter>(request);
 
         var list = await _serviceWrapper.FeedbackTypes.GetFeedbackTypeList(filter, token);
-        if (list != null && !list.Any())
-            return NotFound("No Feedback type available");
 
-        var resultList = _mapper.Map<IEnumerable<FeedbackTypeDto>>(list);
+        var resultList = _mapper.Map<IEnumerable<FeedbackTypeDetailEntity>>(list);
 
-        return list != null
-            ? Ok(new
+        return list != null && !list.Any()
+            ? NotFound(new
             {
-                resultList,
+                status = "Not Found",
+                message = "No Feedback Type available",
+                data = ""
+            })
+            : Ok(new
+            {
+                status = "Success",
+                message = "List found",
+                data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
-            })
-            : BadRequest("Feedback type list is empty");
+            });
     }
 
     // GET: api/FeedbackTypes/5
@@ -173,9 +223,19 @@ public class FeedbacksController : ControllerBase
         var entity = await _serviceWrapper.FeedbackTypes
             .GetFeedbackTypeById(id);
         if (entity == null)
-            return NotFound("Feedback type not found");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Feedback type not found",
+                data = ""
+            });
 
-        return Ok(_mapper.Map<FeedbackTypeDto>(entity));
+        return Ok(new
+        {
+            status = "Success",
+            message = "Feedback type found",
+            data = _mapper.Map<FeedbackTypeDetailEntity>(entity)
+        });
     }
 
     // PUT: api/FeedbackTypes/5
@@ -193,12 +253,27 @@ public class FeedbacksController : ControllerBase
 
         var validation = await _validator.ValidateParams(updateFeedBackType, null);
         if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
 
         var result = await _serviceWrapper.FeedbackTypes.UpdateFeedbackType(updateFeedBackType);
         if (result == null)
-            return NotFound("Feedback type not found");
-        return Ok("Feedback type updated");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Feedback type not found",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Feedback type updated",
+            data = ""
+        });
     }
 
     // POST: api/FeedbackTypes
@@ -214,8 +289,18 @@ public class FeedbacksController : ControllerBase
         };
         var result = await _serviceWrapper.FeedbackTypes.AddFeedbackType(newFeedbackType);
         if (result == null)
-            return NotFound("Feedback type not found");
-        return CreatedAtAction("GetFeedbackType", new { id = result.FeedbackTypeId }, result);
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Feedback type failed to add",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Feedback type added",
+            data = ""
+        });
     }
 
     // DELETE: api/FeedbackTypes/5
@@ -226,7 +311,17 @@ public class FeedbacksController : ControllerBase
     {
         var result = await _serviceWrapper.Feedbacks.DeleteFeedback(id);
         if (!result)
-            return NotFound("Feedback type not found");
-        return Ok("Feedback type deleted");
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Feedback type not found",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Feedback type deleted",
+            data = ""
+        });
     }
 }
