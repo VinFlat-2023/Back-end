@@ -173,7 +173,7 @@ public class ContractsController : ControllerBase
                         data = ""
                     });
 
-                var buildingDetail = new BuildingDetailEntity
+                var buildingDetail = new BuildingContractDetailEntity
                 {
                     BuildingName = building.BuildingName,
                     BuildingPhoneNumber = building.BuildingPhoneNumber

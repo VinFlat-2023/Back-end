@@ -1,5 +1,4 @@
 using AutoMapper;
-using Domain.EntitiesDTO.UniversityDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.University;
 using Domain.FilterRequests;

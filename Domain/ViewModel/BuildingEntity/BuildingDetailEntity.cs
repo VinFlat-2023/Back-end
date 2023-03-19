@@ -1,8 +1,19 @@
+using Domain.ViewModel.AreaEntity;
+
 namespace Domain.ViewModel.BuildingEntity;
 
 public class BuildingDetailEntity
 {
-    public string BuildingName { get; set; }
-    public string BuildingPhoneNumber { get; set; }
-    public BuildingManagerDetailEntity BuildingManager { get; set; }
+    public int BuildingId { get; set; }
+    public string BuildingName { get; set; } = null!;
+    public string? Description { get; set; }
+    public int? TotalRooms { get; set; }
+    public string? ImageUrl { get; set; }
+    public decimal? CoordinateX { get; set; }
+    public decimal? CoordinateY { get; set; }
+    public bool Status { get; set; }
+    public int AreaId { get; set; }
+    public int AccountId { get; set; }
+    public virtual BuildingManagerDetailEntity Account { get; set; } = null!;
+    public virtual AreaDetail Area { get; set; } = null!;
 }

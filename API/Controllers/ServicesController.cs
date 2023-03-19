@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Domain.EntitiesDTO.ServiceDTO;
-using Domain.EntitiesDTO.ServiceTypeDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Service;
 using Domain.EntityRequest.ServiceType;

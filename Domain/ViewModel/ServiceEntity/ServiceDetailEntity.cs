@@ -5,6 +5,7 @@ namespace Domain.ViewModel.ServiceEntity;
 
 public class ServiceDetailEntity
 {
+    public int ServiceId { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
     public bool Status { get; set; }

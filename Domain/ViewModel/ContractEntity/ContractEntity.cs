@@ -1,3 +1,5 @@
+using Domain.ViewModel.BuildingEntity;
+
 namespace Domain.ViewModel.ContractEntity;
 
 public class ContractEntity
@@ -15,11 +17,6 @@ public class ContractEntity
     public string PriceForRent { get; set; } = null!;
     public string PriceForWater { get; set; } = null!;
     public string PriceForElectricity { get; set; } = null!;
-    public string PriceForService { get; set; } = null!;
-
-    public int? BuildingId { get; set; }
-
-    //public int FlatId { get; set; }
+    public string PriceForService { get; set; } 
     public int? RoomId { get; set; }
-    //public int RenterId { get; set; }
 }

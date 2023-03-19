@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Domain.EntitiesDTO.FlatDTO;
-using Domain.EntitiesDTO.FlatTypeDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Flat;
 using Domain.EntityRequest.FlatType;
@@ -199,7 +197,7 @@ public class FlatsController : ControllerBase
     public async Task<IActionResult> GetFlatTypes([FromQuery] FlatTypeFilterRequest request, CancellationToken token)
     {
         var filter = _mapper.Map<FlatTypeFilter>(request);
-        
+
         var list = await _serviceWrapper.FlatTypes.GetFlatTypeList(filter, token);
 
         var resultList = _mapper.Map<IEnumerable<FlatTypeDetailEntity>>(list);

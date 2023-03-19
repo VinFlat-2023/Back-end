@@ -465,9 +465,9 @@ public class AutoMapper : Profile
             .ReverseMap();
         CreateMap<BuildingFilterRequest, BuildingFilter>()
             .ReverseMap();
-        CreateMap<Building, BuildingDetailEntity>()
+        CreateMap<Building, BuildingContractDetailEntity>()
             .ForAllMembers(o => o.ExplicitExpansion());
-        CreateMap<BuildingDetailEntity, Building>()
+        CreateMap<BuildingContractDetailEntity, Building>()
             .ReverseMap();
         CreateMap<Building, BuildingManagerDetailEntity>()
             .ForAllMembers(o => o.ExplicitExpansion());

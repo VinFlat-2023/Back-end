@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Domain.EntitiesDTO.MajorDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Major;
 using Domain.FilterRequests;

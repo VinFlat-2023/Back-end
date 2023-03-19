@@ -165,8 +165,9 @@ public class RentersController : ControllerBase
             Phone = building.Account.Phone
         };
 
-        var buildingDetail = new BuildingDetailEntity
+        var buildingDetail = new BuildingContractDetailEntity
         {
+            BuildingId = building.BuildingId,
             BuildingName = building.BuildingName,
             BuildingPhoneNumber = building.BuildingPhoneNumber,
             BuildingManager = buildingManager
