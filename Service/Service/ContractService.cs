@@ -53,6 +53,23 @@ public class ContractService : IContractService
         return pagedList;
     }
 
+    public async Task<PagedList<Contract>?> GetContractList(ContractFilter filters, int renterId,
+        CancellationToken token)
+    {
+        var queryable = _repositoryWrapper.Contracts.GetContractList(filters, renterId);
+
+        if (!queryable.Any())
+            return null;
+
+        var page = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var size = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
+        var pagedList = await PagedList<Contract>
+            .Create(queryable, page, size, token);
+
+        return pagedList;
+    }
+
     public async Task<Contract?> GetContractById(int contractId)
     {
         return await _repositoryWrapper.Contracts.GetContractDetail(contractId)

@@ -39,6 +39,26 @@ public class ContractRepository : IContractRepository
             .AsNoTracking();
     }
 
+    public IQueryable<Contract> GetContractList(ContractFilter filters, int renterId)
+    {
+        return _context.Contracts
+            .Include(x => x.Renter)
+            .Where(x => x.RenterId == renterId)
+            .Where(x =>
+                (filters.ContractName == null || x.ContractName.Contains(filters.ContractName))
+                && (filters.Description == null || x.Description.Contains(filters.Description))
+                && (filters.PriceForWater == null || x.PriceForWater == filters.PriceForWater)
+                && (filters.PriceForRent == null || x.PriceForRent == filters.PriceForRent)
+                && (filters.PriceForElectricity == null || x.PriceForElectricity == filters.PriceForElectricity)
+                && (filters.PriceForService == null || x.PriceForService == filters.PriceForService)
+                && (filters.ContractStatus == null || x.ContractStatus == filters.ContractStatus)
+                && (filters.DateSigned == null || x.DateSigned == filters.DateSigned)
+                && (filters.EndDate == null || x.EndDate == filters.EndDate)
+                && (filters.StartDate == null || x.StartDate == filters.StartDate)
+                && (filters.LastUpdated == null || x.LastUpdated == filters.LastUpdated))
+            .AsNoTracking();
+    }
+
     public IQueryable<Contract> GetContractHistoryList(ContractHistoryFilter filters)
     {
         return _context.Contracts

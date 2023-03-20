@@ -65,6 +65,38 @@ public class ContractsController : ControllerBase
     }
     //TODO get contract by renter ID
 
+    // GET: api/Contract
+    [SwaggerOperation(Summary = "Get contract list (For management)")]
+    [Authorize(Roles = "Renter")]
+    [HttpGet("renter")]
+    public async Task<IActionResult> GetContractsByRenterId([FromQuery] ContractFilterRequest request,
+        CancellationToken token)
+    {
+        var renterId = Parse(User.Identity?.Name);
+
+        var filter = _mapper.Map<ContractFilter>(request);
+
+        var list = await _serviceWrapper.Contracts.GetContractList(filter, renterId, token);
+
+        var resultList = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(list);
+
+        return list != null && !list.Any()
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "No contract available",
+                data = ""
+            })
+            : Ok(new
+            {
+                status = "Success",
+                message = "Contract list found",
+                data = resultList,
+                totalPage = list.TotalPages,
+                totalCount = list.TotalCount
+            });
+    }
+
     // GET: api/Contract/5
     [SwaggerOperation(Summary = "[Authorize] Get Contract using id (For management)")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
