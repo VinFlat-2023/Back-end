@@ -8,8 +8,7 @@ public interface IAreaService
 {
     public Task<PagedList<Area>?> GetAreaList(AreaFilter filters, CancellationToken token);
     public Task<Area?> GetAreaById(int? areaId);
-    public Task<Area?> AddArea(Area area);
-    public Task<Area?> UpdateArea(Area area);
-    public Task<bool> ToggleAreaStatus(int areaId);
-    public Task<bool> DeleteArea(int areaId);
+    public Task<RepositoryResponse> AddArea(Area area);
+    public Task<RepositoryResponse> UpdateArea(Area area);
+    public Task<RepositoryResponse> DeleteArea(int areaId);
 }

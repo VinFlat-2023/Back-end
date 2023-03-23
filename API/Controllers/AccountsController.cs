@@ -168,6 +168,7 @@ public class AccountsController : ControllerBase
         };
 
         var validation = await _validator.ValidateParams(updateAccount, id, User);
+        
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -178,19 +179,21 @@ public class AccountsController : ControllerBase
 
         var result = await _serviceWrapper.Accounts.UpdateAccount(updateAccount);
 
-        if (result == null)
-            return NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Updating account failed",
+                message = result.Message,
                 data = ""
-            });
-        return Ok(new
-        {
-            status = "Success",
-            message = "Account updated",
-            data = ""
-        });
+            }),
+        };
     }
 
     [SwaggerOperation(Summary = "Update account info")]
@@ -225,42 +228,45 @@ public class AccountsController : ControllerBase
 
         var result = await _serviceWrapper.Accounts.UpdatePasswordAccount(updatePasswordAccount);
 
-        if (result == null)
-            return NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Update password failed",
+                message = result.Message,
                 data = ""
-            });
-
-        return Ok(new
-        {
-            status = "Success",
-            message = "Account password updated",
-            data = ""
-        });
-    }
+            }),
+        };    }
 
 
     [SwaggerOperation(Summary = "Activate and Deactivate Account")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [HttpPut("toggle-account/{id:int}")]
+    [HttpPatch("toggle-account/{id:int}")]
     public async Task<IActionResult> ToggleAccountStatus(int id)
     {
         var result = await _serviceWrapper.Accounts.ToggleAccountStatus(id);
-        if (!result)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Account status failed to update",
-                data = ""
-            });
-        return Ok(new
+        
+        return result.IsSuccess switch
         {
-            status = "Success",
-            message = "Account status updated",
-            data = ""
-        });
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            }),
+        };
     }
 
     // DELETE: api/Accounts/5
@@ -278,6 +284,7 @@ public class AccountsController : ControllerBase
                 message = "Account not found",
                 data = ""
             });
+
         var listUserDevice =
             await _serviceWrapper.Devices.GetDeviceByUserName(account.Username);
 
@@ -286,19 +293,21 @@ public class AccountsController : ControllerBase
 
         var result = await _serviceWrapper.Accounts.DeleteAccount(id);
 
-        if (!result)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Account failed to delete",
-                data = ""
-            });
-
-        return Ok(new
+        return result.IsSuccess switch
         {
-            status = "Success",
-            message = "Account deleted",
-            data = ""
-        });
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            }),
+        };
     }
+
 }

@@ -64,13 +64,16 @@ public class AreasController : ControllerBase
     public async Task<IActionResult> GetArea(int id)
     {
         var entity = await _serviceWrapper.Areas.GetAreaById(id);
+        
         if (entity == null)
+            
             return NotFound(new
             {
                 status = "Not Found",
                 message = "Area not found",
                 data = ""
             });
+        
         return Ok(new
         {
             status = "Success",
@@ -94,6 +97,7 @@ public class AreasController : ControllerBase
         };
 
         var validation = await _validator.ValidateParams(updateArea, id);
+        
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -103,21 +107,26 @@ public class AreasController : ControllerBase
             });
 
         var result = await _serviceWrapper.Areas.UpdateArea(updateArea);
-        if (result == null)
-            return NotFound(new
+
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Area not found",
+                message = result.Message,
                 data = ""
-            });
-        return Ok(new
-        {
-            status = "Success",
-            message = "Area updated",
-            data = ""
-        });
+            }),
+        };
+        
     }
-
+    
+    
     // POST: api/Areas
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Create area (For management)")]
@@ -133,6 +142,7 @@ public class AreasController : ControllerBase
         };
 
         var validation = await _validator.ValidateParams(newArea, null);
+        
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -140,20 +150,24 @@ public class AreasController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+        
         var result = await _serviceWrapper.Areas.AddArea(newArea);
-        if (result == null)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Area failed to create",
-                data = ""
-            });
-        return Ok(new
+        
+        return result.IsSuccess switch
         {
-            status = "Success",
-            message = "Area created",
-            data = ""
-        });
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            }),
+        };
     }
 
     // DELETE: api/Areas/5
@@ -163,19 +177,22 @@ public class AreasController : ControllerBase
     public async Task<IActionResult> DeleteArea(int id)
     {
         var result = await _serviceWrapper.Areas.DeleteArea(id);
-        if (!result)
-            return NotFound(new
+
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Area not found",
+                message = result.Message,
                 data = ""
-            });
-
-        return Ok(new
-        {
-            status = "Success",
-            message = "Area deleted",
-            data = ""
-        });
+            }),
+        };
     }
+
 }

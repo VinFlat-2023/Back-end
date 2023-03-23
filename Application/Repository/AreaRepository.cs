@@ -1,4 +1,5 @@
 ﻿using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -45,11 +46,15 @@ internal class AreaRepository : IAreaRepository
     /// </summary>
     /// <param name="area"></param>
     /// <returns></returns>
-    public async Task<Area> AddArea(Area area)
+    public async Task<RepositoryResponse> AddArea(Area area)
     {
         await _context.Areas.AddAsync(area);
         await _context.SaveChangesAsync();
-        return area;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Area added successfully"
+        };
     }
 
     /// <summary>
@@ -57,21 +62,29 @@ internal class AreaRepository : IAreaRepository
     /// </summary>
     /// <param name="area"></param>
     /// <returns></returns>
-    public async Task<Area?> UpdateArea(Area? area)
+    public async Task<RepositoryResponse> UpdateArea(Area? area)
     {
         var areaData = await _context.Areas
             .FirstOrDefaultAsync(x => x.AreaId == area!.AreaId);
 
         if (areaData == null)
-            return null;
-
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Area not found"
+            };
+        
         areaData.Location = area?.Location ?? areaData.Location;
         areaData.Name = area?.Name ?? areaData.Name;
         areaData.Status = area?.Status ?? areaData.Status;
 
         await _context.SaveChangesAsync();
 
-        return areaData;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Area updated successfully"
+        };
     }
 
     /// <summary>
@@ -79,15 +92,26 @@ internal class AreaRepository : IAreaRepository
     /// </summary>
     /// <param name="areaId"></param>
     /// <returns></returns>
-    public async Task<bool> ToggleArea(int areaId)
+    public async Task<RepositoryResponse> ToggleArea(int areaId)
     {
         var areaFound = await _context.Areas
             .FirstOrDefaultAsync(x => x.AreaId == areaId);
+        
         if (areaFound == null)
-            return false;
+            return new RepositoryResponse
+            {
+                Message = "Area not found",
+                IsSuccess = false
+            };        
         _ = areaFound.Status == !areaFound.Status;
         await _context.SaveChangesAsync();
-        return true;
+        
+        return new RepositoryResponse
+        {
+            Message = "Area status toggled successfully",
+            IsSuccess = true
+        };
+        
     }
 
     /// <summary>
@@ -95,15 +119,25 @@ internal class AreaRepository : IAreaRepository
     /// </summary>
     /// <param name="areaId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteArea(int areaId)
+    public async Task<RepositoryResponse> DeleteArea(int areaId)
     {
         var areaFound = await _context.Areas
             .FirstOrDefaultAsync(x => x.AreaId == areaId);
+        
         if (areaFound == null)
-            return false;
+            return new RepositoryResponse
+            {
+                Message = "Area not found",
+                IsSuccess = false
+            };
 
         _context.Areas.Remove(areaFound);
         await _context.SaveChangesAsync();
-        return true;
+        return new RepositoryResponse
+        {
+            Message = "Area deleted successfully",
+            IsSuccess = true
+        };
+
     }
 }

@@ -1,4 +1,5 @@
 using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -73,24 +74,54 @@ public class AccountRepository : IAccountRepository
     /// </summary>
     /// <param name="account"></param>
     /// <returns></returns>
-    public async Task<Account?> UpdateAccount(Account? account)
+    public async Task<RepositoryResponse> UpdateAccount(Account account)
+    {
+        var accountData = await _context.Accounts
+            .FirstOrDefaultAsync(x => x.AccountId == account.AccountId);
+
+        if (accountData == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Account not found"
+            };
+
+        accountData.Email = account.Email;
+        accountData.Password = account.Password;
+        accountData.Phone = account.Phone;
+        accountData.Username = account.Username;
+        accountData.FullName = account.FullName;
+
+        await _context.SaveChangesAsync();
+
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Account updated successfully"
+        };
+    }
+    
+    public async Task<RepositoryResponse> UpdateAccountPassword(Account? account)
     {
         var accountData = await _context.Accounts
             .FirstOrDefaultAsync(x => x.AccountId == account!.AccountId);
 
         if (accountData == null)
-            return null;
-
-        accountData.Email = account?.Email ?? accountData.Email;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Account not found"
+            };
+        
         accountData.Password = account?.Password ?? accountData.Password;
-        accountData.Phone = account?.Phone ?? accountData.Phone;
-        accountData.Username = account?.Username ?? accountData.Username;
-        accountData.RoleId = account?.RoleId ?? accountData.RoleId;
-        accountData.FullName = account?.FullName ?? accountData.FullName;
 
         await _context.SaveChangesAsync();
 
-        return accountData;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Account password updated successfully"
+        };    
     }
 
     /// <summary>
@@ -98,18 +129,26 @@ public class AccountRepository : IAccountRepository
     /// </summary>
     /// <param name="accountId"></param>
     /// <returns></returns>
-    public async Task<bool> ToggleAccount(int accountId)
+    public async Task<RepositoryResponse> ToggleAccount(int accountId)
     {
         var accountFound = await _context.Accounts
             .FirstOrDefaultAsync(x => x.AccountId == accountId);
 
         if (accountFound == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Account not found"
+            };
 
         accountFound.Status = !accountFound.Status;
 
         await _context.SaveChangesAsync();
-        return true;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Account status updated successfully"
+        };  
     }
 
     /// <summary>
@@ -117,15 +156,26 @@ public class AccountRepository : IAccountRepository
     /// </summary>
     /// <param name="accountId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteAccount(int accountId)
+    public async Task<RepositoryResponse> DeleteAccount(int accountId)
     {
         var accountFound = await _context.Accounts
             .FirstOrDefaultAsync(x => x.AccountId == accountId);
+        
         if (accountFound == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Account not found"
+            };
+        
         _context.Accounts.Remove(accountFound);
         await _context.SaveChangesAsync();
-        return true;
+        
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Account deleted successfully"
+        };  
     }
 
     /// <summary>

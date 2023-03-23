@@ -49,37 +49,37 @@ public class AccountService : IAccountService
             .FirstOrDefaultAsync();
     }
 
-    public Task<Account> UpdatePasswordAccount(Account updatePasswordAccount)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<Account?> AddAccount(Account account)
     {
         return await _repositoryWrapper.Accounts.AddAccount(account);
     }
 
-    public async Task<Account?> UpdateAccount(Account account)
+    public async Task<RepositoryResponse> UpdateAccount(Account account)
     {
         return await _repositoryWrapper.Accounts.UpdateAccount(account);
     }
+    
+    public async Task<RepositoryResponse> UpdatePasswordAccount(Account account)
+    {
+        return await _repositoryWrapper.Accounts.UpdateAccountPassword(account);
+    }
 
-    public async Task<bool> ToggleAccountStatus(int accountId)
+    public async Task<RepositoryResponse> ToggleAccountStatus(int accountId)
     {
         return await _repositoryWrapper.Accounts.ToggleAccount(accountId);
     }
 
-    public async Task<bool> DeleteAccount(int accountId)
+    public async Task<RepositoryResponse> DeleteAccount(int accountId)
     {
         return await _repositoryWrapper.Accounts.DeleteAccount(accountId);
     }
 
-    public async Task<Account?> IsAccountUsernameExist(string? username)
+    public async Task<Account> IsAccountUsernameExist(string? username)
     {
         return await _repositoryWrapper.Accounts.IsAccountUsernameExist(username);
     }
 
-    public async Task<Account?> IsAccountEmailExist(string? email)
+    public async Task<Account> IsAccountEmailExist(string? email)
     {
         return await _repositoryWrapper.Accounts.IsAccountEmailExist(email);
     }
