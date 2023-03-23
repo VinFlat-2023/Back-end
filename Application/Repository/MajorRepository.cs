@@ -26,7 +26,7 @@ internal class MajorRepository : IMajorRepository
             // Filter starts here
             .Where(x =>
                 (filters.Name == null || x.Name.Contains(filters.Name))
-                && (filters.UniversityId == null || x.UniversityId == filters.UniversityId))
+                && (filters.UniversityName == null || x.University.UniversityName.Contains(filters.UniversityName)))
             .AsNoTracking();
     }
 

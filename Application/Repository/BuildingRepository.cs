@@ -72,16 +72,16 @@ public class BuildingRepository : IBuildingRepository
     /// </summary>
     /// <param name="building"></param>
     /// <returns></returns>
-    public async Task<Building?> UpdateBuilding(Building? building)
+    public async Task<Building?> UpdateBuilding(Building building)
     {
         var buildingData = await _context.Buildings
-            .FirstOrDefaultAsync(x => building != null
-                                      && x.BuildingId == building.BuildingId);
+            .FirstOrDefaultAsync(x => x.BuildingId == building.BuildingId);
 
         if (buildingData == null)
             return null;
 
-        var count = _context.Flats.Count(x => x.BuildingId == building.BuildingId);
+        var count = _context.Flats
+            .Count(x => x.BuildingId == building.BuildingId);
 
         buildingData.Description = building?.Description ?? buildingData.Description;
         buildingData.Status = building?.Status ?? buildingData.Status;

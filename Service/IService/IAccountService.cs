@@ -16,4 +16,5 @@ public interface IAccountService
     public Task<Account?> IsAccountUsernameExist(string? email);
     public Task<Account?> AccountLogin(string username, string password);
     public Task<Account?> GetSupervisorAccount(int accountId);
+    public Task<Account> UpdatePasswordAccount(Account updatePasswordAccount);
 }

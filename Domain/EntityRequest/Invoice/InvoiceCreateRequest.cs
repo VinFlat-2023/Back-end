@@ -19,9 +19,6 @@ public class InvoiceCreateRequest
     [NotMapped]
     public IFormFile? Image { get; set; }
 
-    // Receiver account
     public int RenterId { get; set; }
-
-    // Management account
     public int InvoiceTypeId { get; set; }
 }

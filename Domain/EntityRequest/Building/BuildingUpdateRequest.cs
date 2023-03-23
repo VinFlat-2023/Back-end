@@ -9,4 +9,5 @@ public class BuildingUpdateRequest
     public decimal? CoordinateY { get; set; }
     public bool Status { get; set; }
     public int AreaId { get; set; }
+    public string BuildingPhoneNumber { get; set; }
 }

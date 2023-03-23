@@ -140,7 +140,7 @@ public class InvoicesController : ControllerBase
         var list = await _serviceWrapper.Invoices
             .GetInvoiceList(new InvoiceFilter { RenterId = userId }, token);
 
-        var resultList = _mapper.Map<IEnumerable<InvoiceDataDetailEntity>>(list);
+        var resultList = _mapper.Map<IEnumerable<InvoiceRenterDetailEntity>>(list);
 
         return list != null && !list.Any()
             ? NotFound(new
@@ -194,7 +194,7 @@ public class InvoicesController : ControllerBase
 
         // false = paid, true = unpaid
 
-        var resultList = _mapper.Map<IEnumerable<InvoiceDataDetailEntity>>(entities);
+        var resultList = _mapper.Map<IEnumerable<InvoiceRenterDetailEntity>>(entities);
 
         return entities != null
             ? Ok(new
@@ -261,7 +261,7 @@ public class InvoicesController : ControllerBase
         {
             status = "Success",
             message = "Invoice found",
-            data = _mapper.Map<InvoiceDataDetailEntity>(entity)
+            data = _mapper.Map<InvoiceRenterDetailEntity>(entity)
         });
     }
 
@@ -420,27 +420,27 @@ public class InvoicesController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<InvoiceTypeDetailEntity>>(list);
 
-        return list != null
-            ? Ok(new
+        return list != null && !list.Any()
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Invoice type list is empty",
+                data = ""
+            })
+            : Ok(new
             {
                 status = "Success",
                 message = "List found",
                 data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
-            })
-            : NotFound(new
-            {
-                status = "Not Found",
-                message = "Invoice type list is empty",
-                data = ""
             });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice type by id (For management)")]
     [HttpGet("types/{id:int}")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    public async Task<IActionResult> GetInvoiceById(int id)
+    public async Task<IActionResult> GetInvoiceTypeById(int id)
     {
         var entity = await _serviceWrapper.InvoiceTypes.GetInvoiceTypeById(id);
         return entity == null
@@ -559,8 +559,18 @@ public class InvoicesController : ControllerBase
     {
         var result = await _serviceWrapper.InvoiceDetails.DeleteInvoiceDetail(id);
         return !result
-            ? NotFound("Invoice detail failed to delete")
-            : Ok("Invoice detail deleted successfully");
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Invoice detail failed to delete",
+                data = ""
+            })
+            : Ok(new
+            {
+                status = "Success",
+                message = "Invoice detail deleted",
+                data = ""
+            });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice detail list (For management)")]
@@ -645,7 +655,12 @@ public class InvoicesController : ControllerBase
             .GetActiveInvoiceDetailByUserId(id, token);
 
         return entity == null
-            ? NotFound("Invoice detail with active status by this user not found")
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Invoice detail not found",
+                data = ""
+            })
             : Ok(new
             {
                 status = "Success",
@@ -660,30 +675,12 @@ public class InvoicesController : ControllerBase
     public async Task<IActionResult> CreateManyInvoice([FromBody] List<MassInvoiceCreateRequest> invoices)
     {
         var result = await _serviceWrapper.Invoices.BatchInsertInvoice(invoices);
-        switch (result)
+        return result switch
         {
-            case { IsSuccess: true }:
-                return BadRequest(new
-                {
-                    status = "Bad Request",
-                    message = result.Message,
-                    data = ""
-                });
-            case { IsSuccess: false }:
-                return Ok(new
-                {
-                    status = "Success",
-                    message = result.Message,
-                    data = ""
-                });
-            case null:
-                return BadRequest(new
-                {
-                    status = "Bad Request",
-                    message = "Invoice failed to create",
-                    data = ""
-                });
-        }
+            { IsSuccess: false } => BadRequest(new { status = "Bad Request", message = result.Message, data = "" }),
+            { IsSuccess: true } => Ok(new { status = "Success", message = result.Message, data = "" }),
+            null => BadRequest(new { status = "Bad Request", message = "Invoice failed to create", data = "" })
+        };
     }
 
     private static int DateRemainingCheck(DateTime start, DateTime end)

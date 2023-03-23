@@ -93,10 +93,14 @@ public class BuildingsController : ControllerBase
             Description = building.Description,
             CoordinateX = building.CoordinateX ?? 0,
             CoordinateY = building.CoordinateY ?? 0,
-            AreaId = building.AreaId
+            AreaId = building.AreaId,
+            Status = building.Status,
+            BuildingPhoneNumber = building.BuildingPhoneNumber
+            // ImageUrl = building.ImageUrl
         };
 
         var validation = await _validator.ValidateParams(updateBuilding, id);
+
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -104,6 +108,7 @@ public class BuildingsController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+
         var result = await _serviceWrapper.Buildings.UpdateBuilding(updateBuilding);
 
         if (result == null)
@@ -113,6 +118,7 @@ public class BuildingsController : ControllerBase
                 message = "Building failed to update",
                 data = ""
             });
+
         return Ok(new
         {
             status = "Success",
@@ -136,11 +142,13 @@ public class BuildingsController : ControllerBase
             CoordinateY = building.CoordinateY ?? 0,
             TotalRooms = 0,
             AccountId = Convert.ToInt32(User.Identity?.Name),
-            Status = building.Status,
-            AreaId = building.AreaId
+            Status = building.Status ?? true,
+            AreaId = building.AreaId,
+            BuildingPhoneNumber = building.BuildingPhoneNumber
         };
 
         var validation = await _validator.ValidateParams(newBuilding, null);
+
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -148,7 +156,9 @@ public class BuildingsController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+
         var result = await _serviceWrapper.Buildings.AddBuilding(newBuilding);
+
         if (result == null)
             return BadRequest(new
             {

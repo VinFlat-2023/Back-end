@@ -100,6 +100,7 @@ public class FlatsController : ControllerBase
         };
 
         var validation = await _validator.ValidateParams(updateFlat, id);
+
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -146,6 +147,7 @@ public class FlatsController : ControllerBase
         };
 
         var validation = await _validator.ValidateParams(newFlat, null);
+
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -153,7 +155,9 @@ public class FlatsController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+
         var result = await _serviceWrapper.Flats.AddFlat(newFlat);
+
         if (result == null)
             return BadRequest(new
             {
@@ -161,6 +165,7 @@ public class FlatsController : ControllerBase
                 message = "Flat failed to create",
                 data = ""
             });
+
         return Ok(new
         {
             status = "Success",
@@ -176,6 +181,7 @@ public class FlatsController : ControllerBase
     public async Task<IActionResult> DeleteFlat(int id)
     {
         var result = await _serviceWrapper.Flats.DeleteFlat(id);
+
         if (!result)
             return NotFound(new
             {
@@ -183,6 +189,7 @@ public class FlatsController : ControllerBase
                 message = "Flat failed to create",
                 data = ""
             });
+
         return Ok(new
         {
             status = "Success",
@@ -265,6 +272,7 @@ public class FlatsController : ControllerBase
             });
 
         var result = await _serviceWrapper.FlatTypes.UpdateFlatType(updateFlatType);
+
         if (result == null)
             return NotFound(new
             {
@@ -295,6 +303,7 @@ public class FlatsController : ControllerBase
         };
 
         var validation = await _validator.ValidateParams(newFlatType, null);
+
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -304,6 +313,7 @@ public class FlatsController : ControllerBase
             });
 
         var result = await _serviceWrapper.FlatTypes.AddFlatType(newFlatType);
+
         if (result == null)
             return NotFound(new
             {
@@ -311,6 +321,7 @@ public class FlatsController : ControllerBase
                 message = "Flat type not found",
                 data = ""
             });
+
         return Ok(new
         {
             status = "Success",

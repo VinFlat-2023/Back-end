@@ -29,6 +29,8 @@ public class Flat
     public virtual FlatType FlatType { get; set; }
     public int BuildingId { get; set; }
     public virtual Building Building { get; set; }
+    public int AttributeId { get; set; }
+    public virtual Attribute Attribute { get; set; }
     public virtual ICollection<Room> Rooms { get; set; }
     public virtual ICollection<Feedback> FeedBacks { get; set; }
     public virtual ICollection<Contract> Contracts { get; set; }

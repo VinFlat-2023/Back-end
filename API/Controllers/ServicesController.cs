@@ -218,6 +218,10 @@ public class ServicesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update service by id (For management)")]
     public async Task<IActionResult> PutServiceEntity(int id, [FromBody] ServiceUpdateRequest service)
     {
+        var managementId = int.Parse(User.Identity?.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnAccountId(managementId);
+
         var updateService = new ServiceEntity
         {
             ServiceId = id,
@@ -225,7 +229,8 @@ public class ServicesController : ControllerBase
             Description = service.Description,
             Status = service.Status,
             ServiceTypeId = service.ServiceTypeId,
-            Amount = service.Amount ?? 0
+            Amount = service.Amount ?? 0,
+            BuildingId = buildingId
         };
 
         var validation = await _validator.ValidateParams(updateService, id);
@@ -261,13 +266,18 @@ public class ServicesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Add new service (For management)")]
     public async Task<IActionResult> PostServiceEntity([FromBody] ServiceCreateRequest service)
     {
+        var managementId = int.Parse(User.Identity?.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnAccountId(managementId);
+
         var newService = new ServiceEntity
         {
             Name = service.Name,
             Description = service.Description,
             Status = service.Status,
             ServiceTypeId = service.ServiceTypeId,
-            Amount = service.Amount ?? 0
+            Amount = service.Amount ?? 0,
+            BuildingId = buildingId
             // TODO : Auto get latest invoice detail ID with corresponding Invoice with active status
             // TODO : In invoice controller, auto generate invoice detail id
         };
@@ -339,20 +349,20 @@ public class ServicesController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<ServiceTypeDetailEntity>>(list);
 
-        return list != null
-            ? Ok(new
+        return list != null && !list.Any()
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Service type list is empty",
+                data = ""
+            })
+            : Ok(new
             {
                 status = "Success",
                 message = "List found",
                 data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
-            })
-            : NotFound(new
-            {
-                status = "Not Found",
-                message = "Service type list is empty",
-                data = ""
             });
     }
 

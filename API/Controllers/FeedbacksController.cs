@@ -40,19 +40,21 @@ public class FeedbacksController : ControllerBase
 
         var list = await _serviceWrapper.Feedbacks.GetFeedbackList(filter, token);
 
-        if (list != null && !list.Any())
-            return NotFound("No Feedback available");
-
         var resultList = _mapper.Map<IEnumerable<FeedbackDetailEntity>>(list);
 
-        return list != null
-            ? Ok(new
+        return list != null && !list.Any()
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Feedback not found",
+                data = ""
+            })
+            : Ok(new
             {
                 resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount
-            })
-            : BadRequest("Feedback list is empty");
+            });
     }
 
     // GET: api/Feedbacks/5

@@ -7,6 +7,7 @@ public class BuildingCreateRequest
     public decimal? CoordinateX { get; set; }
     public string? ImageUrl { get; set; }
     public decimal? CoordinateY { get; set; }
-    public bool Status { get; set; }
+    public bool? Status { get; set; }
     public int AreaId { get; set; }
+    public string BuildingPhoneNumber { get; set; }
 }

@@ -13,13 +13,13 @@ public class GetIdRepository : IGetIdRepository
         _context = context;
     }
 
-    public async Task<int?> GetBuildingIdBasedOnRenter(int renterId)
+    public async Task<int> GetBuildingIdBasedOnRenter(int renterId)
     {
         var contract = await _context.Contracts
             .FirstOrDefaultAsync(x => x.RenterId == renterId);
 
         if (contract == null)
-            return null;
+            return 0;
 
         return await _context.Contracts
             .Where(x => x.ContractId == contract.ContractId)
@@ -27,13 +27,13 @@ public class GetIdRepository : IGetIdRepository
             .FirstOrDefaultAsync();
     }
 
-    public async Task<int?> GetAccountIdBasedOnBuildingId(int? buildingId)
+    public async Task<int> GetAccountIdBasedOnBuildingId(int buildingId)
     {
         var room = await _context.Buildings
             .FirstOrDefaultAsync(x => x.BuildingId == buildingId);
 
         if (room == null)
-            return null;
+            return 0;
 
         return await _context.Buildings
             .Where(x => x.BuildingId == buildingId)
@@ -41,7 +41,7 @@ public class GetIdRepository : IGetIdRepository
             .FirstOrDefaultAsync();
     }
 
-    public async Task<int?> GetContractIdBasedOnRenterId(int? renterId)
+    public async Task<int> GetContractIdBasedOnRenterId(int renterId)
     {
         return await _context.Contracts
             .Where(x => x.RenterId == renterId)
@@ -49,7 +49,7 @@ public class GetIdRepository : IGetIdRepository
             .FirstOrDefaultAsync();
     }
 
-    public async Task<int?> GetActiveContractIdBasedOnRenterId(int? renterId)
+    public async Task<int> GetActiveContractIdBasedOnRenterId(int renterId)
     {
         return await _context.Contracts
             .Where(x => x.RenterId == renterId && x.ContractStatus == "Active")
@@ -57,11 +57,19 @@ public class GetIdRepository : IGetIdRepository
             .FirstOrDefaultAsync();
     }
 
-    public async Task<int?> GetRoomIdBasedOnFlatId(int? flatId)
+    public async Task<int> GetRoomIdBasedOnFlatId(int flatId)
     {
         return await _context.Rooms
             .Where(x => x.FlatId == flatId)
             .Select(x => x.RoomId)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<int> GetBuildingIdBasedOnAccountId(int accountId)
+    {
+        return await _context.Buildings
+            .Where(x => x.AccountId == accountId)
+            .Select(x => x.BuildingId)
             .FirstOrDefaultAsync();
     }
 }

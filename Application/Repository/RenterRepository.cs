@@ -1,4 +1,5 @@
 using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -91,23 +92,23 @@ public class RenterRepository : IRenterRepository
     /// </summary>
     /// <param name="user"></param>
     /// <returns></returns>
-    public async Task<Renter?> AddRenter(Renter user)
+    public async Task<Renter> AddRenter(Renter user)
     {
         await _context.Renters.AddAsync(user);
         await _context.SaveChangesAsync();
         return user;
     }
 
-    public async Task<Renter?> RenterUsernameCheck(string? username)
+    public async Task<Renter?> RenterUsernameCheck(string username)
     {
         return await _context.Renters
-            .FirstOrDefaultAsync(x => username != null && x.Username.ToLower().Equals(username.ToLower()));
+            .FirstOrDefaultAsync(x => x.Username.ToLower().Equals(username.ToLower()));
     }
 
-    public async Task<Renter?> RenterEmailCheck(string? email)
+    public async Task<Renter?> RenterEmailCheck(string email)
     {
         return await _context.Renters
-            .FirstOrDefaultAsync(x => email != null && x.Email.ToLower().Equals(email.ToLower()));
+            .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
     }
 
     /// <summary>
@@ -115,28 +116,64 @@ public class RenterRepository : IRenterRepository
     /// </summary>
     /// <param name="renter"></param>
     /// <returns></returns>
-    public async Task<Renter?> UpdateRenter(Renter? renter)
+    public async Task<RepositoryResponse> UpdateRenter(Renter renter)
+    {
+        var userData = await _context.Renters
+            .FirstOrDefaultAsync(x => x.RenterId == renter.RenterId);
+
+        if (userData == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "User not found"
+            };
+
+        userData.FullName = renter.FullName;
+        userData.Email = renter.Email;
+        userData.Password = renter.Password;
+        userData.Phone = renter.Phone;
+        userData.MajorId = renter.MajorId;
+        userData.ImageUrl = renter.ImageUrl;
+        userData.Address = renter.Address;
+        userData.UniversityId = renter.UniversityId;
+        userData.Gender = renter.Gender;
+        userData.BirthDate = renter.BirthDate;
+
+        await _context.SaveChangesAsync();
+
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "User updated successful"
+        };
+    }
+
+    /// <summary>
+    ///     UpdateExpenseHistory a renter
+    /// </summary>
+    /// <param name="renter"></param>
+    /// <returns></returns>
+    public async Task<RepositoryResponse> UpdatePasswordRenter(Renter renter)
     {
         var userData = await _context.Renters
             .FirstOrDefaultAsync(x => x.RenterId == renter!.RenterId);
 
         if (userData == null)
-            return null;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "User not found"
+            };
 
-        userData.FullName = renter?.FullName ?? userData.FullName;
-        userData.Email = renter?.Email ?? userData.Email;
         userData.Password = renter?.Password ?? userData.Password;
-        userData.Phone = renter?.Phone ?? userData.Phone;
-        userData.MajorId = renter?.MajorId ?? userData.MajorId;
-        userData.ImageUrl = renter?.ImageUrl;
-        userData.Address = renter?.Address ?? userData.Address;
-        userData.UniversityId = renter?.UniversityId ?? userData.UniversityId;
-        userData.Gender = renter?.Gender ?? userData.Gender;
-        userData.BirthDate = renter?.BirthDate ?? userData.BirthDate;
 
         await _context.SaveChangesAsync();
 
-        return renter;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "User password updated successful"
+        };
     }
 
     /// <summary>
@@ -144,17 +181,26 @@ public class RenterRepository : IRenterRepository
     /// </summary>
     /// <param name="renterId"></param>
     /// <returns></returns>
-    public async Task<bool> ToggleRenter(int renterId)
+    public async Task<RepositoryResponse> ToggleRenter(int renterId)
     {
         var renterFound = await _context.Renters
             .FirstOrDefaultAsync(x => x.RenterId == renterId);
+
         if (renterFound == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "User not found"
+            };
 
         _ = renterFound.Status == !renterFound.Status;
 
         await _context.SaveChangesAsync();
-        return true;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "User status updated successful"
+        };
     }
 
     /// <summary>
@@ -162,18 +208,26 @@ public class RenterRepository : IRenterRepository
     /// </summary>
     /// <param name="renterId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteRenter(int renterId)
+    public async Task<RepositoryResponse> DeleteRenter(int renterId)
     {
         var renterFound = await _context.Renters
             .FirstOrDefaultAsync(x => x.RenterId == renterId);
 
         if (renterFound == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "User not found"
+            };
 
         _context.Renters.Remove(renterFound);
         await _context.SaveChangesAsync();
 
-        return true;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "User deleted"
+        };
     }
 
     /// <summary>
@@ -182,7 +236,7 @@ public class RenterRepository : IRenterRepository
     /// <param name="username"></param>
     /// <param name="password"></param>
     /// <returns></returns>
-    public IQueryable<Renter?> GetRenter(string username, string password)
+    public IQueryable<Renter> GetRenter(string username, string password)
     {
         return _context.Renters
             .Where(a => a.Username == username && a.Password == password);
@@ -190,7 +244,9 @@ public class RenterRepository : IRenterRepository
 
     public async Task<Renter?> GetARenterByUserName(string userName)
     {
-        var user = await _context.Renters.FirstOrDefaultAsync(r => r.Username == userName);
+        var user = await _context.Renters
+            .FirstOrDefaultAsync(r => r.Username == userName);
+
         return user;
     }
 

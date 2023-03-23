@@ -237,7 +237,8 @@ public class TicketsController : ControllerBase
             Status = ticketUpdateRequest.Status ?? "Active",
             ImageUrl = ticketUpdateRequest.ImageUrl ?? ticketEntity.ImageUrl,
             Amount = ticketUpdateRequest.Amount ?? ticketEntity.Amount ?? 0,
-            SolveDate = ticketUpdateRequest.SolveDate.ConvertToDateTime() ?? ticketEntity.SolveDate
+            SolveDate = ticketUpdateRequest.SolveDate.ConvertToDateTime() ?? ticketEntity.SolveDate,
+            AccountId = int.Parse(User.Identity?.Name)
         };
 
         var validation = await _validator.ValidateParams(updateTicket, id);
@@ -287,7 +288,7 @@ public class TicketsController : ControllerBase
 
         var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnRenter(userId);
 
-        if (buildingId == null)
+        if (buildingId == 0)
             return NotFound(new
             {
                 status = "Not Found",
@@ -296,7 +297,8 @@ public class TicketsController : ControllerBase
             });
 
         var managementAccountId = await _serviceWrapper.GetId.GetAccountIdBasedOnBuildingId(buildingId);
-        if (managementAccountId == null)
+
+        if (managementAccountId == 0)
             return NotFound(new
             {
                 status = "Not Found",
@@ -305,7 +307,7 @@ public class TicketsController : ControllerBase
             });
 
         var contractId = await _serviceWrapper.GetId.GetContractIdBasedOnRenterId(userId);
-        if (contractId == null)
+        if (contractId == 0)
             return NotFound(new
             {
                 status = "Not Found",
@@ -322,8 +324,8 @@ public class TicketsController : ControllerBase
             Status = "Active",
             ImageUrl = ticketCreateRequest.ImageUrl,
             Amount = 0,
-            ContractId = contractId.Value,
-            AccountId = managementAccountId.Value
+            ContractId = contractId,
+            AccountId = managementAccountId
         };
 
         var validation = await _validator.ValidateParams(newTicket, null);

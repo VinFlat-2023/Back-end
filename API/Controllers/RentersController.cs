@@ -260,27 +260,29 @@ public class RentersController : ControllerBase
             });
 
         var result = await _serviceWrapper.Renters.UpdateRenter(finalizeUpdate);
-        if (result == null)
-            return BadRequest(new
+
+        return result.IsSuccess switch
+        {
+            false => BadRequest(new
             {
                 status = "Bad Request",
                 message = "Renter failed to update",
                 data = ""
-            });
-
-        return Ok(
-            new
-            {
-                status = "Success",
-                message = "Renter updated",
-                data = ""
-            });
+            }),
+            true => Ok(
+                new
+                {
+                    status = "Success",
+                    message = "Renter updated",
+                    data = ""
+                })
+        };
     }
 
     [HttpPut("{id:int}/change-password")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Update renter by id (For management and renter)")]
-    public async Task<IActionResult> ChangePassword([FromBody] RenterUpdateRequest renter, int id)
+    public async Task<IActionResult> ChangePassword([FromBody] RenterUpdatePasswordRequest renter, int id)
     {
         /*
         var userRole = User.Identities
@@ -309,12 +311,13 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
-        var finalizeUpdate = new Renter
+        var finalizePasswordUpdate = new Renter
         {
             Password = renter.Password
         };
 
-        var validation = await _validator.ValidateParams(finalizeUpdate, id);
+        var validation = await _validator.ValidateParams(finalizePasswordUpdate, id);
+
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -323,29 +326,31 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
-        var result = await _serviceWrapper.Renters.UpdateRenter(finalizeUpdate);
-        if (result == null)
-            return BadRequest(new
+        var result = await _serviceWrapper.Renters.UpdateRenter(finalizePasswordUpdate);
+
+        return result.IsSuccess switch
+        {
+            true => Ok(
+                new
+                {
+                    status = "Success",
+                    message = "Renter updated",
+                    data = ""
+                }),
+            false => BadRequest(new
             {
                 status = "Bad Request",
                 message = "Renter failed to update",
                 data = ""
-            });
-
-        return Ok(
-            new
-            {
-                status = "Success",
-                message = "Renter updated",
-                data = ""
-            });
+            })
+        };
     }
 
 
     // POST: api/Renters
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    [Authorize("Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Register a new renter (For management)")]
     public async Task<IActionResult> PostRenter([FromBody] RenterCreateRequest renter)
     {
@@ -438,18 +443,21 @@ public class RentersController : ControllerBase
             await _serviceWrapper.Devices.DeleteUserDevice(listUserDevice);
 
         var result = await _serviceWrapper.Renters.DeleteRenter(id);
-        return result
-            ? BadRequest(new
+
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = "Renter deleted successfully",
+                data = ""
+            }),
+            false => BadRequest(new
             {
                 status = "Bad Request",
                 message = "Renter failed to delete",
                 data = ""
             })
-            : Ok(new
-            {
-                status = "Success",
-                message = "Renter deleted successfully",
-                data = ""
-            });
+        };
     }
 }

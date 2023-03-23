@@ -10,9 +10,9 @@ public interface IRenterService
     public Task<Renter?> GetRenterById(int? renterId);
     public Task<List<Renter>?> GetRenterListNoFilter(CancellationToken token);
     public Task<Renter?> AddRenter(Renter renter);
-    public Task<Renter?> UpdateRenter(Renter renter);
-    public Task<bool> ToggleRenterStatus(int renterId);
-    public Task<bool> DeleteRenter(int renterId);
+    public Task<RepositoryResponse> UpdateRenter(Renter renter);
+    public Task<RepositoryResponse> ToggleRenterStatus(int renterId);
+    public Task<RepositoryResponse> DeleteRenter(int renterId);
     public Task<Renter> Login(string username, string password);
     public Task<Renter?> RenterLogin(string username, string password);
     public Task<Renter?> GetRenterByUsername(string username);

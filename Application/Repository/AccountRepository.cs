@@ -102,9 +102,12 @@ public class AccountRepository : IAccountRepository
     {
         var accountFound = await _context.Accounts
             .FirstOrDefaultAsync(x => x.AccountId == accountId);
+
         if (accountFound == null)
             return false;
+
         accountFound.Status = !accountFound.Status;
+
         await _context.SaveChangesAsync();
         return true;
     }

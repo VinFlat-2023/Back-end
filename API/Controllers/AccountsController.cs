@@ -89,6 +89,7 @@ public class AccountsController : ControllerBase
         var newAccount = new Account
         {
             Username = account.Username,
+            FullName = account.Fullname,
             Password = account.Password,
             Email = account.Email,
             Phone = account.Phone,
@@ -161,7 +162,6 @@ public class AccountsController : ControllerBase
         {
             AccountId = id,
             Username = account.Username ?? accountEntity.Username,
-            Password = account.Password ?? accountEntity.Password,
             Email = account.Email ?? accountEntity.Email,
             Phone = account.Phone ?? accountEntity.Phone,
             FullName = account.Fullname ?? accountEntity.FullName
@@ -192,6 +192,55 @@ public class AccountsController : ControllerBase
             data = ""
         });
     }
+
+    [SwaggerOperation(Summary = "Update account info")]
+    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountUpdatePasswordRequest account)
+    {
+        var accountEntity = await _serviceWrapper.Accounts.GetAccountById(id);
+
+        if (accountEntity == null)
+            return NotFound(new
+            {
+                status = "Bad Request",
+                message = "This account does not exist",
+                data = ""
+            });
+
+        var updatePasswordAccount = new Account
+        {
+            Password = account.Password
+        };
+
+        var validation = await _validator.ValidateParams(updatePasswordAccount, id, User);
+
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
+        var result = await _serviceWrapper.Accounts.UpdatePasswordAccount(updatePasswordAccount);
+
+        if (result == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Update password failed",
+                data = ""
+            });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Account password updated",
+            data = ""
+        });
+    }
+
 
     [SwaggerOperation(Summary = "Activate and Deactivate Account")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]

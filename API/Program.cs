@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Utilities.MiddlewareExtension;
 using Utilities.ServiceExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -103,7 +102,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.ConfigMiddleware(config);
+//app.ConfigMiddleware(config);
 
 app.MapControllers();
 

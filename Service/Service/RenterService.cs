@@ -81,17 +81,17 @@ public class RenterService : IRenterService
         return logined;
     }
 
-    public async Task<Renter?> UpdateRenter(Renter renter)
+    public async Task<RepositoryResponse> UpdateRenter(Renter renter)
     {
         return await _repositoryWrapper.Renters.UpdateRenter(renter);
     }
 
-    public async Task<bool> ToggleRenterStatus(int renterId)
+    public async Task<RepositoryResponse> ToggleRenterStatus(int renterId)
     {
         return await _repositoryWrapper.Renters.ToggleRenter(renterId);
     }
 
-    public async Task<bool> DeleteRenter(int renterId)
+    public async Task<RepositoryResponse> DeleteRenter(int renterId)
     {
         return await _repositoryWrapper.Renters.DeleteRenter(renterId);
     }

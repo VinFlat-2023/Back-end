@@ -10,9 +10,7 @@ public class Major
     public int MajorId { get; set; }
 
     public string Name { get; set; } = null!;
-
     public int UniversityId { get; set; }
-
     public virtual University University { get; set; } = null!;
 
     public virtual Renter? Renter { get; set; }

@@ -31,6 +31,7 @@ using Domain.Responses;
 using Domain.Utils;
 using Domain.ViewModel.AccountEntity;
 using Domain.ViewModel.AreaEntity;
+using Domain.ViewModel.Attribute;
 using Domain.ViewModel.BuildingEntity;
 using Domain.ViewModel.ContractEntity;
 using Domain.ViewModel.FeedbackEntity;
@@ -49,6 +50,7 @@ using Domain.ViewModel.ServiceTypeEntity;
 using Domain.ViewModel.TicketTypeEntity;
 using Domain.ViewModel.UniversityEntity;
 using MimeKit;
+using Attribute = Domain.EntitiesForManagement.Attribute;
 
 namespace API.Mapping;
 
@@ -81,6 +83,17 @@ public class AutoMapper : Profile
         MapMail();
         MapNotiAndNotiType();
         MapPlaceholder();
+        MapAttribute();
+    }
+
+    private void MapAttribute()
+    {
+        CreateMap<Attribute, AttributeDetailEntity>()
+            .ReverseMap();
+        CreateMap<AttributeUsageAttribute, Attribute>()
+            .ReverseMap();
+        CreateMap<Attribute, AttributeDetailEntity>()
+            .ForAllMembers(o => o.ExplicitExpansion());
     }
 
     private void MapInvoiceType()

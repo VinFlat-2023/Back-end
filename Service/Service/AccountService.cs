@@ -49,6 +49,11 @@ public class AccountService : IAccountService
             .FirstOrDefaultAsync();
     }
 
+    public Task<Account> UpdatePasswordAccount(Account updatePasswordAccount)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<Account?> AddAccount(Account account)
     {
         return await _repositoryWrapper.Accounts.AddAccount(account);
