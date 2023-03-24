@@ -29,4 +29,5 @@ public interface IServiceWrapper
     public INotificationService Notifications { get; }
     public IRoomService Rooms { get; }
     public IGetIdService GetId { get; }
+    public IAttributeForNumericService Attributes { get; }
 }

@@ -279,6 +279,7 @@ public class ContractsController : ControllerBase
             });
 
         var entity = await _serviceWrapper.Contracts.GetContractByUserId(userId);
+
         if (entity == null)
             return NotFound(new
             {
@@ -288,6 +289,7 @@ public class ContractsController : ControllerBase
             });
 
         var contractEntity = await _serviceWrapper.Contracts.GetContractByIdWithActiveStatus(entity.ContractId);
+
         if (contractEntity == null)
             return NotFound(new
             {

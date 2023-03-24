@@ -90,8 +90,8 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_contracts == null) _contracts = new ContractService(_repositories, _paginationOptions);
-            return _contracts;
+            if (_contract == null) _contract = new ContractService(_repositories, _paginationOptions);
+            return _contract;
         }
     }
 
@@ -207,8 +207,8 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_universities == null) _universities = new UniversityService(_repositories, _paginationOptions);
-            return _universities;
+            if (_university == null) _university = new UniversityService(_repositories, _paginationOptions);
+            return _university;
         }
     }
 
@@ -216,8 +216,8 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_wallets == null) _wallets = new WalletService(_repositories);
-            return _wallets;
+            if (_wallet == null) _wallet = new WalletService(_repositories);
+            return _wallet;
         }
     }
 
@@ -225,8 +225,8 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_devices == null) _devices = new DeviceService(_repositories);
-            return _devices;
+            if (_device == null) _device = new DeviceService(_repositories);
+            return _device;
         }
     }
 
@@ -267,6 +267,15 @@ public class ServiceWrapper : IServiceWrapper
         }
     }
 
+    public IAttributeForNumericService Attributes
+    {
+        get
+        {
+            if (_attribute == null) _attribute = new AttributeForNumericService(_repositories, _paginationOptions);
+            return _attribute;
+        }
+    }
+
 
     public INotificationService Notifications
     {
@@ -282,16 +291,16 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_mails != null)
-                return _mails;
+            if (_mail != null)
+                return _mail;
 
             var emailConfig = _configuration
                 .GetSection("EmailConfiguration")
                 .Get<MailConfiguration>();
 
-            _mails = new CustomeMailService(_env, emailConfig, _repositories);
+            _mail = new CustomeMailService(_env, emailConfig, _repositories);
 
-            return _mails;
+            return _mail;
         }
     }
 
@@ -301,7 +310,7 @@ public class ServiceWrapper : IServiceWrapper
     private IAccountService _account;
     private IAreaService _area;
     private IBuildingService _building;
-    private IContractService _contracts;
+    private IContractService _contract;
     private IFeedbackService _feedback;
     private IFeedbackTypeService _feedbackType;
     private IFlatService _flat;
@@ -316,14 +325,15 @@ public class ServiceWrapper : IServiceWrapper
     private IRoleService _roles;
     private IServiceEntityService _serviceEntity;
     private IServiceTypeService _serviceType;
-    private IUniversityService _universities;
-    private IWalletService _wallets;
+    private IUniversityService _university;
+    private IWalletService _wallet;
     private ITokenService _tokens;
-    private IDeviceService _devices;
-    private ICustomeMailService _mails;
+    private IDeviceService _device;
+    private ICustomeMailService _mail;
     private INotificationService _noti;
     private IRoomService _room;
     private IGetIdService _getId;
+    private IAttributeForNumericService _attribute;
 
     #endregion
 }

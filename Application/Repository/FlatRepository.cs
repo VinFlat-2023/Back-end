@@ -27,6 +27,8 @@ public class FlatRepository : IFlatRepository
             .ThenInclude(x => x.Area)
             //.Where(x => x.BuildingId == x.Building.BuildingId)
             .Include(x => x.FlatType)
+            .Include(x => x.AttributeForNumeric)
+            .Include(x => x.UtilitiesFlats)
             //.Where(x => x.FlatTypeId == x.FlatType.FlatTypeId)
             // Filter starts here
             .Where(f =>
@@ -47,7 +49,10 @@ public class FlatRepository : IFlatRepository
     {
         return _context.Flats
             .Include(x => x.Building)
+            .ThenInclude(x => x.Area)
             .Include(x => x.FlatType)
+            .Include(x => x.AttributeForNumeric)
+            .Include(x => x.UtilitiesFlats)
             .Where(x => x.FlatId == flatId);
     }
 
@@ -55,6 +60,7 @@ public class FlatRepository : IFlatRepository
     {
         var roomInFlat = await _context.Flats
             .Where(x => x.FlatId == flatId)
+            .Include(x => x.Rooms)
             .FirstOrDefaultAsync();
 
         if (roomInFlat == null)
@@ -119,6 +125,7 @@ public class FlatRepository : IFlatRepository
     {
         var flatData = await _context.Flats
             .FirstOrDefaultAsync(x => x.FlatId == flat!.FlatId);
+        
         if (flatData == null)
             return null;
 

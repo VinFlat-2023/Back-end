@@ -100,11 +100,11 @@ public class AccountRepository : IAccountRepository
             Message = "Account updated successfully"
         };
     }
-    
-    public async Task<RepositoryResponse> UpdateAccountPassword(Account? account)
+
+    public async Task<RepositoryResponse> UpdateAccountPassword(Account account)
     {
         var accountData = await _context.Accounts
-            .FirstOrDefaultAsync(x => x.AccountId == account!.AccountId);
+            .FirstOrDefaultAsync(x => x.AccountId == account.AccountId);
 
         if (accountData == null)
             return new RepositoryResponse
@@ -112,8 +112,8 @@ public class AccountRepository : IAccountRepository
                 IsSuccess = false,
                 Message = "Account not found"
             };
-        
-        accountData.Password = account?.Password ?? accountData.Password;
+
+        accountData.Password = account.Password;
 
         await _context.SaveChangesAsync();
 
@@ -121,7 +121,7 @@ public class AccountRepository : IAccountRepository
         {
             IsSuccess = true,
             Message = "Account password updated successfully"
-        };    
+        };
     }
 
     /// <summary>
@@ -148,7 +148,7 @@ public class AccountRepository : IAccountRepository
         {
             IsSuccess = true,
             Message = "Account status updated successfully"
-        };  
+        };
     }
 
     /// <summary>
@@ -160,22 +160,23 @@ public class AccountRepository : IAccountRepository
     {
         var accountFound = await _context.Accounts
             .FirstOrDefaultAsync(x => x.AccountId == accountId);
-        
+
         if (accountFound == null)
             return new RepositoryResponse
             {
                 IsSuccess = false,
                 Message = "Account not found"
             };
-        
+
         _context.Accounts.Remove(accountFound);
+
         await _context.SaveChangesAsync();
-        
+
         return new RepositoryResponse
         {
             IsSuccess = true,
             Message = "Account deleted successfully"
-        };  
+        };
     }
 
     /// <summary>

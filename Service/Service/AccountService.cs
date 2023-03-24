@@ -58,7 +58,7 @@ public class AccountService : IAccountService
     {
         return await _repositoryWrapper.Accounts.UpdateAccount(account);
     }
-    
+
     public async Task<RepositoryResponse> UpdatePasswordAccount(Account account)
     {
         return await _repositoryWrapper.Accounts.UpdateAccountPassword(account);

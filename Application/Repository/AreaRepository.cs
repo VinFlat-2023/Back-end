@@ -73,7 +73,7 @@ internal class AreaRepository : IAreaRepository
                 IsSuccess = false,
                 Message = "Area not found"
             };
-        
+
         areaData.Location = area?.Location ?? areaData.Location;
         areaData.Name = area?.Name ?? areaData.Name;
         areaData.Status = area?.Status ?? areaData.Status;
@@ -96,22 +96,21 @@ internal class AreaRepository : IAreaRepository
     {
         var areaFound = await _context.Areas
             .FirstOrDefaultAsync(x => x.AreaId == areaId);
-        
+
         if (areaFound == null)
             return new RepositoryResponse
             {
                 Message = "Area not found",
                 IsSuccess = false
-            };        
+            };
         _ = areaFound.Status == !areaFound.Status;
         await _context.SaveChangesAsync();
-        
+
         return new RepositoryResponse
         {
             Message = "Area status toggled successfully",
             IsSuccess = true
         };
-        
     }
 
     /// <summary>
@@ -123,7 +122,7 @@ internal class AreaRepository : IAreaRepository
     {
         var areaFound = await _context.Areas
             .FirstOrDefaultAsync(x => x.AreaId == areaId);
-        
+
         if (areaFound == null)
             return new RepositoryResponse
             {
@@ -138,6 +137,5 @@ internal class AreaRepository : IAreaRepository
             Message = "Area deleted successfully",
             IsSuccess = true
         };
-
     }
 }

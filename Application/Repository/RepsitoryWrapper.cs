@@ -243,6 +243,15 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
+    public IAttributeRepository Attributes
+    {
+        get
+        {
+            if (_attribute == null) _attribute = new AttributeRepository(_context);
+            return _attribute;
+        }
+    }
+
     #region fields
 
     private IAzureStorageRepository _azureStorage;
@@ -270,6 +279,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     private INotificationRepository _notification;
     private IRoomRepository _room;
     private IGetIdRepository _getId;
+    private IAttributeRepository _attribute;
 
     #endregion
 }

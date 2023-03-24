@@ -51,13 +51,13 @@ public class AreaService : IAreaService
         return await _repositoryWrapper.Areas.UpdateArea(area);
     }
 
-    public async Task<RepositoryResponse> ToggleAreaStatus(int areaId)
-    {
-        return await _repositoryWrapper.Areas.ToggleArea(areaId);
-    }
-
     public async Task<RepositoryResponse> DeleteArea(int areaId)
     {
         return await _repositoryWrapper.Areas.DeleteArea(areaId);
+    }
+
+    public async Task<RepositoryResponse> ToggleAreaStatus(int areaId)
+    {
+        return await _repositoryWrapper.Areas.ToggleArea(areaId);
     }
 }

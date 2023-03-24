@@ -168,7 +168,7 @@ public class AccountsController : ControllerBase
         };
 
         var validation = await _validator.ValidateParams(updateAccount, id, User);
-        
+
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -192,7 +192,7 @@ public class AccountsController : ControllerBase
                 status = "Not Found",
                 message = result.Message,
                 data = ""
-            }),
+            })
         };
     }
 
@@ -241,8 +241,9 @@ public class AccountsController : ControllerBase
                 status = "Not Found",
                 message = result.Message,
                 data = ""
-            }),
-        };    }
+            })
+        };
+    }
 
 
     [SwaggerOperation(Summary = "Activate and Deactivate Account")]
@@ -251,7 +252,7 @@ public class AccountsController : ControllerBase
     public async Task<IActionResult> ToggleAccountStatus(int id)
     {
         var result = await _serviceWrapper.Accounts.ToggleAccountStatus(id);
-        
+
         return result.IsSuccess switch
         {
             true => Ok(new
@@ -265,7 +266,7 @@ public class AccountsController : ControllerBase
                 status = "Not Found",
                 message = result.Message,
                 data = ""
-            }),
+            })
         };
     }
 
@@ -306,8 +307,7 @@ public class AccountsController : ControllerBase
                 status = "Not Found",
                 message = result.Message,
                 data = ""
-            }),
+            })
         };
     }
-
 }

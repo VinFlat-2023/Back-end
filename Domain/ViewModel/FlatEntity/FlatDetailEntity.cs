@@ -1,5 +1,6 @@
 using Domain.ViewModel.BuildingEntity;
 using Domain.ViewModel.FlatTypeEntity;
+using Domain.ViewModel.UtilitiesFlatEntity;
 
 namespace Domain.ViewModel.FlatEntity;
 
@@ -15,4 +16,5 @@ public class FlatDetailEntity
     public FlatTypeDetailEntity FlatType { get; set; }
     public int BuildingId { get; set; }
     public BuildingBasicDetailEntity Building { get; set; }
+    public ICollection<UtilitiesFlatDetailEntity> UtilitiesFlats { get; set; }
 }
