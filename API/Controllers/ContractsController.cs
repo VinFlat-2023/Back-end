@@ -47,14 +47,15 @@ public class ContractsController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "No contract available",
                 data = ""
-            })
-            : Ok(new
+            });
+
+        return Ok(new
             {
                 status = "Success",
                 message = "Contract list found",
@@ -66,7 +67,7 @@ public class ContractsController : ControllerBase
     //TODO get contract by renter ID
 
     // GET: api/Contract
-    [SwaggerOperation(Summary = "Get contract list (For management)")]
+    [SwaggerOperation(Summary = "Get contract list (For renter)")]
     [Authorize(Roles = "Renter")]
     [HttpGet("renter")]
     public async Task<IActionResult> GetContractsByRenterId([FromQuery] ContractFilterRequest request,
@@ -80,21 +81,81 @@ public class ContractsController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "No contract available",
                 data = ""
-            })
-            : Ok(new
-            {
-                status = "Success",
-                message = "Contract list found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
             });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Contract list found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
+    }
+    
+    [SwaggerOperation(Summary = "Get active contract list (For renter)")]
+    [Authorize(Roles = "Renter")]
+    [HttpGet("renter/active")]
+    public async Task<IActionResult> GetActiveContractsByRenterId(CancellationToken token)
+    {
+        var renterId = Parse(User.Identity?.Name);
+
+        var list = await _serviceWrapper.Contracts.GetContractList(new ContractFilter{ ContractStatus = "Active"}, renterId, token);
+
+        var resultList = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(list);
+        
+        if (list == null || !list.Any())
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "No contract available",
+                data = ""
+            });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Contract list found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
+
+    }
+    
+    [SwaggerOperation(Summary = "Get inactive contract list (For renter)")]
+    [Authorize(Roles = "Renter")]
+    [HttpGet("renter/inactive")]
+    public async Task<IActionResult> GetInactiveContractsByRenterId(CancellationToken token)
+    {
+        var renterId = Parse(User.Identity?.Name);
+
+        var list = await _serviceWrapper.Contracts.GetContractList(new ContractFilter{ ContractStatus = "Inactive"}, renterId, token);
+
+        var resultList = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(list);
+
+        if (list == null || !list.Any())
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "No contract available",
+                data = ""
+            });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Contract list found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
 
     // GET: api/Contract/5
@@ -133,9 +194,7 @@ public class ContractsController : ControllerBase
                 PriceForService = entity.PriceForService.DecimalToString(),
                 PriceForWater = entity.PriceForWater.DecimalToString(),
                 PriceForElectricity = entity.PriceForElectricity.DecimalToString(),
-                //BuildingId = entity.BuildingId,
                 RoomId = entity.RoomId
-                //RenterId = entity.RenterId,
             }
         });
     }
@@ -226,9 +285,7 @@ public class ContractsController : ControllerBase
                     PriceForService = entity.PriceForService.DecimalToString(),
                     PriceForWater = entity.PriceForWater.DecimalToString(),
                     PriceForElectricity = entity.PriceForElectricity.DecimalToString(),
-                    //BuildingId = entity.BuildingId,
                     RoomId = entity.RoomId
-                    //RenterId = entity.RenterId,
                 };
 
                 var contractViewModel = new ContractDetailEntity

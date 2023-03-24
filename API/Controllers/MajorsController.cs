@@ -40,14 +40,15 @@ public class MajorsController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<MajorDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "Major list is empty",
                 data = ""
-            })
-            : Ok(new
+            });
+        
+        return Ok(new
             {
                 status = "Success",
                 message = "List found",
@@ -64,6 +65,7 @@ public class MajorsController : ControllerBase
     public async Task<IActionResult> GetMajor(int id)
     {
         var result = await _serviceWrapper.Majors.GetMajorListByUniversity(id);
+        
         if (!result.Any())
             return NotFound(new
             {
@@ -71,6 +73,7 @@ public class MajorsController : ControllerBase
                 message = "Major list in this university is empty",
                 data = ""
             });
+        
         return Ok(new
         {
             status = "Success",
@@ -86,6 +89,7 @@ public class MajorsController : ControllerBase
     public async Task<IActionResult> GetMajorDetail(int id)
     {
         var result = await _serviceWrapper.Majors.GetMajorById(id);
+        
         if (result == null)
             return NotFound(new
             {
@@ -93,6 +97,7 @@ public class MajorsController : ControllerBase
                 message = "Major list in this university is empty",
                 data = ""
             });
+        
         return Ok(new
         {
             status = "Success",

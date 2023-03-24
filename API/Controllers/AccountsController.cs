@@ -42,21 +42,22 @@ public class AccountsController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<AccountDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "Account list is empty",
                 data = ""
-            })
-            : Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
             });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get account by ID")]
@@ -196,10 +197,10 @@ public class AccountsController : ControllerBase
         };
     }
 
-    [SwaggerOperation(Summary = "Update account info")]
+    [SwaggerOperation(Summary = "Update account password")]
     [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountUpdatePasswordRequest account)
+    [HttpPatch("{id:int}/password")]
+    public async Task<IActionResult> UpdateAccountPassword(int id, [FromBody] AccountUpdatePasswordRequest account)
     {
         var accountEntity = await _serviceWrapper.Accounts.GetAccountById(id);
 

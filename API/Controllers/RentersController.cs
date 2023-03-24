@@ -47,14 +47,15 @@ public class RentersController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<RenterProfileEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "Renter list is empty",
                 data = ""
-            })
-            : Ok(new
+            });
+        
+        return Ok(new
             {
                 status = "Success",
                 message = "List found",

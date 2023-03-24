@@ -42,14 +42,15 @@ public class FlatsController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<FlatDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "Flat list is empty",
                 data = ""
-            })
-            : Ok(new
+            });
+        
+        return Ok(new
             {
                 status = "Success",
                 message = "List found",
@@ -209,14 +210,15 @@ public class FlatsController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<FlatTypeDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "Flat type list is empty",
                 data = ""
-            })
-            : Ok(new
+            });
+        
+        return Ok(new
             {
                 status = "Success",
                 message = "List found",

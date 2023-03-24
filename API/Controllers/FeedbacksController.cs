@@ -42,15 +42,18 @@ public class FeedbacksController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<FeedbackDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "Feedback not found",
                 data = ""
-            })
-            : Ok(new
+            });
+        
+        return Ok(new
             {
+                status = "Success",
+                message = "List found",
                 resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount

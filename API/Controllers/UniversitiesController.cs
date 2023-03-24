@@ -41,14 +41,15 @@ public class UniversitiesController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<UniversityDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "University list is empty",
                 data = ""
-            })
-            : Ok(new
+            });
+                
+        return Ok(new
             {
                 status = "Success",
                 message = "List found",
@@ -67,7 +68,12 @@ public class UniversitiesController : ControllerBase
         var entity = await _serviceWrapper.Universities.GetUniversityById(id);
 
         return entity == null
-            ? NotFound("University not found")
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "University not found",
+                data = ""
+            })
             : Ok(new
             {
                 status = "Success",

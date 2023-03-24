@@ -423,14 +423,15 @@ public class TicketsController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<TicketTypeDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "List not found",
                 data = ""
-            })
-            : Ok(new
+            });
+        
+        return Ok(new
             {
                 status = "Success",
                 message = "List found",

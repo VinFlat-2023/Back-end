@@ -40,21 +40,23 @@ public class AreasController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<AreaDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "Area list is empty",
                 data = ""
-            })
-            : Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
             });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
+
     }
 
     // GET: api/Areas/5

@@ -43,14 +43,15 @@ public class ServicesController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<ServiceDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "Service list is empty",
                 data = ""
-            })
-            : Ok(new
+            });
+        
+        return Ok(new
             {
                 status = "Success",
                 message = "List found",
@@ -87,14 +88,15 @@ public class ServicesController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<ServiceDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "Service list is empty",
                 data = ""
-            })
-            : Ok(new
+            });
+        
+        return Ok(new
             {
                 status = "Success",
                 message = "List found",
@@ -126,14 +128,15 @@ public class ServicesController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<ServiceDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "Service list in this building is empty",
                 data = ""
-            })
-            : Ok(new
+            });
+            
+        return Ok(new
             {
                 status = "Success",
                 message = "List found",
@@ -349,14 +352,15 @@ public class ServicesController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<ServiceTypeDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "Service type list is empty",
                 data = ""
-            })
-            : Ok(new
+            });
+        
+        return Ok(new
             {
                 status = "Success",
                 message = "List found",

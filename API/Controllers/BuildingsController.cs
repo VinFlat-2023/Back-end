@@ -39,15 +39,15 @@ public class BuildingsController : ControllerBase
         var list = await _serviceWrapper.Buildings.GetBuildingList(filter, token);
 
         var resultList = _mapper.Map<IEnumerable<BuildingDetailEntity>>(list);
-
-        return list != null && !list.Any()
-            ? NotFound(new
+        
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "Building list is empty",
                 data = ""
-            })
-            : Ok(new
+            }); 
+        return Ok(new
             {
                 status = "Success",
                 message = "List found",

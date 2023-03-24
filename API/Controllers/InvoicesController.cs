@@ -44,14 +44,15 @@ public class InvoicesController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<InvoiceRenterDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Bad Request",
                 message = "List is empty",
                 data = ""
-            })
-            : Ok(new
+            });
+        
+        return Ok(new
             {
                 status = "Success",
                 message = "List found",
@@ -103,14 +104,15 @@ public class InvoicesController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<InvoiceRenterDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "No invoice list found",
                 data = ""
-            })
-            : Ok(new
+            });
+        
+        return Ok(new
             {
                 status = "Success",
                 message = "List found",
@@ -142,14 +144,15 @@ public class InvoicesController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<InvoiceRenterDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "No invoice list found",
                 data = ""
-            })
-            : Ok(new
+            });
+            
+        return Ok(new
             {
                 status = "Success",
                 message = "List found",
@@ -189,28 +192,29 @@ public class InvoicesController : ControllerBase
                 data = ""
             });
 
-        var entities = await _serviceWrapper.Invoices
+        var list = await _serviceWrapper.Invoices
             .GetInvoiceList(new InvoiceFilter { RenterId = userId, Status = status }, token);
 
         // false = paid, true = unpaid
 
-        var resultList = _mapper.Map<IEnumerable<InvoiceRenterDetailEntity>>(entities);
+        var resultList = _mapper.Map<IEnumerable<InvoiceRenterDetailEntity>>(list);
 
-        return entities != null
-            ? Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = entities.TotalPages,
-                totalCount = entities.TotalCount
-            })
-            : NotFound(new
-            {
-                status = "Not Found",
-                message = "No invoice list found",
-                data = ""
-            });
+        if (list == null || !list.Any())
+            return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "No invoice list found",
+                    data = ""
+                });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
 
 
@@ -420,14 +424,15 @@ public class InvoicesController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<InvoiceTypeDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "Invoice type list is empty",
                 data = ""
-            })
-            : Ok(new
+            });
+            
+        return Ok(new
             {
                 status = "Success",
                 message = "List found",
@@ -585,14 +590,15 @@ public class InvoicesController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<InvoiceDataDetailEntity>>(list);
 
-        return list != null && !list.Any()
-            ? NotFound(new
+        if (list == null || !list.Any())
+            return NotFound(new
             {
                 status = "Not Found",
                 message = "Invoice detail list is empty",
                 data = ""
-            })
-            : Ok(new
+            });
+        
+        return Ok(new
             {
                 status = "Success",
                 message = "List found",
