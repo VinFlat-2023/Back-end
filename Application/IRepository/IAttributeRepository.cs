@@ -7,8 +7,8 @@ namespace Application.IRepository;
 public interface IAttributeRepository
 {
     public IQueryable<AttributeForNumeric> GetAttributeList(AttributeForNumericFilter numericFilter);
-    public IQueryable<AttributeForNumeric> GetAttributeById(int? attributeId);
+    public IQueryable<AttributeForNumeric> GetAttributeById(int? attributeForNumericId);
     public Task<AttributeForNumeric> AddAttribute(AttributeForNumeric attribute);
     public Task<RepositoryResponse> UpdateAttribute(AttributeForNumeric attribute);
-    public Task<RepositoryResponse> DeleteAttribute(int attributeId);
+    public Task<RepositoryResponse> DeleteAttribute(int attributeForNumericId);
 }

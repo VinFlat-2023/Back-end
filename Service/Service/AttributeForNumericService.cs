@@ -39,9 +39,9 @@ public class AttributeForNumericService : IAttributeForNumericService
         return pagedList;
     }
 
-    public async Task<AttributeForNumeric?> GetAttributeById(int? attributeId)
+    public async Task<AttributeForNumeric?> GetAttributeById(int? attributeForNumericId)
     {
-        return await _repositoryWrapper.Attributes.GetAttributeById(attributeId)
+        return await _repositoryWrapper.Attributes.GetAttributeById(attributeForNumericId)
             .FirstOrDefaultAsync();    
     }
 
@@ -55,9 +55,9 @@ public class AttributeForNumericService : IAttributeForNumericService
         return await _repositoryWrapper.Attributes.UpdateAttribute(attribute);
     }
 
-    public async Task<RepositoryResponse> DeleteAttribute(int attributeId)
+    public async Task<RepositoryResponse> DeleteAttribute(int attributeForNumericId)
     {
-        return await _repositoryWrapper.Attributes.DeleteAttribute(attributeId);
+        return await _repositoryWrapper.Attributes.DeleteAttribute(attributeForNumericId);
         
     }
 }

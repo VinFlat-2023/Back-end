@@ -27,10 +27,10 @@ public class AttributeRepository : IAttributeRepository
             .AsNoTracking();
     }
 
-    public IQueryable<AttributeForNumeric> GetAttributeById(int? attributeId)
+    public IQueryable<AttributeForNumeric> GetAttributeById(int? attributeForNumericId)
     {
         return _context.AttributeForNumerics
-            .Where(x => x.AttributeId == attributeId);
+            .Where(x => x.AttributeForNumericId == attributeForNumericId);
     }
 
     public async Task<AttributeForNumeric> AddAttribute(AttributeForNumeric attribute)
@@ -43,7 +43,7 @@ public class AttributeRepository : IAttributeRepository
     public async Task<RepositoryResponse> UpdateAttribute(AttributeForNumeric attribute)
     {
         var attributeData = await _context.AttributeForNumerics
-            .FirstOrDefaultAsync(x => x.AttributeId == attribute.AttributeId);
+            .FirstOrDefaultAsync(x => x.AttributeForNumericId == attribute.AttributeForNumericId);
 
         if (attributeData == null)
             return new RepositoryResponse
@@ -64,10 +64,10 @@ public class AttributeRepository : IAttributeRepository
         };
     }
 
-    public async Task<RepositoryResponse> DeleteAttribute(int attributeId)
+    public async Task<RepositoryResponse> DeleteAttribute(int attributeForNumericId)
     {
         var attributeData = await _context.AttributeForNumerics
-            .FirstOrDefaultAsync(x => x.AttributeId == attributeId);
+            .FirstOrDefaultAsync(x => x.AttributeForNumericId == attributeForNumericId);
 
         if (attributeData == null)
             return new RepositoryResponse
