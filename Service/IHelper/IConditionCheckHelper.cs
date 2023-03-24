@@ -51,4 +51,5 @@ public interface IConditionCheckHelper
     public Task<Account?> AccountUsernameExist(string? username);
 
     public Task<Room?> RoomCheck(int? roomId);
+    public Task<AttributeForNumeric?> AttributeCheck(int? roomTypeId);
 }

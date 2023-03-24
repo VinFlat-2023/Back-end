@@ -47,12 +47,12 @@ public class BuildingService : IBuildingService
         return await _repositoryWrapper.Buildings.AddBuilding(building);
     }
 
-    public async Task<Building?> UpdateBuilding(Building building)
+    public async Task<RepositoryResponse> UpdateBuilding(Building building)
     {
         return await _repositoryWrapper.Buildings.UpdateBuilding(building);
     }
 
-    public async Task<bool> DeleteBuilding(int buildingId)
+    public async Task<RepositoryResponse> DeleteBuilding(int buildingId)
     {
         return await _repositoryWrapper.Buildings.DeleteBuilding(buildingId);
     }

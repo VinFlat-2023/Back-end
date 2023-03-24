@@ -22,7 +22,7 @@ public class Account
     public bool Status { get; set; }
 
     [Range(0, 100, ErrorMessage = "Role Id cannot be negative")]
-    public int? RoleId { get; set; }
+    public int RoleId { get; set; }
 
     public virtual Role Role { get; set; }
     public virtual ICollection<Invoice> Invoices { get; set; }

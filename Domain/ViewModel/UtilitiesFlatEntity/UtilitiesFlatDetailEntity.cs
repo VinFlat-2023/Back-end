@@ -9,5 +9,5 @@ public class UtilitiesFlatDetailEntity
     public int FlatId { get; set; }
     public virtual FlatDetailEntity Flat { get; set; }
     public int UtilityId { get; set; }
-    public virtual UtilityDetailEntity Utility { get; set; } 
+    public virtual UtilityDetailEntity Utility { get; set; }
 }

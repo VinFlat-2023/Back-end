@@ -37,7 +37,7 @@ public class RentersController : ControllerBase
 
     // GET: api/Renters
     [HttpGet]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Get renter list with pagination and filter (For management)")]
     public async Task<IActionResult> GetRenters([FromQuery] RenterFilterRequest request, CancellationToken token)
     {
@@ -54,20 +54,20 @@ public class RentersController : ControllerBase
                 message = "Renter list is empty",
                 data = ""
             });
-        
+
         return Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
-            });
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
 
     // GET: api/Renters/5
     [HttpGet("{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get renter by id (For management and renter)")]
     public async Task<IActionResult> GetRenter(int id)
     {
@@ -193,7 +193,7 @@ public class RentersController : ControllerBase
     // PUT: api/Renters/5
     // To protect from over posting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Update renter by id (For management and renter)")]
     public async Task<IActionResult> PutRenter([FromBody] RenterUpdateRequest renter, int id)
     {
@@ -281,7 +281,7 @@ public class RentersController : ControllerBase
     }
 
     [HttpPut("{id:int}/change-password")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Update renter by id (For management and renter)")]
     public async Task<IActionResult> ChangePassword([FromBody] RenterUpdatePasswordRequest renter, int id)
     {
@@ -424,7 +424,7 @@ public class RentersController : ControllerBase
 
     // DELETE: api/Renters/5
     [HttpDelete("{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Disable renter by id (For management)")]
     public async Task<IActionResult> DeleteRenter(int id)
     {

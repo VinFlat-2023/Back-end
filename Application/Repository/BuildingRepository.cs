@@ -1,4 +1,5 @@
 using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -72,13 +73,17 @@ public class BuildingRepository : IBuildingRepository
     /// </summary>
     /// <param name="building"></param>
     /// <returns></returns>
-    public async Task<Building?> UpdateBuilding(Building building)
+    public async Task<RepositoryResponse> UpdateBuilding(Building building)
     {
         var buildingData = await _context.Buildings
             .FirstOrDefaultAsync(x => x.BuildingId == building.BuildingId);
 
         if (buildingData == null)
-            return null;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Building not found"
+            };
 
         var count = _context.Flats
             .Count(x => x.BuildingId == building.BuildingId);
@@ -94,7 +99,12 @@ public class BuildingRepository : IBuildingRepository
 
         await _context.SaveChangesAsync();
 
-        return buildingData;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Building updated successfully"
+        };
+        ;
     }
 
     /// <summary>
@@ -102,14 +112,27 @@ public class BuildingRepository : IBuildingRepository
     /// </summary>
     /// <param name="buildingId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteBuilding(int buildingId)
+    public async Task<RepositoryResponse> DeleteBuilding(int buildingId)
     {
         var buildingFound = await _context.Buildings
             .FirstOrDefaultAsync(x => x.BuildingId == buildingId);
+
         if (buildingFound == null)
-            return false;
+
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Building failed to delete"
+            };
+
         _context.Buildings.Remove(buildingFound);
+
         await _context.SaveChangesAsync();
-        return true;
+
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Building deleted successfully"
+        };
     }
 }

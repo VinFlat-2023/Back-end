@@ -13,7 +13,7 @@ public class JwtRoleCheckHelper : IJwtRoleCheckerHelper
         if (!await JwtCheck(user))
             return false;
 
-        return roleCheck is not ("Admin" or "SuperAdmin" or "Supervisor");
+        return roleCheck is not ("Admin" or "Supervisor");
     }
 
     public async Task<bool> IsRenterRoleAuthorized(ClaimsPrincipal user, int id)
@@ -23,7 +23,7 @@ public class JwtRoleCheckHelper : IJwtRoleCheckerHelper
         if (!await JwtCheck(user))
             return false;
 
-        return roleCheck is not ("Admin" or "SuperAdmin" or "Supervisor")
+        return roleCheck is not ("Admin" or "Supervisor")
                || (roleCheck is not "Renter" && user.Identity?.Name == id.ToString());
     }
 
@@ -34,7 +34,7 @@ public class JwtRoleCheckHelper : IJwtRoleCheckerHelper
         if (!await JwtCheck(user))
             return false;
 
-        return roleCheck is not ("Admin" or "SuperAdmin" or "Supervisor" or "Renter");
+        return roleCheck is not ("Admin" or "Supervisor" or "Renter");
     }
 
     public async Task<bool> IsManagementAndEmployeeRoleAuthorized(ClaimsPrincipal user, int id)
@@ -44,20 +44,11 @@ public class JwtRoleCheckHelper : IJwtRoleCheckerHelper
         if (!await JwtCheck(user))
             return false;
 
-        return roleCheck is not ("Admin" or "SuperAdmin" or "Supervisor")
+        return roleCheck is not ("Admin" or "Supervisor")
                || (roleCheck is not "Employee"
                    && user.Identity?.Name == id.ToString());
     }
 
-    public async Task<bool> IsSuperAdminRoleAuthorized(ClaimsPrincipal user)
-    {
-        var roleCheck = await JwtRoleCheck(user);
-
-        if (!await JwtCheck(user))
-            return false;
-
-        return roleCheck is not "SuperAdmin";
-    }
 
     private static async Task<string> JwtRoleCheck(ClaimsPrincipal user)
     {

@@ -21,9 +21,9 @@ public class AttributeRepository : IAttributeRepository
         return _context.AttributeForNumerics
             // Filter starts here
             .Where(x =>
-                filters.ElectricityAttribute == null || 
-                x.ElectricityAttribute.ToLower().Equals(filters.ElectricityAttribute.ToLower())
-                && filters.ElectricityAttribute == null || 
+                filters.ElectricityAttribute == null ||
+                (x.ElectricityAttribute.ToLower().Equals(filters.ElectricityAttribute.ToLower())
+                 && filters.ElectricityAttribute == null) ||
                 x.ElectricityAttribute.ToLower().Equals(filters.ElectricityAttribute.ToLower()))
             .AsNoTracking();
     }

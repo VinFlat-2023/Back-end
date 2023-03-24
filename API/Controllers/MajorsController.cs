@@ -29,7 +29,7 @@ public class MajorsController : ControllerBase
     }
 
     // GET: api/Majors
-    [Authorize(Roles = "SuperAdmin, Admin, Renter, Supervisor")]
+    [Authorize(Roles = "Admin, Renter, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Get major list with pagination and filter (For management)")]
     [HttpGet]
     public async Task<IActionResult> GetMajors([FromQuery] MajorFilterRequest request, CancellationToken token)
@@ -47,25 +47,25 @@ public class MajorsController : ControllerBase
                 message = "Major list is empty",
                 data = ""
             });
-        
+
         return Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
-            });
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
 
     // GET: api/Majors/5
     [SwaggerOperation(Summary = "[Authorize] Get all majors by university id (For management and renter)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Renter, Supervisor")]
+    [Authorize(Roles = "Admin, Renter, Supervisor")]
     [HttpGet("university/{id:int}")]
     public async Task<IActionResult> GetMajor(int id)
     {
         var result = await _serviceWrapper.Majors.GetMajorListByUniversity(id);
-        
+
         if (!result.Any())
             return NotFound(new
             {
@@ -73,7 +73,7 @@ public class MajorsController : ControllerBase
                 message = "Major list in this university is empty",
                 data = ""
             });
-        
+
         return Ok(new
         {
             status = "Success",
@@ -84,12 +84,12 @@ public class MajorsController : ControllerBase
 
     // GET: api/Majors/5
     [SwaggerOperation(Summary = "[Authorize] Get major using id (For management and renter)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Renter, Supervisor")]
+    [Authorize(Roles = "Admin, Renter, Supervisor")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetMajorDetail(int id)
     {
         var result = await _serviceWrapper.Majors.GetMajorById(id);
-        
+
         if (result == null)
             return NotFound(new
             {
@@ -97,7 +97,7 @@ public class MajorsController : ControllerBase
                 message = "Major list in this university is empty",
                 data = ""
             });
-        
+
         return Ok(new
         {
             status = "Success",
@@ -107,7 +107,7 @@ public class MajorsController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "[Authorize] Create major (For management)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpPost]
     public async Task<IActionResult> PostMajor([FromBody] MajorCreateRequest major)
     {
@@ -145,7 +145,7 @@ public class MajorsController : ControllerBase
     // PUT: api/Majors/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Update major info (For management)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateMajor(int id, [FromBody] MajorUpdateRequest major)
     {
@@ -182,7 +182,7 @@ public class MajorsController : ControllerBase
 
     // DELETE: api/Majors/5
     [SwaggerOperation(Summary = "[Authorize] Remove major (For management)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteMajor(int id)
     {

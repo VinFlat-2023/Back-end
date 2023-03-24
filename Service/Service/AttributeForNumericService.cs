@@ -42,7 +42,7 @@ public class AttributeForNumericService : IAttributeForNumericService
     public async Task<AttributeForNumeric?> GetAttributeById(int? attributeForNumericId)
     {
         return await _repositoryWrapper.Attributes.GetAttributeById(attributeForNumericId)
-            .FirstOrDefaultAsync();    
+            .FirstOrDefaultAsync();
     }
 
     public async Task<AttributeForNumeric?> AddAttribute(AttributeForNumeric attribute)
@@ -58,6 +58,5 @@ public class AttributeForNumericService : IAttributeForNumericService
     public async Task<RepositoryResponse> DeleteAttribute(int attributeForNumericId)
     {
         return await _repositoryWrapper.Attributes.DeleteAttribute(attributeForNumericId);
-        
     }
 }

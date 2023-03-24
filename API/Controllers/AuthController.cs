@@ -84,7 +84,7 @@ public class AuthController : ControllerBase
         if (renter == null)
             return Unauthorized(new
             {
-                status = "Success",
+                status = "Unauthorized",
                 message = "Username or password is wrong",
                 data = ""
             });

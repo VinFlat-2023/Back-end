@@ -30,7 +30,8 @@ public class TokenService : ITokenService
         };
 
         var securityKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_configuration["JwtToken:NotTokenKeyForSureSourceTrustMeDude"]));
+            Encoding.UTF8.GetBytes(
+                _configuration["JwtToken:NotTokenKeyForSureSourceTrustMeDude"]));
 
         var credential = new SigningCredentials(
             securityKey, SecurityAlgorithms.HmacSha512Signature);

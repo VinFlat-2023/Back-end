@@ -125,7 +125,7 @@ public class FlatRepository : IFlatRepository
     {
         var flatData = await _context.Flats
             .FirstOrDefaultAsync(x => x.FlatId == flat!.FlatId);
-        
+
         if (flatData == null)
             return null;
 

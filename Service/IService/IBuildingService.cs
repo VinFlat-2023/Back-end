@@ -9,6 +9,6 @@ public interface IBuildingService
     public Task<PagedList<Building>?> GetBuildingList(BuildingFilter filters, CancellationToken token);
     public Task<Building?> GetBuildingById(int? buildingId);
     public Task<Building?> AddBuilding(Building building);
-    public Task<Building?> UpdateBuilding(Building building);
-    public Task<bool> DeleteBuilding(int buildingId);
+    public Task<RepositoryResponse> UpdateBuilding(Building building);
+    public Task<RepositoryResponse> DeleteBuilding(int buildingId);
 }

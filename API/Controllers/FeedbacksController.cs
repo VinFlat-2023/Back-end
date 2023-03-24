@@ -32,7 +32,7 @@ public class FeedbacksController : ControllerBase
 
     // GET: api/Feedbacks
     [SwaggerOperation(Summary = "[Authorize] Get Feedback List")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpGet]
     public async Task<IActionResult> GetFeedbacks([FromQuery] FeedbackFilterRequest request, CancellationToken token)
     {
@@ -49,20 +49,20 @@ public class FeedbacksController : ControllerBase
                 message = "Feedback not found",
                 data = ""
             });
-        
+
         return Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
-            });
+        {
+            status = "Success",
+            message = "List found",
+            resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
 
     // GET: api/Feedbacks/5
     [SwaggerOperation(Summary = "[Authorize] Get Feedback")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetFeedback(int id)
     {
@@ -85,7 +85,7 @@ public class FeedbacksController : ControllerBase
     // PUT: api/Feedbacks/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Update Feedback info")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutFeedback(int id, [FromBody] FeedbackUpdateRequest feedback)
     {
@@ -126,7 +126,7 @@ public class FeedbacksController : ControllerBase
     // POST: api/Feedbacks
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Create Feedback")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [HttpPost]
     public async Task<IActionResult> PostFeedback([FromBody] FeedbackCreateRequest feedback)
     {
@@ -169,7 +169,7 @@ public class FeedbacksController : ControllerBase
 
     // DELETE: api/Feedbacks/5
     [SwaggerOperation(Summary = "Remove Feedback")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteFeedback(int id)
     {
@@ -192,7 +192,7 @@ public class FeedbacksController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Get Feedback Type List")]
     [HttpGet("type")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = " Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetFeedbackTypes([FromQuery] FeedbackTypeFilterRequest request,
         CancellationToken token)
     {
@@ -222,7 +222,7 @@ public class FeedbacksController : ControllerBase
     // GET: api/FeedbackTypes/5
     [SwaggerOperation(Summary = "[Authorize] GetFeedback Type")]
     [HttpGet("type/{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = " Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetFeedbackType(int id)
     {
         var entity = await _serviceWrapper.FeedbackTypes
@@ -247,7 +247,7 @@ public class FeedbacksController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Update Feedback Type info")]
     [HttpPut("type/{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = " Admin, Supervisor")]
     public async Task<IActionResult> PutFeedbackType(int id, [FromBody] FeedbackTypeUpdateRequest feedbackType)
     {
         var updateFeedBackType = new FeedbackType
@@ -285,7 +285,7 @@ public class FeedbacksController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "Create Feedback Type")]
     [HttpPost("type")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = " Admin, Supervisor")]
     public async Task<IActionResult> PostFeedbackType([FromBody] FeedbackTypeCreateRequest feedbackType)
     {
         var newFeedbackType = new FeedbackType
@@ -311,7 +311,7 @@ public class FeedbacksController : ControllerBase
     // DELETE: api/FeedbackTypes/5
     [SwaggerOperation(Summary = "Remove Feedback Type")]
     [HttpDelete("type/{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = " Admin, Supervisor")]
     public async Task<IActionResult> DeleteFeedbackType(int id)
     {
         var result = await _serviceWrapper.Feedbacks.DeleteFeedback(id);

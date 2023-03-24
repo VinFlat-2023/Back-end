@@ -6,6 +6,7 @@ using Domain.EntitiesDTO.NotificationDTO;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Account;
 using Domain.EntityRequest.Area;
+using Domain.EntityRequest.Attribute;
 using Domain.EntityRequest.Building;
 using Domain.EntityRequest.Contract;
 using Domain.EntityRequest.FeedBack;
@@ -84,7 +85,6 @@ public class AutoMapper : Profile
         MapNotiAndNotiType();
         MapPlaceholder();
         MapAttribute();
-        AttributeForNumeric();
         MapUtilitiesFlat();
         MapUtility();
     }
@@ -93,7 +93,7 @@ public class AutoMapper : Profile
     {
         CreateMap<Utility, UtilitiesFlatDetailEntity>()
             .ReverseMap();
-        
+
         CreateMap<UtilitiesFlatDetailEntity, Utility>()
             .ReverseMap();
     }
@@ -102,10 +102,9 @@ public class AutoMapper : Profile
     {
         CreateMap<UtilitiesFlat, UtilitiesFlatDetailEntity>()
             .ReverseMap();
-        
+
         CreateMap<UtilitiesFlatDetailEntity, UtilitiesFlat>()
             .ReverseMap();
-        
     }
 
     private void MapAttribute()
@@ -114,11 +113,13 @@ public class AutoMapper : Profile
             .ReverseMap();
         CreateMap<AttributeDetailEntity, AttributeForNumeric>()
             .ReverseMap();
-        
         CreateMap<AttributeForNumeric, AttributeForNumericFilter>()
             .ForAllMembers(o => o.ExplicitExpansion());
-
         CreateMap<AttributeForNumericFilterRequest, AttributeForNumericFilter>()
+            .ReverseMap();
+        CreateMap<AttributeForNumeric, AttributeCreateRequest>()
+            .ReverseMap();
+        CreateMap<AttributeForNumeric, AttributeUpdateRequest>()
             .ReverseMap();
     }
 
@@ -238,20 +239,6 @@ public class AutoMapper : Profile
         CreateMap<TicketTypeDetailEntity, TicketType>()
             .ForAllMembers(o => o.ExplicitExpansion());
         CreateMap<TicketType, TicketTypeDetailEntity>()
-            .ReverseMap();
-    }
-
-    private void AttributeForNumeric()
-    {
-        CreateMap<AttributeForNumeric, AttributeForNumeric>()
-            .ReverseMap();
-
-        CreateMap<AttributeForNumeric, AttributeForNumeric>()
-            .ReverseMap();
-
-        CreateMap<AttributeForNumericFilterRequest, AttributeForNumericFilter>()
-            .ReverseMap();
-        CreateMap<AttributeForNumericFilter, AttributeForNumericFilterRequest>()
             .ReverseMap();
     }
 

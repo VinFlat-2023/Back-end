@@ -32,7 +32,7 @@ public class ServicesController : ControllerBase
 
     // GET: api/ServiceEntities
     [HttpGet]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get service list with pagination and filter (For management and renter))")]
     public async Task<IActionResult> GetServiceEntities([FromQuery] ServiceFilterRequest request,
         CancellationToken token)
@@ -50,19 +50,19 @@ public class ServicesController : ControllerBase
                 message = "Service list is empty",
                 data = ""
             });
-        
+
         return Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
-            });
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
 
     [HttpGet("building/current")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary =
         "[Authorize] Get service list based on current user building id (For management and renter)")]
     public async Task<IActionResult> GetServiceEntitiesBasedOnRenterId([FromQuery] ServiceFilterRequest request,
@@ -95,19 +95,19 @@ public class ServicesController : ControllerBase
                 message = "Service list is empty",
                 data = ""
             });
-        
+
         return Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
-            });
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
 
     [HttpGet("building/{buildingId:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Get service list based on building id (For management)d)")]
     public async Task<IActionResult> GetServiceEntitiesByBuilding([FromQuery] ServiceFilterRequest request,
         int buildingId, CancellationToken token)
@@ -135,15 +135,15 @@ public class ServicesController : ControllerBase
                 message = "Service list in this building is empty",
                 data = ""
             });
-            
+
         return Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
-            });
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
 
     [HttpPut("select")]
@@ -194,7 +194,7 @@ public class ServicesController : ControllerBase
 
     // GET: api/ServiceEntitys/5
     [HttpGet("{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get service by id (For management and renter)")]
     public async Task<IActionResult> GetServiceEntity(int id)
     {
@@ -217,7 +217,7 @@ public class ServicesController : ControllerBase
     // PUT: api/ServiceEntitys/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Update service by id (For management)")]
     public async Task<IActionResult> PutServiceEntity(int id, [FromBody] ServiceUpdateRequest service)
     {
@@ -265,7 +265,7 @@ public class ServicesController : ControllerBase
     // POST: api/ServiceEntitiess
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Add new service (For management)")]
     public async Task<IActionResult> PostServiceEntity([FromBody] ServiceCreateRequest service)
     {
@@ -313,7 +313,7 @@ public class ServicesController : ControllerBase
 
     // DELETE: api/ServiceEntitys/5
     [HttpDelete("{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Delete service by id (For management)")]
     public async Task<IActionResult> DeleteServiceEntity(int id)
     {
@@ -334,7 +334,7 @@ public class ServicesController : ControllerBase
     }
 
     [HttpGet("type")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get service type list (For management and renter)")]
     public async Task<IActionResult> GetServiceTypes([FromQuery] ServiceTypeFilterRequest request,
         CancellationToken token)
@@ -359,20 +359,20 @@ public class ServicesController : ControllerBase
                 message = "Service type list is empty",
                 data = ""
             });
-        
+
         return Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
-            });
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
 
     // GET: api/ServiceTypes/5
     [HttpGet("type/{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get service type by id (For management and renter)")]
     public async Task<IActionResult> GetServiceType(int id)
     {
@@ -395,7 +395,7 @@ public class ServicesController : ControllerBase
     // PUT: api/ServiceTypes/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("type/{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Update service type by id (For management)")]
     public async Task<IActionResult> PutServiceType(int id, ServiceTypeCreateRequest serviceType)
     {
@@ -434,7 +434,7 @@ public class ServicesController : ControllerBase
     // POST: api/ServiceTypes
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost("type")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Add new service type (For management)")]
     public async Task<IActionResult> PostServiceType(ServiceTypeCreateRequest serviceType)
     {
@@ -471,7 +471,7 @@ public class ServicesController : ControllerBase
 
     // DELETE: api/ServiceTypes/5
     [HttpDelete("type/{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Delete service type by id (For management)")]
     public async Task<IActionResult> DeleteServiceType(int id)
     {

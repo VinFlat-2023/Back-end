@@ -32,7 +32,7 @@ public class AccountsController : ControllerBase
 
     // GET: api/Accounts
     [SwaggerOperation(Summary = "[Authorize] Get account list")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpGet]
     public async Task<IActionResult> GetAccounts([FromQuery] AccountFilterRequest request, CancellationToken token)
     {
@@ -61,7 +61,7 @@ public class AccountsController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get account by ID")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetAccount(int id)
     {
@@ -83,7 +83,7 @@ public class AccountsController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "[Authorize] Create Account")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpPost("register")]
     public async Task<IActionResult> CreateAccount([FromBody] AccountCreateRequest account)
     {
@@ -145,7 +145,7 @@ public class AccountsController : ControllerBase
     // PUT: api/Accounts/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "Update account info")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountUpdateRequest account)
     {
@@ -198,7 +198,7 @@ public class AccountsController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "Update account password")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpPatch("{id:int}/password")]
     public async Task<IActionResult> UpdateAccountPassword(int id, [FromBody] AccountUpdatePasswordRequest account)
     {
@@ -248,7 +248,7 @@ public class AccountsController : ControllerBase
 
 
     [SwaggerOperation(Summary = "Activate and Deactivate Account")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpPatch("toggle-account/{id:int}")]
     public async Task<IActionResult> ToggleAccountStatus(int id)
     {
@@ -273,7 +273,7 @@ public class AccountsController : ControllerBase
 
     // DELETE: api/Accounts/5
     [SwaggerOperation(Summary = "Remove Account")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteAccount(int id)
     {

@@ -31,7 +31,7 @@ public class AreasController : ControllerBase
     // GET: api/Areas
     [HttpGet]
     [SwaggerOperation(Summary = "[Authorize] Get area list (For management and renter))")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetAreas([FromQuery] AreaFilterRequest request, CancellationToken token)
     {
         var filter = _mapper.Map<AreaFilter>(request);
@@ -56,12 +56,11 @@ public class AreasController : ControllerBase
             totalPage = list.TotalPages,
             totalCount = list.TotalCount
         });
-
     }
 
     // GET: api/Areas/5
     [SwaggerOperation(Summary = "[Authorize] Get area using id (For management and renter)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetArea(int id)
     {
@@ -87,7 +86,7 @@ public class AreasController : ControllerBase
     // PUT: api/Areas/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Update area info using id (For management)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutArea(int id, [FromBody] AreaUpdateRequest area)
     {
@@ -131,7 +130,7 @@ public class AreasController : ControllerBase
     // POST: api/Areas
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Create area (For management)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpPost]
     public async Task<IActionResult> PostArea([FromBody] AreaCreateRequest area)
     {
@@ -173,7 +172,7 @@ public class AreasController : ControllerBase
 
     // DELETE: api/Areas/5
     [SwaggerOperation(Summary = "[Authorize] Delete area using id (For management)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteArea(int id)
     {

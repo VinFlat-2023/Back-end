@@ -34,5 +34,5 @@ public class Flat
     public virtual ICollection<Room> Rooms { get; set; }
     public virtual ICollection<Feedback> FeedBacks { get; set; }
     public virtual ICollection<Contract> Contracts { get; set; }
-    public virtual ICollection<UtilitiesFlat> UtilitiesFlats { get; set; } 
+    public virtual ICollection<UtilitiesFlat> UtilitiesFlats { get; set; }
 }

@@ -30,7 +30,7 @@ public class BuildingsController : ControllerBase
 
     // GET: api/Buildings
     [SwaggerOperation(Summary = "[Authorize] Get building list (For management and renter)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [HttpGet]
     public async Task<IActionResult> GetBuildings([FromQuery] BuildingFilterRequest request, CancellationToken token)
     {
@@ -39,27 +39,27 @@ public class BuildingsController : ControllerBase
         var list = await _serviceWrapper.Buildings.GetBuildingList(filter, token);
 
         var resultList = _mapper.Map<IEnumerable<BuildingDetailEntity>>(list);
-        
+
         if (list == null || !list.Any())
             return NotFound(new
             {
                 status = "Not Found",
                 message = "Building list is empty",
                 data = ""
-            }); 
-        return Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
             });
+        return Ok(new
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
 
     // GET: api/Buildings/5
     [SwaggerOperation(Summary = "[Authorize] Get building info (For management and renter)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetBuilding(int id)
     {
@@ -82,7 +82,7 @@ public class BuildingsController : ControllerBase
     // PUT: api/Buildings/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Update Building info (For management)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutBuilding(int id, [FromBody] BuildingUpdateRequest building)
     {
@@ -111,26 +111,27 @@ public class BuildingsController : ControllerBase
 
         var result = await _serviceWrapper.Buildings.UpdateBuilding(updateBuilding);
 
-        if (result == null)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Building failed to update",
-                data = ""
-            });
-
-        return Ok(new
+        return result.IsSuccess switch
         {
-            status = "Success",
-            message = "Building updated",
-            data = ""
-        });
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
     }
 
     // POST: api/Buildings
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Create building (For management)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpPost]
     public async Task<IActionResult> PostBuilding([FromBody] BuildingCreateRequest building)
     {
@@ -177,25 +178,26 @@ public class BuildingsController : ControllerBase
 
     // DELETE: api/Buildings/5
     [SwaggerOperation(Summary = "[Authorize] Remove building (For management)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteBuilding(int id)
     {
         var result = await _serviceWrapper.Buildings.DeleteBuilding(id);
 
-        return !result
-            ? NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Building not found",
+                message = result.Message,
                 data = ""
             })
-            : Ok(
-                new
-                {
-                    status = "Success",
-                    message = "Building deleted",
-                    data = ""
-                });
+        };
     }
 }

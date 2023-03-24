@@ -8,7 +8,6 @@ public static class AuthorizationService
     {
         services.AddAuthorization(o =>
         {
-            o.AddPolicy("SuperAdmin", policy => policy.RequireClaim("SuperAdmin"));
             o.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
             o.AddPolicy("Supervisor", policy => policy.RequireClaim("Supervisor"));
             o.AddPolicy("Technician", policy => policy.RequireClaim("Technician"));

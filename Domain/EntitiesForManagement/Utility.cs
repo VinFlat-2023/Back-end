@@ -6,6 +6,7 @@ public class Utility
     {
         UtilitiesFlats = new HashSet<UtilitiesFlat>();
     }
+
     public int UtilityId { get; set; }
     public string UtilitiesName { get; set; } = null!;
     public string? Description { get; set; }

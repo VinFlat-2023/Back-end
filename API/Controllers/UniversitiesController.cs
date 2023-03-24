@@ -29,7 +29,7 @@ public class UniversitiesController : ControllerBase
     }
 
     // GET: api/Universities
-    [Authorize(Roles = "SuperAdmin, Admin, Renter, Supervisor")]
+    [Authorize(Roles = "Admin, Renter, Supervisor")]
     [HttpGet]
     [SwaggerOperation(Summary =
         "[Authorize] Get university list with pagination and filter (For management and renter)")]
@@ -48,19 +48,19 @@ public class UniversitiesController : ControllerBase
                 message = "University list is empty",
                 data = ""
             });
-                
+
         return Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
-            });
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
 
     // GET: api/Universities/5
-    [Authorize(Roles = "SuperAdmin, Admin, Renter, Supervisor")]
+    [Authorize(Roles = "Admin, Renter, Supervisor")]
     [HttpGet("{id:int}")]
     [SwaggerOperation(Summary = "[Authorize] Get university by id (For management and renter)")]
     public async Task<IActionResult> GetUniversity(int id)
@@ -84,7 +84,7 @@ public class UniversitiesController : ControllerBase
 
     // PUT: api/Universities/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpPut("{id:int}")]
     [SwaggerOperation(Summary = "[Authorize] Update university by id (For management)")]
     public async Task<IActionResult> PutUniversity(int id, UniversityUpdateRequest university)
@@ -124,7 +124,7 @@ public class UniversitiesController : ControllerBase
 
     // POST: api/Universities
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpPost]
     [SwaggerOperation(Summary = "[Authorize] Create university (For management)")]
     public async Task<IActionResult> PostUniversity([FromBody] UniversityCreateRequest university)
@@ -162,7 +162,7 @@ public class UniversitiesController : ControllerBase
     }
 
     // DELETE: api/Universities/5
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpDelete("{id:int}")]
     [SwaggerOperation(Summary = "[Authorize] Delete university by id (For management)")]
     public async Task<IActionResult> DeleteUniversity(int id)

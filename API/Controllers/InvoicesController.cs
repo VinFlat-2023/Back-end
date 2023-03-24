@@ -35,7 +35,7 @@ public class InvoicesController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice list (For management)")]
     [HttpGet]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> GetInvoices([FromQuery] InvoiceFilterRequest request, CancellationToken token)
     {
         var filter = _mapper.Map<InvoiceFilter>(request);
@@ -51,21 +51,21 @@ public class InvoicesController : ControllerBase
                 message = "List is empty",
                 data = ""
             });
-        
+
         return Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
-            });
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
 
     // GET: api/Invoices/5
     [SwaggerOperation(Summary = "[Authorize] Get invoice by Id (For management)")]
     [HttpGet("{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceByManagement(int id)
     {
         var entity = await _serviceWrapper.Invoices.GetInvoiceById(id);
@@ -86,7 +86,7 @@ public class InvoicesController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice list by renter Id (For management)")]
     [HttpGet("user/{userId:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceRenter(int userId, CancellationToken token)
     {
         var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
@@ -111,15 +111,15 @@ public class InvoicesController : ControllerBase
                 message = "No invoice list found",
                 data = ""
             });
-        
+
         return Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
-            });
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice list by renter (For renter)")]
@@ -151,20 +151,20 @@ public class InvoicesController : ControllerBase
                 message = "No invoice list found",
                 data = ""
             });
-            
+
         return Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
-            });
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice list by renter Id (For renter and management)")]
     [HttpGet("user/{userId:int}/status/{status:bool}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     public async Task<IActionResult> GetInvoiceListRenterWithStatus(int userId, bool status, CancellationToken token)
     {
         /*
@@ -201,11 +201,11 @@ public class InvoicesController : ControllerBase
 
         if (list == null || !list.Any())
             return NotFound(new
-                {
-                    status = "Not Found",
-                    message = "No invoice list found",
-                    data = ""
-                });
+            {
+                status = "Not Found",
+                message = "No invoice list found",
+                data = ""
+            });
 
         return Ok(new
         {
@@ -274,7 +274,7 @@ public class InvoicesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update Invoice info (For management)",
         Description = "date format d/M/YYYY")]
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> PutInvoice(int id, [FromBody] InvoiceUpdateRequest invoice)
     {
         var updateInvoice = new Invoice
@@ -314,7 +314,7 @@ public class InvoicesController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Create Invoice (For management)", Description = "date format d/M/YYYY")]
     [HttpPost]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> PostInvoice([FromBody] InvoiceCreateRequest invoice)
     {
         var accountId = User.Identity?.Name;
@@ -385,7 +385,7 @@ public class InvoicesController : ControllerBase
     // DELETE: api/Invoices/5
     [SwaggerOperation(Summary = "[Authorize] Delete invoice (For management)")]
     [HttpDelete("{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> DeleteInvoice(int id)
     {
         var result = await _serviceWrapper.Invoices.DeleteInvoice(id);
@@ -407,7 +407,7 @@ public class InvoicesController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice type list (For management)")]
     [HttpGet("types")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceTypes([FromQuery] InvoiceTypeFilterRequest request,
         CancellationToken token)
     {
@@ -431,20 +431,20 @@ public class InvoicesController : ControllerBase
                 message = "Invoice type list is empty",
                 data = ""
             });
-            
+
         return Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
-            });
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice type by id (For management)")]
     [HttpGet("types/{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceTypeById(int id)
     {
         var entity = await _serviceWrapper.InvoiceTypes.GetInvoiceTypeById(id);
@@ -465,7 +465,7 @@ public class InvoicesController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Create invoice type (For management)")]
     [HttpPost("types")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> CreateNewInvoiceType([FromBody] InvoiceTypeCreateRequest invoiceType)
     {
         var newInvoiceType = new InvoiceType
@@ -501,7 +501,7 @@ public class InvoicesController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Update invoice type (For management)")]
     [HttpPut("types/{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> UpdateInvoiceType(int id, [FromBody] InvoiceTypeUpdateRequest invoiceType)
     {
         var updateInvoiceType = new InvoiceType
@@ -538,7 +538,7 @@ public class InvoicesController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Delete invoice type (For management)")]
     [HttpDelete("types/{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteInvoiceType(int id)
     {
         var result = await _serviceWrapper.InvoiceTypes.DeleteInvoiceType(id);
@@ -559,7 +559,7 @@ public class InvoicesController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Delete invoice detail (For management)")]
     [HttpDelete("details/{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> DeleteInvoiceDetail(int id)
     {
         var result = await _serviceWrapper.InvoiceDetails.DeleteInvoiceDetail(id);
@@ -580,7 +580,7 @@ public class InvoicesController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice detail list (For management)")]
     [HttpGet("details")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceDetails([FromQuery] InvoiceDetailFilterRequest request,
         CancellationToken token)
     {
@@ -597,20 +597,20 @@ public class InvoicesController : ControllerBase
                 message = "Invoice detail list is empty",
                 data = ""
             });
-        
+
         return Ok(new
-            {
-                status = "Success",
-                message = "List found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
-            });
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice detail by id (For management)")]
     [HttpGet("details/{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceDetailById(int id)
     {
         var entity = await _serviceWrapper.InvoiceDetails.GetInvoiceDetailById(id);
@@ -631,7 +631,7 @@ public class InvoicesController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice detail by user id with true (For management)")]
     [HttpGet("details/user/{id:int}")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceDetailListByUserId(int id, CancellationToken token)
     {
         var result = await _serviceWrapper.InvoiceDetails
@@ -654,7 +654,7 @@ public class InvoicesController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice detail by user id with true (For management)")]
     [HttpGet("details/user/{id:int}/active")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> GetInvoiceDetailByUserId(int id, CancellationToken token)
     {
         var entity = await _serviceWrapper.InvoiceDetails
@@ -677,7 +677,7 @@ public class InvoicesController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Create invoice based on list of renter id (For management)")]
     [HttpPost("create")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> CreateManyInvoice([FromBody] List<MassInvoiceCreateRequest> invoices)
     {
         var result = await _serviceWrapper.Invoices.BatchInsertInvoice(invoices);

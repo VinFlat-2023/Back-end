@@ -66,7 +66,7 @@ public class ApplicationContext : DbContext
             .HasOne(x => x.Contract)
             .WithMany(x => x.Tickets)
             .OnDelete(DeleteBehavior.NoAction);
-        
+
         modelBuilder.Entity<Notification>(entity =>
         {
             entity.HasNoKey();
@@ -628,22 +628,22 @@ public class ApplicationContext : DbContext
             new Utility
             {
                 UtilityId = 1,
-                UtilitiesName = "Air Conditioner",
+                UtilitiesName = "Air Conditioner"
             },
             new Utility
             {
                 UtilityId = 2,
-                UtilitiesName = "Water Heater",
+                UtilitiesName = "Water Heater"
             },
             new Utility
             {
                 UtilityId = 3,
-                UtilitiesName = "Wifi",
+                UtilitiesName = "Wifi"
             },
             new Utility
             {
                 UtilityId = 4,
-                UtilitiesName = "Kitchen",
+                UtilitiesName = "Kitchen"
             }
         );
 
@@ -652,13 +652,13 @@ public class ApplicationContext : DbContext
             {
                 UtilitiesFlatId = 1,
                 FlatId = 1,
-                UtilityId = 1,
+                UtilityId = 1
             },
             new UtilitiesFlat
             {
                 UtilitiesFlatId = 2,
                 FlatId = 1,
-                UtilityId = 2,
+                UtilityId = 2
             }
         );
 
@@ -675,7 +675,7 @@ public class ApplicationContext : DbContext
                 ElectricityMeterAfter = 0,
                 FlatTypeId = 1,
                 BuildingId = 1,
-                AttributeForNumericId = 4,
+                AttributeForNumericId = 4
             },
             new Flat
             {
@@ -689,7 +689,7 @@ public class ApplicationContext : DbContext
                 ElectricityMeterAfter = 0,
                 FlatTypeId = 3,
                 BuildingId = 3,
-                AttributeForNumericId = 3,
+                AttributeForNumericId = 3
             },
             new Flat
             {
@@ -704,7 +704,7 @@ public class ApplicationContext : DbContext
                 FlatTypeId = 2,
                 BuildingId = 2,
                 AvailableRoom = 0,
-                AttributeForNumericId = 2,
+                AttributeForNumericId = 2
             },
             new Flat
             {
@@ -718,7 +718,7 @@ public class ApplicationContext : DbContext
                 ElectricityMeterAfter = 0,
                 FlatTypeId = 5,
                 BuildingId = 2,
-                AttributeForNumericId = 1,
+                AttributeForNumericId = 1
             }
         );
 

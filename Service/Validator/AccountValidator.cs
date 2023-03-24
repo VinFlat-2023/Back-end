@@ -113,13 +113,6 @@ break;
                         case null:
                             ValidatorResult.Failures.Add("Role provided does not exist");
                             break;
-                        case { RoleName: "SuperAdmin" }:
-                            ValidatorResult.Failures.Add("Role provided is not allowed to be assigned");
-                            break;
-                        case { RoleName: "Admin" }:
-                            if (user != null && await _jwtRoleCheckerHelper.IsSuperAdminRoleAuthorized(user))
-                                ValidatorResult.Failures.Add("Role provided is not allowed to be assigned");
-                            break;
                     }
 
                     break;

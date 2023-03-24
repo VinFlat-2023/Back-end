@@ -4,7 +4,7 @@ public class UtilitiesFlat
 {
     public int UtilitiesFlatId { get; set; }
     public int FlatId { get; set; }
-    public virtual Flat Flat { get; set; } 
+    public virtual Flat Flat { get; set; }
     public int UtilityId { get; set; }
-    public virtual Utility Utility { get; set; } 
+    public virtual Utility Utility { get; set; }
 }

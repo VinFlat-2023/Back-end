@@ -8,5 +8,4 @@ public interface IJwtRoleCheckerHelper
     public Task<bool> IsRenterRoleAuthorized(ClaimsPrincipal user, int id);
     public Task<bool> IsRenterRoleAuthorized(ClaimsPrincipal user);
     public Task<bool> IsManagementAndEmployeeRoleAuthorized(ClaimsPrincipal user, int id);
-    public Task<bool> IsSuperAdminRoleAuthorized(ClaimsPrincipal user);
 }

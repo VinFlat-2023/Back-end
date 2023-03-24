@@ -37,7 +37,7 @@ public class ContractsController : ControllerBase
 
     // GET: api/Contract
     [SwaggerOperation(Summary = "Get contract list (For management)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpGet]
     public async Task<IActionResult> GetContracts([FromQuery] ContractFilterRequest request, CancellationToken token)
     {
@@ -56,13 +56,13 @@ public class ContractsController : ControllerBase
             });
 
         return Ok(new
-            {
-                status = "Success",
-                message = "Contract list found",
-                data = resultList,
-                totalPage = list.TotalPages,
-                totalCount = list.TotalCount
-            });
+        {
+            status = "Success",
+            message = "Contract list found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
     }
     //TODO get contract by renter ID
 
@@ -98,7 +98,7 @@ public class ContractsController : ControllerBase
             totalCount = list.TotalCount
         });
     }
-    
+
     [SwaggerOperation(Summary = "Get active contract list (For renter)")]
     [Authorize(Roles = "Renter")]
     [HttpGet("renter/active")]
@@ -106,10 +106,11 @@ public class ContractsController : ControllerBase
     {
         var renterId = Parse(User.Identity?.Name);
 
-        var list = await _serviceWrapper.Contracts.GetContractList(new ContractFilter{ ContractStatus = "Active"}, renterId, token);
+        var list = await _serviceWrapper.Contracts.GetContractList(new ContractFilter { ContractStatus = "Active" },
+            renterId, token);
 
         var resultList = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(list);
-        
+
         if (list == null || !list.Any())
             return NotFound(new
             {
@@ -126,9 +127,8 @@ public class ContractsController : ControllerBase
             totalPage = list.TotalPages,
             totalCount = list.TotalCount
         });
-
     }
-    
+
     [SwaggerOperation(Summary = "Get inactive contract list (For renter)")]
     [Authorize(Roles = "Renter")]
     [HttpGet("renter/inactive")]
@@ -136,7 +136,8 @@ public class ContractsController : ControllerBase
     {
         var renterId = Parse(User.Identity?.Name);
 
-        var list = await _serviceWrapper.Contracts.GetContractList(new ContractFilter{ ContractStatus = "Inactive"}, renterId, token);
+        var list = await _serviceWrapper.Contracts.GetContractList(new ContractFilter { ContractStatus = "Inactive" },
+            renterId, token);
 
         var resultList = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(list);
 
@@ -160,7 +161,7 @@ public class ContractsController : ControllerBase
 
     // GET: api/Contract/5
     [SwaggerOperation(Summary = "[Authorize] Get Contract using id (For management)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetContractManagement(int id)
     {
@@ -305,7 +306,7 @@ public class ContractsController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get active contract based on user Id (For management and renter)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [HttpGet("user/{userId:int}/active")]
     public async Task<IActionResult> GetContractBasedOnUserId(int userId)
     {
@@ -386,7 +387,7 @@ public class ContractsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Update Contract info (For management)",
         Description = "date format d/M/YYYY")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutContract(int id, [FromBody] ContractUpdateRequest contract)
     {
@@ -448,7 +449,7 @@ public class ContractsController : ControllerBase
     // POST: api/Contract
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Create Contract (For management)", Description = "date format d/M/YYYY")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpPost("sign")]
     public async Task<IActionResult> PostContract([FromBody] ContractCreateRequest contract)
     {
@@ -505,7 +506,7 @@ public class ContractsController : ControllerBase
 
     // DELETE: api/Contract/5
     [SwaggerOperation(Summary = "[Authorize] Remove contract (For management)")]
-    [Authorize(Roles = "SuperAdmin, Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteContract(int id)
     {

@@ -32,6 +32,7 @@ public static class RegisteredService
         // add validator service
         services.AddScoped<IAccountValidator, AccountValidator>();
         services.AddScoped<IAreaValidator, AreaValidator>();
+        services.AddScoped<IAttributeValidator, AttributeValidator>();
         services.AddScoped<IBuildingValidator, BuildingValidator>();
         services.AddScoped<IContractValidator, ContractValidator>();
         services.AddScoped<IFeedbackValidator, FeedbackValidator>();
@@ -39,9 +40,11 @@ public static class RegisteredService
         services.AddScoped<IInvoiceValidator, InvoiceValidator>();
         services.AddScoped<IMajorValidator, MajorValidator>();
         services.AddScoped<IRenterValidator, RenterValidator>();
-        services.AddScoped<ITicketValidator, TicketValidator>();
         services.AddScoped<IRoleValidator, RoleValidator>();
+        services.AddScoped<IRoomValidator, RoomValidator>();
         services.AddScoped<IServiceValidator, ServiceValidator>();
+        services.AddScoped<ITicketValidator, TicketValidator>();
+        services.AddScoped<ITransactionValidator, TransactionValidator>();
         services.AddScoped<IUniversityValidator, UniversityValidator>();
 
         //Add Mail services

@@ -121,7 +121,7 @@ public class ConditionCheckHelper : IConditionCheckHelper
 
     public async Task<Account?> AccountUsernameExist(string? username)
     {
-        return await _serviceWrapper.Accounts.IsAccountUsernameExist(username) ?? null;
+        return await _serviceWrapper.Accounts.IsAccountUsernameExist(username);
     }
 
     public async Task<Room?> RoomCheck(int? roomId)
@@ -129,8 +129,20 @@ public class ConditionCheckHelper : IConditionCheckHelper
         return await _serviceWrapper.Rooms.GetRoomById(roomId) ?? null;
     }
 
+    /*
+    public async Task<RoomType?> RoomTypeCheck(int? roomTypeId)
+    {
+        return await _serviceWrapper.Rooms.get
+    }
+    */
+
+    public async Task<AttributeForNumeric?> AttributeCheck(int? attributeId)
+    {
+        return await _serviceWrapper.Attributes.GetAttributeById(attributeId);
+    }
+
     public async Task<Account?> AccountEmailCheck(string? email)
     {
-        return await _serviceWrapper.Accounts.IsAccountEmailExist(email) ?? null;
+        return await _serviceWrapper.Accounts.IsAccountEmailExist(email);
     }
 }
