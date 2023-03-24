@@ -6,7 +6,7 @@ public class Utility
     {
         UtilitiesFlats = new HashSet<UtilitiesFlat>();
     }
-    public int UtilitiesId { get; set; }
+    public int UtilityId { get; set; }
     public string UtilitiesName { get; set; } = null!;
     public string? Description { get; set; }
     public virtual ICollection<UtilitiesFlat> UtilitiesFlats { get; set; }
