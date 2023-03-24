@@ -66,7 +66,7 @@ public class ApplicationContext : DbContext
             .HasOne(x => x.Contract)
             .WithMany(x => x.Tickets)
             .OnDelete(DeleteBehavior.NoAction);
-
+        
         modelBuilder.Entity<Notification>(entity =>
         {
             entity.HasNoKey();
@@ -104,6 +104,34 @@ public class ApplicationContext : DbContext
             entity.HasIndex(e => e.Email)
                 .IsUnique();
         });
+
+        modelBuilder.Entity<AttributeForNumeric>().HasData(
+            new AttributeForNumeric
+            {
+                AttributeForNumericId = 1,
+                WaterAttribute = "1",
+                ElectricityAttribute = "1.1"
+            },
+            new AttributeForNumeric
+            {
+                AttributeForNumericId = 2,
+                WaterAttribute = "1",
+                ElectricityAttribute = "0.9"
+            },
+            new AttributeForNumeric
+            {
+                AttributeForNumericId = 3,
+                WaterAttribute = "1",
+                ElectricityAttribute = "1.2"
+            },
+            new AttributeForNumeric
+            {
+                AttributeForNumericId = 4,
+                WaterAttribute = "0.9",
+                ElectricityAttribute = "1.4"
+            }
+        );
+
 
         modelBuilder.Entity<Account>().HasData(
             new Account
@@ -596,6 +624,44 @@ public class ApplicationContext : DbContext
             }
         );
 
+        modelBuilder.Entity<Utility>().HasData(
+            new Utility
+            {
+                UtilityId = 1,
+                UtilitiesName = "Air Conditioner",
+            },
+            new Utility
+            {
+                UtilityId = 2,
+                UtilitiesName = "Water Heater",
+            },
+            new Utility
+            {
+                UtilityId = 3,
+                UtilitiesName = "Wifi",
+            },
+            new Utility
+            {
+                UtilityId = 4,
+                UtilitiesName = "Kitchen",
+            }
+        );
+
+        modelBuilder.Entity<UtilitiesFlat>().HasData(
+            new UtilitiesFlat
+            {
+                UtilitiesFlatId = 1,
+                FlatId = 1,
+                UtilityId = 1,
+            },
+            new UtilitiesFlat
+            {
+                UtilitiesFlatId = 2,
+                FlatId = 1,
+                UtilityId = 2,
+            }
+        );
+
         modelBuilder.Entity<Flat>().HasData(
             new Flat
             {
@@ -608,7 +674,8 @@ public class ApplicationContext : DbContext
                 WaterMeterAfter = 0,
                 ElectricityMeterAfter = 0,
                 FlatTypeId = 1,
-                BuildingId = 1
+                BuildingId = 1,
+                AttributeForNumericId = 4,
             },
             new Flat
             {
@@ -621,7 +688,8 @@ public class ApplicationContext : DbContext
                 WaterMeterAfter = 0,
                 ElectricityMeterAfter = 0,
                 FlatTypeId = 3,
-                BuildingId = 3
+                BuildingId = 3,
+                AttributeForNumericId = 3,
             },
             new Flat
             {
@@ -635,7 +703,8 @@ public class ApplicationContext : DbContext
                 ElectricityMeterAfter = 0,
                 FlatTypeId = 2,
                 BuildingId = 2,
-                AvailableRoom = 0
+                AvailableRoom = 0,
+                AttributeForNumericId = 2,
             },
             new Flat
             {
@@ -648,7 +717,8 @@ public class ApplicationContext : DbContext
                 WaterMeterAfter = 0,
                 ElectricityMeterAfter = 0,
                 FlatTypeId = 5,
-                BuildingId = 2
+                BuildingId = 2,
+                AttributeForNumericId = 1,
             }
         );
 

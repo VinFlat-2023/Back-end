@@ -4,6 +4,6 @@ namespace Domain.FilterRequests;
 
 public class AttributeForNumericFilterRequest : PagingFilter
 {
-    public int? ElectricityAttribute { get; set; }
-    public int? WaterAttribute { get; set; }
+    public string? ElectricityAttribute { get; set; }
+    public string? WaterAttribute { get; set; }
 }
