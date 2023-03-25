@@ -18,4 +18,7 @@ public class ContractCreateRequest
     [NotMapped] public IFormFile? Image { get; set; }
     public decimal PriceForRent { get; set; }
     public int RenterId { get; set; }
+    public int BuildingId { get; set; }
+    public int FlatId { get; set; }
+    public int RoomId { get; set; }
 }

@@ -14,6 +14,6 @@ public interface IContractService
     public Task<Contract?> GetContractByIdWithActiveStatus(int contractId);
     public Task<Contract?> GetContractByUserId(int contractId);
     public Task<Contract?> AddContract(Contract contract);
-    public Task<Contract?> UpdateContract(Contract contract);
-    public Task<bool> DeleteContract(int contractId);
+    public Task<RepositoryResponse> UpdateContract(Contract contract);
+    public Task<RepositoryResponse> DeleteContract(int contractId);
 }

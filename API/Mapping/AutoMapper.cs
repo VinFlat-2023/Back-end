@@ -51,6 +51,7 @@ using Domain.ViewModel.ServiceTypeEntity;
 using Domain.ViewModel.TicketTypeEntity;
 using Domain.ViewModel.UniversityEntity;
 using Domain.ViewModel.UtilitiesFlatEntity;
+using Domain.ViewModel.UtilityEntity;
 using MimeKit;
 
 namespace API.Mapping;
@@ -91,6 +92,12 @@ public class AutoMapper : Profile
 
     private void MapUtility()
     {
+        CreateMap<Utility, UtilityDetailEntity>()
+            .ReverseMap();
+
+        CreateMap<UtilityDetailEntity, Utility>()
+            .ReverseMap();
+
         CreateMap<Utility, UtilitiesFlatDetailEntity>()
             .ReverseMap();
 
@@ -298,6 +305,8 @@ public class AutoMapper : Profile
             .ReverseMap();
         CreateMap<FlatTypeUpdateRequest, FlatType>()
             .ReverseMap();
+
+
         CreateMap<FlatTypeFilterRequest, FlatTypeFilter>();
 
         CreateMap<FlatType, FlatTypeDetailEntity>()
@@ -310,8 +319,10 @@ public class AutoMapper : Profile
     {
         CreateMap<FlatCreateRequest, Flat>()
             .ReverseMap();
+
         CreateMap<FlatUpdateRequest, Flat>()
             .ReverseMap();
+
         CreateMap<FlatFilterRequest, FlatFilter>()
             .ReverseMap();
 
@@ -325,7 +336,7 @@ public class AutoMapper : Profile
         CreateMap<Flat, FlatBasicDetailEntity>()
             .ReverseMap();
 
-        CreateMap<FlatTypeDetailEntity, Flat>()
+        CreateMap<FlatBasicDetailEntity, Flat>()
             .ForAllMembers(o => o.ExplicitExpansion());
         CreateMap<Flat, FlatBasicDetailEntity>()
             .ReverseMap();

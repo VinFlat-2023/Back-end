@@ -264,10 +264,14 @@ public class ContractsController : ControllerBase
                         data = ""
                     });
 
+                var supervisorId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(entity.BuildingId);
+
                 var buildingDetail = new BuildingContractDetailEntity
                 {
+                    AccountId = supervisorId,
                     BuildingName = building.BuildingName,
-                    BuildingPhoneNumber = building.BuildingPhoneNumber
+                    BuildingPhoneNumber = building.BuildingPhoneNumber,
+                    BuildingAddress = building.Area.Name
                 };
 
                 var contractDetailView = new ContractMeterDetailEntity
@@ -453,8 +457,6 @@ public class ContractsController : ControllerBase
     [HttpPost("sign")]
     public async Task<IActionResult> PostContract([FromBody] ContractCreateRequest contract)
     {
-        var imageExtension = ImageExtension.ImageExtensionChecker(contract.Image?.FileName);
-
         var renterEntity = await _serviceWrapper.Renters.GetRenterById(contract.RenterId);
 
         if (renterEntity == null)
@@ -464,24 +466,25 @@ public class ContractsController : ControllerBase
                 message = "Renter not found",
                 data = ""
             });
+
         var newContract = new Contract
         {
             ContractName = contract.ContractName ?? "Contract for " + renterEntity.FullName,
             DateSigned = contract.DateSigned.ConvertToDateTime() ?? DateTimeUtils.GetCurrentDateTime(),
             StartDate = contract.StartDate.ConvertToDateTime() ?? DateTimeUtils.GetCurrentDateTime(),
+            CreatedDate = DateTime.UtcNow,
+            Description = contract.Description ?? "No description",
             EndDate = contract.EndDate.ConvertToDateTime(),
             LastUpdated = DateTime.UtcNow,
             ContractStatus = contract.ContractStatus ?? "Active",
-            CreatedDate = DateTime.UtcNow,
             PriceForRent = contract.PriceForRent,
             PriceForElectricity = contract.PriceForElectricity,
             PriceForWater = contract.PriceForWater,
             PriceForService = contract.PriceForService,
             RenterId = renterEntity.RenterId,
-            ImageUrl = (await _serviceWrapper.AzureStorage.UploadAsync(contract.Image, "Contract",
-                imageExtension))?.Blob.Uri,
-            //ImageUrl = contract.ImageUrl,
-            Description = contract.Description ?? "No description"
+            BuildingId = contract.BuildingId,
+            FlatId = contract.FlatId,
+            RoomId = contract.RoomId
         };
 
         var validation = await _validator.ValidateParams(newContract, null);
@@ -501,7 +504,12 @@ public class ContractsController : ControllerBase
                 message = "Contract failed to create",
                 data = ""
             });
-        return CreatedAtAction("GetContract", new { id = result.ContractId }, result);
+        return Ok(new
+        {
+            status = "Success",
+            message = "Contract created",
+            data = ""
+        });
     }
 
     // DELETE: api/Contract/5
@@ -511,18 +519,20 @@ public class ContractsController : ControllerBase
     public async Task<IActionResult> DeleteContract(int id)
     {
         var result = await _serviceWrapper.Contracts.DeleteContract(id);
-        if (!result)
-            return NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Contract not found",
+                message = result.Message,
                 data = ""
-            });
-        return Ok(new
-        {
-            status = "Success",
-            message = "Contract deleted",
-            data = ""
-        });
+            })
+        };
     }
 }

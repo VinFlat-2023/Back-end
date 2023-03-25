@@ -36,9 +36,9 @@ public class RenterService : IRenterService
         return pagedList;
     }
 
-    public async Task<List<Renter>?> GetRenterListNoFilter(CancellationToken token)
+    public async Task<List<Renter>?> GetRenterListBasedOnFlat(int flatId, CancellationToken token)
     {
-        return await _repositoryWrapper.Renters.GetRenterListNoFilter()
+        return await _repositoryWrapper.Renters.GetRenterListBasedOnFlat(flatId)
             .ToListAsync(token);
     }
 
@@ -72,13 +72,6 @@ public class RenterService : IRenterService
     public async Task<Renter?> AddRenter(Renter renter)
     {
         return await _repositoryWrapper.Renters.AddRenter(renter);
-    }
-
-    public async Task<Renter> Login(string username, string password)
-    {
-        var list = _repositoryWrapper.Renters.GetRenterListNoFilter();
-        var logined = await list.SingleOrDefaultAsync(e => e.Username == username && e.Password == password);
-        return logined;
     }
 
     public async Task<RepositoryResponse> UpdateRenter(Renter renter)

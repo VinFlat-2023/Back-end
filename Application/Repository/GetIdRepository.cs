@@ -72,4 +72,15 @@ public class GetIdRepository : IGetIdRepository
             .Select(x => x.BuildingId)
             .FirstOrDefaultAsync();
     }
+
+    public async Task<int> GetSupervisorIdByBuildingId(int entityBuildingId)
+    {
+        return await _context.Buildings
+            .Where(x => x.BuildingId == entityBuildingId)
+            .Include(x => x.Account)
+            .ThenInclude(x => x.Role)
+            .Where(x => x.Account.Role.RoleName == "Supervisor")
+            .Select(x => x.AccountId)
+            .FirstOrDefaultAsync();
+    }
 }

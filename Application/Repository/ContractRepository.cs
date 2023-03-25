@@ -1,4 +1,5 @@
 using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -121,13 +122,18 @@ public class ContractRepository : IContractRepository
     /// </summary>
     /// <param name="contract"></param>
     /// <returns></returns>
-    public async Task<Contract?> UpdateContract(Contract? contract)
+    public async Task<RepositoryResponse> UpdateContract(Contract? contract)
     {
         var contractData = await _context.Contracts
             .FirstOrDefaultAsync(x => x.ContractId == contract!.ContractId);
 
         if (contractData == null)
-            return null;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Contract not found"
+            };
+        ;
 
         //contractData.FlatId = contract?.FlatId ?? contractData.FlatId;
         contractData.DateSigned = contract?.DateSigned ?? contractData.DateSigned;
@@ -143,7 +149,11 @@ public class ContractRepository : IContractRepository
 
         await _context.SaveChangesAsync();
 
-        return contractData;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Contract updated"
+        };
     }
 
     /// <summary>
@@ -151,14 +161,22 @@ public class ContractRepository : IContractRepository
     /// </summary>
     /// <param name="contractId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteContract(int contractId)
+    public async Task<RepositoryResponse> DeleteContract(int contractId)
     {
         var contractFound = await _context.Contracts
             .FirstOrDefaultAsync(x => x.ContractId == contractId);
         if (contractFound == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Contract not found"
+            };
         _context.Contracts.Remove(contractFound);
         await _context.SaveChangesAsync();
-        return true;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Contract deleted"
+        };
     }
 }

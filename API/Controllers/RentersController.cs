@@ -106,7 +106,7 @@ public class RentersController : ControllerBase
     [HttpGet("rental")]
     [Authorize(Roles = "Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get current renter rental (For renter)")]
-    public async Task<IActionResult> GetRental()
+    public async Task<IActionResult> GetRental(CancellationToken token)
     {
         var userId = int.Parse(User.Identity?.Name);
 
@@ -150,7 +150,25 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
-        var flatDetail = new FlatMeterDetailEntity
+        var flatCheck = await _serviceWrapper.Flats.GetFlatById(contract.FlatId);
+        if (flatCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "This flat does not exist in our system",
+                data = ""
+            });
+
+        var listRenter = await _serviceWrapper.Renters.GetRenterListBasedOnFlat(flatCheck.FlatId, token);
+        if (listRenter == null || !listRenter.Any())
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "This flat does not have any renter",
+                data = ""
+            });
+
+        var flatMeterDetail = new FlatMeterDetailEntity
         {
             PriceForRent = contract.PriceForRent.DecimalToString(),
             PriceForWater = contract.PriceForWater.DecimalToString(),
@@ -160,8 +178,11 @@ public class RentersController : ControllerBase
             ElectricityMeterAfter = contract.Flat.ElectricityMeterAfter
         };
 
+        var supervisorId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(building.BuildingId);
+
         var buildingManager = new AccountBuildingDetailEntity
         {
+            AccountId = supervisorId,
             FullName = building.Account.FullName,
             Phone = building.Account.Phone
         };
@@ -171,6 +192,7 @@ public class RentersController : ControllerBase
             BuildingId = building.BuildingId,
             BuildingName = building.BuildingName,
             BuildingPhoneNumber = building.BuildingPhoneNumber,
+            BuildingAddress = building.Area.Name,
             Account = buildingManager
         };
 
@@ -178,7 +200,8 @@ public class RentersController : ControllerBase
         {
             BuildingDetailEntity = buildingDetail,
             FlatName = contract.Flat.Name,
-            FlatMeterEntity = flatDetail
+            FlatMeterEntity = flatMeterDetail,
+            Renters = _mapper.Map<ICollection<RenterBasicDetailEntity>>(listRenter)
         };
 
         return Ok(new

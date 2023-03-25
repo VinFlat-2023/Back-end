@@ -41,4 +41,9 @@ public class GetIdService : IGetIdService
     {
         return await _repositoryWrapper.GetId.GetRoomIdBasedOnFlatId(flatId);
     }
+
+    public async Task<int> GetSupervisorIdByBuildingId(int entityBuildingId)
+    {
+        return await _repositoryWrapper.GetId.GetSupervisorIdByBuildingId(entityBuildingId);
+    }
 }

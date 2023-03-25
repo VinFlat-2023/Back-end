@@ -29,6 +29,7 @@ public class FlatRepository : IFlatRepository
             .Include(x => x.FlatType)
             .Include(x => x.AttributeForNumeric)
             .Include(x => x.UtilitiesFlats)
+            .ThenInclude(x => x.Utility)
             //.Where(x => x.FlatTypeId == x.FlatType.FlatTypeId)
             // Filter starts here
             .Where(f =>
@@ -53,6 +54,7 @@ public class FlatRepository : IFlatRepository
             .Include(x => x.FlatType)
             .Include(x => x.AttributeForNumeric)
             .Include(x => x.UtilitiesFlats)
+            .ThenInclude(x => x.Utility)
             .Where(x => x.FlatId == flatId);
     }
 

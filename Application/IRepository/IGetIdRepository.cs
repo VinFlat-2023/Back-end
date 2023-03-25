@@ -10,4 +10,5 @@ public interface IGetIdRepository
     Task<int> GetActiveContractIdBasedOnRenterId(int renterId);
     Task<int> GetRoomIdBasedOnFlatId(int flatId);
     Task<int> GetBuildingIdBasedOnAccountId(int accountId);
+    Task<int> GetSupervisorIdByBuildingId(int entityBuildingId);
 }

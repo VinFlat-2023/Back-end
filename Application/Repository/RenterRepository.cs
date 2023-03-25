@@ -40,13 +40,12 @@ public class RenterRepository : IRenterRepository
     ///     Get a list of all renters
     /// </summary>
     /// <returns></returns>
-    public IQueryable<Renter> GetRenterListNoFilter()
+    public IQueryable<Renter> GetRenterListBasedOnFlat(int flatId)
     {
         return _context.Renters
-            .Include(x => x.University)
-            .ThenInclude(x => x.Majors)
-            .Include(x => x.Major)
-            .Where(x => x.MajorId == x.Major.MajorId);
+            .Include(x => x.Contracts
+                .Where(y => y.ContractStatus == "Active"))
+            .Where(x => x.Contracts.Any(y => y.FlatId == flatId));
     }
 
     /// <summary>

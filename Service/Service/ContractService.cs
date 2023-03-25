@@ -99,12 +99,12 @@ public class ContractService : IContractService
         return await _repositoryWrapper.Contracts.AddContract(contract);
     }
 
-    public async Task<Contract?> UpdateContract(Contract contract)
+    public async Task<RepositoryResponse> UpdateContract(Contract contract)
     {
         return await _repositoryWrapper.Contracts.UpdateContract(contract);
     }
 
-    public async Task<bool> DeleteContract(int contractId)
+    public async Task<RepositoryResponse> DeleteContract(int contractId)
     {
         return await _repositoryWrapper.Contracts.DeleteContract(contractId);
     }

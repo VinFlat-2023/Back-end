@@ -1239,6 +1239,66 @@ public class ApplicationContext : DbContext
                     ImageUrl = "No image",
                     FlatId = 3,
                     RoomId = 2
+                },
+                new Contract
+                {
+                    ContractId = 4,
+                    ContractName = "Contract for renter 3 (2)",
+                    DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
+                    StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
+                    EndDate = null,
+                    LastUpdated = DateTime.UtcNow,
+                    ContractStatus = "Active",
+                    PriceForRent = 2800000,
+                    PriceForService = 10000,
+                    PriceForWater = 1000,
+                    PriceForElectricity = 120,
+                    RenterId = 3,
+                    BuildingId = 3,
+                    Description = "Contract description for renter 3",
+                    ImageUrl = "No image",
+                    FlatId = 4,
+                    RoomId = 1
+                },
+                new Contract
+                {
+                    ContractId = 5,
+                    ContractName = "Contract for renter 3 (3)",
+                    DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
+                    StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
+                    EndDate = null,
+                    LastUpdated = DateTime.UtcNow,
+                    ContractStatus = "Inactive",
+                    PriceForRent = 2800000,
+                    PriceForService = 10000,
+                    PriceForWater = 1000,
+                    PriceForElectricity = 120,
+                    RenterId = 3,
+                    BuildingId = 3,
+                    Description = "Contract description for renter 3",
+                    ImageUrl = "No image",
+                    FlatId = 3,
+                    RoomId = 2
+                },
+                new Contract
+                {
+                    ContractId = 6,
+                    ContractName = "Contract for renter 3 (4)",
+                    DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
+                    StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
+                    EndDate = null,
+                    LastUpdated = DateTime.UtcNow,
+                    ContractStatus = "Inactive",
+                    PriceForRent = 2800000,
+                    PriceForService = 10000,
+                    PriceForWater = 1000,
+                    PriceForElectricity = 120,
+                    RenterId = 3,
+                    BuildingId = 3,
+                    Description = "Contract description for renter 3",
+                    ImageUrl = "No image",
+                    FlatId = 3,
+                    RoomId = 2
                 }
             );
 
