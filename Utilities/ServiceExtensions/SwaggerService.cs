@@ -21,7 +21,7 @@ public static class SwaggerService
                     Type = SecuritySchemeType.ApiKey
                 });
                 c.OperationFilter<SecurityRequirementsOperationFilter>();
-                //Enabla api summary
+                //Enable api summary
                 c.EnableAnnotations();
             }
         );

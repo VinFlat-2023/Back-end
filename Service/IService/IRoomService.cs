@@ -5,7 +5,7 @@ namespace Service.IService;
 
 public interface IRoomService
 {
-    Task<Room?> UpdateRoom(Room room);
+    Task<RepositoryResponse> UpdateRoom(Room room);
 
     Task<RepositoryResponse> AddRoom(Room room, int flatId);
 

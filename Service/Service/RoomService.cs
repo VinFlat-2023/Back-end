@@ -15,7 +15,7 @@ public class RoomService : IRoomService
         _repositoryWrapper = repositoryWrapper;
     }
 
-    public async Task<Room?> UpdateRoom(Room room)
+    public async Task<RepositoryResponse> UpdateRoom(Room room)
     {
         return await _repositoryWrapper.Rooms.UpdateRoom(room);
     }

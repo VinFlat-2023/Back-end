@@ -73,27 +73,38 @@ public class RoomRepository : IRoomRepository
     public async Task<Room?> GetRoomDetail(int? roomId)
     {
         return await _context.Rooms
+            .Include(x => x.RoomType)
             .FirstOrDefaultAsync(x => x.RoomId == roomId);
     }
 
-    public async Task<Room?> UpdateRoom(Room? room)
+    public async Task<RepositoryResponse> UpdateRoom(Room room)
     {
         var roomData = await _context.Rooms
+            .Include(x => x.RoomType)
             .FirstOrDefaultAsync(x => x.RoomId == room.RoomId);
 
         if (roomData == null)
-            return null;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Room not found or does not exist"
+            };
 
         roomData.AvailableSlots = room?.AvailableSlots ?? roomData.AvailableSlots;
 
         await _context.SaveChangesAsync();
 
-        return roomData;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Room updated successfully"
+        };
     }
 
     public async Task<RepositoryResponse> DeleteRoom(int roomId)
     {
         var roomFound = await _context.Rooms
+            .Include(x => x.RoomType)
             .FirstOrDefaultAsync(x => x.RoomId == roomId);
         switch (roomFound)
         {
@@ -115,7 +126,7 @@ public class RoomRepository : IRoomRepository
                 return new RepositoryResponse
                 {
                     IsSuccess = true,
-                    Message = ""
+                    Message = "Room deleted successfully"
                 };
         }
     }
