@@ -30,7 +30,6 @@ public class RenterRepository : IRenterRepository
                 && (filters.Phone == null || x.Phone.Contains(filters.Phone))
                 && (filters.Email == null || x.Email.Contains(filters.Email))
                 && (filters.UniversityId == null || x.UniversityId == filters.UniversityId)
-                && (filters.MajorId == null || x.MajorId == filters.MajorId)
                 && (filters.Gender == null || x.Gender == filters.Gender)
                 && (filters.FullName == null || x.FullName.Contains(filters.FullName)))
             .AsNoTracking();

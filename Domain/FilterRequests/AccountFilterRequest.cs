@@ -12,5 +12,5 @@ public class AccountFilterRequest : PagingFilter
 
     public bool? Status { get; set; }
 
-    public int? RoleId { get; set; }
+    public string? RoleName { get; set; }
 }

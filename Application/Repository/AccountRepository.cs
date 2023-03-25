@@ -28,7 +28,7 @@ public class AccountRepository : IAccountRepository
             .Where(x =>
                 (filters.Username == null || x.Username.Contains(filters.Username))
                 && (filters.Status == null || x.Status == filters.Status)
-                && (filters.RoleId == null || x.RoleId == filters.RoleId)
+                && (filters.RoleName == null || x.Role.RoleName == filters.RoleName)
                 && (filters.FullName == null || x.FullName.Contains(filters.FullName))
                 && (filters.Phone == null || x.Phone.Contains(filters.Phone)))
             .AsNoTracking();

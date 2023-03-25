@@ -12,7 +12,11 @@ public class FeedbackFilterRequest : PagingFilter
 
     public int? FlatId { get; set; }
 
-    public int? RenterId { get; set; }
+    public string? FlatName { get; set; }
 
+    public int? RenterId { get; set; }
+    
+    public string? FullName { get; set; }
+    
     public int? FeedbackTypeId { get; set; }
 }

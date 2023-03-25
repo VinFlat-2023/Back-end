@@ -253,7 +253,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_room == null) _room = new RoomService(_repositories);
+            if (_room == null) _room = new RoomService(_repositories, _paginationOptions);
             return _room;
         }
     }

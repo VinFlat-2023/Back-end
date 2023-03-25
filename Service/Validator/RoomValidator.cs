@@ -42,4 +42,9 @@ public class RoomValidator : BaseValidator, IRoomValidator
 
         return ValidatorResult;
     }
+
+    public Task<ValidatorResult> ValidateParams(RoomType? obj, int? roomTypeId)
+    {
+        throw new NotImplementedException();
+    }
 }

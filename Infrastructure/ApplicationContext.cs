@@ -594,30 +594,35 @@ public class ApplicationContext : DbContext
             new FlatType
             {
                 FlatTypeId = 1,
+                FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 10,
                 Status = "Active"
             },
             new FlatType
             {
                 FlatTypeId = 2,
+                FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 2,
                 Status = "Active"
             },
             new FlatType
             {
                 FlatTypeId = 3,
+                FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 4,
                 Status = "Active"
             },
             new FlatType
             {
                 FlatTypeId = 4,
+                FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 5,
                 Status = "Active"
             },
             new FlatType
             {
                 FlatTypeId = 5,
+                FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 6,
                 Status = "NonActive"
             }
@@ -760,18 +765,21 @@ public class ApplicationContext : DbContext
             new RoomType
             {
                 RoomTypeId = 1,
+                RoomTypeName = "Room type id 1 : 2 slots",
                 Description = "Room type id 1 : 2 slots",
                 NumberOfSlots = 2
             },
             new RoomType
             {
                 RoomTypeId = 2,
+                RoomTypeName = "Room type id 2 : 2 slots",
                 Description = "Room type id 2 : 2 slots",
                 NumberOfSlots = 2
             },
             new RoomType
             {
                 RoomTypeId = 3,
+                RoomTypeName = "Room type id 3 : 2 slots",
                 Description = "Room type id 3 : 2 slots",
                 NumberOfSlots = 2
             }

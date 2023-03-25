@@ -1,7 +1,10 @@
 using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
+using Domain.Options;
+using Domain.QueryFilter;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Service.IService;
 
 namespace Service.Service;
@@ -9,10 +12,12 @@ namespace Service.Service;
 public class RoomService : IRoomService
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly PaginationOption _paginationOptions;
 
-    public RoomService(IRepositoryWrapper repositoryWrapper)
+    public RoomService(IRepositoryWrapper repositoryWrapper, IOptions<PaginationOption> paginationOptions)
     {
         _repositoryWrapper = repositoryWrapper;
+        _paginationOptions = paginationOptions.Value; 
     }
 
     public async Task<RepositoryResponse> UpdateRoom(Room room)
@@ -39,5 +44,21 @@ public class RoomService : IRoomService
     public async Task<RepositoryResponse> DeleteRoom(int roomId)
     {
         return await _repositoryWrapper.Rooms.DeleteRoom(roomId);
+    }
+
+    public async Task<PagedList<Room>?> GetRoomList(RoomFilter filters, CancellationToken token)
+    {
+        var queryable = _repositoryWrapper.Rooms.GetRoomList(filters);
+
+        if (!queryable.Any())
+            return null;
+
+        var page = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var size = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
+        var pagedList = await PagedList<Room>
+            .Create(queryable, page, size, token);
+
+        return pagedList;
     }
 }

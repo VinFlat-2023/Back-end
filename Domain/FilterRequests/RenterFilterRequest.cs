@@ -19,6 +19,6 @@ public class RenterFilterRequest : PagingFilter
     public string? Gender { get; set; }
 
     public int? UniversityId { get; set; }
-
-    public int? MajorId { get; set; }
+    
+    public string? UniversityName { get; set; }
 }

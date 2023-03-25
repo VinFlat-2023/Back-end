@@ -27,11 +27,14 @@ internal class FeedbackRepository : IFeedbackRepository
             .Include(x => x.FeedbackType)
             .Where(x =>
                 (filters.FeedbackTitle == null || x.FeedbackTitle.Contains(filters.FeedbackTitle))
+                && (filters.Description == null || x.Description.Contains(filters.Description))
                 && (filters.Status == null || x.Status == filters.Status)
                 && (filters.FlatId == null || x.FlatId == filters.FlatId)
-                && (filters.FeedbackTypeId == null || x.FeedbackTypeId == filters.FeedbackTypeId)
+                && (filters.FlatName == null || x.Flat.Name.Contains(filters.FlatName))
                 && (filters.RenterId == null || x.RenterId == filters.RenterId)
-                && (filters.Description == null || x.Description.Contains(filters.Description)))
+                && (filters.FullName == null || x.Renter.FullName.Contains(filters.FullName))
+                && (filters.FeedbackTypeId == null || x.FeedbackTypeId == filters.FeedbackTypeId)
+                && (filters.RenterId == null || x.RenterId == filters.RenterId))
             .AsNoTracking();
     }
 

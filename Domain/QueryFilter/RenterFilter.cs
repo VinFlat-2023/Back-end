@@ -9,6 +9,6 @@ public class RenterFilter : PagingFilter
     public bool? Status { get; set; }
     public string? Address { get; set; }
     public string? Gender { get; set; }
-    public int? MajorId { get; set; }
     public int? UniversityId { get; set; }
+    public string? UniversityName { get; set; }
 }

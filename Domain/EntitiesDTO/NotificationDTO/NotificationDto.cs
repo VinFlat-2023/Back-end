@@ -16,7 +16,7 @@ public class NotificationDto
 
     // Custom Fields
 
-    public string RenterName { get; set; }
+    public string FullName { get; set; }
     public string FullContent { get; set; }
     public string NotificationTypeName { get; set; }
 

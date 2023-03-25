@@ -27,14 +27,18 @@ internal class TicketRepository : ITicketRepository
             .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
             // Filter starts here
             .Where(x =>
-                (filters.Status == null || x.Status == filters.Status) &&
-                (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId) &&
-                (filters.Description == null || (x.Description.Contains(filters.Description) &&
-                                                 (filters.CreateDate == null ||
-                                                  x.CreateDate == filters.CreateDate) &&
-                                                 (filters.Amount == null || x.Amount == filters.Amount) &&
-                                                 (filters.SolveDate == null ||
-                                                  x.SolveDate == filters.SolveDate))))
+                (filters.Status == null || x.Status == filters.Status) 
+                && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId) 
+                && (filters.Description == null || (x.Description.Contains(filters.Description) 
+                && (filters.CreateDate == null || x.CreateDate == filters.CreateDate) 
+                && (filters.Amount == null || x.Amount == filters.Amount)
+                && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
+                && (filters.ContractId == null || x.ContractId == filters.ContractId)
+                && (filters.AccountId == null || x.AccountId == filters.AccountId)
+                && (filters.TicketTypeName == null || (x.TicketType.TicketTypeName.Contains(filters.TicketTypeName)
+                && (filters.ContractName == null || (x.Contract.ContractName.Contains(filters.ContractName)
+                && (filters.TicketTypeName == null || (x.TicketType.TicketTypeName.Contains(filters.TicketTypeName)
+                && (filters.FullName == null || x.Account.FullName == filters.FullName))))))))))
             .AsNoTracking();
     }
 

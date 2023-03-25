@@ -1,6 +1,7 @@
 using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
+using Domain.QueryFilter;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,10 +15,25 @@ public class RoomRepository : IRoomRepository
     {
         _context = context;
     }
+    
+    
+    public IQueryable<Room> GetRoomList(RoomFilter filters)
+    {
+        return _context.Rooms
+            .Include(x => x.Flat)
+            .Include(x => x.RoomType)
+            .Where(x =>
+                (filters.FlatName == null || x.Flat.Name.Contains(filters.FlatName))
+                && (filters.AvailableSlots == null || x.AvailableSlots == filters.AvailableSlots)
+                && (filters.RoomName == null || x.RoomName == filters.RoomName)
+                && (filters.RoomTypeName == null || x.RoomType.RoomTypeName.Contains(filters.RoomTypeName)))
+            .AsNoTracking();
+    }
 
     public IQueryable<Room> GetRoomListInAFlat(int flatId)
     {
         return _context.Rooms
+            .Include(x => x.Flat)
             .Where(x => x.FlatId == flatId)
             .AsNoTracking();
     }
@@ -74,6 +90,7 @@ public class RoomRepository : IRoomRepository
     {
         return await _context.Rooms
             .Include(x => x.RoomType)
+            .Include(x => x.Flat)
             .FirstOrDefaultAsync(x => x.RoomId == roomId);
     }
 
@@ -130,4 +147,5 @@ public class RoomRepository : IRoomRepository
                 };
         }
     }
+
 }
