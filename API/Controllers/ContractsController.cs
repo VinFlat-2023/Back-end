@@ -309,12 +309,13 @@ public class ContractsController : ControllerBase
         }
     }
 
+    /*
+
     [SwaggerOperation(Summary = "[Authorize] Get active contract based on user Id (For management and renter)")]
     [Authorize(Roles = "Admin, Supervisor, Renter")]
     [HttpGet("user/{userId:int}/active")]
     public async Task<IActionResult> GetContractBasedOnUserId(int userId)
     {
-        /*
         var userRole = User.Identities
             .FirstOrDefault()?.Claims
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
@@ -328,7 +329,7 @@ public class ContractsController : ControllerBase
                 message = "You are not authorized to access this resource",
                 data = ""
             });
-        */
+        
 
         var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
 
@@ -386,6 +387,9 @@ public class ContractsController : ControllerBase
             }
         });
     }
+    
+    */
+
 
     // PUT: api/Contract/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

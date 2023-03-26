@@ -62,4 +62,16 @@ public class RoomController : ControllerBase
     {
         return Ok("On");
     }
+
+    [HttpGet("types")]
+    [Authorize(Roles = "Supervisor")]
+    [SwaggerOperation("[Authorize] Get all room types")]
+    public async Task<IActionResult> GetAllRoomTypes(RoomTypeFilterRequest request, CancellationToken token)
+    {
+        var filter = _mapper.Map<RoomTypeFilter>(request);
+
+        var list = await _serviceWrapper.RoomType.GetRoomTypes(filter, token);
+
+        return Ok("test");
+    }
 }

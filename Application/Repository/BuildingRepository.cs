@@ -29,13 +29,16 @@ public class BuildingRepository : IBuildingRepository
             // Filter starts here
             .Where(x =>
                 (filter.BuildingName == null || x.BuildingName.Contains(filter.BuildingName))
-                && (filter.Description == null || x.Description.Contains(filter.Description)
-                && (filter.TotalRooms == null || x.TotalRooms == filter.TotalRooms)
-                && (filter.Status == null || x.Status == filter.Status)
-                && (filter.BuildingPhoneNumber == null || x.BuildingPhoneNumber.Contains(filter.BuildingPhoneNumber))
-                && (filter.Username == null || x.Account.Username.Contains(filter.Username))
-                && (filter.AreaName == null || x.Area.Name.Contains(filter.AreaName))
-                && (filter.Username == null || x.Account.Username == filter.Username)))
+                && (filter.Description == null || (x.Description.Contains(filter.Description)
+                                                   && (filter.TotalRooms == null || x.TotalRooms == filter.TotalRooms)
+                                                   && (filter.Status == null || x.Status == filter.Status)
+                                                   && (filter.BuildingPhoneNumber == null ||
+                                                       x.BuildingPhoneNumber.Contains(filter.BuildingPhoneNumber))
+                                                   && (filter.Username == null ||
+                                                       x.Account.Username.Contains(filter.Username))
+                                                   && (filter.AreaName == null || x.Area.Name.Contains(filter.AreaName))
+                                                   && (filter.Username == null ||
+                                                       x.Account.Username == filter.Username))))
             .AsNoTracking();
     }
 

@@ -34,7 +34,7 @@ public class FlatRepository : IFlatRepository
             // Filter starts here
             .Where(f =>
                 (filters.Name == null || f.Name.Contains(filters.Name))
-                && (filters.Description == null || f.Description.Contains(filters.Description)) 
+                && (filters.Description == null || f.Description.Contains(filters.Description))
                 && (filters.Status == null || f.Status == filters.Status)
                 && (filters.FlatTypeId == null || f.FlatTypeId == filters.FlatTypeId)
                 && (filters.FlatTypeName == null || f.FlatType.FlatTypeName.Contains(filters.FlatTypeName))

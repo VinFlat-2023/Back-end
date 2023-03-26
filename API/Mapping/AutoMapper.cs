@@ -101,10 +101,10 @@ public class AutoMapper : Profile
 
         CreateMap<RoomType, RoomType>()
             .ReverseMap();
-        
+
         CreateMap<RoomType, RoomTypeDetailEntity>()
             .ReverseMap();
-        
+
         CreateMap<RoomTypeDetailEntity, RoomType>()
             .ReverseMap();
     }
@@ -113,51 +113,50 @@ public class AutoMapper : Profile
     {
         CreateMap<Room, RoomBasicDetailEntity>()
             .ReverseMap();
-        
+
         CreateMap<RoomBasicDetailEntity, Room>()
             .ReverseMap();
-        
+
         CreateMap<Room, RoomDetailEntity>()
             .ReverseMap();
-        
+
         CreateMap<RoomDetailEntity, Room>()
             .ReverseMap();
-       
+
         CreateMap<RoomFilterRequest, RoomFilter>()
-            .ReverseMap();    
-        
+            .ReverseMap();
     }
-    
+
     private void MapUniversity()
     {
         CreateMap<UniversityCreateRequest, University>()
             .ReverseMap();
         CreateMap<UniversityUpdateRequest, University>()
             .ReverseMap();
-        
+
         CreateMap<UniversityFilterRequest, UniversityFilter>()
             .ReverseMap();
-        
+
         CreateMap<University, UniversityDetailEntity>()
             .ReverseMap();
         CreateMap<UniversityDetailEntity, University>()
             .ForAllMembers(o => o.ExplicitExpansion());
     }
-    
+
     private void MapInvoiceType()
     {
         CreateMap<InvoiceTypeCreateRequest, InvoiceType>()
             .ReverseMap();
-        
+
         CreateMap<InvoiceTypeUpdateRequest, InvoiceType>()
             .ReverseMap();
-        
+
         CreateMap<InvoiceTypeFilterRequest, InvoiceTypeFilter>()
             .ReverseMap();
-        
+
         CreateMap<InvoiceTypeDetailEntity, InvoiceType>()
             .ForAllMembers(o => o.ExplicitExpansion());
-        
+
         CreateMap<InvoiceType, InvoiceTypeDetailEntity>()
             .ReverseMap();
     }

@@ -20,9 +20,11 @@ public class RoomTypeRepository : IRoomTypeRepository
     {
         return _context.RoomTypes
             .Where(x =>
-                (filter.RoomTypeName == null || x.RoomTypeName.Contains(filter.RoomTypeName) 
-                    && (filter.Description == null || x.Description.Contains(filter.Description))
-                    && (filter.NumberOfSlots == null || x.NumberOfSlots == filter.NumberOfSlots))
+                filter.RoomTypeName == null || (x.RoomTypeName.Contains(filter.RoomTypeName)
+                                                && (filter.Description == null ||
+                                                    x.Description.Contains(filter.Description))
+                                                && (filter.NumberOfSlots == null ||
+                                                    x.NumberOfSlots == filter.NumberOfSlots))
             ).AsNoTracking();
     }
 
@@ -60,7 +62,6 @@ public class RoomTypeRepository : IRoomTypeRepository
             IsSuccess = true,
             Message = "Room type updated"
         };
-
     }
 
     public async Task<RepositoryResponse> DeleteRoomType(int roomTypeId)

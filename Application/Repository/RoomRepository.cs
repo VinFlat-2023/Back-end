@@ -15,8 +15,8 @@ public class RoomRepository : IRoomRepository
     {
         _context = context;
     }
-    
-    
+
+
     public IQueryable<Room> GetRoomList(RoomFilter filters)
     {
         return _context.Rooms
@@ -147,5 +147,4 @@ public class RoomRepository : IRoomRepository
                 };
         }
     }
-
 }

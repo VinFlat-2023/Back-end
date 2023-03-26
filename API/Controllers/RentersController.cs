@@ -178,11 +178,9 @@ public class RentersController : ControllerBase
             ElectricityMeterAfter = contract.Flat.ElectricityMeterAfter
         };
 
-        var supervisorId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(building.BuildingId);
-
         var buildingManager = new AccountBuildingDetailEntity
         {
-            AccountId = supervisorId,
+            AccountId = building.AccountId,
             FullName = building.Account.FullName,
             Phone = building.Account.Phone
         };
@@ -193,6 +191,7 @@ public class RentersController : ControllerBase
             BuildingName = building.BuildingName,
             BuildingPhoneNumber = building.BuildingPhoneNumber,
             BuildingAddress = building.Area.Name,
+            AccountId = building.AccountId,
             Account = buildingManager
         };
 

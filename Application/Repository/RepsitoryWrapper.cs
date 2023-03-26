@@ -234,6 +234,15 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
+    public IRoomTypeRepository RoomType
+    {
+        get
+        {
+            if (_roomType == null) _roomType = new RoomTypeRepository(_context);
+            return _roomType;
+        }
+    }
+
     public IGetIdRepository GetId
     {
         get
@@ -278,6 +287,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IDeviceRepository _devices;
     private INotificationRepository _notification;
     private IRoomRepository _room;
+    private IRoomTypeRepository _roomType;
     private IGetIdRepository _getId;
     private IAttributeRepository _attribute;
 

@@ -13,6 +13,6 @@ public class ServiceFilterRequest : PagingFilter
     public decimal? Amount { get; set; }
 
     public int? ServiceTypeId { get; set; }
-    
+
     public string? ServiceTypeName { get; set; }
 }

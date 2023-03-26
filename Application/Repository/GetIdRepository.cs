@@ -80,7 +80,7 @@ public class GetIdRepository : IGetIdRepository
             .Include(x => x.Account)
             .ThenInclude(x => x.Role)
             .Where(x => x.Account.Role.RoleName == "Supervisor")
-            .Select(x => x.AccountId)
+            .Select(x => x.Account.AccountId)
             .FirstOrDefaultAsync();
     }
 }

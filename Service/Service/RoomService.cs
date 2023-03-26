@@ -11,13 +11,13 @@ namespace Service.Service;
 
 public class RoomService : IRoomService
 {
-    private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly PaginationOption _paginationOptions;
+    private readonly IRepositoryWrapper _repositoryWrapper;
 
     public RoomService(IRepositoryWrapper repositoryWrapper, IOptions<PaginationOption> paginationOptions)
     {
         _repositoryWrapper = repositoryWrapper;
-        _paginationOptions = paginationOptions.Value; 
+        _paginationOptions = paginationOptions.Value;
     }
 
     public async Task<RepositoryResponse> UpdateRoom(Room room)

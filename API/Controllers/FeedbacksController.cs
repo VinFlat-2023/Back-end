@@ -331,6 +331,6 @@ public class FeedbacksController : ControllerBase
                 message = result.Message,
                 data = ""
             })
-        }; 
+        };
     }
 }
