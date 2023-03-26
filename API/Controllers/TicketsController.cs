@@ -395,19 +395,21 @@ public class TicketsController : ControllerBase
             });
 
         var result = await _serviceWrapper.Tickets.DeleteTicket(id);
-        if (!result)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Ticket failed to delete",
-                data = ""
-            });
-        return Ok(new
+        return result.IsSuccess switch
         {
-            status = "Success",
-            message = "Ticket deleted successfully",
-            data = ""
-        });
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
     }
 
     // GET: api/RequestTypes

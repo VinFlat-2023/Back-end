@@ -47,12 +47,12 @@ public class FeedbackService : IFeedbackService
         return await _repositoryWrapper.Feedbacks.AddFeedback(feedback);
     }
 
-    public async Task<Feedback?> UpdateFeedback(Feedback feedback)
+    public async Task<RepositoryResponse> UpdateFeedback(Feedback feedback)
     {
         return await _repositoryWrapper.Feedbacks.UpdateFeedback(feedback);
     }
 
-    public async Task<bool> DeleteFeedback(int feedbackId)
+    public async Task<RepositoryResponse> DeleteFeedback(int feedbackId)
     {
         return await _repositoryWrapper.Feedbacks.DeleteFeedback(feedbackId);
     }

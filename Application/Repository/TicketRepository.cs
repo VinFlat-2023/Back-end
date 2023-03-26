@@ -1,4 +1,5 @@
 ﻿using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -24,7 +25,6 @@ internal class TicketRepository : ITicketRepository
         return _context.Tickets
             .Include(x => x.TicketType)
             .Include(x => x.Contract)
-            .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
             // Filter starts here
             .Where(x =>
                 (filters.Status == null || x.Status == filters.Status) 
@@ -48,7 +48,6 @@ internal class TicketRepository : ITicketRepository
         {
             true => _context.Tickets
                 .Include(x => x.TicketType)
-                .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
                 .Where(x => x.AccountId == id)
                 // Filter starts here
                 .Where(x =>
@@ -66,7 +65,6 @@ internal class TicketRepository : ITicketRepository
                 .Include(x => x.TicketType)
                 .Include(x => x.Contract)
                 .ThenInclude(x => x.Renter)
-                .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
                 .Where(x => x.Contract.RenterId == id)
                 // Filter starts here
                 .Where(x =>
@@ -122,19 +120,27 @@ internal class TicketRepository : ITicketRepository
     /// </summary>
     /// <param name="ticket"></param>
     /// <returns></returns>
-    public async Task<Ticket?> UpdateTicket(Ticket? ticket)
+    public async Task<RepositoryResponse> UpdateTicket(Ticket ticket)
     {
         var ticketData = await _context.Tickets
             .FirstOrDefaultAsync(x => x.TicketId == ticket!.TicketId);
         if (ticketData == null)
-            return null;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Ticket not found"
+            };
 
-        ticketData.Description = ticket?.Description ?? ticketData.Description;
-        ticketData.SolveDate = ticket?.SolveDate ?? ticketData.SolveDate;
-        ticketData.TicketTypeId = ticket?.TicketTypeId ?? ticketData.TicketTypeId;
+        ticketData.Description = ticket.Description;
+        ticketData.SolveDate = ticket.SolveDate ?? ticketData.SolveDate;
+        ticketData.TicketTypeId = ticket.TicketTypeId;
 
         await _context.SaveChangesAsync();
-        return ticketData;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Ticket updated successfully"
+        };
     }
 
     /// <summary>
@@ -142,14 +148,22 @@ internal class TicketRepository : ITicketRepository
     /// </summary>
     /// <param name="ticketId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteTicket(int ticketId)
+    public async Task<RepositoryResponse> DeleteTicket(int ticketId)
     {
         var ticketFound = await _context.Tickets
             .FirstOrDefaultAsync(x => x.TicketId == ticketId);
         if (ticketFound == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message ="Ticket not found"
+            };
         _context.Tickets.Remove(ticketFound);
         await _context.SaveChangesAsync();
-        return true;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Ticket deleted"
+        };
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -69,19 +70,27 @@ internal class FeedbackRepository : IFeedbackRepository
     /// </summary>
     /// <param name="feedback"></param>
     /// <returns></returns>
-    public async Task<Feedback?> UpdateFeedback(Feedback feedback)
+    public async Task<RepositoryResponse> UpdateFeedback(Feedback feedback)
     {
         var feedbackData = await _context.Feedbacks
             .FirstOrDefaultAsync(x => x.FeedbackId == feedback.FeedbackId);
         if (feedbackData == null)
-            return null;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Feedback not found"
+            };
 
         feedbackData.Description = feedback?.Description ?? feedbackData.Description;
         feedbackData.Status = feedback?.Status ?? feedbackData.Status;
         feedbackData.FeedbackTypeId = feedback?.FeedbackTypeId ?? feedbackData.FeedbackTypeId;
 
         await _context.SaveChangesAsync();
-        return feedbackData;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Feedback updated"
+        };
     }
 
     /// <summary>
@@ -89,14 +98,22 @@ internal class FeedbackRepository : IFeedbackRepository
     /// </summary>
     /// <param name="feedbackId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteFeedback(int feedbackId)
+    public async Task<RepositoryResponse> DeleteFeedback(int feedbackId)
     {
         var feedbackFound = await _context.Feedbacks
             .FirstOrDefaultAsync(x => x.FeedbackId == feedbackId);
         if (feedbackFound == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Feedback deleted"
+            };
         _context.Feedbacks.Remove(feedbackFound);
         await _context.SaveChangesAsync();
-        return true;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Feedback deleted"
+        };
     }
 }

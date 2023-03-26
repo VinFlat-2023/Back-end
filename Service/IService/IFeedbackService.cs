@@ -9,6 +9,6 @@ public interface IFeedbackService
     public Task<PagedList<Feedback>?> GetFeedbackList(FeedbackFilter filter, CancellationToken token);
     public Task<Feedback?> GetFeedbackById(int? feedbackId);
     public Task<Feedback?> AddFeedback(Feedback feedback);
-    public Task<Feedback?> UpdateFeedback(Feedback feedback);
-    public Task<bool> DeleteFeedback(int feedbackId);
+    public Task<RepositoryResponse> UpdateFeedback(Feedback feedback);
+    public Task<RepositoryResponse> DeleteFeedback(int feedbackId);
 }

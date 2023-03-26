@@ -105,20 +105,21 @@ public class FeedbacksController : ControllerBase
             return BadRequest(validation.Failures.FirstOrDefault());
 
         var result = await _serviceWrapper.Feedbacks.UpdateFeedback(updateFeedback);
-        if (result == null)
-            return NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Feedback not found",
+                message = result.Message,
                 data = ""
-            });
-
-        return Ok(new
-        {
-            status = "Success",
-            message = "Feedback updated",
-            data = ""
-        });
+            })
+        };
     }
 
     //TODO : get feedback from renter ID
@@ -174,20 +175,21 @@ public class FeedbacksController : ControllerBase
     public async Task<IActionResult> DeleteFeedback(int id)
     {
         var result = await _serviceWrapper.Feedbacks.DeleteFeedback(id);
-        if (!result)
-            return NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Feedback not found",
+                message = result.Message,
                 data = ""
-            });
-
-        return Ok(new
-        {
-            status = "Success",
-            message = "Feedback deleted",
-            data = ""
-        });
+            })
+        };
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get Feedback Type List")]
@@ -315,18 +317,20 @@ public class FeedbacksController : ControllerBase
     public async Task<IActionResult> DeleteFeedbackType(int id)
     {
         var result = await _serviceWrapper.Feedbacks.DeleteFeedback(id);
-        if (!result)
-            return NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Feedback type not found",
+                message = result.Message,
                 data = ""
-            });
-        return Ok(new
-        {
-            status = "Success",
-            message = "Feedback type deleted",
-            data = ""
-        });
+            })
+        }; 
     }
 }

@@ -70,12 +70,12 @@ public class TicketService : ITicketService
         return await _repositoryWrapper.Tickets.CreateTicket(ticket);
     }
 
-    public async Task<Ticket?> UpdateTicket(Ticket ticket)
+    public async Task<RepositoryResponse> UpdateTicket(Ticket ticket)
     {
         return await _repositoryWrapper.Tickets.UpdateTicket(ticket);
     }
 
-    public async Task<bool> DeleteTicket(int ticketId)
+    public async Task<RepositoryResponse> DeleteTicket(int ticketId)
     {
         return await _repositoryWrapper.Tickets.DeleteTicket(ticketId);
     }
