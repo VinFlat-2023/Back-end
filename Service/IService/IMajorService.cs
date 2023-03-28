@@ -10,6 +10,6 @@ public interface IMajorService
     public Task<List<Major>> GetMajorListByUniversity(int? id);
     public Task<Major?> GetMajorById(int? majorId);
     public Task<Major?> AddMajor(Major major);
-    public Task<Major?> UpdateMajor(Major major);
-    public Task<bool> DeleteMajor(int majorId);
+    public Task<RepositoryResponse> UpdateMajor(Major major);
+    public Task<RepositoryResponse> DeleteMajor(int majorId);
 }

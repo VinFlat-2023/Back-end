@@ -47,12 +47,12 @@ public class FeedbackTypeService : IFeedbackTypeService
         return await _repositoryWrapper.FeedbackTypes.AddFeedbackType(feedbackType);
     }
 
-    public async Task<FeedbackType?> UpdateFeedbackType(FeedbackType feedbackType)
+    public async Task<RepositoryResponse> UpdateFeedbackType(FeedbackType feedbackType)
     {
         return await _repositoryWrapper.FeedbackTypes.UpdateFeedbackType(feedbackType);
     }
 
-    public async Task<bool> DeleteFeedbackType(int feedbackTypeId)
+    public async Task<RepositoryResponse> DeleteFeedbackType(int feedbackTypeId)
     {
         return await _repositoryWrapper.FeedbackTypes.DeleteFeedbackType(feedbackTypeId);
     }

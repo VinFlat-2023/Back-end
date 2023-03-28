@@ -1,4 +1,5 @@
 ﻿using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -25,8 +26,9 @@ internal class MajorRepository : IMajorRepository
             .Include(x => x.University)
             // Filter starts here
             .Where(x =>
-                (filters.Name == null || x.Name.Contains(filters.Name))
-                && (filters.UniversityName == null || x.University.UniversityName.Contains(filters.UniversityName)))
+                (filters.Name == null || x.Name.ToLower().Contains(filters.Name.ToLower()))
+                && (filters.UniversityName == null ||
+                    x.University.UniversityName.ToLower().Contains(filters.UniversityName.ToLower())))
             .AsNoTracking();
     }
 
@@ -63,17 +65,25 @@ internal class MajorRepository : IMajorRepository
     /// </summary>
     /// <param name="major"></param>
     /// <returns></returns>
-    public async Task<Major?> UpdateMajor(Major major)
+    public async Task<RepositoryResponse> UpdateMajor(Major major)
     {
         var majorData = await _context.Majors
             .FirstOrDefaultAsync(x => x.MajorId == major.MajorId);
         if (majorData == null)
-            return null;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Major not found"
+            };
 
         majorData.Name = major?.Name ?? majorData.Name;
 
         await _context.SaveChangesAsync();
-        return majorData;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Major updated successfully"
+        };
     }
 
     /// <summary>
@@ -81,14 +91,22 @@ internal class MajorRepository : IMajorRepository
     /// </summary>
     /// <param name="majorId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteMajor(int majorId)
+    public async Task<RepositoryResponse> DeleteMajor(int majorId)
     {
         var majorFound = await _context.Majors
             .FirstOrDefaultAsync(x => x.MajorId == majorId);
         if (majorFound == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Major not found"
+            };
         _context.Majors.Remove(majorFound);
         await _context.SaveChangesAsync();
-        return true;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Major deleted successfully"
+        };
     }
 }

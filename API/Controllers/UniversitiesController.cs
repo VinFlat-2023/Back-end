@@ -168,18 +168,20 @@ public class UniversitiesController : ControllerBase
     public async Task<IActionResult> DeleteUniversity(int id)
     {
         var result = await _serviceWrapper.Universities.DeleteUniversity(id);
-        if (!result)
-            return NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "University not found",
+                message = result.Message,
                 data = ""
-            });
-        return Ok(new
-        {
-            status = "Success",
-            message = "University deleted",
-            data = ""
-        });
+            })
+        };
     }
 }

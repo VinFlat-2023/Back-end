@@ -10,6 +10,6 @@ public interface IFlatRepository
     public IQueryable<Flat> GetFlatDetail(int? flatId);
     public Task<RepositoryResponse> GetRoomInAFlat(int flatId);
     public Task<Flat> AddFlat(Flat flat);
-    public Task<Flat?> UpdateFlat(Flat flat);
-    public Task<bool> DeleteFlat(int flatId);
+    public Task<RepositoryResponse> UpdateFlat(Flat flat);
+    public Task<RepositoryResponse> DeleteFlat(int flatId);
 }

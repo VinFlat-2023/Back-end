@@ -16,5 +16,6 @@ public class ServiceType
 
     public string Name { get; set; }
     public string Status { get; set; }
+    public int BuildingId { get; set; }
     public virtual ICollection<ServiceEntity> ServiceEntities { get; set; }
 }

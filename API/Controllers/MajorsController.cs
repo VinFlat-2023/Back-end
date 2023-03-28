@@ -165,19 +165,21 @@ public class MajorsController : ControllerBase
                 data = ""
             });
         var result = await _serviceWrapper.Majors.UpdateMajor(updateMajor);
-        if (result == null)
-            return NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Updating major failed",
+                message = result.Message,
                 data = ""
-            });
-        return Ok(new
-        {
-            status = "Success",
-            message = "Major updated",
-            data = ""
-        });
+            })
+        };
     }
 
     // DELETE: api/Majors/5
@@ -187,18 +189,20 @@ public class MajorsController : ControllerBase
     public async Task<IActionResult> DeleteMajor(int id)
     {
         var result = await _serviceWrapper.Majors.DeleteMajor(id);
-        if (!result)
-            return NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Major failed to delete",
+                message = result.Message,
                 data = ""
-            });
-        return Ok(new
-        {
-            status = "Success",
-            message = "Major deleted",
-            data = ""
-        });
+            })
+        };
     }
 }

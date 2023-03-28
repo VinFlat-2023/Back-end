@@ -46,12 +46,12 @@ public class InvoiceTypeService : IInvoiceTypeService
         return pagedList;
     }
 
-    public async Task<InvoiceType?> UpdateInvoiceType(InvoiceType? invoiceType)
+    public async Task<RepositoryResponse> UpdateInvoiceType(InvoiceType invoiceType)
     {
         return await _repositoryWrapper.InvoiceTypes.UpdateInvoiceType(invoiceType);
     }
 
-    public async Task<bool> DeleteInvoiceType(int id)
+    public async Task<RepositoryResponse> DeleteInvoiceType(int id)
     {
         return await _repositoryWrapper.InvoiceTypes.DeleteInvoiceType(id);
     }

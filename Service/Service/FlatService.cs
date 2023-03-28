@@ -47,12 +47,12 @@ public class FlatService : IFlatService
         return await _repositoryWrapper.Flats.AddFlat(flat);
     }
 
-    public async Task<Flat?> UpdateFlat(Flat flat)
+    public async Task<RepositoryResponse> UpdateFlat(Flat flat)
     {
         return await _repositoryWrapper.Flats.UpdateFlat(flat);
     }
 
-    public async Task<bool> DeleteFlat(int flatId)
+    public async Task<RepositoryResponse> DeleteFlat(int flatId)
     {
         return await _repositoryWrapper.Flats.DeleteFlat(flatId);
     }

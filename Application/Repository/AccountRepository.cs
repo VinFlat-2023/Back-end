@@ -26,10 +26,11 @@ public class AccountRepository : IAccountRepository
             .Include(x => x.Role)
             // Filter starts here
             .Where(x =>
-                (filters.Username == null || x.Username.Contains(filters.Username))
+                (filters.Username == null ||
+                 x.Username.Contains(filters.Username))
                 && (filters.Status == null || x.Status == filters.Status)
-                && (filters.RoleName == null || x.Role.RoleName == filters.RoleName)
-                && (filters.FullName == null || x.FullName.Contains(filters.FullName))
+                && (filters.RoleName == null || x.Role.RoleName.ToLower().Contains(filters.RoleName.ToLower()))
+                && (filters.FullName == null || x.FullName.ToLower().Contains(filters.FullName.ToLower()))
                 && (filters.Phone == null || x.Phone.Contains(filters.Phone)))
             .AsNoTracking();
     }
@@ -206,7 +207,6 @@ public class AccountRepository : IAccountRepository
     /// <returns></returns>
     public IQueryable<Account> GetAccountListContainName(string name)
     {
-        return _context.Accounts.Where(a => string.Equals(a.Username, name,
-            StringComparison.CurrentCultureIgnoreCase));
+        return _context.Accounts.Where(a => string.Equals(a.Username, name));
     }
 }

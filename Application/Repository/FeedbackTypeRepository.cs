@@ -1,4 +1,5 @@
 ﻿using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -23,7 +24,7 @@ internal class FeedbackTypeRepository : IFeedbackTypeRepository
     {
         return _context.FeedbackTypes
             .Where(x =>
-                filters.Name == null || x.Name.Contains(filters.Name))
+                filters.Name == null || x.Name.ToLower().Contains(filters.Name.ToLower()))
             .AsNoTracking();
     }
 
@@ -55,17 +56,25 @@ internal class FeedbackTypeRepository : IFeedbackTypeRepository
     /// </summary>
     /// <param name="feedbackType"></param>
     /// <returns></returns>
-    public async Task<FeedbackType?> UpdateFeedbackType(FeedbackType? feedbackType)
+    public async Task<RepositoryResponse> UpdateFeedbackType(FeedbackType? feedbackType)
     {
         var feedbackTypeData = await _context.FeedbackTypes
             .FirstOrDefaultAsync(x => x.FeedbackTypeId == feedbackType!.FeedbackTypeId);
         if (feedbackTypeData == null)
-            return null;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Feedback type not found"
+            };
 
         feedbackTypeData.Name = feedbackType?.Name ?? feedbackTypeData.Name;
 
         await _context.SaveChangesAsync();
-        return feedbackTypeData;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Feedback type updated successfully"
+        };
     }
 
     /// <summary>
@@ -73,14 +82,22 @@ internal class FeedbackTypeRepository : IFeedbackTypeRepository
     /// </summary>
     /// <param name="feedbackTypeId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteFeedbackType(int feedbackTypeId)
+    public async Task<RepositoryResponse> DeleteFeedbackType(int feedbackTypeId)
     {
         var feedbackTypeFound = await _context.FeedbackTypes
             .FirstOrDefaultAsync(x => x.FeedbackTypeId == feedbackTypeId);
         if (feedbackTypeFound == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Feedback type not found"
+            };
         _context.FeedbackTypes.Remove(feedbackTypeFound);
         await _context.SaveChangesAsync();
-        return true;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Feedback type deleted successfully"
+        };
     }
 }

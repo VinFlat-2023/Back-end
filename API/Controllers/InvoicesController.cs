@@ -542,19 +542,21 @@ public class InvoicesController : ControllerBase
     public async Task<IActionResult> DeleteInvoiceType(int id)
     {
         var result = await _serviceWrapper.InvoiceTypes.DeleteInvoiceType(id);
-        return !result
-            ? NotFound(new
-            {
-                status = "Not Found",
-                message = "Invoice type failed to delete",
-                data = ""
-            })
-            : Ok(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
             {
                 status = "Success",
-                message = "Invoice type deleted",
+                message = result.Message,
                 data = ""
-            });
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
     }
 
     [SwaggerOperation(Summary = "[Authorize] Delete invoice detail (For management)")]
@@ -563,19 +565,21 @@ public class InvoicesController : ControllerBase
     public async Task<IActionResult> DeleteInvoiceDetail(int id)
     {
         var result = await _serviceWrapper.InvoiceDetails.DeleteInvoiceDetail(id);
-        return !result
-            ? NotFound(new
-            {
-                status = "Not Found",
-                message = "Invoice detail failed to delete",
-                data = ""
-            })
-            : Ok(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
             {
                 status = "Success",
-                message = "Invoice detail deleted",
+                message = result.Message,
                 data = ""
-            });
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice detail list (For management)")]

@@ -318,19 +318,21 @@ public class ServicesController : ControllerBase
     public async Task<IActionResult> DeleteServiceEntity(int id)
     {
         var result = await _serviceWrapper.ServicesEntity.DeleteServiceEntity(id);
-        if (!result)
-            return NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Service not found",
+                message = result.Message,
                 data = ""
-            });
-        return Ok(new
-        {
-            status = "Success",
-            message = "Service deleted",
-            data = ""
-        });
+            })
+        };
     }
 
     [HttpGet("type")]
@@ -476,18 +478,20 @@ public class ServicesController : ControllerBase
     public async Task<IActionResult> DeleteServiceType(int id)
     {
         var result = await _serviceWrapper.ServiceTypes.DeleteServiceType(id);
-        if (!result)
-            return NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Service type not found",
+                message = result.Message,
                 data = ""
-            });
-        return Ok(new
-        {
-            status = "Success",
-            message = "Service type deleted",
-            data = ""
-        });
+            })
+        };
     }
 }

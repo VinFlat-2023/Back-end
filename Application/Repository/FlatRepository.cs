@@ -33,13 +33,15 @@ public class FlatRepository : IFlatRepository
             //.Where(x => x.FlatTypeId == x.FlatType.FlatTypeId)
             // Filter starts here
             .Where(f =>
-                (filters.Name == null || f.Name.Contains(filters.Name))
-                && (filters.Description == null || f.Description.Contains(filters.Description))
+                (filters.Name == null || f.Name.Contains(filters.Name.ToLower()))
+                && (filters.Description == null || f.Description.Contains(filters.Description.ToLower()))
                 && (filters.Status == null || f.Status == filters.Status)
                 && (filters.FlatTypeId == null || f.FlatTypeId == filters.FlatTypeId)
-                && (filters.FlatTypeName == null || f.FlatType.FlatTypeName.Contains(filters.FlatTypeName))
+                && (filters.FlatTypeName == null ||
+                    f.FlatType.FlatTypeName.ToLower().Contains(filters.FlatTypeName.ToLower()))
                 && (filters.BuildingId == null || f.BuildingId == filters.BuildingId)
-                && (filters.Description == null || f.Description.Contains(filters.Description)))
+                && (filters.BuildingName == null ||
+                    f.Building.BuildingName.ToLower().Contains(filters.BuildingName.ToLower())))
             .AsNoTracking();
     }
 
@@ -125,13 +127,17 @@ public class FlatRepository : IFlatRepository
     /// </summary>
     /// <param name="flat"></param>
     /// <returns></returns>
-    public async Task<Flat?> UpdateFlat(Flat? flat)
+    public async Task<RepositoryResponse> UpdateFlat(Flat? flat)
     {
         var flatData = await _context.Flats
             .FirstOrDefaultAsync(x => x.FlatId == flat!.FlatId);
 
         if (flatData == null)
-            return null;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Flat not found"
+            };
 
         flatData.Name = flat?.Name ?? flatData.Name;
         flatData.Description = flat?.Description ?? flatData.Description;
@@ -142,7 +148,11 @@ public class FlatRepository : IFlatRepository
         flatData.ElectricityMeterAfter = flat?.ElectricityMeterAfter ?? flatData.ElectricityMeterAfter;
 
         await _context.SaveChangesAsync();
-        return flatData;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Flat updated successfully"
+        };
     }
 
     /// <summary>
@@ -150,14 +160,22 @@ public class FlatRepository : IFlatRepository
     /// </summary>
     /// <param name="flatId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteFlat(int flatId)
+    public async Task<RepositoryResponse> DeleteFlat(int flatId)
     {
         var flatFound = await _context.Flats
             .FirstOrDefaultAsync(x => x.FlatId == flatId);
         if (flatFound == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Flat not found"
+            };
         _context.Flats.Remove(flatFound);
         await _context.SaveChangesAsync();
-        return true;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Flat deleted successfully"
+        };
     }
 }

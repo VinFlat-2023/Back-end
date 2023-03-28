@@ -29,12 +29,14 @@ public class InvoiceRepository : IInvoiceRepository
             .Include(x => x.InvoiceDetails)
             // Filter starts here
             .Where(x =>
-                (filter.Name == null || x.Name.Contains(filter.Name))
+                (filter.Name == null || x.Name.ToLower().Contains(filter.Name.ToLower()))
                 && (filter.Status == null || x.Status == filter.Status)
                 && (filter.Amount == null || x.Amount == filter.Amount)
                 && (filter.Detail == null || x.Detail == filter.Detail)
                 && (filter.RenterId == null || x.RenterId == filter.RenterId)
+                && (filter.RenterName == null || x.Renter.FullName.ToLower().Contains(filter.RenterName.ToLower()))
                 && (filter.AccountId == null || x.AccountId == filter.AccountId)
+                && (filter.AccountName == null || x.Account.FullName.ToLower().Contains(filter.AccountName.ToLower()))
                 && (filter.InvoiceTypeId == null || x.InvoiceTypeId == filter.InvoiceTypeId))
             .AsNoTracking();
     }

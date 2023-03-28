@@ -13,6 +13,6 @@ public interface IServiceEntityService
 
     public Task<ServiceEntity?> GetServiceEntityById(int? serviceEntityId);
     public Task<ServiceEntity?> AddServiceEntity(ServiceEntity serviceEntity);
-    public Task<ServiceEntity?> UpdateServiceEntity(ServiceEntity serviceEntity);
-    public Task<bool> DeleteServiceEntity(int serviceEntityId);
+    public Task<RepositoryResponse> UpdateServiceEntity(ServiceEntity serviceEntity);
+    public Task<RepositoryResponse> DeleteServiceEntity(int serviceEntityId);
 }

@@ -12,5 +12,5 @@ public interface IInvoiceDetailService
     Task<InvoiceDetail?> GetActiveInvoiceDetailByUserId(int id, CancellationToken token);
     Task<InvoiceDetail?> GetInvoiceDetailById(int? id);
     Task<PagedList<InvoiceDetail>?> GetInvoiceDetails(InvoiceDetailFilter filters, CancellationToken token);
-    Task<bool> DeleteInvoiceDetail(int id);
+    Task<RepositoryResponse> DeleteInvoiceDetail(int id);
 }

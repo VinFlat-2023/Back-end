@@ -32,7 +32,7 @@ public class RoomController : ControllerBase
     {
         var filter = _mapper.Map<RoomFilter>(request);
 
-        var list = await _serviceWrapper.Rooms.GetRoomList(filter, token);
+        var list = await _serviceWrapper.Rooms.GetRoomList(filter, 0, token);
 
         var resultList = _mapper.Map<IEnumerable<RoomBasicDetailEntity>>(list);
 

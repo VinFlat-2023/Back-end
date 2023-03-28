@@ -1,4 +1,5 @@
 using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -19,7 +20,8 @@ public class InvoiceTypeRepository : IInvoiceTypeRepository
     {
         return _context.InvoiceTypes
             .Where(x =>
-                (filters.InvoiceTypeName == null || x.InvoiceTypeName.Contains(filters.InvoiceTypeName))
+                (filters.InvoiceTypeName == null ||
+                 x.InvoiceTypeName.ToLower().Contains(filters.InvoiceTypeName.ToLower()))
                 && (filters.InvoiceTypeIdWildCard == null || x.InvoiceTypeIdWildCard == filters.InvoiceTypeIdWildCard)
                 && (filters.Status == null || x.Status == filters.Status))
             .AsNoTracking();
@@ -31,30 +33,46 @@ public class InvoiceTypeRepository : IInvoiceTypeRepository
             .FirstOrDefaultAsync(x => x.InvoiceTypeId == id);
     }
 
-    public async Task<InvoiceType?> UpdateInvoiceType(InvoiceType? invoiceType)
+    public async Task<RepositoryResponse> UpdateInvoiceType(InvoiceType? invoiceType)
     {
         var invoiceTypeData = await _context.InvoiceTypes
             .FirstOrDefaultAsync(x => invoiceType != null && x.InvoiceTypeId == invoiceType.InvoiceTypeId);
         if (invoiceTypeData == null)
-            return null;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "InvoiceType not found"
+            };
 
         invoiceTypeData.InvoiceTypeName = invoiceType?.InvoiceTypeName ?? invoiceTypeData.InvoiceTypeName;
         invoiceTypeData.Status = invoiceType?.Status ?? invoiceTypeData.Status;
 
         await _context.SaveChangesAsync();
-        return invoiceTypeData;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "InvoiceType updated successfully"
+        };
     }
 
-    public async Task<bool> DeleteInvoiceType(int id)
+    public async Task<RepositoryResponse> DeleteInvoiceType(int id)
     {
         var invoiceType = await _context.InvoiceTypes
             .FirstOrDefaultAsync(x => x.InvoiceTypeId == id);
         if (invoiceType == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "InvoiceType not found"
+            };
 
         _context.InvoiceTypes.Remove(invoiceType);
         await _context.SaveChangesAsync();
-        return true;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "InvoiceType deleted successfully"
+        };
     }
 
     public async Task<InvoiceType?> AddInvoiceType(InvoiceType invoiceType)

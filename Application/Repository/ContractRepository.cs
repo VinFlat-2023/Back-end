@@ -26,8 +26,10 @@ public class ContractRepository : IContractRepository
         return _context.Contracts
             .Include(x => x.Renter)
             .Where(x =>
-                (filters.ContractName == null || x.ContractName.Contains(filters.ContractName))
-                && (filters.Description == null || x.Description.Contains(filters.Description))
+                (filters.ContractName == null ||
+                 x.ContractName.ToLower().Contains(filters.ContractName.ToLower()))
+                && (filters.Description == null ||
+                    x.Description.ToLower().Contains(filters.Description.ToLower()))
                 && (filters.PriceForWater == null || x.PriceForWater == filters.PriceForWater)
                 && (filters.PriceForRent == null || x.PriceForRent == filters.PriceForRent)
                 && (filters.PriceForElectricity == null || x.PriceForElectricity == filters.PriceForElectricity)
@@ -46,8 +48,10 @@ public class ContractRepository : IContractRepository
             .Include(x => x.Renter)
             .Where(x => x.RenterId == renterId)
             .Where(x =>
-                (filters.ContractName == null || x.ContractName.Contains(filters.ContractName))
-                && (filters.Description == null || x.Description.Contains(filters.Description))
+                (filters.ContractName == null ||
+                 x.ContractName.ToLower().Contains(filters.ContractName.ToLower()))
+                && (filters.Description == null ||
+                    x.Description.ToLower().Contains(filters.Description.ToLower()))
                 && (filters.PriceForWater == null || x.PriceForWater == filters.PriceForWater)
                 && (filters.PriceForRent == null || x.PriceForRent == filters.PriceForRent)
                 && (filters.PriceForElectricity == null || x.PriceForElectricity == filters.PriceForElectricity)
@@ -68,7 +72,8 @@ public class ContractRepository : IContractRepository
             .Where(x => x.Renter.RenterId == x.RenterId)
             // filter starts here
             .Where(x =>
-                (filters.ContractName == null || x.ContractName.Contains(filters.ContractName))
+                (filters.ContractName == null ||
+                 x.ContractName.ToLower().Contains(filters.ContractName.ToLower()))
                 && (filters.ContractId == null || x.ContractId == filters.ContractId)
                 && (filters.ContractStatus == null || x.ContractStatus == filters.ContractStatus)
                 && (filters.RenterId == null || x.RenterId == filters.RenterId))
@@ -133,7 +138,6 @@ public class ContractRepository : IContractRepository
                 IsSuccess = false,
                 Message = "Contract not found"
             };
-        ;
 
         //contractData.FlatId = contract?.FlatId ?? contractData.FlatId;
         contractData.DateSigned = contract?.DateSigned ?? contractData.DateSigned;

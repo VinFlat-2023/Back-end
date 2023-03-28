@@ -1,4 +1,5 @@
 ﻿using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -23,7 +24,7 @@ internal class ServiceTypeRepository : IServiceTypeRepository
     {
         return _context.ServiceTypes
             .Where(x =>
-                (filters.Name == null || x.Name.Contains(filters.Name))
+                (filters.Name == null || x.Name.ToLower().Contains(filters.Name.ToLower()))
                 && (filters.Status == null || x.Status == filters.Status))
             .AsNoTracking();
     }
@@ -56,18 +57,26 @@ internal class ServiceTypeRepository : IServiceTypeRepository
     /// </summary>
     /// <param name="serviceType"></param>
     /// <returns></returns>
-    public async Task<ServiceType?> UpdateServiceType(ServiceType? serviceType)
+    public async Task<RepositoryResponse> UpdateServiceType(ServiceType serviceType)
     {
         var serviceTypeData = await _context.ServiceTypes
-            .FirstOrDefaultAsync(x => x.ServiceTypeId == serviceType!.ServiceTypeId);
+            .FirstOrDefaultAsync(x => x.ServiceTypeId == serviceType.ServiceTypeId);
         if (serviceTypeData == null)
-            return null;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Service type not found"
+            };
 
-        serviceTypeData.Name = serviceType?.Name ?? serviceTypeData.Name;
-        serviceTypeData.ServiceTypeId = serviceType?.ServiceTypeId ?? serviceTypeData.ServiceTypeId;
+        serviceTypeData.Name = serviceType.Name;
+        serviceTypeData.ServiceTypeId = serviceType.ServiceTypeId;
 
         await _context.SaveChangesAsync();
-        return serviceTypeData;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Service type updated successfully"
+        };
     }
 
     /// <summary>
@@ -75,14 +84,22 @@ internal class ServiceTypeRepository : IServiceTypeRepository
     /// </summary>
     /// <param name="serviceTypeId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteServiceType(int serviceTypeId)
+    public async Task<RepositoryResponse> DeleteServiceType(int serviceTypeId)
     {
         var serviceTypeFound = await _context.ServiceTypes
             .FirstOrDefaultAsync(x => x.ServiceTypeId == serviceTypeId);
         if (serviceTypeFound == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Service type not found"
+            };
         _context.ServiceTypes.Remove(serviceTypeFound);
         await _context.SaveChangesAsync();
-        return true;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Service type deleted successfully"
+        };
     }
 }

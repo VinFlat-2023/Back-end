@@ -48,12 +48,12 @@ public class ServiceEntityService : IServiceEntityService
         return await _repositoryWrapper.ServiceEntities.AddService(serviceEntity);
     }
 
-    public async Task<ServiceEntity?> UpdateServiceEntity(ServiceEntity serviceEntity)
+    public async Task<RepositoryResponse> UpdateServiceEntity(ServiceEntity serviceEntity)
     {
         return await _repositoryWrapper.ServiceEntities.UpdateService(serviceEntity);
     }
 
-    public async Task<bool> DeleteServiceEntity(int serviceEntityId)
+    public async Task<RepositoryResponse> DeleteServiceEntity(int serviceEntityId)
     {
         return await _repositoryWrapper.ServiceEntities.DeleteService(serviceEntityId);
     }

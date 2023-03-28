@@ -1,3 +1,4 @@
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 
@@ -11,5 +12,5 @@ public interface IInvoiceDetailRepository
     Task<InvoiceDetail?> GetActiveInvoiceDetailByUserId(int id, CancellationToken token);
     Task<InvoiceDetail?> GetInvoiceDetailById(int? id);
     IQueryable<InvoiceDetail> GetInvoiceDetails(InvoiceDetailFilter filters);
-    Task<bool> DeleteInvoiceDetail(int id);
+    Task<RepositoryResponse> DeleteInvoiceDetail(int id);
 }

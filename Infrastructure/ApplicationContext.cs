@@ -558,33 +558,7 @@ public class ApplicationContext : DbContext
                 CoordinateX = 21233,
                 CoordinateY = 334,
                 AreaId = 3,
-                AccountId = 3,
-                ImageUrl = "",
-                BuildingPhoneNumber = "012323123"
-            },
-            new Building
-            {
-                BuildingId = 7,
-                BuildingName = "Building 1g",
-                Description = "Building 1g",
-                Status = true,
-                CoordinateX = 423,
-                CoordinateY = 3214,
-                AreaId = 4,
-                AccountId = 3,
-                ImageUrl = "",
-                BuildingPhoneNumber = "012323123"
-            },
-            new Building
-            {
-                BuildingId = 8,
-                BuildingName = "Building 1h",
-                Description = "Building 1h",
-                Status = true,
-                CoordinateX = 2323,
-                CoordinateY = 31454,
-                AreaId = 4,
-                AccountId = 3,
+                AccountId = 4,
                 ImageUrl = "",
                 BuildingPhoneNumber = "012323123"
             }
@@ -596,35 +570,40 @@ public class ApplicationContext : DbContext
                 FlatTypeId = 1,
                 FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 10,
-                Status = "Active"
+                Status = "Active",
+                BuildingId = 5
             },
             new FlatType
             {
                 FlatTypeId = 2,
                 FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 2,
-                Status = "Active"
+                Status = "Active",
+                BuildingId = 5
             },
             new FlatType
             {
                 FlatTypeId = 3,
                 FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 4,
-                Status = "Active"
+                Status = "Active",
+                BuildingId = 5
             },
             new FlatType
             {
                 FlatTypeId = 4,
                 FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 5,
-                Status = "Active"
+                Status = "Active",
+                BuildingId = 5
             },
             new FlatType
             {
                 FlatTypeId = 5,
                 FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 6,
-                Status = "NonActive"
+                Status = "Active",
+                BuildingId = 5
             }
         );
 
@@ -767,21 +746,24 @@ public class ApplicationContext : DbContext
                 RoomTypeId = 1,
                 RoomTypeName = "Room type id 1 : 2 slots",
                 Description = "Room type id 1 : 2 slots",
-                NumberOfSlots = 2
+                NumberOfSlots = 2,
+                BuildingId = 5
             },
             new RoomType
             {
                 RoomTypeId = 2,
                 RoomTypeName = "Room type id 2 : 2 slots",
                 Description = "Room type id 2 : 2 slots",
-                NumberOfSlots = 2
+                NumberOfSlots = 2,
+                BuildingId = 5
             },
             new RoomType
             {
                 RoomTypeId = 3,
                 RoomTypeName = "Room type id 3 : 2 slots",
                 Description = "Room type id 3 : 2 slots",
-                NumberOfSlots = 2
+                NumberOfSlots = 2,
+                BuildingId = 5
             }
         );
 
@@ -868,25 +850,29 @@ public class ApplicationContext : DbContext
             {
                 ServiceTypeId = 1,
                 Name = "Nước",
-                Status = "Active"
+                Status = "Active",
+                BuildingId = 3
             },
             new ServiceType
             {
                 ServiceTypeId = 2,
                 Name = "Gas",
-                Status = "Active"
+                Status = "Active",
+                BuildingId = 3
             },
             new ServiceType
             {
                 ServiceTypeId = 3,
                 Name = "Điện",
-                Status = "Active"
+                Status = "Active",
+                BuildingId = 2
             },
             new ServiceType
             {
                 ServiceTypeId = 4,
                 Name = "Còn lại",
-                Status = "Active"
+                Status = "Active",
+                BuildingId = 2
             }
         );
 

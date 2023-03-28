@@ -47,12 +47,12 @@ public class UniversityService : IUniversityService
         return await _repositoryWrapper.Universities.AddUniversity(university);
     }
 
-    public async Task<University?> UpdateUniversity(University university)
+    public async Task<RepositoryResponse> UpdateUniversity(University university)
     {
         return await _repositoryWrapper.Universities.UpdateUniversity(university);
     }
 
-    public async Task<bool> DeleteUniversity(int universityId)
+    public async Task<RepositoryResponse> DeleteUniversity(int universityId)
     {
         return await _repositoryWrapper.Universities.DeleteUniversity(universityId);
     }

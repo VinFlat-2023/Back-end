@@ -47,12 +47,12 @@ public class ServiceTypeService : IServiceTypeService
         return await _repositoryWrapper.ServiceTypes.AddServiceType(serviceType);
     }
 
-    public async Task<ServiceType?> UpdateServiceType(ServiceType serviceType)
+    public async Task<RepositoryResponse> UpdateServiceType(ServiceType serviceType)
     {
         return await _repositoryWrapper.ServiceTypes.UpdateServiceType(serviceType);
     }
 
-    public async Task<bool> DeleteServiceType(int serviceTypeId)
+    public async Task<RepositoryResponse> DeleteServiceType(int serviceTypeId)
     {
         return await _repositoryWrapper.ServiceTypes.DeleteServiceType(serviceTypeId);
     }

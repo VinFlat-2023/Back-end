@@ -24,9 +24,9 @@ internal class AreaRepository : IAreaRepository
     {
         return _context.Areas
             .Where(x =>
-                (filters.Name == null || x.Name.Contains(filters.Name))
+                (filters.Name == null || x.Name.ToLower().Contains(filters.Name.ToLower()))
                 && (filters.Status == null || x.Status == filters.Status)
-                && (filters.Location == null || x.Location.Contains(filters.Location)))
+                && (filters.Location == null || x.Location.ToLower().Contains(filters.Location.ToLower())))
             .AsNoTracking();
     }
 

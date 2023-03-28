@@ -47,12 +47,12 @@ public class FlatTypeService : IFlatTypeService
         return await _repositoryWrapper.FlatTypes.AddFlatType(flatType);
     }
 
-    public async Task<FlatType?> UpdateFlatType(FlatType flatType)
+    public async Task<RepositoryResponse> UpdateFlatType(FlatType flatType)
     {
         return await _repositoryWrapper.FlatTypes.UpdateFlatType(flatType);
     }
 
-    public async Task<bool> DeleteFlatType(int flatTypeId)
+    public async Task<RepositoryResponse> DeleteFlatType(int flatTypeId)
     {
         return await _repositoryWrapper.FlatTypes.DeleteFlatType(flatTypeId);
     }

@@ -558,19 +558,20 @@ public class TicketsController : ControllerBase
     public async Task<IActionResult> DeleteTicketType(int id)
     {
         var result = await _serviceWrapper.TicketTypes.DeleteTicketType(id);
-        if (!result)
-            return NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Request type not found",
+                message = result.Message,
                 data = ""
-            });
-
-        return Ok(new
-        {
-            status = "Success",
-            message = "Request type deleted",
-            data = ""
-        });
+            })
+        };
     }
 }

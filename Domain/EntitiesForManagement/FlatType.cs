@@ -17,5 +17,6 @@ public class FlatType
     public string FlatTypeName { get; set; }
     public int? RoomCapacity { get; set; }
     public string? Status { get; set; }
+    public int BuildingId { get; set; }
     public virtual ICollection<Flat> Flats { get; set; }
 }

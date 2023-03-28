@@ -27,13 +27,14 @@ internal class FeedbackRepository : IFeedbackRepository
             .Include(x => x.Renter)
             .Include(x => x.FeedbackType)
             .Where(x =>
-                (filters.FeedbackTitle == null || x.FeedbackTitle.Contains(filters.FeedbackTitle))
-                && (filters.Description == null || x.Description.Contains(filters.Description))
+                (filters.FeedbackTitle == null ||
+                 x.FeedbackTitle.ToLower().Contains(filters.FeedbackTitle.ToLower()))
+                && (filters.Description == null || x.Description.ToLower().Contains(filters.Description.ToLower()))
                 && (filters.Status == null || x.Status == filters.Status)
                 && (filters.FlatId == null || x.FlatId == filters.FlatId)
-                && (filters.FlatName == null || x.Flat.Name.Contains(filters.FlatName))
+                && (filters.FlatName == null || x.Flat.Name.ToLower().Contains(filters.FlatName.ToLower()))
                 && (filters.RenterId == null || x.RenterId == filters.RenterId)
-                && (filters.FullName == null || x.Renter.FullName.Contains(filters.FullName))
+                && (filters.FullName == null || x.Renter.FullName.Contains(filters.FullName.ToLower()))
                 && (filters.FeedbackTypeId == null || x.FeedbackTypeId == filters.FeedbackTypeId)
                 && (filters.RenterId == null || x.RenterId == filters.RenterId))
             .AsNoTracking();

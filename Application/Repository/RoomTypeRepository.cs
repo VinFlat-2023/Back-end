@@ -16,22 +16,21 @@ public class RoomTypeRepository : IRoomTypeRepository
         _context = context;
     }
 
-    public IQueryable<RoomType> GetRoomTypeList(RoomTypeFilter filter)
+    public IQueryable<RoomType> GetRoomTypeList(RoomTypeFilter filter, int buildingId)
     {
         return _context.RoomTypes
+            .Where(x => x.BuildingId == buildingId)
             .Where(x =>
-                filter.RoomTypeName == null || (x.RoomTypeName.Contains(filter.RoomTypeName)
-                                                && (filter.Description == null ||
-                                                    x.Description.Contains(filter.Description))
-                                                && (filter.NumberOfSlots == null ||
-                                                    x.NumberOfSlots == filter.NumberOfSlots))
-            ).AsNoTracking();
+                (filter.RoomTypeName == null || x.RoomTypeName.ToLower().Contains(filter.RoomTypeName.ToLower()))
+                && (filter.Description == null || x.Description.ToLower().Contains(filter.Description.ToLower()))
+                && (filter.NumberOfSlots == null || x.NumberOfSlots == filter.NumberOfSlots))
+            .AsNoTracking();
     }
 
-    public IQueryable<RoomType> GetRoomTypeDetail(int? roomTypeId)
+    public IQueryable<RoomType> GetRoomTypeDetail(int? roomTypeId, int buildingId)
     {
         return _context.RoomTypes
-            .Where(x => x.RoomTypeId == roomTypeId);
+            .Where(x => x.RoomTypeId == roomTypeId && x.BuildingId == buildingId);
     }
 
     public async Task<RoomType> CreateRoomType(RoomType roomType)
@@ -41,18 +40,42 @@ public class RoomTypeRepository : IRoomTypeRepository
         return roomType;
     }
 
-    public async Task<RepositoryResponse> UpdateRoomType(RoomType roomType)
+    public async Task<RepositoryResponse> UpdateRoomType(RoomType roomType, int buildingId)
     {
         var roomTypeData = await _context.RoomTypes
-            .FirstOrDefaultAsync(x => x.RoomTypeId == roomType.RoomTypeId);
+            .FirstOrDefaultAsync(x => x.RoomTypeId == roomType.RoomTypeId && x.BuildingId == buildingId);
 
-        if (roomTypeData == null)
-            return new RepositoryResponse
-            {
-                IsSuccess = false,
-                Message = "Room type not found"
-            };
+        switch (roomTypeData)
+        {
+            case null:
+                return new RepositoryResponse
+                {
+                    IsSuccess = false,
+                    Message = "Room type not found"
+                };
+            case { } when roomTypeData.RoomTypeName == roomType.RoomTypeName:
+                return new RepositoryResponse
+                {
+                    IsSuccess = false,
+                    Message = "Room type name already exists"
+                };
 
+            case { } when roomTypeData.BuildingId == 0 || roomTypeData.BuildingId != buildingId:
+                return new RepositoryResponse
+                {
+                    IsSuccess = false,
+                    Message = "Building id not found"
+                };
+
+            case { } when roomTypeData.NumberOfSlots == roomType.NumberOfSlots:
+                return new RepositoryResponse
+                {
+                    IsSuccess = false,
+                    Message = "There is already a room type with the same number of slots"
+                };
+        }
+
+        // Do not change building id
         roomTypeData.RoomTypeName = roomTypeData.RoomTypeName;
         roomTypeData.Description = roomTypeData.Description;
 
@@ -64,10 +87,10 @@ public class RoomTypeRepository : IRoomTypeRepository
         };
     }
 
-    public async Task<RepositoryResponse> DeleteRoomType(int roomTypeId)
+    public async Task<RepositoryResponse> DeleteRoomType(int roomTypeId, int buildingId)
     {
         var roomTypeFound = await _context.RoomTypes
-            .FirstOrDefaultAsync(x => x.RoomTypeId == roomTypeId);
+            .FirstOrDefaultAsync(x => x.RoomTypeId == roomTypeId && x.BuildingId == buildingId);
         if (roomTypeFound == null)
             return new RepositoryResponse
             {

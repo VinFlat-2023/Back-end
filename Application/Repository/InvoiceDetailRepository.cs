@@ -1,4 +1,5 @@
 using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -55,17 +56,27 @@ public class InvoiceDetailRepository : IInvoiceDetailRepository
             .FirstOrDefaultAsync(token);
     }
 
-    public async Task<bool> DeleteInvoiceDetail(int id)
+    public async Task<RepositoryResponse> DeleteInvoiceDetail(int id)
     {
         var invoiceDetail = await _context.InvoiceDetails
             .FirstOrDefaultAsync(x => x.InvoiceDetailId == id);
         if (invoiceDetail == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Invoice detail not found"
+            };
 
         _context.InvoiceDetails.Remove(invoiceDetail);
         await _context.SaveChangesAsync();
-        return true;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Invoice detail deleted successfully"
+        };
     }
+
+    // TODO : FIX INVOICE DETAIL
 
     public async Task<InvoiceDetail?> UpdateInvoiceDetail(InvoiceDetail invoiceDetail)
     {

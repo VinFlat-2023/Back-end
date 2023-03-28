@@ -54,12 +54,12 @@ public class MajorService : IMajorService
         return await _repositoryWrapper.Majors.AddMajor(major);
     }
 
-    public async Task<Major?> UpdateMajor(Major major)
+    public async Task<RepositoryResponse> UpdateMajor(Major major)
     {
         return await _repositoryWrapper.Majors.UpdateMajor(major);
     }
 
-    public async Task<bool> DeleteMajor(int majorId)
+    public async Task<RepositoryResponse> DeleteMajor(int majorId)
     {
         return await _repositoryWrapper.Majors.DeleteMajor(majorId);
     }

@@ -60,7 +60,7 @@ public class InvoiceDetailService : IInvoiceDetailService
         return pagedList;
     }
 
-    public async Task<bool> DeleteInvoiceDetail(int id)
+    public async Task<RepositoryResponse> DeleteInvoiceDetail(int id)
     {
         return await _repositoryWrapper.InvoiceDetails.DeleteInvoiceDetail(id);
     }

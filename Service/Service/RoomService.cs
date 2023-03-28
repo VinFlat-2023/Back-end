@@ -46,9 +46,9 @@ public class RoomService : IRoomService
         return await _repositoryWrapper.Rooms.DeleteRoom(roomId);
     }
 
-    public async Task<PagedList<Room>?> GetRoomList(RoomFilter filters, CancellationToken token)
+    public async Task<PagedList<Room>?> GetRoomList(RoomFilter filters, int buildingId, CancellationToken token)
     {
-        var queryable = _repositoryWrapper.Rooms.GetRoomList(filters);
+        var queryable = _repositoryWrapper.Rooms.GetRoomList(filters, buildingId);
 
         if (!queryable.Any())
             return null;

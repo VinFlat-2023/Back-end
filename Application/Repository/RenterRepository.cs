@@ -24,14 +24,16 @@ public class RenterRepository : IRenterRepository
             .Include(x => x.Major)
             // Filter starts here
             .Where(x =>
-                (filters.Username == null || x.Username.Contains(filters.Username))
+                (filters.Username == null || x.Username.ToLower().Contains(filters.Username.ToLower()))
                 && (filters.Status == null || x.Status == filters.Status)
-                && (filters.Address == null || x.Address.Contains(filters.Address))
+                && (filters.Address == null || x.Address.ToLower().Contains(filters.Address.ToLower()))
                 && (filters.Phone == null || x.Phone.Contains(filters.Phone))
-                && (filters.Email == null || x.Email.Contains(filters.Email))
+                && (filters.Email == null || x.Email.Contains(filters.Email.ToLower()))
                 && (filters.UniversityId == null || x.UniversityId == filters.UniversityId)
+                && (filters.UniversityName == null ||
+                    x.University.UniversityName.Contains(filters.UniversityName.ToLower()))
                 && (filters.Gender == null || x.Gender == filters.Gender)
-                && (filters.FullName == null || x.FullName.Contains(filters.FullName)))
+                && (filters.FullName == null || x.FullName.ToLower().Contains(filters.FullName.ToLower())))
             .AsNoTracking();
     }
 
@@ -60,8 +62,6 @@ public class RenterRepository : IRenterRepository
             .Include(x => x.Major)
             .Include(x => x.Contracts
                 .Where(y => y.ContractStatus == "Active"))
-            .Where(x => x.MajorId == x.Major.MajorId)
-            .Where(x => x.UniversityId == x.University.UniversityId)
             .Where(x => x.RenterId == userId);
     }
 

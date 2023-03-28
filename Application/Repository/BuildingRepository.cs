@@ -28,17 +28,18 @@ public class BuildingRepository : IBuildingRepository
             .ThenInclude(x => x.Role)
             // Filter starts here
             .Where(x =>
-                (filter.BuildingName == null || x.BuildingName.Contains(filter.BuildingName))
-                && (filter.Description == null || (x.Description.Contains(filter.Description)
+                (filter.BuildingName == null || x.BuildingName.ToLower().Contains(filter.BuildingName.ToLower()))
+                && (filter.Description == null || (x.Description.ToLower().Contains(filter.Description.ToLower())
                                                    && (filter.TotalRooms == null || x.TotalRooms == filter.TotalRooms)
                                                    && (filter.Status == null || x.Status == filter.Status)
                                                    && (filter.BuildingPhoneNumber == null ||
                                                        x.BuildingPhoneNumber.Contains(filter.BuildingPhoneNumber))
-                                                   && (filter.Username == null ||
-                                                       x.Account.Username.Contains(filter.Username))
-                                                   && (filter.AreaName == null || x.Area.Name.Contains(filter.AreaName))
-                                                   && (filter.Username == null ||
-                                                       x.Account.Username == filter.Username))))
+                                                   && (filter.Username == null || x.Account.Username.ToLower()
+                                                       .Contains(filter.Username.ToLower()))
+                                                   && (filter.AreaName == null || x.Area.Name.ToLower()
+                                                       .Contains(filter.AreaName.ToLower()))
+                                                   && (filter.Username == null || x.Account.Username.ToLower()
+                                                       .Contains(filter.Username.ToLower())))))
             .AsNoTracking();
     }
 
@@ -53,9 +54,6 @@ public class BuildingRepository : IBuildingRepository
             .Include(x => x.Area)
             .Include(x => x.Account)
             .ThenInclude(x => x.Role)
-            .Where(x => x.AreaId == x.Area.AreaId)
-            .Where(x => x.AccountId == x.Account.AccountId)
-            .Where(x => x.Account.RoleId == x.Account.Role.RoleId)
             .Where(x => x.BuildingId == buildingId);
     }
 

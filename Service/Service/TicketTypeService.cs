@@ -47,12 +47,12 @@ public class TicketTypeService : ITicketTypeService
         return await _repositoryWrapper.TicketTypes.AddTicketType(ticketType);
     }
 
-    public async Task<TicketType?> UpdateTicketType(TicketType ticketType)
+    public async Task<RepositoryResponse> UpdateTicketType(TicketType ticketType)
     {
         return await _repositoryWrapper.TicketTypes.UpdateTicketType(ticketType);
     }
 
-    public async Task<bool> DeleteTicketType(int ticketTypeId)
+    public async Task<RepositoryResponse> DeleteTicketType(int ticketTypeId)
     {
         return await _repositoryWrapper.TicketTypes.DeleteTicketType(ticketTypeId);
     }

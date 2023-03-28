@@ -17,16 +17,18 @@ public class RoomRepository : IRoomRepository
     }
 
 
-    public IQueryable<Room> GetRoomList(RoomFilter filters)
+    public IQueryable<Room> GetRoomList(RoomFilter filters, int buildingId)
     {
         return _context.Rooms
             .Include(x => x.Flat)
+            .ThenInclude(x => x.Building)
+            .Where(x => x.Flat.Building.BuildingId == buildingId)
             .Include(x => x.RoomType)
             .Where(x =>
-                (filters.FlatName == null || x.Flat.Name.Contains(filters.FlatName))
+                (filters.FlatName == null || x.Flat.Name.ToLower().Contains(filters.FlatName.ToLower()))
                 && (filters.AvailableSlots == null || x.AvailableSlots == filters.AvailableSlots)
-                && (filters.RoomName == null || x.RoomName == filters.RoomName)
-                && (filters.RoomTypeName == null || x.RoomType.RoomTypeName.Contains(filters.RoomTypeName)))
+                && (filters.RoomName == null || x.RoomName.ToLower().Contains(filters.RoomName.ToLower()))
+                && (filters.RoomTypeName == null || x.RoomType.RoomTypeName.Contains(filters.RoomTypeName.ToLower())))
             .AsNoTracking();
     }
 

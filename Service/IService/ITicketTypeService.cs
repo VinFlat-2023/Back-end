@@ -9,6 +9,6 @@ public interface ITicketTypeService
     public Task<PagedList<TicketType>?> GetTicketTypeList(TicketTypeFilter filter, CancellationToken token);
     public Task<TicketType?> GetTicketTypeById(int? ticketTypeId);
     public Task<TicketType?> AddTicketType(TicketType ticketType);
-    public Task<TicketType?> UpdateTicketType(TicketType ticketType);
-    public Task<bool> DeleteTicketType(int ticketTypeId);
+    public Task<RepositoryResponse> UpdateTicketType(TicketType ticketType);
+    public Task<RepositoryResponse> DeleteTicketType(int ticketTypeId);
 }

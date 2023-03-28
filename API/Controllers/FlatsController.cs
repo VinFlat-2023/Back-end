@@ -183,20 +183,21 @@ public class FlatsController : ControllerBase
     {
         var result = await _serviceWrapper.Flats.DeleteFlat(id);
 
-        if (!result)
-            return NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Flat failed to create",
+                message = result.Message,
                 data = ""
-            });
-
-        return Ok(new
-        {
-            status = "Success",
-            message = "Flat deleted",
-            data = ""
-        });
+            })
+        };
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get flat type list by filter request (For management and renter)")]
@@ -339,20 +340,21 @@ public class FlatsController : ControllerBase
     public async Task<IActionResult> DeleteFlatType(int id)
     {
         var result = await _serviceWrapper.FlatTypes.DeleteFlatType(id);
-        if (!result)
-            return NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Flat type not found",
+                message = result.Message,
                 data = ""
-            });
-
-        return Ok(new
-        {
-            status = "Success",
-            message = "Flat type deleted",
-            data = ""
-        });
+            })
+        };
     }
 
     [SwaggerOperation(Summary = "[Authorize] Check total available slots in a flat (For management)")]

@@ -24,8 +24,8 @@ public class RoleRepository : IRoleRepository
     {
         return _context.Roles
             .Where(x =>
-                filters.RoleName == null || (x.RoleName.Contains(filters.RoleName)
-                                             && (filters.Status == null || x.Status == filters.Status)))
+                (filters.RoleName == null || x.RoleName.Contains(filters.RoleName))
+                && (filters.Status == null || x.Status == filters.Status))
             .AsNoTracking();
     }
 

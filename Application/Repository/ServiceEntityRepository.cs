@@ -1,4 +1,5 @@
 ﻿using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -27,10 +28,10 @@ internal class ServiceEntityRepository : IServiceEntityRepository
             .ThenInclude(x => x.Account)
             // Filter starts here
             .Where(x =>
-                (filters.Name == null || x.Name.Contains(filters.Name))
+                (filters.Name == null || x.Name.ToLower().Contains(filters.Name.ToLower()))
                 && (filters.Status == null || x.Status == filters.Status)
                 && (filters.ServiceTypeId == null || x.ServiceTypeId == filters.ServiceTypeId)
-                && (filters.Description == null || x.Description.Contains(filters.Description)))
+                && (filters.Description == null || x.Description.ToLower().Contains(filters.Description.ToLower())))
             .AsNoTracking();
     }
 
@@ -42,10 +43,10 @@ internal class ServiceEntityRepository : IServiceEntityRepository
             .Where(x => x.BuildingId == buildingId)
             // Filter starts here
             .Where(x =>
-                (filters.Name == null || x.Name.Contains(filters.Name))
+                (filters.Name == null || x.Name.ToLower().Contains(filters.Name.ToLower()))
                 && (filters.Status == null || x.Status == filters.Status)
                 && (filters.ServiceTypeId == null || x.ServiceTypeId == filters.ServiceTypeId)
-                && (filters.Description == null || x.Description.Contains(filters.Description)))
+                && (filters.Description == null || x.Description.ToLower().Contains(filters.Description.ToLower())))
             .AsNoTracking();
     }
 
@@ -77,23 +78,31 @@ internal class ServiceEntityRepository : IServiceEntityRepository
     /// </summary>
     /// <param name="service"></param>
     /// <returns></returns>
-    public async Task<ServiceEntity?> UpdateService(ServiceEntity? service)
+    public async Task<RepositoryResponse> UpdateService(ServiceEntity service)
     {
         var serviceData = await _context.Services
-            .Where(x => x.ServiceId == service!.ServiceId)
+            .Where(x => x.ServiceId == service.ServiceId)
             .FirstOrDefaultAsync();
 
         if (serviceData == null)
-            return null;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Service not found"
+            };
 
-        serviceData.ServiceTypeId = service?.ServiceTypeId ?? serviceData.ServiceTypeId;
-        serviceData.Name = service?.Name ?? serviceData.Name;
-        serviceData.Description = service?.Description ?? serviceData.Description;
-        serviceData.Status = service?.Status ?? serviceData.Status;
-        serviceData.Amount = service?.Amount ?? serviceData.Amount;
+        serviceData.ServiceTypeId = service.ServiceTypeId;
+        serviceData.Name = service.Name;
+        serviceData.Description = service.Description;
+        serviceData.Status = service.Status;
+        serviceData.Amount = service.Amount ?? serviceData.Amount;
 
         await _context.SaveChangesAsync();
-        return serviceData;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Service updated successfully"
+        };
     }
 
     /// <summary>
@@ -101,14 +110,22 @@ internal class ServiceEntityRepository : IServiceEntityRepository
     /// </summary>
     /// <param name="serviceId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteService(int serviceId)
+    public async Task<RepositoryResponse> DeleteService(int serviceId)
     {
         var serviceFound = await _context.Services
             .FirstOrDefaultAsync(x => x.ServiceId == serviceId);
         if (serviceFound == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Service not found"
+            };
         _context.Services.Remove(serviceFound);
         await _context.SaveChangesAsync();
-        return true;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Service deleted successfully"
+        };
     }
 }

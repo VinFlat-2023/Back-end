@@ -1,4 +1,5 @@
 using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -58,12 +59,16 @@ public class UniversityRepository : IUniversityRepository
     /// </summary>
     /// <param name="university"></param>
     /// <returns></returns>
-    public async Task<University?> UpdateUniversity(University? university)
+    public async Task<RepositoryResponse> UpdateUniversity(University university)
     {
         var universityData = await _context.University
             .FirstOrDefaultAsync(x => x.UniversityId == university!.UniversityId);
         if (universityData == null)
-            return null;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "University not found"
+            };
 
         universityData.UniversityName = university?.UniversityName ?? universityData.UniversityName;
         universityData.Address = university?.Address ?? universityData.Address;
@@ -72,7 +77,11 @@ public class UniversityRepository : IUniversityRepository
 
         await _context.SaveChangesAsync();
 
-        return university;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "University updated successfully"
+        };
     }
 
     /// <summary>
@@ -80,15 +89,23 @@ public class UniversityRepository : IUniversityRepository
     /// </summary>
     /// <param name="universityId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteUniversity(int universityId)
+    public async Task<RepositoryResponse> DeleteUniversity(int universityId)
     {
         var universityFound = await _context.University
             .FirstOrDefaultAsync(x => x.UniversityId == universityId);
         if (universityFound == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "University not found"
+            };
         _context.University.Remove(universityFound);
         await _context.SaveChangesAsync();
-        return true;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "University deleted successfully"
+        };
     }
 
     /// <summary>

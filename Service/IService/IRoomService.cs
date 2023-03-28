@@ -14,5 +14,5 @@ public interface IRoomService
     public Task<Room?> GetRoomById(int? roomId);
 
     public Task<RepositoryResponse> DeleteRoom(int roomId);
-    public Task<PagedList<Room>?> GetRoomList(RoomFilter filters, CancellationToken token);
+    public Task<PagedList<Room>?> GetRoomList(RoomFilter filters, int buildingId, CancellationToken token);
 }

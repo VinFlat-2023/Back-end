@@ -1,4 +1,5 @@
 ﻿using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -23,9 +24,9 @@ internal class TicketTypeRepository : ITicketTypeRepository
     {
         return _context.TicketTypes
             .Where(x =>
-                (filters.Name == null || x.TicketTypeName.Contains(filters.Name))
+                (filters.Name == null || x.TicketTypeName.ToLower().Contains(filters.Name.ToLower()))
                 && (filters.Status == null || x.Status == filters.Status)
-                && (filters.Description == null || x.Description.Contains(filters.Description)))
+                && (filters.Description == null || x.Description.ToLower().Contains(filters.Description.ToLower())))
             .AsNoTracking();
     }
 
@@ -57,12 +58,16 @@ internal class TicketTypeRepository : ITicketTypeRepository
     /// </summary>
     /// <param name="ticketType"></param>
     /// <returns></returns>
-    public async Task<TicketType?> UpdateTicketType(TicketType? ticketType)
+    public async Task<RepositoryResponse> UpdateTicketType(TicketType ticketType)
     {
         var requestTypeData = await _context.TicketTypes
             .FirstOrDefaultAsync(x => x.TicketTypeId == ticketType!.TicketTypeId);
         if (requestTypeData == null)
-            return null;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "TicketType not found"
+            };
 
         requestTypeData.Description = ticketType?.Description ?? requestTypeData.Description;
         requestTypeData.TicketTypeName = ticketType?.TicketTypeName ?? requestTypeData.TicketTypeName;
@@ -70,7 +75,11 @@ internal class TicketTypeRepository : ITicketTypeRepository
 
         await _context.SaveChangesAsync();
 
-        return requestTypeData;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "TicketType updated successfully"
+        };
     }
 
     /// <summary>
@@ -78,15 +87,23 @@ internal class TicketTypeRepository : ITicketTypeRepository
     /// </summary>
     /// <param name="ticketTypeId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteTicketType(int ticketTypeId)
+    public async Task<RepositoryResponse> DeleteTicketType(int ticketTypeId)
     {
         var ticketTypeFound = await _context.TicketTypes
             .FirstOrDefaultAsync(x => x.TicketTypeId == ticketTypeId);
         if (ticketTypeFound == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "TicketType not found"
+            };
         _context.TicketTypes.Remove(ticketTypeFound);
         await _context.SaveChangesAsync();
-        return true;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "TicketType deleted successfully"
+        };
     }
 
     /// <summary>
@@ -94,17 +111,25 @@ internal class TicketTypeRepository : ITicketTypeRepository
     /// </summary>
     /// <param name="ticketTypeId"></param>
     /// <returns></returns>
-    public async Task<bool> ToggleTicketTypeStatus(int ticketTypeId)
+    public async Task<RepositoryResponse> ToggleTicketTypeStatus(int ticketTypeId)
     {
         var ticketTypeStatus = await _context.TicketTypes
             .FirstOrDefaultAsync(x => x.TicketTypeId == ticketTypeId);
 
         if (ticketTypeStatus == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "TicketType not found"
+            };
 
         ticketTypeStatus.Status = !ticketTypeStatus.Status;
 
         await _context.SaveChangesAsync();
-        return true;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "TicketType status toggled successfully"
+        };
     }
 }

@@ -1,4 +1,5 @@
 using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -56,18 +57,26 @@ public class FlatTypeRepository : IFlatTypeRepository
     /// </summary>
     /// <param name="flatType"></param>
     /// <returns></returns>
-    public async Task<FlatType?> UpdateFlatType(FlatType? flatType)
+    public async Task<RepositoryResponse> UpdateFlatType(FlatType? flatType)
     {
         var flatTypeData = await _context.FlatTypes
             .FirstOrDefaultAsync(x => x.FlatTypeId == flatType!.FlatTypeId);
         if (flatTypeData == null)
-            return null;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Flat type not found"
+            };
 
         flatTypeData.RoomCapacity = flatType?.RoomCapacity ?? flatTypeData.RoomCapacity;
         flatTypeData.Status = flatType?.Status ?? flatTypeData.Status;
 
         await _context.SaveChangesAsync();
-        return flatTypeData;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Flat type updated successfully"
+        };
     }
 
     /// <summary>
@@ -75,14 +84,22 @@ public class FlatTypeRepository : IFlatTypeRepository
     /// </summary>
     /// <param name="flatTypeId"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteFlatType(int flatTypeId)
+    public async Task<RepositoryResponse> DeleteFlatType(int flatTypeId)
     {
         var flatTypeFound = await _context.FlatTypes
             .FirstOrDefaultAsync(x => x.FlatTypeId == flatTypeId);
         if (flatTypeFound == null)
-            return false;
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Flat type not found"
+            };
         _context.FlatTypes.Remove(flatTypeFound);
         await _context.SaveChangesAsync();
-        return true;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Flat type deleted successfully"
+        };
     }
 }

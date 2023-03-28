@@ -11,5 +11,5 @@ public interface IRoomRepository
     public Task<Room?> GetRoomDetail(int? roomId);
     public Task<RepositoryResponse> UpdateRoom(Room room);
     public Task<RepositoryResponse> DeleteRoom(int roomId);
-    public IQueryable<Room> GetRoomList(RoomFilter filters);
+    public IQueryable<Room> GetRoomList(RoomFilter filters, int buildingId);
 }
