@@ -271,7 +271,7 @@ public class ContractsController : ControllerBase
                     AccountId = supervisorId,
                     BuildingName = building.BuildingName,
                     BuildingPhoneNumber = building.BuildingPhoneNumber,
-                    BuildingAddress = building.Area.Name
+                    BuildingAddress = building.BuildingAddress,
                 };
 
                 var contractDetailView = new ContractMeterDetailEntity

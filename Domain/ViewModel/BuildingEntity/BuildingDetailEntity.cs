@@ -12,6 +12,7 @@ public class BuildingDetailEntity
     public decimal? CoordinateX { get; set; }
     public decimal? CoordinateY { get; set; }
     public bool Status { get; set; }
+    public string BuildingAddress { get; set; }
     public int AccountId { get; set; }
     public AccountBuildingDetailEntity Account { get; set; }
     public int AreaId { get; set; }

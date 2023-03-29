@@ -13,8 +13,8 @@ public class Building
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int BuildingId { get; set; }
-
     public string BuildingName { get; set; }
+    public string BuildingAddress { get; set; }
     public string Description { get; set; }
     public int TotalRooms { get; set; }
     public string ImageUrl { get; set; }

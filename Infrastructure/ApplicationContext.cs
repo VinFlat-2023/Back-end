@@ -495,6 +495,7 @@ public class ApplicationContext : DbContext
                 AreaId = 1,
                 AccountId = 5,
                 ImageUrl = "",
+                BuildingAddress = "Quajan 9",
                 BuildingPhoneNumber = "012323123"
             },
             new Building
@@ -508,6 +509,7 @@ public class ApplicationContext : DbContext
                 AreaId = 1,
                 AccountId = 2,
                 ImageUrl = "",
+                BuildingAddress = "Quận 9",
                 BuildingPhoneNumber = "012323123"
             },
             new Building
@@ -521,6 +523,7 @@ public class ApplicationContext : DbContext
                 AreaId = 2,
                 AccountId = 2,
                 ImageUrl = "",
+                BuildingAddress = "Quận 2",
                 BuildingPhoneNumber = "012323123"
             },
             new Building
@@ -534,6 +537,7 @@ public class ApplicationContext : DbContext
                 AreaId = 2,
                 AccountId = 4,
                 ImageUrl = "",
+                BuildingAddress = "Quận 3",
                 BuildingPhoneNumber = "012323123"
             },
             new Building
@@ -547,6 +551,7 @@ public class ApplicationContext : DbContext
                 AreaId = 3,
                 AccountId = 3,
                 ImageUrl = "",
+                BuildingAddress = "Quận 4",
                 BuildingPhoneNumber = "012323123"
             },
             new Building
@@ -560,6 +565,7 @@ public class ApplicationContext : DbContext
                 AreaId = 3,
                 AccountId = 4,
                 ImageUrl = "",
+                BuildingAddress = "Quận 7",
                 BuildingPhoneNumber = "012323123"
             }
         );

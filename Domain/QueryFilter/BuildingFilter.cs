@@ -7,7 +7,7 @@ public class BuildingFilter : PagingFilter
     public int? TotalRooms { get; set; }
     public bool? Status { get; set; }
     public string? BuildingPhoneNumber { get; set; }
-    public string? FullName { get; set; }
+    public string? BuildingAddress { get; set; }
     public string? AreaName { get; set; }
-    public string? Username { get; set; }
+    public string? AccountName { get; set; }
 }

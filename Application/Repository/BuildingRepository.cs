@@ -29,17 +29,13 @@ public class BuildingRepository : IBuildingRepository
             // Filter starts here
             .Where(x =>
                 (filter.BuildingName == null || x.BuildingName.ToLower().Contains(filter.BuildingName.ToLower()))
-                && (filter.Description == null || (x.Description.ToLower().Contains(filter.Description.ToLower())
-                                                   && (filter.TotalRooms == null || x.TotalRooms == filter.TotalRooms)
-                                                   && (filter.Status == null || x.Status == filter.Status)
-                                                   && (filter.BuildingPhoneNumber == null ||
-                                                       x.BuildingPhoneNumber.Contains(filter.BuildingPhoneNumber))
-                                                   && (filter.Username == null || x.Account.Username.ToLower()
-                                                       .Contains(filter.Username.ToLower()))
-                                                   && (filter.AreaName == null || x.Area.Name.ToLower()
-                                                       .Contains(filter.AreaName.ToLower()))
-                                                   && (filter.Username == null || x.Account.Username.ToLower()
-                                                       .Contains(filter.Username.ToLower())))))
+                && (filter.Description == null || x.Description.ToLower().Contains(filter.Description.ToLower()))
+                && (filter.BuildingAddress == null || x.BuildingAddress.ToLower().Contains(filter.BuildingAddress.ToLower()))
+                && (filter.TotalRooms == null || x.TotalRooms == filter.TotalRooms)
+                && (filter.Status == null || x.Status == filter.Status)
+                && (filter.BuildingPhoneNumber == null || x.BuildingPhoneNumber.Contains(filter.BuildingPhoneNumber))
+                && (filter.AccountName == null || x.Account.Username.ToLower().Contains(filter.AccountName.ToLower()))
+                && (filter.AreaName == null || x.Area.Name.ToLower().Contains(filter.AreaName.ToLower())))
             .AsNoTracking();
     }
 
@@ -89,14 +85,15 @@ public class BuildingRepository : IBuildingRepository
         var count = _context.Flats
             .Count(x => x.BuildingId == building.BuildingId);
 
-        buildingData.Description = building?.Description ?? buildingData.Description;
-        buildingData.Status = building?.Status ?? buildingData.Status;
-        buildingData.CoordinateX = building?.CoordinateX ?? buildingData.CoordinateX;
-        buildingData.CoordinateY = building?.CoordinateY ?? buildingData.CoordinateY;
-        buildingData.ImageUrl = building?.ImageUrl ?? buildingData.ImageUrl;
+        buildingData.Description = building.Description;
+        buildingData.Status = building.Status;
+        buildingData.CoordinateX = building.CoordinateX;
+        buildingData.CoordinateY = building.CoordinateY;
+        buildingData.ImageUrl = building.ImageUrl;
         buildingData.TotalRooms = count;
-        buildingData.BuildingName = building?.BuildingName ?? buildingData.BuildingName;
-        buildingData.BuildingPhoneNumber = building?.BuildingPhoneNumber ?? buildingData.BuildingPhoneNumber;
+        buildingData.BuildingAddress = buildingData.BuildingAddress;
+        buildingData.BuildingName = building.BuildingName;
+        buildingData.BuildingPhoneNumber = building.BuildingPhoneNumber;
 
         await _context.SaveChangesAsync();
 

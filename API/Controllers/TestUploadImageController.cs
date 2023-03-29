@@ -21,7 +21,7 @@ public class TestUploadImageController : ControllerBase
         _serviceWrapper = serviceWrapper;
     }
 
-    [HttpPatch]
+    [HttpPut]
     [Authorize(Roles = "Renter")]
     [Route("renter")]
     public async Task<IActionResult> UploadFileRenter([FromForm] ImageUploadRequest imageUploadRequest)
@@ -44,12 +44,12 @@ public class TestUploadImageController : ControllerBase
 
         var finalizeUpdate = new Renter
         {
-            RenterId = imageUploadRequest.Id,
+            RenterId = renterId,
             ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image, fileNameUserImage,
                 "User", imageExtension))?.Blob.Uri
         };
 
-        var result = await _serviceWrapper.Renters.UpdateRenter(finalizeUpdate);
+        var result = await _serviceWrapper.Renters.UpdateImageRenter(finalizeUpdate);
 
         return result.IsSuccess switch
         {
@@ -63,12 +63,12 @@ public class TestUploadImageController : ControllerBase
             {
                 status = "Success",
                 message = "Image uploaded successfully",
-                data = result
+                data = ""
             })
         };
     }
 
-    [HttpPatch]
+    [HttpPut]
     [Authorize(Roles = "Supervisor")]
     [Route("contract")]
     public async Task<IActionResult> UploadFileContract([FromForm] ImageUploadRequest imageUploadRequest)
@@ -85,7 +85,7 @@ public class TestUploadImageController : ControllerBase
                 data = ""
             });
 
-        var contract = await _serviceWrapper.Contracts.GetContractById(imageUploadRequest.Id);
+        var contract = await _serviceWrapper.Contracts.GetContractById(renterId);
 
         if (contract == null)
             return NotFound(new
@@ -101,7 +101,7 @@ public class TestUploadImageController : ControllerBase
 
         var finalizeUpdate = new Contract
         {
-            ContractId = imageUploadRequest.Id,
+            ContractId = renterId,
             ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(contract.Image, fileNameContract, "Contract",
                 imageExtension))?.Blob.Uri
         };

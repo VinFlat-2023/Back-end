@@ -199,7 +199,7 @@ public class AccountsController : ControllerBase
 
     [SwaggerOperation(Summary = "Update account password")]
     [Authorize(Roles = "Admin, Supervisor")]
-    [HttpPatch("{id:int}/password")]
+    [HttpPut("{id:int}/password")]
     public async Task<IActionResult> UpdateAccountPassword(int id, [FromBody] AccountUpdatePasswordRequest account)
     {
         var accountEntity = await _serviceWrapper.Accounts.GetAccountById(id);
@@ -249,7 +249,7 @@ public class AccountsController : ControllerBase
 
     [SwaggerOperation(Summary = "Activate and Deactivate Account")]
     [Authorize(Roles = "Admin, Supervisor")]
-    [HttpPatch("toggle-account/{id:int}")]
+    [HttpPut("toggle-account/{id:int}")]
     public async Task<IActionResult> ToggleAccountStatus(int id)
     {
         var result = await _serviceWrapper.Accounts.ToggleAccountStatus(id);

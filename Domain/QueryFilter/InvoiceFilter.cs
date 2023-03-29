@@ -14,7 +14,6 @@ public class InvoiceFilter : PagingFilter
 
     public DateTime? CreatedTime { get; set; }
     public int? RenterId { get; set; }
-
     public string? RenterName { get; set; }
     public int? AccountId { get; set; }
     public string? AccountName { get; set; }

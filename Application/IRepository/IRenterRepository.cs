@@ -11,6 +11,7 @@ public interface IRenterRepository
     public IQueryable<Renter> GetRenterDetail(int? renterId);
     public Task<Renter> AddRenter(Renter renter);
     public Task<RepositoryResponse> UpdateRenter(Renter renter);
+    public Task<RepositoryResponse> UpdateImageRenter(Renter renter);
     public Task<RepositoryResponse> UpdatePasswordRenter(Renter renter);
     public Task<RepositoryResponse> ToggleRenter(int renterId);
     public Task<RepositoryResponse> DeleteRenter(int renterId);

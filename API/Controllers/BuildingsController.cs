@@ -98,7 +98,7 @@ public class BuildingsController : ControllerBase
             BuildingPhoneNumber = building.BuildingPhoneNumber
             // ImageUrl = building.ImageUrl
         };
-
+        
         var validation = await _validator.ValidateParams(updateBuilding, id);
 
         if (!validation.IsValid)

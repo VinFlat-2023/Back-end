@@ -47,6 +47,8 @@ public static class RegisteredService
         services.AddScoped<ITransactionValidator, TransactionValidator>();
         services.AddScoped<IUniversityValidator, UniversityValidator>();
 
+        services.AddScoped<IDynamicObjectPropertyExistExtension, DynamicObjectPropertyExistExtension>();
+
         //Add Mail services
         //Added in ServiceWrapper 
 

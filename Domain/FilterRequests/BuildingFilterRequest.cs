@@ -8,11 +8,8 @@ public class BuildingFilterRequest : PagingFilter
     public string? Description { get; set; }
     public int? TotalRooms { get; set; }
     public bool? Status { get; set; }
-
     public string? BuildingPhoneNumber { get; set; }
-
-    // Management Company
-    public string? FullName { get; set; }
+    public string? BuildingAddress { get; set; }
     public string? AreaName { get; set; }
-    public string? Username { get; set; }
+    public string? AccountName { get; set; }
 }

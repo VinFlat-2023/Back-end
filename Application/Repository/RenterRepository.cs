@@ -131,7 +131,6 @@ public class RenterRepository : IRenterRepository
         userData.Password = renter.Password;
         userData.Phone = renter.Phone;
         userData.MajorId = renter.MajorId;
-        userData.ImageUrl = renter.ImageUrl;
         userData.Address = renter.Address;
         userData.UniversityId = renter.UniversityId;
         userData.Gender = renter.Gender;
@@ -143,6 +142,29 @@ public class RenterRepository : IRenterRepository
         {
             IsSuccess = true,
             Message = "User updated successful"
+        };
+    }
+    
+    public async Task<RepositoryResponse> UpdateImageRenter(Renter renter)
+    {
+        var userData = await _context.Renters
+            .FirstOrDefaultAsync(x => x.RenterId == renter.RenterId);
+
+        if (userData == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "User not found"
+            };
+
+        userData.ImageUrl = renter.ImageUrl;
+
+        await _context.SaveChangesAsync();
+
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "User image updated successful"
         };
     }
 

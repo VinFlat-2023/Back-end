@@ -190,7 +190,7 @@ public class RentersController : ControllerBase
             BuildingId = building.BuildingId,
             BuildingName = building.BuildingName,
             BuildingPhoneNumber = building.BuildingPhoneNumber,
-            BuildingAddress = building.Area.Name,
+            BuildingAddress = building.BuildingAddress,
             AccountId = building.AccountId,
             Account = buildingManager
         };

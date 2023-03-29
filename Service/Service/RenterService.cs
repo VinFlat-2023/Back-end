@@ -79,6 +79,11 @@ public class RenterService : IRenterService
         return await _repositoryWrapper.Renters.UpdateRenter(renter);
     }
 
+    public async Task<RepositoryResponse> UpdateImageRenter(Renter renter)
+    {
+        return await _repositoryWrapper.Renters.UpdateImageRenter(renter);
+    }
+
     public async Task<RepositoryResponse> ToggleRenterStatus(int renterId)
     {
         return await _repositoryWrapper.Renters.ToggleRenter(renterId);

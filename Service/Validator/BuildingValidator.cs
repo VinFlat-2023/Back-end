@@ -1,4 +1,6 @@
+using System.Dynamic;
 using Domain.EntitiesForManagement;
+using Microsoft.IdentityModel.Tokens;
 using Service.IHelper;
 using Service.IValidator;
 
@@ -7,28 +9,31 @@ namespace Service.Validator;
 public class BuildingValidator : BaseValidator, IBuildingValidator
 {
     private readonly IConditionCheckHelper _conditionCheckHelper;
-
-    public BuildingValidator(IConditionCheckHelper conditionCheckHelper)
+    private readonly IDynamicObjectPropertyExistExtension _dynamic;
+    public BuildingValidator(IConditionCheckHelper conditionCheckHelper, IDynamicObjectPropertyExistExtension dynamic)
     {
         _conditionCheckHelper = conditionCheckHelper;
+        _dynamic = dynamic;
     }
+    
 
-    public async Task<ValidatorResult> ValidateParams(Building? obj, int? buildingId)
+    public async Task<ValidatorResult> ValidateParams(Building obj, int? buildingId)
     {
+        dynamic? dynamicObject = obj;
+
         try
         {
-            if (buildingId != null)
-                switch (obj?.BuildingId)
+            if (_dynamic.DoesPropertyExist(dynamicObject, obj.BuildingId.ToString()))
+                switch (obj.BuildingId)
                 {
-                    case { } when obj.BuildingId != buildingId:
+                    case { } when obj.BuildingId != buildingId :
                         ValidatorResult.Failures.Add("Building id mismatch");
                         break;
-                    case null:
+                    case { } when obj.BuildingId.ToString().IsNullOrEmpty() :
                         ValidatorResult.Failures.Add("Building is required");
                         break;
-                    case not null:
-                        if (await _conditionCheckHelper.BuildingCheck(obj.BuildingId) == null)
-                            ValidatorResult.Failures.Add("Building provided does not exist");
+                    case { } when await _conditionCheckHelper.BuildingCheck(obj.BuildingId) == null :
+                        ValidatorResult.Failures.Add("Building provided does not exist");
                         break;
                 }
 
@@ -50,6 +55,17 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
                     break;
                 case { } when obj.BuildingName.Length > 100:
                     ValidatorResult.Failures.Add("Building mame cannot exceed 100 characters");
+                    break;
+            }
+
+            switch (obj?.BuildingAddress)
+            {
+                case { } when string.IsNullOrWhiteSpace(obj.BuildingAddress):
+                    ValidatorResult.Failures.Add("Building address is required");
+                    break;
+                
+                case { } when obj.BuildingAddress.Length > 500:
+                    ValidatorResult.Failures.Add("Building address cannot exceed 500 characters");
                     break;
             }
 
