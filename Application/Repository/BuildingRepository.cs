@@ -30,7 +30,8 @@ public class BuildingRepository : IBuildingRepository
             .Where(x =>
                 (filter.BuildingName == null || x.BuildingName.ToLower().Contains(filter.BuildingName.ToLower()))
                 && (filter.Description == null || x.Description.ToLower().Contains(filter.Description.ToLower()))
-                && (filter.BuildingAddress == null || x.BuildingAddress.ToLower().Contains(filter.BuildingAddress.ToLower()))
+                && (filter.BuildingAddress == null ||
+                    x.BuildingAddress.ToLower().Contains(filter.BuildingAddress.ToLower()))
                 && (filter.TotalRooms == null || x.TotalRooms == filter.TotalRooms)
                 && (filter.Status == null || x.Status == filter.Status)
                 && (filter.BuildingPhoneNumber == null || x.BuildingPhoneNumber.Contains(filter.BuildingPhoneNumber))
@@ -39,6 +40,32 @@ public class BuildingRepository : IBuildingRepository
             .AsNoTracking();
     }
 
+    public IQueryable<Building> GetBuildingListBySpareSlot()
+    {
+        return _context.Buildings
+            .Include(x => x.Area)
+            .Include(x => x.Account)
+            .ThenInclude(x => x.Role)
+            .Include(x => x.Flats)
+            // Filter starts here
+            
+            .AsNoTracking();
+    }
+
+    
+    public IQueryable<Building> GetBuildingListTop15(BuildingFilter filter)
+    {
+        return _context.Buildings
+            .Include(x => x.Area)
+            .Include(x => x.Account)
+            .ThenInclude(x => x.Role)
+            // Filter starts here
+            .OrderBy(x => x.BuildingName)
+            .Distinct()
+            .Take(15)
+            .AsNoTracking();
+    }
+    
     /// <summary>
     ///     Get building detail using building id
     /// </summary>
@@ -58,11 +85,24 @@ public class BuildingRepository : IBuildingRepository
     /// </summary>
     /// <param name="building"></param>
     /// <returns></returns>
-    public async Task<Building?> AddBuilding(Building building)
+    public async Task<RepositoryResponse> AddBuilding(Building building)
     {
+        var buildingCheck =
+            await _context.Buildings.FirstOrDefaultAsync(x => x.AccountId == building.AccountId);
+        if (buildingCheck != null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "This account is already assigned to a building"
+            };
+
         await _context.Buildings.AddAsync(building);
         await _context.SaveChangesAsync();
-        return building;
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Building added successfully for this account"
+        };
     }
 
     /// <summary>
@@ -70,6 +110,30 @@ public class BuildingRepository : IBuildingRepository
     /// </summary>
     /// <param name="building"></param>
     /// <returns></returns>
+    public async Task<RepositoryResponse> UpdateBuildingImages(Building building)
+    {
+        var buildingData = await _context.Buildings
+            .FirstOrDefaultAsync(x => x.BuildingId == building.BuildingId);
+
+        if (buildingData == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Building not found"
+            };
+
+        buildingData.ImageUrl = building.ImageUrl;
+
+        await _context.SaveChangesAsync();
+
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Building image updated successfully"
+        };
+        ;
+    }
+
     public async Task<RepositoryResponse> UpdateBuilding(Building building)
     {
         var buildingData = await _context.Buildings
@@ -89,7 +153,6 @@ public class BuildingRepository : IBuildingRepository
         buildingData.Status = building.Status;
         buildingData.CoordinateX = building.CoordinateX;
         buildingData.CoordinateY = building.CoordinateY;
-        buildingData.ImageUrl = building.ImageUrl;
         buildingData.TotalRooms = count;
         buildingData.BuildingAddress = buildingData.BuildingAddress;
         buildingData.BuildingName = building.BuildingName;

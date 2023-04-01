@@ -27,6 +27,7 @@ public class InvoiceRepository : IInvoiceRepository
             .Include(x => x.Account)
             .Include(x => x.Renter)
             .Include(x => x.InvoiceDetails)
+            .Include(x => x.InvoiceType)
             // Filter starts here
             .Where(x =>
                 (filter.Name == null || x.Name.ToLower().Contains(filter.Name.ToLower()))
@@ -52,12 +53,16 @@ public class InvoiceRepository : IInvoiceRepository
             .Include(x => x.Account)
             .Include(x => x.Renter)
             .Include(x => x.InvoiceDetails)
+            .Include(x => x.InvoiceType)
             .FirstOrDefaultAsync(x => x.InvoiceId == invoiceId);
     }
 
     public async Task<int> GetLatestUnpaidInvoiceByRenter(int renterId)
     {
         return await _context.Invoices
+            .Include(x => x.Renter)
+            .Include(x => x.InvoiceDetails)
+            .Include(x => x.InvoiceType)
             // false = unpaid invoice
             .Where(x => x.RenterId == renterId && x.Status == false)
             .OrderByDescending(x => x.CreatedTime)

@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Domain.CustomAttribute;
+using Microsoft.AspNetCore.Http;
 
 namespace Domain.EntitiesForManagement;
 
@@ -13,15 +15,22 @@ public class Building
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int BuildingId { get; set; }
+
     public string BuildingName { get; set; }
     public string BuildingAddress { get; set; }
     public string Description { get; set; }
     public int TotalRooms { get; set; }
-    public string ImageUrl { get; set; }
     public decimal CoordinateX { get; set; }
     public decimal CoordinateY { get; set; }
     public string BuildingPhoneNumber { get; set; }
 
+    [MaxUploadedFileSize(4 * 1024 * 1024)]
+    [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]
+    [DataType(DataType.Upload)]
+    [NotMapped]
+    public IFormFile? Image { get; set; }
+
+    public string? ImageUrl { get; set; }
     public bool Status { get; set; }
 
     // Management Company

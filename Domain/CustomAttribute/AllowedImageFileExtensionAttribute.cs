@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 namespace Domain.CustomAttribute;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-internal sealed class AllowedImageFileExtensionAttribute : ValidationAttribute
+public class AllowedImageFileExtensionAttribute : ValidationAttribute
 {
     private readonly string[] _extensions;
 
@@ -26,6 +26,6 @@ internal sealed class AllowedImageFileExtensionAttribute : ValidationAttribute
 
     private static string GetErrorMessage()
     {
-        return "This photo extension is not allowed!";
+        return "This photo extension is not allowed.";
     }
 }

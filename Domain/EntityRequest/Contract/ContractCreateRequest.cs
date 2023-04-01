@@ -1,10 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Http;
-
-namespace Domain.EntityRequest.Contract;
+﻿namespace Domain.EntityRequest.Contract;
 
 public class ContractCreateRequest
 {
+    // Contract
     public string? ContractName { get; set; }
     public string DateSigned { get; set; }
     public string StartDate { get; set; }
@@ -14,11 +12,15 @@ public class ContractCreateRequest
     public decimal PriceForWater { get; set; }
     public decimal PriceForElectricity { get; set; }
     public decimal PriceForService { get; set; }
-    public string? ImageUrl { get; set; }
-    [NotMapped] public IFormFile? Image { get; set; }
     public decimal PriceForRent { get; set; }
-    public int RenterId { get; set; }
-    public int BuildingId { get; set; }
     public int FlatId { get; set; }
     public int RoomId { get; set; }
+
+    // Renter
+    public string RenterUsername { get; set; }
+    public string? RenterEmail { get; set; }
+    public string RenterPhone { get; set; }
+    public DateTime? RenterBirthDate { get; set; }
+    public string Address { get; set; }
+    public string Gender { get; set; }
 }

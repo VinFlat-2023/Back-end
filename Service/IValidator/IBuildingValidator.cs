@@ -5,5 +5,5 @@ namespace Service.IValidator;
 
 public interface IBuildingValidator
 {
-    Task<ValidatorResult> ValidateParams(Building obj, int? buildingId);
+    Task<ValidatorResult> ValidateParams(Building? obj, int? buildingId);
 }

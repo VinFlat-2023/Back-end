@@ -30,7 +30,13 @@ internal class ServiceEntityRepository : IServiceEntityRepository
             .Where(x =>
                 (filters.Name == null || x.Name.ToLower().Contains(filters.Name.ToLower()))
                 && (filters.Status == null || x.Status == filters.Status)
+                && (filters.Amount == null || x.Amount == filters.Amount)
+                && (filters.BuildingId == null || x.BuildingId == filters.BuildingId)
+                && (filters.BuildingName == null ||
+                    x.Building.BuildingName.ToLower().Contains(filters.BuildingName.ToLower()))
                 && (filters.ServiceTypeId == null || x.ServiceTypeId == filters.ServiceTypeId)
+                && (filters.ServiceTypeName == null ||
+                    x.ServiceType.Name.ToLower().Contains(filters.ServiceTypeName.ToLower()))
                 && (filters.Description == null || x.Description.ToLower().Contains(filters.Description.ToLower())))
             .AsNoTracking();
     }

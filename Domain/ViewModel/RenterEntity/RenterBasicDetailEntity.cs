@@ -9,4 +9,5 @@ public class RenterBasicDetailEntity
     public string FullName { get; set; }
     public DateTime? BirthDate { get; set; }
     public bool Status { get; set; }
+    public string? ImageUrl { get; set; }
 }

@@ -39,7 +39,6 @@ using Domain.ViewModel.FeedbackEntity;
 using Domain.ViewModel.FeedbackTypeDetail;
 using Domain.ViewModel.FlatEntity;
 using Domain.ViewModel.FlatTypeEntity;
-using Domain.ViewModel.InvoiceDetailEntity;
 using Domain.ViewModel.InvoiceEntity;
 using Domain.ViewModel.InvoiceTypeEntity;
 using Domain.ViewModel.MajorEntity;
@@ -262,6 +261,11 @@ public class AutoMapper : Profile
         CreateMap<ServiceEntity, ServiceDetailEntity>()
             .ForAllMembers(o => o.ExplicitExpansion());
         CreateMap<ServiceDetailEntity, ServiceEntity>()
+            .ReverseMap();
+
+        CreateMap<ServiceBasicDetailEntity, ServiceEntity>()
+            .ReverseMap();
+        CreateMap<ServiceEntity, ServiceBasicDetailEntity>()
             .ReverseMap();
     }
 

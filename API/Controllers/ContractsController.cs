@@ -271,7 +271,7 @@ public class ContractsController : ControllerBase
                     AccountId = supervisorId,
                     BuildingName = building.BuildingName,
                     BuildingPhoneNumber = building.BuildingPhoneNumber,
-                    BuildingAddress = building.BuildingAddress,
+                    BuildingAddress = building.BuildingAddress
                 };
 
                 var contractDetailView = new ContractMeterDetailEntity
@@ -457,41 +457,57 @@ public class ContractsController : ControllerBase
     // POST: api/Contract
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Create Contract (For management)", Description = "date format d/M/YYYY")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     [HttpPost("sign")]
     public async Task<IActionResult> PostContract([FromBody] ContractCreateRequest contract)
     {
-        var renterEntity = await _serviceWrapper.Renters.GetRenterById(contract.RenterId);
+        var newRenter = new Renter
+        {
+            Username = contract.RenterUsername,
+            Password = "123456",
+            Email = contract.RenterEmail ?? "No email",
+            Phone = contract.RenterPhone,
+            BirthDate = contract.RenterBirthDate,
+            Address = contract.Address,
+            Gender = contract.Gender
+        };
+
+        var renterEntity = await _serviceWrapper.Renters.AddRenter(newRenter);
 
         if (renterEntity == null)
-            return NotFound(new
+            return BadRequest(new
             {
-                status = "Not Found",
-                message = "Renter not found",
+                status = "Bad Request",
+                message = "Renter failed to create",
                 data = ""
             });
+
+        var supervisorId = Parse(User.Identity?.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetAccountIdBasedOnBuildingId(supervisorId);
 
         var newContract = new Contract
         {
             ContractName = contract.ContractName ?? "Contract for " + renterEntity.FullName,
             DateSigned = contract.DateSigned.ConvertToDateTime() ?? DateTimeUtils.GetCurrentDateTime(),
             StartDate = contract.StartDate.ConvertToDateTime() ?? DateTimeUtils.GetCurrentDateTime(),
-            CreatedDate = DateTime.UtcNow,
+            CreatedDate = DateTimeUtils.GetCurrentDateTime(),
             Description = contract.Description ?? "No description",
             EndDate = contract.EndDate.ConvertToDateTime(),
-            LastUpdated = DateTime.UtcNow,
+            LastUpdated = DateTimeUtils.GetCurrentDateTime(),
             ContractStatus = contract.ContractStatus ?? "Active",
             PriceForRent = contract.PriceForRent,
             PriceForElectricity = contract.PriceForElectricity,
             PriceForWater = contract.PriceForWater,
             PriceForService = contract.PriceForService,
             RenterId = renterEntity.RenterId,
-            BuildingId = contract.BuildingId,
+            BuildingId = buildingId,
             FlatId = contract.FlatId,
             RoomId = contract.RoomId
         };
 
         var validation = await _validator.ValidateParams(newContract, null);
+
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -501,6 +517,7 @@ public class ContractsController : ControllerBase
             });
 
         var result = await _serviceWrapper.Contracts.AddContract(newContract);
+
         if (result == null)
             return NotFound(new
             {
@@ -508,6 +525,7 @@ public class ContractsController : ControllerBase
                 message = "Contract failed to create",
                 data = ""
             });
+
         return Ok(new
         {
             status = "Success",

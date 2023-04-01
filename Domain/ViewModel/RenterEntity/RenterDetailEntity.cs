@@ -8,6 +8,7 @@ public class RenterDetailEntity
     public string? Phone { get; set; }
     public string? FullName { get; set; }
     public DateTime? BirthDate { get; set; }
+    public string? ImageUrl { get; set; }
     public string? CitizenNumber { get; set; }
     public string? CitizenImageUrl { get; set; }
     public string? Address { get; set; }

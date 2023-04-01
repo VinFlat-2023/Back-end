@@ -1,8 +1,7 @@
-using Domain.ViewModel.InvoiceEntity;
 using Domain.ViewModel.PlaceholderForFeeEntity;
 using Domain.ViewModel.ServiceEntity;
 
-namespace Domain.ViewModel.InvoiceDetailEntity;
+namespace Domain.ViewModel.InvoiceEntity;
 
 public class InvoiceDataDetailEntity
 {

@@ -9,6 +9,7 @@ using Domain.ViewModel.BuildingEntity;
 using Domain.ViewModel.FlatEntity;
 using Domain.ViewModel.RentalEntity;
 using Domain.ViewModel.RenterEntity;
+using Domain.ViewModel.ServiceEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -24,15 +25,17 @@ namespace API.Controllers;
 public class RentersController : ControllerBase
 {
     private readonly IMapper _mapper;
+    private readonly IPasswordValidator _passwordValidator;
+    private readonly IRenterValidator _renterValidator;
     private readonly IServiceWrapper _serviceWrapper;
-    private readonly IRenterValidator _validator;
 
     public RentersController(IMapper mapper, IServiceWrapper serviceWrapper,
-        IRenterValidator validator)
+        IRenterValidator renterValidator, IPasswordValidator passwordValidator)
     {
         _mapper = mapper;
         _serviceWrapper = serviceWrapper;
-        _validator = validator;
+        _renterValidator = renterValidator;
+        _passwordValidator = passwordValidator;
     }
 
     // GET: api/Renters
@@ -168,6 +171,11 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
+        var listService = await _serviceWrapper.ServicesEntity.GetServiceEntityList(new ServiceEntityFilter
+        {
+            BuildingId = building.BuildingId
+        }, token);
+
         var flatMeterDetail = new FlatMeterDetailEntity
         {
             PriceForRent = contract.PriceForRent.DecimalToString(),
@@ -200,6 +208,7 @@ public class RentersController : ControllerBase
             BuildingDetailEntity = buildingDetail,
             FlatName = contract.Flat.Name,
             FlatMeterEntity = flatMeterDetail,
+            Services = _mapper.Map<ICollection<ServiceBasicDetailEntity>>(listService),
             Renters = _mapper.Map<ICollection<RenterBasicDetailEntity>>(listRenter)
         };
 
@@ -260,20 +269,23 @@ public class RentersController : ControllerBase
             Phone = renter.Phone,
             FullName = renter.FullName,
             BirthDate = renter.BirthDate ?? null,
+
+            /*
+
             ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(renter.Image, fileNameUserImage,
                 "User", imageExtension))?.Blob.Uri,
-            /*
             CitizenNumber = renter.CitizenNumber,
             CitizenImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(renter.CitizenImage, fileNameCitizenImage,
                 "Citizen", imageExtension))?.Blob.Uri,
             */
+
             Address = renter.Address,
             Gender = renter.Gender,
             UniversityId = renter.UniversityId ?? null,
             MajorId = renter.MajorId ?? null
         };
 
-        var validation = await _validator.ValidateParams(finalizeUpdate, id);
+        var validation = await _renterValidator.ValidateParams(finalizeUpdate, id);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -302,10 +314,10 @@ public class RentersController : ControllerBase
         };
     }
 
-    [HttpPut("{id:int}/change-password")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [HttpPut("change-password")]
+    [Authorize(Roles = "Renter")]
     [SwaggerOperation(Summary = "[Authorize] Update renter by id (For management and renter)")]
-    public async Task<IActionResult> ChangePassword([FromBody] RenterUpdatePasswordRequest renter, int id)
+    public async Task<IActionResult> ChangePassword([FromBody] RenterUpdatePasswordRequest renter)
     {
         /*
         var userRole = User.Identities
@@ -324,7 +336,9 @@ public class RentersController : ControllerBase
             });
         */
 
-        var renterCheck = await _serviceWrapper.Renters.GetRenterById(id);
+        var renterId = int.Parse(User.Identity?.Name);
+
+        var renterCheck = await _serviceWrapper.Renters.GetRenterById(renterId);
 
         if (renterCheck == null)
             return NotFound(new
@@ -336,10 +350,12 @@ public class RentersController : ControllerBase
 
         var finalizePasswordUpdate = new Renter
         {
+            RenterId = renterId,
             Password = renter.Password
         };
 
-        var validation = await _validator.ValidateParams(finalizePasswordUpdate, id);
+        var validation = await _passwordValidator
+            .ValidateParams(finalizePasswordUpdate.Password, renterId, true);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -399,7 +415,7 @@ public class RentersController : ControllerBase
             MajorId = renter.MajorId ?? null
         };
 
-        var validation = await _validator.ValidateParams(finalizeCreation, null);
+        var validation = await _renterValidator.ValidateParams(finalizeCreation, null);
         if (!validation.IsValid)
             return BadRequest(new
             {

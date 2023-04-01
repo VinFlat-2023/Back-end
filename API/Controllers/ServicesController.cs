@@ -223,7 +223,7 @@ public class ServicesController : ControllerBase
     {
         var managementId = int.Parse(User.Identity?.Name);
 
-        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnAccountId(managementId);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(managementId);
 
         var updateService = new ServiceEntity
         {
@@ -271,7 +271,7 @@ public class ServicesController : ControllerBase
     {
         var managementId = int.Parse(User.Identity?.Name);
 
-        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnAccountId(managementId);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(managementId);
 
         var newService = new ServiceEntity
         {

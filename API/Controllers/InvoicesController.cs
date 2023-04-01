@@ -5,7 +5,6 @@ using Domain.EntityRequest.InvoiceType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.Utils;
-using Domain.ViewModel.InvoiceDetailEntity;
 using Domain.ViewModel.InvoiceEntity;
 using Domain.ViewModel.InvoiceTypeEntity;
 using Microsoft.AspNetCore.Authorization;

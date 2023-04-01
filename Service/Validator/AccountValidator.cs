@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using System.Text.RegularExpressions;
 using Domain.EntitiesForManagement;
 using Service.IHelper;
@@ -17,7 +16,7 @@ public class AccountValidator : BaseValidator, IAccountValidator
         _jwtRoleCheckerHelper = jwtRoleCheckerHelper;
     }
 
-    public async Task<ValidatorResult> ValidateParams(Account? obj, int? accountId, ClaimsPrincipal? user)
+    public async Task<ValidatorResult> ValidateParams(Account? obj, int? accountId, bool isUpdate)
     {
         try
         {
@@ -57,6 +56,26 @@ public class AccountValidator : BaseValidator, IAccountValidator
                     break;
             }
 
+            switch (obj?.FullName)
+            {
+                case { } when obj.FullName.Length > 100:
+                    ValidatorResult.Failures.Add("Name cannot exceed 100 characters");
+                    break;
+                case { } when string.IsNullOrWhiteSpace(obj.FullName):
+                    ValidatorResult.Failures.Add("Name is required");
+                    break;
+            }
+
+            switch (obj?.Password)
+            {
+                case { } when obj.Password.Length > 100:
+                    ValidatorResult.Failures.Add("Password cannot exceed 100 characters");
+                    break;
+                case { } when string.IsNullOrWhiteSpace(obj.Password):
+                    ValidatorResult.Failures.Add("Password is required");
+                    break;
+            }
+
             switch (obj?.Email)
             {
                 case { } when obj.Email.Length > 256:
@@ -93,33 +112,34 @@ break;
                 case { } when !validatePhoneNumberRegex.IsMatch(obj.Phone):
                     ValidatorResult.Failures.Add("Phone number is invalid");
                     break;
-                case { } when obj.Phone.Length > 15:
-                    ValidatorResult.Failures.Add("Phone number cannot exceed 15 characters");
+                case { } when obj.Phone.Length > 13:
+                    ValidatorResult.Failures.Add("Phone number cannot exceed 13 characters");
                     break;
                 case { } when obj.Phone.Length < 7:
                     ValidatorResult.Failures.Add("Phone number cannot be less than 7 characters");
                     break;
             }
 
-            switch (obj?.RoleId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Role is required");
-                    break;
-                case not null:
-                    var roleValidation = await _conditionCheckHelper.RoleCheck(obj.RoleId);
-                    switch (roleValidation)
-                    {
-                        case null:
-                            ValidatorResult.Failures.Add("Role provided does not exist");
-                            break;
-                    }
-
-                    break;
-            }
-
             if (obj?.Status == null)
                 ValidatorResult.Failures.Add("Status is required");
+
+            if (isUpdate)
+                switch (obj?.RoleId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Role is required");
+                        break;
+                    case not null:
+                        var roleValidation = await _conditionCheckHelper.RoleCheck(obj.RoleId);
+                        switch (roleValidation)
+                        {
+                            case null:
+                                ValidatorResult.Failures.Add("Role provided does not exist");
+                                break;
+                        }
+
+                        break;
+                }
         }
         catch (Exception e)
         {

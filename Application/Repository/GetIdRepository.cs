@@ -65,7 +65,7 @@ public class GetIdRepository : IGetIdRepository
             .FirstOrDefaultAsync();
     }
 
-    public async Task<int> GetBuildingIdBasedOnAccountId(int accountId)
+    public async Task<int> GetBuildingIdBasedOnSupervisorId(int accountId)
     {
         return await _context.Buildings
             .Where(x => x.AccountId == accountId)

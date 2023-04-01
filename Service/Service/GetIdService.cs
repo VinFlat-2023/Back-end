@@ -22,9 +22,9 @@ public class GetIdService : IGetIdService
         return await _repositoryWrapper.GetId.GetAccountIdBasedOnBuildingId(buildingId);
     }
 
-    public async Task<int> GetBuildingIdBasedOnAccountId(int accountId)
+    public async Task<int> GetBuildingIdBasedOnSupervisorId(int accountId)
     {
-        return await _repositoryWrapper.GetId.GetBuildingIdBasedOnAccountId(accountId);
+        return await _repositoryWrapper.GetId.GetBuildingIdBasedOnSupervisorId(accountId);
     }
 
     public async Task<int> GetContractIdBasedOnRenterId(int renterId)

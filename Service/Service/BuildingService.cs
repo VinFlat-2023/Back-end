@@ -42,7 +42,7 @@ public class BuildingService : IBuildingService
             .FirstOrDefaultAsync();
     }
 
-    public async Task<Building?> AddBuilding(Building building)
+    public async Task<RepositoryResponse> AddBuilding(Building building)
     {
         return await _repositoryWrapper.Buildings.AddBuilding(building);
     }
@@ -50,6 +50,11 @@ public class BuildingService : IBuildingService
     public async Task<RepositoryResponse> UpdateBuilding(Building building)
     {
         return await _repositoryWrapper.Buildings.UpdateBuilding(building);
+    }
+
+    public async Task<RepositoryResponse> UpdateBuildingImages(Building building)
+    {
+        return await _repositoryWrapper.Buildings.UpdateBuildingImages(building);
     }
 
     public async Task<RepositoryResponse> DeleteBuilding(int buildingId)

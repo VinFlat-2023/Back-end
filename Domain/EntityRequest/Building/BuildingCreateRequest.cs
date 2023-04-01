@@ -2,12 +2,12 @@
 
 public class BuildingCreateRequest
 {
-    public string BuildingName { get; set; } = null!;
-    public string Description { get; set; } = null!;
+    public string? BuildingName { get; set; }
+    public string? BuildingAddress { get; set; }
+    public string? Description { get; set; }
     public decimal? CoordinateX { get; set; }
-    public string? ImageUrl { get; set; }
     public decimal? CoordinateY { get; set; }
+    public string? BuildingPhoneNumber { get; set; }
     public bool? Status { get; set; }
     public int AreaId { get; set; }
-    public string BuildingPhoneNumber { get; set; }
 }

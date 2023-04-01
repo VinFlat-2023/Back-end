@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace Domain.CustomAttribute;
 
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-internal sealed class MaxUploadedFileSizeAttribute : ValidationAttribute
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
+public class MaxUploadedFileSizeAttribute : ValidationAttribute
 {
     private readonly int _maxFileSize;
 
