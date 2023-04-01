@@ -7,7 +7,7 @@ namespace Domain.EntityRequest.Image;
 
 public class ImageUploadRequest
 {
-    [MaxUploadedFileSize(1 * 1024 * 1024)]
+    [MaxUploadedFileSize(10 * 1024 * 1024)]
     [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]
     [DataType(DataType.Upload)]
     [NotMapped]

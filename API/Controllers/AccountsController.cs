@@ -18,16 +18,18 @@ namespace API.Controllers;
 [ApiController]
 public class AccountsController : ControllerBase
 {
+    private readonly IAccountValidator _accountValidator;
     private readonly IMapper _mapper;
+    private readonly IPasswordValidator _passwordValidator;
     private readonly IServiceWrapper _serviceWrapper;
-    private readonly IAccountValidator _validator;
 
     public AccountsController(IServiceWrapper serviceWrapper, IMapper mapper,
-        IAccountValidator validator)
+        IAccountValidator accountValidator, IPasswordValidator passwordValidator)
     {
         _serviceWrapper = serviceWrapper;
         _mapper = mapper;
-        _validator = validator;
+        _accountValidator = accountValidator;
+        _passwordValidator = passwordValidator;
     }
 
     // GET: api/Accounts
@@ -98,7 +100,7 @@ public class AccountsController : ControllerBase
             RoleId = account.RoleId
         };
 
-        var validation = await _validator.ValidateParams(newAccount, null, User);
+        var validation = await _accountValidator.ValidateParams(newAccount, null, false);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -168,7 +170,7 @@ public class AccountsController : ControllerBase
             FullName = account.Fullname ?? accountEntity.FullName
         };
 
-        var validation = await _validator.ValidateParams(updateAccount, id, User);
+        var validation = await _accountValidator.ValidateParams(updateAccount, id, true);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -198,11 +200,12 @@ public class AccountsController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "Update account password")]
-    [Authorize(Roles = "Admin, Supervisor")]
-    [HttpPut("{id:int}/password")]
-    public async Task<IActionResult> UpdateAccountPassword(int id, [FromBody] AccountUpdatePasswordRequest account)
+    [Authorize(Roles = "Admin, Supervisor, Technician")]
+    [HttpPut("change-password")]
+    public async Task<IActionResult> UpdateAccountPassword([FromBody] AccountUpdatePasswordRequest account)
     {
-        var accountEntity = await _serviceWrapper.Accounts.GetAccountById(id);
+        var accountId = int.Parse(User.Identity?.Name);
+        var accountEntity = await _serviceWrapper.Accounts.GetAccountById(accountId);
 
         if (accountEntity == null)
             return NotFound(new
@@ -214,10 +217,12 @@ public class AccountsController : ControllerBase
 
         var updatePasswordAccount = new Account
         {
+            AccountId = accountId,
             Password = account.Password
         };
 
-        var validation = await _validator.ValidateParams(updatePasswordAccount, id, User);
+        var validation = await _passwordValidator
+            .ValidateParams(updatePasswordAccount.Password, accountId, false);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -249,10 +254,12 @@ public class AccountsController : ControllerBase
 
     [SwaggerOperation(Summary = "Activate and Deactivate Account")]
     [Authorize(Roles = "Admin, Supervisor")]
-    [HttpPut("toggle-account/{id:int}")]
-    public async Task<IActionResult> ToggleAccountStatus(int id)
+    [HttpPut("toggle-account/status")]
+    public async Task<IActionResult> ToggleAccountStatus()
     {
-        var result = await _serviceWrapper.Accounts.ToggleAccountStatus(id);
+        var accountId = int.Parse(User.Identity?.Name);
+
+        var result = await _serviceWrapper.Accounts.ToggleAccountStatus(accountId);
 
         return result.IsSuccess switch
         {
@@ -273,7 +280,7 @@ public class AccountsController : ControllerBase
 
     // DELETE: api/Accounts/5
     [SwaggerOperation(Summary = "Remove Account")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteAccount(int id)
     {

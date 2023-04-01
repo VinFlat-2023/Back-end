@@ -178,6 +178,7 @@ public class TicketsController : ControllerBase
                 });
 
             case "Renter" when User.Identity?.Name == entity.Contract.RenterId.ToString():
+
                 var renterTicketCheck = await _serviceWrapper.Tickets.GetTicketById(id, entity.Contract.RenterId);
 
                 if (renterTicketCheck == null)
@@ -194,6 +195,7 @@ public class TicketsController : ControllerBase
                     message = "Ticket found",
                     data = entity
                 });
+
             case null:
                 return NotFound(new
                 {

@@ -104,6 +104,8 @@ internal class TicketRepository : ITicketRepository
     public IQueryable<Ticket> GetTicketDetail(int? ticketId)
     {
         return _context.Tickets
+            .Include(x => x.Contract)
+            .ThenInclude(x => x.Renter)
             .Include(x => x.TicketType)
             .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
             .Where(x => x.TicketId == ticketId);

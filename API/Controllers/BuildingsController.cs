@@ -29,8 +29,8 @@ public class BuildingsController : ControllerBase
     }
 
     // GET: api/Buildings
-    [SwaggerOperation(Summary = "[Authorize] Get building list (For management and renter)")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Get building list (For management (Admin only)")]
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> GetBuildings([FromQuery] BuildingFilterRequest request, CancellationToken token)
     {
@@ -54,6 +54,88 @@ public class BuildingsController : ControllerBase
             data = resultList,
             totalPage = list.TotalPages,
             totalCount = list.TotalCount
+        });
+    }
+    
+    [SwaggerOperation(Summary = "[Authorize] Get building list")]
+    [HttpGet]
+    public async Task<IActionResult> GetBasicBuildingsList([FromQuery] string areaName, CancellationToken token)
+    {
+        var list = await _serviceWrapper.Buildings.GetBuildingList(new BuildingFilter
+        {
+            AreaName = areaName
+        }, token);
+
+        var resultList = _mapper.Map<IEnumerable<BuildingDetailEntity>>(list);
+
+        if (list == null || !list.Any())
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Building list is empty",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
+    }
+    
+    [SwaggerOperation(Summary = "[Authorize] Get building list by number of spare slot")]
+    [HttpGet]
+    public async Task<IActionResult> GetBasicBuildingsListFromSpareSlot()
+    {
+        var filter = _mapper.Map<BuildingFilter>(request);
+
+        var list = await _serviceWrapper.Buildings.GetBuildingList(filter, token);
+
+        var resultList = _mapper.Map<IEnumerable<BuildingDetailEntity>>(list);
+
+        if (list == null || !list.Any())
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Building list is empty",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
+    }
+
+    [SwaggerOperation(Summary = "[Authorize] Get current building (For management (Supervisor only)")]
+    [Authorize(Roles = "Supervisor")]
+    [HttpGet("current")]
+    public async Task<IActionResult> GetBuildingBasedOnSupervisor()
+    {
+        var supervisorId = int.Parse(User.Identity?.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(supervisorId);
+
+        var entity = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
+
+        if (entity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Building not found",
+                data = ""
+            });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Building found",
+            data = _mapper.Map<BuildingDetailEntity>(entity)
         });
     }
 
@@ -96,9 +178,8 @@ public class BuildingsController : ControllerBase
             AreaId = building.AreaId,
             Status = building.Status,
             BuildingPhoneNumber = building.BuildingPhoneNumber
-            // ImageUrl = building.ImageUrl
         };
-        
+
         var validation = await _validator.ValidateParams(updateBuilding, id);
 
         if (!validation.IsValid)
@@ -131,21 +212,34 @@ public class BuildingsController : ControllerBase
     // POST: api/Buildings
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Create building (For management)")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     [HttpPost]
     public async Task<IActionResult> PostBuilding([FromBody] BuildingCreateRequest building)
     {
+        var supervisorId = int.Parse(User.Identity.Name);
+
+        var supervisor = await _serviceWrapper.Accounts.GetAccountById(supervisorId);
+
+        if (supervisor == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Supervisor not found",
+                data = ""
+            });
+
         var newBuilding = new Building
         {
-            BuildingName = building.BuildingName,
-            Description = building.Description,
+            BuildingName = building.BuildingName ?? "Building created by " + supervisor.FullName,
+            BuildingAddress = building.BuildingAddress ?? "To be filled",
+            Description = building.Description ?? "Building description",
             CoordinateX = building.CoordinateX ?? 0,
             CoordinateY = building.CoordinateY ?? 0,
             TotalRooms = 0,
-            AccountId = Convert.ToInt32(User.Identity?.Name),
+            AccountId = supervisorId,
             Status = building.Status ?? true,
             AreaId = building.AreaId,
-            BuildingPhoneNumber = building.BuildingPhoneNumber
+            BuildingPhoneNumber = building.BuildingPhoneNumber ?? "0"
         };
 
         var validation = await _validator.ValidateParams(newBuilding, null);
@@ -160,20 +254,21 @@ public class BuildingsController : ControllerBase
 
         var result = await _serviceWrapper.Buildings.AddBuilding(newBuilding);
 
-        if (result == null)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Building failed to create",
-                data = ""
-            });
-
-        return Ok(new
+        return result.IsSuccess switch
         {
-            status = "Success",
-            message = "Building created",
-            data = ""
-        });
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
     }
 
     // DELETE: api/Buildings/5

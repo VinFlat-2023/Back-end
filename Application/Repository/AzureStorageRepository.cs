@@ -153,7 +153,7 @@ public class AzureStorageRepository : IAzureStorageRepository
             when (ex.ErrorCode == BlobErrorCode.BlobAlreadyExists)
         {
             _logger
-                .LogError("File with name {FileFileName} already exists in container. " +
+                .LogError("File with name {FileName} already exists in container. " +
                           "Set another name to store the file in the container: " +
                           "\'{StorageContainerName}.\'",
                     file?.FileName, containerName);

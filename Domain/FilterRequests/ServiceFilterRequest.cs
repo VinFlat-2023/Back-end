@@ -15,4 +15,8 @@ public class ServiceFilterRequest : PagingFilter
     public int? ServiceTypeId { get; set; }
 
     public string? ServiceTypeName { get; set; }
+
+    public int? BuildingId { get; set; }
+
+    public string? BuildingName { get; set; }
 }

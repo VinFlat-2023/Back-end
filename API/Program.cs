@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Domain.Options;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -58,6 +59,13 @@ builder.Logging.AddLoggerConfig();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddSwaggerService();
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.ValueLengthLimit = 50 * 1024 * 1024;
+    options.MultipartBodyLengthLimit = 50 * 1024 * 1024; // if don't set default value is: 128 MB
+    options.MultipartHeadersLengthLimit = 50 * 1024 * 1024;
+});
 
 builder.Services.AddAuthorizationService();
 

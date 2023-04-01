@@ -19,13 +19,14 @@ public class Renter
     public int RenterId { get; set; }
 
     public string Username { get; set; }
-    public string Email { get; set; }
+    public string? Email { get; set; }
     public string Password { get; set; }
     public string Phone { get; set; }
     public string FullName { get; set; }
     public DateTime? BirthDate { get; set; }
     public bool Status { get; set; }
     public string? ImageUrl { get; set; }
+    public string? RenterAddress { get; set; }
 
     [MaxUploadedFileSize(4 * 1024 * 1024)]
     [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]

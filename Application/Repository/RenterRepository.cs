@@ -144,7 +144,7 @@ public class RenterRepository : IRenterRepository
             Message = "User updated successful"
         };
     }
-    
+
     public async Task<RepositoryResponse> UpdateImageRenter(Renter renter)
     {
         var userData = await _context.Renters

@@ -8,4 +8,6 @@ public class ServiceEntityFilter : PagingFilter
     public decimal? Amount { get; set; }
     public int? ServiceTypeId { get; set; }
     public string? ServiceTypeName { get; set; }
+    public int? BuildingId { get; set; }
+    public string? BuildingName { get; set; }
 }
