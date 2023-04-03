@@ -25,14 +25,15 @@ public class BuildingRepository : IBuildingRepository
         return _context.Buildings
             .Include(x => x.Area)
             .Include(x => x.Account)
-            .ThenInclude(x => x.Role)
+            .Include(x => x.Flats)
+            .ThenInclude(x => x.Rooms)
             // Filter starts here
             .Where(x =>
                 (filter.BuildingName == null || x.BuildingName.ToLower().Contains(filter.BuildingName.ToLower()))
                 && (filter.Description == null || x.Description.ToLower().Contains(filter.Description.ToLower()))
                 && (filter.BuildingAddress == null ||
                     x.BuildingAddress.ToLower().Contains(filter.BuildingAddress.ToLower()))
-                && (filter.TotalRooms == null || x.TotalRooms == filter.TotalRooms)
+                && (filter.TotalFlats == null || x.TotalFlats == filter.TotalFlats)
                 && (filter.Status == null || x.Status == filter.Status)
                 && (filter.BuildingPhoneNumber == null || x.BuildingPhoneNumber.Contains(filter.BuildingPhoneNumber))
                 && (filter.AccountName == null || x.Account.Username.ToLower().Contains(filter.AccountName.ToLower()))
@@ -40,32 +41,17 @@ public class BuildingRepository : IBuildingRepository
             .AsNoTracking();
     }
 
-    public IQueryable<Building> GetBuildingListBySpareSlot()
+    public IQueryable<Building> GetBuildingListBySpareSlotWithTrue()
     {
         return _context.Buildings
             .Include(x => x.Area)
             .Include(x => x.Account)
             .ThenInclude(x => x.Role)
-            .Include(x => x.Flats)
-            // Filter starts here
-            
+            .Include(flat => flat.Flats)
+            .ThenInclude(x => x.Rooms.Where(room => room.AvailableSlots > 0))
             .AsNoTracking();
     }
 
-    
-    public IQueryable<Building> GetBuildingListTop15(BuildingFilter filter)
-    {
-        return _context.Buildings
-            .Include(x => x.Area)
-            .Include(x => x.Account)
-            .ThenInclude(x => x.Role)
-            // Filter starts here
-            .OrderBy(x => x.BuildingName)
-            .Distinct()
-            .Take(15)
-            .AsNoTracking();
-    }
-    
     /// <summary>
     ///     Get building detail using building id
     /// </summary>
@@ -150,10 +136,11 @@ public class BuildingRepository : IBuildingRepository
             .Count(x => x.BuildingId == building.BuildingId);
 
         buildingData.Description = building.Description;
+        buildingData.AveragePrice = building.AveragePrice;
         buildingData.Status = building.Status;
         buildingData.CoordinateX = building.CoordinateX;
         buildingData.CoordinateY = building.CoordinateY;
-        buildingData.TotalRooms = count;
+        buildingData.TotalFlats = count;
         buildingData.BuildingAddress = buildingData.BuildingAddress;
         buildingData.BuildingName = building.BuildingName;
         buildingData.BuildingPhoneNumber = building.BuildingPhoneNumber;
@@ -165,7 +152,6 @@ public class BuildingRepository : IBuildingRepository
             IsSuccess = true,
             Message = "Building updated successfully"
         };
-        ;
     }
 
     /// <summary>
@@ -195,5 +181,18 @@ public class BuildingRepository : IBuildingRepository
             IsSuccess = true,
             Message = "Building deleted successfully"
         };
+    }
+
+    public IQueryable<Building> GetBuildingListTop15(BuildingFilter filter)
+    {
+        return _context.Buildings
+            .Include(x => x.Area)
+            .Include(x => x.Account)
+            .ThenInclude(x => x.Role)
+            // Filter starts here
+            .OrderBy(x => x.BuildingName)
+            .Distinct()
+            .Take(15)
+            .AsNoTracking();
     }
 }

@@ -29,7 +29,7 @@ public class BuildingsController : ControllerBase
     }
 
     // GET: api/Buildings
-    [SwaggerOperation(Summary = "[Authorize] Get building list (For management (Admin only)")]
+    [SwaggerOperation(Summary = "[Authorize] Get building list (For management (Admin only))")]
     [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> GetBuildings([FromQuery] BuildingFilterRequest request, CancellationToken token)
@@ -56,7 +56,7 @@ public class BuildingsController : ControllerBase
             totalCount = list.TotalCount
         });
     }
-    
+
     [SwaggerOperation(Summary = "[Authorize] Get building list")]
     [HttpGet]
     public async Task<IActionResult> GetBasicBuildingsList([FromQuery] string areaName, CancellationToken token)
@@ -84,14 +84,12 @@ public class BuildingsController : ControllerBase
             totalCount = list.TotalCount
         });
     }
-    
+
     [SwaggerOperation(Summary = "[Authorize] Get building list by number of spare slot")]
     [HttpGet]
-    public async Task<IActionResult> GetBasicBuildingsListFromSpareSlot()
+    public async Task<IActionResult> GetBasicBuildingsListFromSpareSlot(CancellationToken token)
     {
-        var filter = _mapper.Map<BuildingFilter>(request);
-
-        var list = await _serviceWrapper.Buildings.GetBuildingList(filter, token);
+        var list = await _serviceWrapper.Buildings.GetBuildingListBySpareSlotWithTrue(token);
 
         var resultList = _mapper.Map<IEnumerable<BuildingDetailEntity>>(list);
 
@@ -177,6 +175,7 @@ public class BuildingsController : ControllerBase
             CoordinateY = building.CoordinateY ?? 0,
             AreaId = building.AreaId,
             Status = building.Status,
+            AveragePrice = building.AveragePrice,
             BuildingPhoneNumber = building.BuildingPhoneNumber
         };
 
@@ -235,7 +234,8 @@ public class BuildingsController : ControllerBase
             Description = building.Description ?? "Building description",
             CoordinateX = building.CoordinateX ?? 0,
             CoordinateY = building.CoordinateY ?? 0,
-            TotalRooms = 0,
+            TotalFlats = 0,
+            AveragePrice = building.AveragePrice ?? 0,
             AccountId = supervisorId,
             Status = building.Status ?? true,
             AreaId = building.AreaId,

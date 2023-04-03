@@ -92,6 +92,16 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
                     break;
             }
 
+            switch (obj?.AveragePrice)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Average price is required");
+                    break;
+                case { } when obj.AveragePrice < 0:
+                    ValidatorResult.Failures.Add("Average price cannot be less than 0");
+                    break;
+            }
+
             switch (obj?.AccountId)
             {
                 case null:

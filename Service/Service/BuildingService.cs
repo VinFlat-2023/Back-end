@@ -36,6 +36,22 @@ public class BuildingService : IBuildingService
         return pagedList;
     }
 
+    public async Task<PagedList<Building>?> GetBuildingListBySpareSlotWithTrue(CancellationToken token)
+    {
+        var queryable = _repositoryWrapper.Buildings.GetBuildingListBySpareSlotWithTrue();
+
+        if (!queryable.Any())
+            return null;
+
+        var page = _paginationOptions.DefaultPageNumber;
+        var size = _paginationOptions.DefaultPageSize;
+
+        var pagedList = await PagedList<Building>
+            .Create(queryable, page, size, token);
+
+        return pagedList;
+    }
+
     public async Task<Building?> GetBuildingById(int? buildingId)
     {
         return await _repositoryWrapper.Buildings.GetBuildingDetail(buildingId)

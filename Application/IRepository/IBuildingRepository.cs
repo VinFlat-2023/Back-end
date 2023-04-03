@@ -7,6 +7,7 @@ namespace Application.IRepository;
 public interface IBuildingRepository
 {
     public IQueryable<Building> GetBuildingList(BuildingFilter filter);
+    public IQueryable<Building> GetBuildingListBySpareSlotWithTrue();
     public IQueryable<Building?> GetBuildingDetail(int? buildingId);
     public Task<RepositoryResponse> AddBuilding(Building building);
     public Task<RepositoryResponse> UpdateBuilding(Building building);
