@@ -64,6 +64,7 @@ public class AuthController : ControllerBase
             data = new
             {
                 id = account.AccountId,
+                roleId = account.RoleId,
                 token = jwtToken
             }
         });

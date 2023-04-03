@@ -19,7 +19,7 @@ public class Building
     public string BuildingName { get; set; }
     public string BuildingAddress { get; set; }
     public string Description { get; set; }
-    public int TotalRooms { get; set; }
+    public int TotalFlats { get; set; }
     public decimal CoordinateX { get; set; }
     public decimal CoordinateY { get; set; }
     public string BuildingPhoneNumber { get; set; }
@@ -30,6 +30,7 @@ public class Building
     [NotMapped]
     public IFormFile? Image { get; set; }
 
+    public decimal AveragePrice { get; set; }
     public string? ImageUrl { get; set; }
     public bool Status { get; set; }
 
