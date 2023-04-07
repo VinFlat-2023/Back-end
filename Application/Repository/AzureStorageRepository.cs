@@ -31,7 +31,7 @@ public class AzureStorageRepository : IAzureStorageRepository
         var container = new BlobContainerClient(_storageConnectionString, GetContainerName(containerName));
         //await container.CreateAsync();
 
-        await container.CreateIfNotExistsAsync();
+        await container.CreateIfNotExistsAsync(PublicAccessType.Blob);
 
         try
         {
@@ -92,7 +92,7 @@ public class AzureStorageRepository : IAzureStorageRepository
     }
 
     public async Task<BlobResponse?> UpdateFileAsync(IFormFile? file, string? fileName, string containerName,
-        string? fileExtension)
+        string? fileExtension, bool isPrivate)
     {
         BlobResponse? response = new();
 
@@ -100,7 +100,15 @@ public class AzureStorageRepository : IAzureStorageRepository
         var container = new BlobContainerClient(_storageConnectionString, GetContainerName(containerName));
         //await container.CreateAsync();
 
-        await container.CreateIfNotExistsAsync();
+        switch (isPrivate)
+        {
+            case true:
+                await container.CreateIfNotExistsAsync(PublicAccessType.None);
+                break;
+            case false:
+                await container.CreateIfNotExistsAsync(PublicAccessType.Blob);
+                break;
+        }
 
         try
         {

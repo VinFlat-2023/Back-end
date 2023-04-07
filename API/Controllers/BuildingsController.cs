@@ -139,9 +139,9 @@ public class BuildingsController : ControllerBase
     [HttpGet("current")]
     public async Task<IActionResult> GetBuildingBasedOnSupervisor()
     {
-        var supervisorId = int.Parse(User.Identity?.Name);
+        var employeeId = int.Parse(User.Identity?.Name);
 
-        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(supervisorId);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId);
 
         var entity = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
 
@@ -239,9 +239,9 @@ public class BuildingsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> PostBuilding([FromBody] BuildingCreateRequest building)
     {
-        var supervisorId = int.Parse(User.Identity.Name);
+        var employeeId = int.Parse(User.Identity.Name);
 
-        var supervisor = await _serviceWrapper.Employees.GetEmployeeById(supervisorId);
+        var supervisor = await _serviceWrapper.Employees.GetEmployeeById(employeeId);
 
         if (supervisor == null)
             return NotFound(new
@@ -260,7 +260,7 @@ public class BuildingsController : ControllerBase
             CoordinateY = building.CoordinateY ?? 0,
             TotalFlats = 0,
             AveragePrice = building.AveragePrice ?? 0,
-            EmployeeId = supervisorId,
+            EmployeeId = employeeId,
             Status = building.Status ?? true,
             AreaId = building.AreaId,
             BuildingPhoneNumber = building.BuildingPhoneNumber ?? "0"

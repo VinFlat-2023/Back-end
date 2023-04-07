@@ -263,11 +263,11 @@ public class ContractsController : ControllerBase
                         data = ""
                     });
 
-                var supervisorId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(entity.BuildingId);
+                var employeeId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(entity.BuildingId);
 
                 var buildingDetail = new BuildingContractDetailEntity
                 {
-                    EmployeeId = supervisorId,
+                    EmployeeId = employeeId,
                     BuildingName = building.BuildingName,
                     BuildingPhoneNumber = building.BuildingPhoneNumber,
                     BuildingAddress = building.BuildingAddress
@@ -480,9 +480,9 @@ public class ContractsController : ControllerBase
                 data = ""
             });
 
-        var supervisorId = Parse(User.Identity?.Name);
+        var employeeId = Parse(User.Identity?.Name);
 
-        var buildingId = await _serviceWrapper.GetId.GetEmployeeIdBasedOnBuildingId(supervisorId);
+        var buildingId = await _serviceWrapper.GetId.GetEmployeeIdBasedOnBuildingId(employeeId);
 
         var newContract = new Contract
         {

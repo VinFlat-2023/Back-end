@@ -71,11 +71,11 @@ public class TicketsController : ControllerBase
                 });
 
             case "Supervisor":
-                var supervisorId = int.Parse(User.Identity?.Name);
+                var employeeId = int.Parse(User.Identity?.Name);
 
                 // TODO : searching based on renter ID for management
                 var supervisorTicketCheck =
-                    await _serviceWrapper.Tickets.GetTicketList(filter, supervisorId, true, token);
+                    await _serviceWrapper.Tickets.GetTicketList(filter, employeeId, true, token);
 
                 if (supervisorTicketCheck == null)
                     return NotFound(new

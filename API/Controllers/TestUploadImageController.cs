@@ -47,7 +47,7 @@ public class TestUploadImageController : ControllerBase
         {
             RenterId = renterId,
             ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image,
-                fileNameUserImage, "User", imageExtension))?.Blob.Uri
+                fileNameUserImage, "User", imageExtension, false))?.Blob.Uri
         };
 
         var result = await _serviceWrapper.Renters.UpdateImageRenter(finalizeUpdate);
@@ -75,9 +75,9 @@ public class TestUploadImageController : ControllerBase
     [HttpPut("building")]
     public async Task<IActionResult> PutBuilding([FromForm] ImageUploadRequest imageUploadRequest)
     {
-        var supervisorId = int.Parse(User.Identity?.Name);
+        var employeeId = int.Parse(User.Identity?.Name);
 
-        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(supervisorId);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId);
 
         var buildingCheck = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
 
@@ -97,7 +97,7 @@ public class TestUploadImageController : ControllerBase
         {
             BuildingId = buildingId,
             ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image, fileNameUserImage,
-                "User", imageExtension))?.Blob.Uri
+                "Building", imageExtension, false))?.Blob.Uri
         };
 
         var result = await _serviceWrapper.Buildings.UpdateBuildingImages(updateBuilding);
@@ -142,7 +142,7 @@ public class TestUploadImageController : ControllerBase
         {
             AreaId = areaId,
             ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image, fileNameUserImage,
-                "Area", imageExtension))?.Blob.Uri
+                "Area", imageExtension, false))?.Blob.Uri
         };
 
         var result = await _serviceWrapper.Areas.UpdateAreaImage(updateArea);
@@ -189,7 +189,7 @@ public class TestUploadImageController : ControllerBase
         {
             EmployeeId = employeeId,
             ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image, fileNameUserImage,
-                "Employee", imageExtension))?.Blob.Uri
+                "Employee", imageExtension, false))?.Blob.Uri
         };
 
         var result = await _serviceWrapper.Employees.UpdateEmployeeProfilePicture(updateArea);
@@ -246,8 +246,8 @@ public class TestUploadImageController : ControllerBase
         var finalizeUpdate = new Contract
         {
             ContractId = renterId,
-            ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(contract.Image, fileNameContract, "Contract",
-                imageExtension))?.Blob.Uri
+            ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(contract.Image, fileNameContract, 
+                "Contract", imageExtension, false))?.Blob.Uri
         };
 
         var result = await _serviceWrapper.Contracts.UpdateContract(finalizeUpdate);
