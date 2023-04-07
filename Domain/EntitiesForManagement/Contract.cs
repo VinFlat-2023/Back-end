@@ -23,8 +23,11 @@ public class Contract
     public DateTime? EndDate { get; set; }
     public DateTime LastUpdated { get; set; }
     public string ContractStatus { get; set; }
-    public string? ImageUrl { get; set; }
     [NotMapped] public IFormFile? Image { get; set; }
+    public string? ImageUrl { get; set; }
+    public string? ImageUrl2 { get; set; }
+    public string? ImageUrl3 { get; set; }
+    public string? ImageUrl4 { get; set; }
     public decimal PriceForRent { get; set; }
     public decimal PriceForWater { get; set; }
     public decimal PriceForElectricity { get; set; }
