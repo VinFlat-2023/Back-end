@@ -23,7 +23,8 @@ public interface IAzureStorageRepository
     /// <param name="fileExtension"></param>
     /// <param name="isPrivate"></param>
     /// <returns></returns>
-    Task<BlobResponse?> UpdateFileAsync(IFormFile? file, string? fileName, string containerName, string? fileExtension, bool isPrivate);
+    Task<BlobResponse?> UpdateFileAsync(IFormFile? file, string? fileName, string containerName, string? fileExtension,
+        bool isPrivate);
 
     /// <summary>
     ///     This method downloads a file with the specified filename

@@ -103,7 +103,7 @@ public class AzureStorageRepository : IAzureStorageRepository
         switch (isPrivate)
         {
             case true:
-                await container.CreateIfNotExistsAsync(PublicAccessType.None);
+                await container.CreateIfNotExistsAsync();
                 break;
             case false:
                 await container.CreateIfNotExistsAsync(PublicAccessType.Blob);

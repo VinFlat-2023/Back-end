@@ -22,7 +22,8 @@ public class AzureStorageService : IAzureStorageService
     public async Task<BlobResponse?> UpdateAsync(IFormFile? file, string? fileName, string containerName,
         string? fileExtension, bool isPrivate)
     {
-        return await _repositoryWrapper.AzureStorage.UpdateFileAsync(file, fileName, containerName, fileExtension, isPrivate);
+        return await _repositoryWrapper.AzureStorage.UpdateFileAsync(file, fileName, containerName, fileExtension,
+            isPrivate);
     }
 
 

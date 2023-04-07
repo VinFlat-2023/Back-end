@@ -14,7 +14,8 @@ public interface IAzureStorageService
     /// <returns>Blob with status</returns>
     Task<BlobResponse?> UploadAsync(IFormFile? file, string containerName, string? fileExtension);
 
-    Task<BlobResponse?> UpdateAsync(IFormFile? file, string? fileName, string containerName, string? fileExtension, bool isPrivate);
+    Task<BlobResponse?> UpdateAsync(IFormFile? file, string? fileName, string containerName, string? fileExtension,
+        bool isPrivate);
 
     /// <summary>
     ///     This method downloads a file with the specified filename

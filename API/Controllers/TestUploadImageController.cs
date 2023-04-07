@@ -69,11 +69,10 @@ public class TestUploadImageController : ControllerBase
         };
     }
 
-
     [SwaggerOperation]
     [Authorize(Roles = "Supervisor")]
-    [HttpPut("building")]
-    public async Task<IActionResult> PutBuilding([FromForm] ImageUploadRequest imageUploadRequest)
+    [HttpPut("building/image/1")]
+    public async Task<IActionResult> PutBuilding1([FromForm] ImageUploadRequest imageUploadRequest)
     {
         var employeeId = int.Parse(User.Identity?.Name);
 
@@ -97,6 +96,104 @@ public class TestUploadImageController : ControllerBase
         {
             BuildingId = buildingId,
             ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image, fileNameUserImage,
+                "Building", imageExtension, false))?.Blob.Uri
+        };
+
+        var result = await _serviceWrapper.Buildings.UpdateBuildingImages(updateBuilding);
+
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
+    }
+
+    [SwaggerOperation]
+    [Authorize(Roles = "Supervisor")]
+    [HttpPut("building/image/2")]
+    public async Task<IActionResult> PutBuilding2([FromForm] ImageUploadRequest imageUploadRequest)
+    {
+        var employeeId = int.Parse(User.Identity?.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId);
+
+        var buildingCheck = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
+
+        if (buildingCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Building not found",
+                data = ""
+            });
+
+        var fileNameUserImage = buildingCheck.ImageUrl?.Split('/').Last();
+
+        var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image?.FileName);
+
+        var updateBuilding = new Building
+        {
+            BuildingId = buildingId,
+            ImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image, fileNameUserImage,
+                "Building", imageExtension, false))?.Blob.Uri
+        };
+
+        var result = await _serviceWrapper.Buildings.UpdateBuildingImages(updateBuilding);
+
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
+    }
+
+    [SwaggerOperation]
+    [Authorize(Roles = "Supervisor")]
+    [HttpPut("building/image/3")]
+    public async Task<IActionResult> PutBuilding3([FromForm] ImageUploadRequest imageUploadRequest)
+    {
+        var employeeId = int.Parse(User.Identity?.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId);
+
+        var buildingCheck = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
+
+        if (buildingCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Building not found",
+                data = ""
+            });
+
+        var fileNameUserImage = buildingCheck.ImageUrl?.Split('/').Last();
+
+        var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image?.FileName);
+
+        var updateBuilding = new Building
+        {
+            BuildingId = buildingId,
+            ImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image, fileNameUserImage,
                 "Building", imageExtension, false))?.Blob.Uri
         };
 
@@ -246,7 +343,7 @@ public class TestUploadImageController : ControllerBase
         var finalizeUpdate = new Contract
         {
             ContractId = renterId,
-            ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(contract.Image, fileNameContract, 
+            ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(contract.Image, fileNameContract,
                 "Contract", imageExtension, false))?.Blob.Uri
         };
 

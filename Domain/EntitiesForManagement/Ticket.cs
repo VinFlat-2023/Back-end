@@ -25,19 +25,7 @@ public class Ticket
 
     public string? ImageUrl { get; set; }
 
-    [MaxUploadedFileSize(4 * 1024 * 1024)]
-    [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]
-    [DataType(DataType.Upload)]
-    [NotMapped]
-    public IFormFile? Image2 { get; set; }
-
     public string? ImageUrl2 { get; set; }
-
-    [MaxUploadedFileSize(4 * 1024 * 1024)]
-    [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]
-    [DataType(DataType.Upload)]
-    [NotMapped]
-    public IFormFile? Image3 { get; set; }
 
     public string? ImageUrl3 { get; set; }
 
