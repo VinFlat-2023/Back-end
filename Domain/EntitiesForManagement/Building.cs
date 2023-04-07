@@ -30,13 +30,30 @@ public class Building
     [NotMapped]
     public IFormFile? Image { get; set; }
 
-    public decimal AveragePrice { get; set; }
     public string? ImageUrl { get; set; }
+
+    [MaxUploadedFileSize(4 * 1024 * 1024)]
+    [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]
+    [DataType(DataType.Upload)]
+    [NotMapped]
+    public IFormFile? Image2 { get; set; }
+
+    public string? ImageUrl2 { get; set; }
+
+    [MaxUploadedFileSize(4 * 1024 * 1024)]
+    [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]
+    [DataType(DataType.Upload)]
+    [NotMapped]
+    public IFormFile? Image3 { get; set; }
+
+    public string? ImageUrl3 { get; set; }
+
+    public decimal AveragePrice { get; set; }
     public bool Status { get; set; }
 
     // Management Company
-    public int AccountId { get; set; }
-    public virtual Account Account { get; set; }
+    public int EmployeeId { get; set; }
+    public virtual Employee Employee { get; set; }
     [ForeignKey("AreaId")] public int AreaId { get; set; }
     public virtual Area Area { get; set; }
     public virtual ICollection<Flat> Flats { get; set; }

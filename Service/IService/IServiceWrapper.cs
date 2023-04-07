@@ -3,7 +3,7 @@
 public interface IServiceWrapper
 {
     public IAzureStorageService AzureStorage { get; }
-    public IAccountService Accounts { get; }
+    public IEmployeeService Employees { get; }
     public IAreaService Areas { get; }
     public IBuildingService Buildings { get; }
     public IContractService Contracts { get; }
@@ -14,7 +14,6 @@ public interface IServiceWrapper
     public IInvoiceService Invoices { get; }
     public IInvoiceTypeService InvoiceTypes { get; }
     public IInvoiceDetailService InvoiceDetails { get; }
-    public IMajorService Majors { get; }
     public IRenterService Renters { get; }
     public ITicketService Tickets { get; }
     public ITicketTypeService TicketTypes { get; }
@@ -22,7 +21,6 @@ public interface IServiceWrapper
     public ITokenService Tokens { get; }
     public IServiceEntityService ServicesEntity { get; }
     public IServiceTypeService ServiceTypes { get; }
-    public IUniversityService Universities { get; }
     public IWalletService Wallets { get; }
     public IDeviceService Devices { get; }
     public ICustomeMailService Mails { get; }
@@ -30,5 +28,4 @@ public interface IServiceWrapper
     public IRoomService Rooms { get; }
     public IRoomTypeService RoomType { get; }
     public IGetIdService GetId { get; }
-    public IAttributeForNumericService Attributes { get; }
 }

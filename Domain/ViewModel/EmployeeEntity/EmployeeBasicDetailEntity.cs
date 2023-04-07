@@ -1,8 +1,8 @@
-namespace Domain.ViewModel.AccountEntity;
+namespace Domain.ViewModel.EmployeeEntity;
 
-public class AccountBasicDetailEntity
+public class EmployeeBasicDetailEntity
 {
-    public int AccountId { get; set; }
+    public int EmployeeId { get; set; }
     public string Username { get; set; }
     public string FullName { get; set; }
     public string Email { get; set; }

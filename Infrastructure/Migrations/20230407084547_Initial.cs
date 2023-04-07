@@ -15,6 +15,7 @@ namespace Infrastructure.Migrations
                 {
                     AreaId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false)
@@ -22,20 +23,6 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Areas", x => x.AreaId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AttributeForNumerics",
-                columns: table => new
-                {
-                    AttributeForNumericId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ElectricityAttribute = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    WaterAttribute = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AttributeForNumerics", x => x.AttributeForNumericId);
                 });
 
             migrationBuilder.CreateTable(
@@ -59,7 +46,7 @@ namespace Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FlatTypeName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RoomCapacity = table.Column<int>(type: "int", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
                     BuildingId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -110,6 +97,32 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PlaceholderForFee", x => x.PlaceholderForFeeId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Renters",
+                columns: table => new
+                {
+                    RenterId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RenterAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CitizenNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CitizenImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DeviceToken = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Renters", x => x.RenterId);
                 });
 
             migrationBuilder.CreateTable(
@@ -173,22 +186,6 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "University",
-                columns: table => new
-                {
-                    UniversityId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UniversityName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_University", x => x.UniversityId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Utility",
                 columns: table => new
                 {
@@ -240,24 +237,26 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Accounts",
+                name: "Employees",
                 columns: table => new
                 {
-                    AccountId = table.Column<int>(type: "int", nullable: false)
+                    EmployeeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Accounts", x => x.AccountId);
+                    table.PrimaryKey("PK_Employees", x => x.EmployeeId);
                     table.ForeignKey(
-                        name: "FK_Accounts_Roles_RoleId",
+                        name: "FK_Employees_Roles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "RoleId",
@@ -265,22 +264,30 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Majors",
+                name: "Wallet",
                 columns: table => new
                 {
-                    MajorId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UniversityId = table.Column<int>(type: "int", nullable: false)
+                    WalletID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
+                    Balance = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(getdate())"),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    WalletTypeID = table.Column<int>(type: "int", nullable: false),
+                    RenterId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Majors", x => x.MajorId);
+                    table.PrimaryKey("PK_Wallet", x => x.WalletID);
                     table.ForeignKey(
-                        name: "FK_Majors_University_UniversityId",
-                        column: x => x.UniversityId,
-                        principalTable: "University",
-                        principalColumn: "UniversityId",
+                        name: "FK_Wallet_Renters_RenterId",
+                        column: x => x.RenterId,
+                        principalTable: "Renters",
+                        principalColumn: "RenterId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Wallet_WalletType_WalletTypeID",
+                        column: x => x.WalletTypeID,
+                        principalTable: "WalletType",
+                        principalColumn: "WalletTypeID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -293,67 +300,112 @@ namespace Infrastructure.Migrations
                     BuildingName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BuildingAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TotalRooms = table.Column<int>(type: "int", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TotalFlats = table.Column<int>(type: "int", nullable: false),
                     CoordinateX = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CoordinateY = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     BuildingPhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AveragePrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
-                    AccountId = table.Column<int>(type: "int", nullable: false),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
                     AreaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Buildings", x => x.BuildingId);
                     table.ForeignKey(
-                        name: "FK_Buildings_Accounts_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Accounts",
-                        principalColumn: "AccountId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Buildings_Areas_AreaId",
                         column: x => x.AreaId,
                         principalTable: "Areas",
                         principalColumn: "AreaId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Buildings_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "EmployeeId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Renters",
+                name: "Invoices",
                 columns: table => new
                 {
-                    RenterId = table.Column<int>(type: "int", nullable: false)
+                    InvoiceId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Amount = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Detail = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CitizenNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CitizenImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UniversityId = table.Column<int>(type: "int", nullable: true),
-                    MajorId = table.Column<int>(type: "int", nullable: true),
-                    DeviceToken = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    PaymentTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RenterId = table.Column<int>(type: "int", nullable: true),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
+                    InvoiceTypeId = table.Column<int>(type: "int", nullable: false),
+                    PeriodEnd = table.Column<DateTime>(type: "datetime2", nullable: false)
+                        .Annotation("SqlServer:IsTemporal", true)
+                        .Annotation("SqlServer:TemporalPeriodEndColumnName", "PeriodEnd")
+                        .Annotation("SqlServer:TemporalPeriodStartColumnName", "PeriodStart"),
+                    PeriodStart = table.Column<DateTime>(type: "datetime2", nullable: false)
+                        .Annotation("SqlServer:IsTemporal", true)
+                        .Annotation("SqlServer:TemporalPeriodEndColumnName", "PeriodEnd")
+                        .Annotation("SqlServer:TemporalPeriodStartColumnName", "PeriodStart")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Renters", x => x.RenterId);
+                    table.PrimaryKey("PK_Invoices", x => x.InvoiceId);
                     table.ForeignKey(
-                        name: "FK_Renters_Majors_MajorId",
-                        column: x => x.MajorId,
-                        principalTable: "Majors",
-                        principalColumn: "MajorId");
+                        name: "FK_Invoices_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "EmployeeId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Renters_University_UniversityId",
-                        column: x => x.UniversityId,
-                        principalTable: "University",
-                        principalColumn: "UniversityId");
+                        name: "FK_Invoices_InvoiceTypes_InvoiceTypeId",
+                        column: x => x.InvoiceTypeId,
+                        principalTable: "InvoiceTypes",
+                        principalColumn: "InvoiceTypeId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Invoices_Renters_RenterId",
+                        column: x => x.RenterId,
+                        principalTable: "Renters",
+                        principalColumn: "RenterId");
+                })
+                .Annotation("SqlServer:IsTemporal", true)
+                .Annotation("SqlServer:TemporalHistoryTableName", "InvoicesHistory")
+                .Annotation("SqlServer:TemporalHistoryTableSchema", null)
+                .Annotation("SqlServer:TemporalPeriodEndColumnName", "PeriodEnd")
+                .Annotation("SqlServer:TemporalPeriodStartColumnName", "PeriodStart");
+
+            migrationBuilder.CreateTable(
+                name: "UserDevice",
+                columns: table => new
+                {
+                    UserDeviceId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    DeviceToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmployeeId = table.Column<int>(type: "int", nullable: true),
+                    RenterId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserDevice", x => x.UserDeviceId);
+                    table.ForeignKey(
+                        name: "FK_UserDevice_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "EmployeeId");
+                    table.ForeignKey(
+                        name: "FK_UserDevice_Renters_RenterId",
+                        column: x => x.RenterId,
+                        principalTable: "Renters",
+                        principalColumn: "RenterId");
                 });
 
             migrationBuilder.CreateTable(
@@ -372,18 +424,11 @@ namespace Infrastructure.Migrations
                     MaxRoom = table.Column<int>(type: "int", nullable: false),
                     AvailableRoom = table.Column<int>(type: "int", nullable: false),
                     FlatTypeId = table.Column<int>(type: "int", nullable: false),
-                    BuildingId = table.Column<int>(type: "int", nullable: false),
-                    AttributeForNumericId = table.Column<int>(type: "int", nullable: false)
+                    BuildingId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Flats", x => x.FlatId);
-                    table.ForeignKey(
-                        name: "FK_Flats_AttributeForNumerics_AttributeForNumericId",
-                        column: x => x.AttributeForNumericId,
-                        principalTable: "AttributeForNumerics",
-                        principalColumn: "AttributeForNumericId",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Flats_Buildings_BuildingId",
                         column: x => x.BuildingId,
@@ -429,109 +474,24 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Invoices",
+                name: "Transactions",
                 columns: table => new
                 {
-                    InvoiceId = table.Column<int>(type: "int", nullable: false)
+                    TransactionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Amount = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false),
-                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Detail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PaymentTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RenterId = table.Column<int>(type: "int", nullable: true),
-                    AccountId = table.Column<int>(type: "int", nullable: false),
-                    InvoiceTypeId = table.Column<int>(type: "int", nullable: false),
-                    PeriodEnd = table.Column<DateTime>(type: "datetime2", nullable: false)
-                        .Annotation("SqlServer:IsTemporal", true)
-                        .Annotation("SqlServer:TemporalPeriodEndColumnName", "PeriodEnd")
-                        .Annotation("SqlServer:TemporalPeriodStartColumnName", "PeriodStart"),
-                    PeriodStart = table.Column<DateTime>(type: "datetime2", nullable: false)
-                        .Annotation("SqlServer:IsTemporal", true)
-                        .Annotation("SqlServer:TemporalPeriodEndColumnName", "PeriodEnd")
-                        .Annotation("SqlServer:TemporalPeriodStartColumnName", "PeriodStart")
+                    TpTransId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TransactionTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    InvoiceId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Invoices", x => x.InvoiceId);
+                    table.PrimaryKey("PK_Transactions", x => x.TransactionId);
                     table.ForeignKey(
-                        name: "FK_Invoices_Accounts_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Accounts",
-                        principalColumn: "AccountId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Invoices_InvoiceTypes_InvoiceTypeId",
-                        column: x => x.InvoiceTypeId,
-                        principalTable: "InvoiceTypes",
-                        principalColumn: "InvoiceTypeId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Invoices_Renters_RenterId",
-                        column: x => x.RenterId,
-                        principalTable: "Renters",
-                        principalColumn: "RenterId");
-                })
-                .Annotation("SqlServer:IsTemporal", true)
-                .Annotation("SqlServer:TemporalHistoryTableName", "InvoicesHistory")
-                .Annotation("SqlServer:TemporalHistoryTableSchema", null)
-                .Annotation("SqlServer:TemporalPeriodEndColumnName", "PeriodEnd")
-                .Annotation("SqlServer:TemporalPeriodStartColumnName", "PeriodStart");
-
-            migrationBuilder.CreateTable(
-                name: "UserDevice",
-                columns: table => new
-                {
-                    UserDeviceId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    DeviceToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AccountId = table.Column<int>(type: "int", nullable: true),
-                    RenterId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserDevice", x => x.UserDeviceId);
-                    table.ForeignKey(
-                        name: "FK_UserDevice_Accounts_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Accounts",
-                        principalColumn: "AccountId");
-                    table.ForeignKey(
-                        name: "FK_UserDevice_Renters_RenterId",
-                        column: x => x.RenterId,
-                        principalTable: "Renters",
-                        principalColumn: "RenterId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Wallet",
-                columns: table => new
-                {
-                    WalletID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
-                    Balance = table.Column<int>(type: "int", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(getdate())"),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    WalletTypeID = table.Column<int>(type: "int", nullable: false),
-                    RenterId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Wallet", x => x.WalletID);
-                    table.ForeignKey(
-                        name: "FK_Wallet_Renters_RenterId",
-                        column: x => x.RenterId,
-                        principalTable: "Renters",
-                        principalColumn: "RenterId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Wallet_WalletType_WalletTypeID",
-                        column: x => x.WalletTypeID,
-                        principalTable: "WalletType",
-                        principalColumn: "WalletTypeID",
+                        name: "FK_Transactions_Invoices_InvoiceId",
+                        column: x => x.InvoiceId,
+                        principalTable: "Invoices",
+                        principalColumn: "InvoiceId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -542,10 +502,10 @@ namespace Infrastructure.Migrations
                     ContractId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ContractName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateSigned = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ContractStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -634,6 +594,8 @@ namespace Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RoomName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AvailableSlots = table.Column<int>(type: "int", nullable: false),
+                    ElectricityAttribute = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    WaterAttribute = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     FlatId = table.Column<int>(type: "int", nullable: false),
                     RoomTypeId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -714,28 +676,6 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Transactions",
-                columns: table => new
-                {
-                    TransactionId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TpTransId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TransactionTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    InvoiceId = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Transactions", x => x.TransactionId);
-                    table.ForeignKey(
-                        name: "FK_Transactions_Invoices_InvoiceId",
-                        column: x => x.InvoiceId,
-                        principalTable: "Invoices",
-                        principalColumn: "InvoiceId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Tickets",
                 columns: table => new
                 {
@@ -747,24 +687,26 @@ namespace Infrastructure.Migrations
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ContractId = table.Column<int>(type: "int", nullable: false),
-                    AccountId = table.Column<int>(type: "int", nullable: false),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
                     TicketTypeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tickets", x => x.TicketId);
                     table.ForeignKey(
-                        name: "FK_Tickets_Accounts_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Accounts",
-                        principalColumn: "AccountId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Tickets_Contracts_ContractId",
                         column: x => x.ContractId,
                         principalTable: "Contracts",
                         principalColumn: "ContractId");
+                    table.ForeignKey(
+                        name: "FK_Tickets_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "EmployeeId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Tickets_TicketTypes_TicketTypeId",
                         column: x => x.TicketTypeId,
@@ -775,28 +717,17 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Areas",
-                columns: new[] { "AreaId", "Location", "Name", "Status" },
+                columns: new[] { "AreaId", "ImageUrl", "Location", "Name", "Status" },
                 values: new object[,]
                 {
-                    { 1, "HCM", "HCM", true },
-                    { 2, "HN", "HN", true },
-                    { 3, "DN", "DN", true },
-                    { 4, "Hue", "Hue", true },
-                    { 5, "TH", "Thanh Hoa", true },
-                    { 6, "HP", "Hai Phong", true },
-                    { 7, "DN", "Dong Nai", true },
-                    { 8, "HN", "Hoa Lac", true }
-                });
-
-            migrationBuilder.InsertData(
-                table: "AttributeForNumerics",
-                columns: new[] { "AttributeForNumericId", "ElectricityAttribute", "WaterAttribute" },
-                values: new object[,]
-                {
-                    { 1, "1.1", "1" },
-                    { 2, "0.9", "1" },
-                    { 3, "1.2", "1" },
-                    { 4, "1.4", "0.9" }
+                    { 1, "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/PANO0002-Pano.jpg/1200px-PANO0002-Pano.jpg", "HCM", "Quận 1", true },
+                    { 2, "https://i1-vnexpress.vnecdn.net/2022/11/17/Ve-may-bay-di-sai-gon-600x399-4356-2813-1668672299.jpg?w=0&h=0&q=100&dpr=2&fit=crop&s=8All1Mq-so56XkVbZXvdFA", "HCM", "Quận 2", true },
+                    { 3, "https://images.pexels.com/photos/11742806/pexels-photo-11742806.jpeg?cs=srgb&dl=pexels-th%E1%BB%8Bnh-la-11742806.jpg&fm=jpg", "HCM", "Quận 3", true },
+                    { 4, "", "HCM", "Quận 9", true },
+                    { 5, "", "HCM", "Quận Phú Nhuận", true },
+                    { 6, "", "HCM", "Quận 7", true },
+                    { 7, "", "HCM", "Quận 8", true },
+                    { 8, "", "HCM", "Quận 1", true }
                 });
 
             migrationBuilder.InsertData(
@@ -814,11 +745,11 @@ namespace Infrastructure.Migrations
                 columns: new[] { "FlatTypeId", "BuildingId", "FlatTypeName", "RoomCapacity", "Status" },
                 values: new object[,]
                 {
-                    { 1, 5, "AAAAAAAA", 10, "Active" },
-                    { 2, 5, "AAAAAAAA", 2, "Active" },
-                    { 3, 5, "AAAAAAAA", 4, "Active" },
-                    { 4, 5, "AAAAAAAA", 5, "Active" },
-                    { 5, 5, "AAAAAAAA", 6, "Active" }
+                    { 1, 5, "AAAAAAAA", 10, true },
+                    { 2, 5, "AAAAAAAA", 2, true },
+                    { 3, 5, "AAAAAAAA", 4, true },
+                    { 4, 5, "AAAAAAAA", 5, true },
+                    { 5, 5, "AAAAAAAA", 6, true }
                 });
 
             migrationBuilder.InsertData(
@@ -832,11 +763,16 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Renters",
-                columns: new[] { "RenterId", "Address", "BirthDate", "CitizenImageUrl", "CitizenNumber", "DeviceToken", "Email", "FullName", "Gender", "ImageUrl", "MajorId", "Password", "Phone", "Status", "UniversityId", "Username" },
+                columns: new[] { "RenterId", "Address", "BirthDate", "CitizenImageUrl", "CitizenNumber", "DeviceToken", "Email", "FullName", "Gender", "ImageUrl", "Password", "Phone", "RenterAddress", "Status", "Username" },
                 values: new object[,]
                 {
-                    { 1, "HCM", new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8098), null, "3214324523", "12321fdsg45adsa", "renter1@mail.com", "Nguyen Van A", "Male", null, null, "renter1", "0123543125", true, null, "renter1" },
-                    { 2, "Hue", new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8102), null, "3214324523", "dsavvf", "renter2@mail.com", "Nguyen Van B", "Male", null, null, "renter2", "0123543125", true, null, "renter2" }
+                    { 1, "HCM", new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(673), null, "3214324523", "12321fdsg45adsa", "renter1@mail.com", "Nguyen Van A", "Male", null, "renter1", "0123543125", null, true, "renter1" },
+                    { 2, "Hue", new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(678), null, "3214324523", "dsavvf", "renter2@mail.com", "Nguyen Van B", "Male", null, "renter2", "0123543125", null, true, "renter2" },
+                    { 3, "DN", new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(680), null, "3214324523", "123221ad145ad423sa", "renter3@mail.com", "Nguyen Van C", "Female", null, "renter3", "0123543125", null, true, "renter3" },
+                    { 4, "HN", new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(681), null, "3214324523", "ewasdv12344", "renter4@mail.com", "Nguyen Van D", "Female", null, "renter4", "0123543125", null, true, "renter4" },
+                    { 5, "HCM", new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(682), null, "3214324523", "ewasdv12344", "trankhaimnhkhoi10a3@mail.com", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", null, true, "minhkhoi10a3" },
+                    { 6, "HCM", new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(684), null, "3214324523", "ewasdv12344", "trankhaimnhkhoi@mail.com", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", null, true, "minhkhoi" },
+                    { 7, "HCM", new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(713), null, "3214324523", "ewasdv12344", "khoitkmse150850@fpt", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", null, true, "minhkhoitkm" }
                 });
 
             migrationBuilder.InsertData(
@@ -883,110 +819,72 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "University",
-                columns: new[] { "UniversityId", "Address", "Description", "Status", "UniversityName" },
-                values: new object[,]
-                {
-                    { 1, "HCM", "HCM University of Technology", "Active", "HCM University of Technology" },
-                    { 2, "HCM", "HCM University of Science", "Active", "HCM University of Science" },
-                    { 3, "HCM", "HCM University of Pedagogy", "Active", "HCM University of Pedagogy" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "University",
-                columns: new[] { "UniversityId", "Address", "Description", "Status", "UniversityName" },
-                values: new object[,]
-                {
-                    { 4, "HCM", "HCM University of Physical", "Active", "HCM University of Physical" },
-                    { 5, "HCM", "HCM University of Math", "Active", "HCM University of Math" },
-                    { 6, "HCM", "HCM University of History", "Active", "HCM University of History" }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Utility",
                 columns: new[] { "UtilityId", "Description", "UtilitiesName" },
                 values: new object[,]
                 {
                     { 1, null, "Air Conditioner" },
-                    { 2, null, "Water Heater" },
-                    { 3, null, "Wifi" },
-                    { 4, null, "Kitchen" }
+                    { 2, null, "Water Heater" }
                 });
 
             migrationBuilder.InsertData(
-                table: "Accounts",
-                columns: new[] { "AccountId", "Email", "FullName", "Password", "Phone", "RoleId", "Status", "Username" },
-                values: new object[,]
-                {
-                    { 1, "superadmin@mail", "Super admin account", "superadmin", "0123543125", 1, true, "superadmin" },
-                    { 2, "admin@mail", "Admin account", "admin", "0123543532", 2, true, "admin" },
-                    { 3, "supervisor@mail", "Supervisor account", "supervisor", "0123543554", 3, true, "supervisor" },
-                    { 4, "employee1@mail", "Employee account 1", "employee1", "0123543235", 4, true, "employee1" },
-                    { 5, "employee2@mail", "Employee account 2", "employee2", "0123123235", 4, true, "employee2" }
-                });
+                table: "Utility",
+                columns: new[] { "UtilityId", "Description", "UtilitiesName" },
+                values: new object[] { 3, null, "Wifi" });
 
             migrationBuilder.InsertData(
-                table: "Majors",
-                columns: new[] { "MajorId", "Name", "UniversityId" },
-                values: new object[,]
-                {
-                    { 1, "Computer Science", 1 },
-                    { 2, "Information Technology", 1 },
-                    { 3, "Software Engineering", 2 },
-                    { 4, "Information Technology", 2 },
-                    { 5, "Information Technology", 3 }
-                });
+                table: "Utility",
+                columns: new[] { "UtilityId", "Description", "UtilitiesName" },
+                values: new object[] { 4, null, "Kitchen" });
 
             migrationBuilder.InsertData(
-                table: "Renters",
-                columns: new[] { "RenterId", "Address", "BirthDate", "CitizenImageUrl", "CitizenNumber", "DeviceToken", "Email", "FullName", "Gender", "ImageUrl", "MajorId", "Password", "Phone", "Status", "UniversityId", "Username" },
+                table: "Employees",
+                columns: new[] { "EmployeeId", "Address", "Email", "FullName", "ImageUrl", "Password", "Phone", "RoleId", "Status", "Username" },
                 values: new object[,]
                 {
-                    { 4, "HN", new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8105), null, "3214324523", "ewasdv12344", "renter4@mail.com", "Nguyen Van D", "Female", null, null, "renter4", "0123543125", true, 1, "renter4" },
-                    { 5, "HCM", new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8108), null, "3214324523", "ewasdv12344", "trankhaimnhkhoi10a3@mail.com", "Tran Minh Khoi", "Male", null, null, "123456789", "0123543125", true, 1, "minhkhoi10a3" },
-                    { 6, "HCM", new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8110), null, "3214324523", "ewasdv12344", "trankhaimnhkhoi@mail.com", "Tran Minh Khoi", "Male", null, null, "123456789", "0123543125", true, 1, "minhkhoi" }
+                    { 1, "Admin address", "superadmin@mail", "Super admin employee", null, "superadmin", "0123543125", 1, true, "superadmin" },
+                    { 2, "Admin address", "admin@mail", "Admin employee", null, "admin", "0123543532", 2, true, "admin" },
+                    { 3, "Supervisor address", "supervisor@mail", "Supervisor employee", null, "supervisor", "0123543554", 3, true, "supervisor" },
+                    { 4, "Employee address", "employee1@mail", "Employee employee 1", null, "employee1", "0123543235", 4, true, "employee1" },
+                    { 5, "Employee address", "employee2@mail", "Employee employee 2", null, "employee2", "0123123235", 4, true, "employee2" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Buildings",
-                columns: new[] { "BuildingId", "AccountId", "AreaId", "BuildingAddress", "BuildingName", "BuildingPhoneNumber", "CoordinateX", "CoordinateY", "Description", "ImageUrl", "Status", "TotalRooms" },
+                columns: new[] { "BuildingId", "AreaId", "AveragePrice", "BuildingAddress", "BuildingName", "BuildingPhoneNumber", "CoordinateX", "CoordinateY", "Description", "EmployeeId", "ImageUrl", "ImageUrl2", "ImageUrl3", "Status", "TotalFlats" },
                 values: new object[,]
                 {
-                    { 1, 5, 1, "Quajan 9", "Building 1a", "012323123", 231m, 324m, "Building 1a", "", true, 0 },
-                    { 2, 2, 1, "Quận 9", "Building 1b", "012323123", 21233m, 334m, "Building 1b", "", true, 0 },
-                    { 3, 2, 2, "Quận 2", "Building 1c", "012323123", 423m, 3214m, "Building 1c", "", true, 0 },
-                    { 4, 4, 2, "Quận 3", "Building 1d", "012323123", 2323m, 314m, "Building 1d", "", true, 0 },
-                    { 5, 3, 3, "Quận 4", "Building 1e", "012323123", 23431m, 3245m, "Building 1e", "", true, 0 },
-                    { 6, 4, 3, "Quận 7", "Building 1f", "012323123", 21233m, 334m, "Building 1f", "", true, 0 }
+                    { 1, 1, 0m, "Quajan 9", "Building 1a", "012323123", 231m, 324m, "Building 1a", 5, "", null, null, true, 0 },
+                    { 2, 1, 0m, "Quận 9", "Building 1b", "012323123", 21233m, 334m, "Building 1b", 2, "", null, null, true, 0 },
+                    { 3, 2, 0m, "Quận 2", "Building 1c", "012323123", 423m, 3214m, "Building 1c", 2, "", null, null, true, 0 },
+                    { 4, 2, 0m, "Quận 3", "Building 1d", "012323123", 2323m, 314m, "Building 1d", 4, "", null, null, true, 0 },
+                    { 5, 2, 0m, "Quận 4", "Building 1e", "012323123", 23431m, 3245m, "Building 1e", 3, "", null, null, true, 0 },
+                    { 6, 3, 0m, "Quận 7", "Building 1f", "012323123", 21233m, 334m, "Building 1f", 4, "", null, null, true, 0 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Invoices",
-                columns: new[] { "InvoiceId", "AccountId", "Amount", "CreatedTime", "Detail", "DueDate", "ImageUrl", "InvoiceTypeId", "Name", "PaymentTime", "RenterId", "Status" },
+                columns: new[] { "InvoiceId", "Amount", "CreatedTime", "Detail", "DueDate", "EmployeeId", "ImageUrl", "InvoiceTypeId", "Name", "PaymentTime", "RenterId", "Status" },
                 values: new object[,]
                 {
-                    { 1, 2, 0, new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8470), "Detail for invoice 1", null, null, 1, "Hoá đơn điện tử cho renter 1", null, 1, true },
-                    { 2, 3, 0, new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8472), "Detail for invoice 2", null, null, 1, "Hoá đơn điện tử cho renter 2", null, 2, true }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Renters",
-                columns: new[] { "RenterId", "Address", "BirthDate", "CitizenImageUrl", "CitizenNumber", "DeviceToken", "Email", "FullName", "Gender", "ImageUrl", "MajorId", "Password", "Phone", "Status", "UniversityId", "Username" },
-                values: new object[,]
-                {
-                    { 3, "DN", new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8104), null, "3214324523", "123221ad145ad423sa", "renter3@mail.com", "Nguyen Van C", "Female", null, 2, "renter3", "0123543125", true, 1, "renter3" },
-                    { 7, "HCM", new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8111), null, "3214324523", "ewasdv12344", "khoitkmse150850@fpt", "Tran Minh Khoi", "Male", null, 1, "123456789", "0123543125", true, 1, "minhkhoitkm" }
+                    { 1, 0, new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(994), "Detail for invoice 1", null, 2, null, 1, "Hoá đơn điện tử cho renter 1", null, 1, true },
+                    { 2, 0, new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(996), "Detail for invoice 2", null, 3, null, 1, "Hoá đơn điện tử cho renter 2", null, 2, true },
+                    { 3, 0, new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(997), "Detail for invoice 3", null, 4, null, 1, "Hoá đơn điện tử cho renter 3", null, 3, false },
+                    { 4, 0, new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(998), "Detail for invoice 3 (2)", null, 2, null, 1, "Hoá đơn điện tử cho renter 3 (2)", null, 3, false },
+                    { 5, 0, new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(999), "Detail for invoice 3 (3)", null, 2, null, 1, "Hoá đơn điện tử cho renter 3 (3)", null, 3, false },
+                    { 6, 0, new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1000), "Detail for invoice 3 (4)", null, 2, null, 1, "Hoá đơn điện tử cho renter 3 (4)", null, 3, true },
+                    { 7, 0, new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1000), "Detail for invoice 3 (5)", null, 2, null, 1, "Hoá đơn điện tử cho renter 3 (5)", null, 3, true }
                 });
 
             migrationBuilder.InsertData(
                 table: "Flats",
-                columns: new[] { "FlatId", "AttributeForNumericId", "AvailableRoom", "BuildingId", "Description", "ElectricityMeterAfter", "ElectricityMeterBefore", "FlatTypeId", "MaxRoom", "Name", "Status", "WaterMeterAfter", "WaterMeterBefore" },
+                columns: new[] { "FlatId", "AvailableRoom", "BuildingId", "Description", "ElectricityMeterAfter", "ElectricityMeterBefore", "FlatTypeId", "MaxRoom", "Name", "Status", "WaterMeterAfter", "WaterMeterBefore" },
                 values: new object[,]
                 {
-                    { 1, 4, 0, 1, "Flat 1", 0, 0, 1, 0, "Flat 1", "Active", 0, 0 },
-                    { 2, 3, 0, 3, "Flat 2", 0, 0, 3, 0, "Flat 2", "Active", 0, 0 },
-                    { 3, 2, 0, 2, "Flat 3", 0, 0, 2, 0, "Flat 3", "Active", 0, 0 },
-                    { 4, 1, 0, 2, "Flat 4", 0, 0, 5, 0, "Flat 4", "NonActive", 0, 0 }
+                    { 1, 0, 1, "Flat 1", 0, 0, 1, 0, "Flat 1", "Active", 0, 0 },
+                    { 2, 0, 3, "Flat 2", 0, 0, 3, 0, "Flat 2", "Active", 0, 0 },
+                    { 3, 0, 2, "Flat 3", 0, 0, 2, 0, "Flat 3", "Active", 0, 0 },
+                    { 4, 0, 2, "Flat 4", 0, 0, 5, 0, "Flat 4", "NonActive", 0, 0 }
                 });
 
             migrationBuilder.InsertData(
@@ -996,18 +894,6 @@ namespace Infrastructure.Migrations
                 {
                     { 3, 0m, 1, null, null, null },
                     { 4, 0m, 2, null, null, null }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Invoices",
-                columns: new[] { "InvoiceId", "AccountId", "Amount", "CreatedTime", "Detail", "DueDate", "ImageUrl", "InvoiceTypeId", "Name", "PaymentTime", "RenterId", "Status" },
-                values: new object[,]
-                {
-                    { 3, 4, 0, new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8473), "Detail for invoice 3", null, null, 1, "Hoá đơn điện tử cho renter 3", null, 3, false },
-                    { 4, 2, 0, new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8477), "Detail for invoice 3 (2)", null, null, 1, "Hoá đơn điện tử cho renter 3 (2)", null, 3, false },
-                    { 5, 2, 0, new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8478), "Detail for invoice 3 (3)", null, null, 1, "Hoá đơn điện tử cho renter 3 (3)", null, 3, false },
-                    { 6, 2, 0, new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8478), "Detail for invoice 3 (4)", null, null, 1, "Hoá đơn điện tử cho renter 3 (4)", null, 3, true },
-                    { 7, 2, 0, new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8479), "Detail for invoice 3 (5)", null, null, 1, "Hoá đơn điện tử cho renter 3 (5)", null, 3, true }
                 });
 
             migrationBuilder.InsertData(
@@ -1028,12 +914,12 @@ namespace Infrastructure.Migrations
                 columns: new[] { "ContractId", "BuildingId", "ContractName", "ContractStatus", "CreatedDate", "DateSigned", "Description", "EndDate", "FlatId", "ImageUrl", "LastUpdated", "PriceForElectricity", "PriceForRent", "PriceForService", "PriceForWater", "RenterId", "RoomId", "StartDate" },
                 values: new object[,]
                 {
-                    { 1, 1, "Contract for renter 1", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 2, 27, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8535), "Contract description for renter 1", null, 2, "No image", new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8542), 0m, 1800000m, 0m, 0m, 1, 1, new DateTime(2023, 3, 4, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8541) },
-                    { 2, 2, "Contract for renter 2", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 2, 28, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8548), "Contract description for renter 2", null, 3, "No image", new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8549), 0m, 2800000m, 0m, 0m, 2, 1, new DateTime(2023, 3, 2, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8548) },
-                    { 3, 3, "Contract for renter 3", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 2, 28, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8550), "Contract description for renter 3", null, 3, "No image", new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8551), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 3, 2, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8551) },
-                    { 4, 3, "Contract for renter 3 (2)", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 2, 28, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8553), "Contract description for renter 3", null, 4, "No image", new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8554), 120m, 2800000m, 10000m, 1000m, 3, 1, new DateTime(2023, 3, 2, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8554) },
-                    { 5, 3, "Contract for renter 3 (3)", "Inactive", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 2, 28, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8556), "Contract description for renter 3", null, 3, "No image", new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8557), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 3, 2, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8556) },
-                    { 6, 3, "Contract for renter 3 (4)", "Inactive", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 2, 28, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8558), "Contract description for renter 3", null, 3, "No image", new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8559), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 3, 2, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8558) }
+                    { 1, 1, "Contract for renter 1", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 8, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1074), "Contract description for renter 1", null, 2, "No image", new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1081), 0m, 1800000m, 0m, 0m, 1, 1, new DateTime(2023, 3, 13, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1080) },
+                    { 2, 2, "Contract for renter 2", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 9, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1083), "Contract description for renter 2", null, 3, "No image", new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1084), 0m, 2800000m, 0m, 0m, 2, 1, new DateTime(2023, 3, 11, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1084) },
+                    { 3, 3, "Contract for renter 3", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 9, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1086), "Contract description for renter 3", null, 3, "No image", new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1087), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 3, 11, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1086) },
+                    { 4, 3, "Contract for renter 3 (2)", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 9, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1089), "Contract description for renter 3", null, 4, "No image", new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1089), 120m, 2800000m, 10000m, 1000m, 3, 1, new DateTime(2023, 3, 11, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1089) },
+                    { 5, 3, "Contract for renter 3 (3)", "Inactive", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 9, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1091), "Contract description for renter 3", null, 3, "No image", new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1092), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 3, 11, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1091) },
+                    { 6, 3, "Contract for renter 3 (4)", "Inactive", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 9, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1093), "Contract description for renter 3", null, 3, "No image", new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1094), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 3, 11, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(1093) }
                 });
 
             migrationBuilder.InsertData(
@@ -1059,13 +945,13 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Rooms",
-                columns: new[] { "RoomId", "AvailableSlots", "FlatId", "RoomName", "RoomTypeId" },
+                columns: new[] { "RoomId", "AvailableSlots", "ElectricityAttribute", "FlatId", "RoomName", "RoomTypeId", "WaterAttribute" },
                 values: new object[,]
                 {
-                    { 1, 2, 1, "Room 1 for flat 1", 1 },
-                    { 2, 1, 3, "Room 1 for flat 3", 1 },
-                    { 3, 2, 3, "Room 2 for flat 3", 2 },
-                    { 4, 2, 3, "Room 3 for flat 3", 3 }
+                    { 1, 2, 0m, 1, "Room 1 for flat 1", 1, 0m },
+                    { 2, 1, 0m, 3, "Room 1 for flat 3", 1, 0m },
+                    { 3, 2, 0m, 3, "Room 2 for flat 3", 2, 0m },
+                    { 4, 2, 0m, 3, "Room 3 for flat 3", 3, 0m }
                 });
 
             migrationBuilder.InsertData(
@@ -1079,41 +965,24 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Tickets",
-                columns: new[] { "TicketId", "AccountId", "Amount", "ContractId", "CreateDate", "Description", "ImageUrl", "SolveDate", "Status", "TicketTypeId" },
+                columns: new[] { "TicketId", "Amount", "ContractId", "CreateDate", "Description", "EmployeeId", "ImageUrl", "ImageUrl2", "ImageUrl3", "SolveDate", "Status", "TicketTypeId" },
                 values: new object[,]
                 {
-                    { 1, 2, null, 3, new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8399), "Sự cố 1", null, null, "Active", 1 },
-                    { 2, 2, null, 3, new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8402), "Sự cố 2", null, null, "Processing", 2 },
-                    { 3, 2, null, 3, new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8403), "Sự cố 3", null, null, "Completed", 3 },
-                    { 4, 2, null, 3, new DateTime(2023, 3, 29, 6, 49, 10, 566, DateTimeKind.Utc).AddTicks(8404), "Sự cố 4", null, null, "Active", 1 }
+                    { 1, null, 3, new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(918), "Sự cố 1", 2, null, null, null, null, "Active", 1 },
+                    { 2, null, 3, new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(920), "Sự cố 2", 2, null, null, null, null, "Processing", 2 },
+                    { 3, null, 3, new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(921), "Sự cố 3", 2, null, null, null, null, "Completed", 3 },
+                    { 4, null, 3, new DateTime(2023, 4, 7, 8, 45, 46, 829, DateTimeKind.Utc).AddTicks(922), "Sự cố 4", 2, null, null, null, null, "Active", 1 }
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Accounts_Email",
-                table: "Accounts",
-                column: "Email",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Accounts_RoleId",
-                table: "Accounts",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Accounts_Username",
-                table: "Accounts",
-                column: "Username",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Buildings_AccountId",
-                table: "Buildings",
-                column: "AccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Buildings_AreaId",
                 table: "Buildings",
                 column: "AreaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Buildings_EmployeeId",
+                table: "Buildings",
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Contracts_FlatId",
@@ -1124,6 +993,23 @@ namespace Infrastructure.Migrations
                 name: "IX_Contracts_RenterId",
                 table: "Contracts",
                 column: "RenterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_Email",
+                table: "Employees",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_RoleId",
+                table: "Employees",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_Username",
+                table: "Employees",
+                column: "Username",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Feedbacks_FeedbackTypeId",
@@ -1139,11 +1025,6 @@ namespace Infrastructure.Migrations
                 name: "IX_Feedbacks_RenterId",
                 table: "Feedbacks",
                 column: "RenterId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Flats_AttributeForNumericId",
-                table: "Flats",
-                column: "AttributeForNumericId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Flats_BuildingId",
@@ -1171,9 +1052,9 @@ namespace Infrastructure.Migrations
                 column: "ServiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Invoices_AccountId",
+                name: "IX_Invoices_EmployeeId",
                 table: "Invoices",
-                column: "AccountId");
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invoices_InvoiceTypeId",
@@ -1186,11 +1067,6 @@ namespace Infrastructure.Migrations
                 column: "RenterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Majors_UniversityId",
-                table: "Majors",
-                column: "UniversityId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Notification_NotificationTypeId",
                 table: "Notification",
                 column: "NotificationTypeId");
@@ -1199,17 +1075,8 @@ namespace Infrastructure.Migrations
                 name: "IX_Renters_Email",
                 table: "Renters",
                 column: "Email",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Renters_MajorId",
-                table: "Renters",
-                column: "MajorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Renters_UniversityId",
-                table: "Renters",
-                column: "UniversityId");
+                unique: true,
+                filter: "[Email] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Renters_Username",
@@ -1238,14 +1105,14 @@ namespace Infrastructure.Migrations
                 column: "ServiceTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tickets_AccountId",
-                table: "Tickets",
-                column: "AccountId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Tickets_ContractId",
                 table: "Tickets",
                 column: "ContractId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tickets_EmployeeId",
+                table: "Tickets",
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_TicketTypeId",
@@ -1258,9 +1125,9 @@ namespace Infrastructure.Migrations
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserDevice_AccountId",
+                name: "IX_UserDevice_EmployeeId",
                 table: "UserDevice",
-                column: "AccountId");
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserDevice_RenterId",
@@ -1370,25 +1237,16 @@ namespace Infrastructure.Migrations
                 name: "Renters");
 
             migrationBuilder.DropTable(
-                name: "AttributeForNumerics");
-
-            migrationBuilder.DropTable(
                 name: "Buildings");
 
             migrationBuilder.DropTable(
                 name: "FlatTypes");
 
             migrationBuilder.DropTable(
-                name: "Majors");
-
-            migrationBuilder.DropTable(
-                name: "Accounts");
-
-            migrationBuilder.DropTable(
                 name: "Areas");
 
             migrationBuilder.DropTable(
-                name: "University");
+                name: "Employees");
 
             migrationBuilder.DropTable(
                 name: "Roles");

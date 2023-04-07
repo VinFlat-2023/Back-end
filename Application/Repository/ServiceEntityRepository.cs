@@ -25,7 +25,7 @@ internal class ServiceEntityRepository : IServiceEntityRepository
         return _context.Services
             .Include(x => x.ServiceType)
             .Include(x => x.Building)
-            .ThenInclude(x => x.Account)
+            .ThenInclude(x => x.Employee)
             // Filter starts here
             .Where(x =>
                 (filters.Name == null || x.Name.ToLower().Contains(filters.Name.ToLower()))

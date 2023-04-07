@@ -11,4 +11,5 @@ public interface IAreaService
     public Task<RepositoryResponse> AddArea(Area area);
     public Task<RepositoryResponse> UpdateArea(Area area);
     public Task<RepositoryResponse> DeleteArea(int areaId);
+    public Task<RepositoryResponse> UpdateAreaImage(Area updateArea);
 }

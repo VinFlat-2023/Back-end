@@ -94,7 +94,7 @@ public class ContractRepository : IContractRepository
             .Where(x => x.ContractId == contractId)
             .Include(x => x.Flat)
             .ThenInclude(x => x.Building)
-            .ThenInclude(x => x.Account);
+            .ThenInclude(x => x.Employee);
     }
 
     public IQueryable<Contract?> GetContractByUserId(int userId)

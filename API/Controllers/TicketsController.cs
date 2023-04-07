@@ -240,7 +240,7 @@ public class TicketsController : ControllerBase
             ImageUrl = ticketUpdateRequest.ImageUrl ?? ticketEntity.ImageUrl,
             Amount = ticketUpdateRequest.Amount ?? ticketEntity.Amount ?? 0,
             SolveDate = ticketUpdateRequest.SolveDate.ConvertToDateTime() ?? ticketEntity.SolveDate,
-            AccountId = int.Parse(User.Identity?.Name)
+            EmployeeId = int.Parse(User.Identity?.Name)
         };
 
         var validation = await _validator.ValidateParams(updateTicket, id);
@@ -298,13 +298,13 @@ public class TicketsController : ControllerBase
                 data = ""
             });
 
-        var managementAccountId = await _serviceWrapper.GetId.GetAccountIdBasedOnBuildingId(buildingId);
+        var managementEmployeeId = await _serviceWrapper.GetId.GetEmployeeIdBasedOnBuildingId(buildingId);
 
-        if (managementAccountId == 0)
+        if (managementEmployeeId == 0)
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Management account not found",
+                message = "Management employee not found",
                 data = ""
             });
 
@@ -327,7 +327,7 @@ public class TicketsController : ControllerBase
             ImageUrl = ticketCreateRequest.ImageUrl,
             Amount = 0,
             ContractId = contractId,
-            AccountId = managementAccountId
+            EmployeeId = managementEmployeeId
         };
 
         var validation = await _validator.ValidateParams(newTicket, null);
@@ -367,7 +367,7 @@ public class TicketsController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        if (userRole is not ("Admin" or "Supervisor") || User.Identity?.Name != id.ToString() && userRole != "Renter")
+        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
             return BadRequest(new
             {
                 status = "Bad Request",

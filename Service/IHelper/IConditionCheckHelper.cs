@@ -4,15 +4,11 @@ namespace Service.IHelper;
 
 public interface IConditionCheckHelper
 {
-    public Task<Account?> AccountCheck(int? id);
+    public Task<Employee?> EmployeeCheck(int? id);
 
     public Task<Renter?> RenterCheck(int? id);
 
     public Task<Role?> RoleCheck(int? id);
-
-    public Task<Major?> MajorCheck(int? id);
-
-    public Task<University?> UniversityCheck(int? id);
 
     public Task<Renter?> RenterUsernameCheck(string? username);
 
@@ -46,10 +42,9 @@ public interface IConditionCheckHelper
 
     public Task<Area?> AreaCheck(int? id);
 
-    public Task<Account?> AccountEmailCheck(string? email);
+    public Task<Employee?> EmployeeEmailCheck(string? email);
 
-    public Task<Account?> AccountUsernameExist(string? username);
+    public Task<Employee?> EmployeeUsernameExist(string? username);
 
     public Task<Room?> RoomCheck(int? roomId);
-    public Task<AttributeForNumeric?> AttributeCheck(int? roomTypeId);
 }

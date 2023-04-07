@@ -5,33 +5,33 @@ using Service.IValidator;
 
 namespace Service.Validator;
 
-public class AccountValidator : BaseValidator, IAccountValidator
+public class EmployeeValidator : BaseValidator, IEmployeeValidator
 {
     private readonly IConditionCheckHelper _conditionCheckHelper;
     private readonly IJwtRoleCheckerHelper _jwtRoleCheckerHelper;
 
-    public AccountValidator(IConditionCheckHelper conditionCheckHelper, IJwtRoleCheckerHelper jwtRoleCheckerHelper)
+    public EmployeeValidator(IConditionCheckHelper conditionCheckHelper, IJwtRoleCheckerHelper jwtRoleCheckerHelper)
     {
         _conditionCheckHelper = conditionCheckHelper;
         _jwtRoleCheckerHelper = jwtRoleCheckerHelper;
     }
 
-    public async Task<ValidatorResult> ValidateParams(Account? obj, int? accountId, bool isUpdate)
+    public async Task<ValidatorResult> ValidateParams(Employee? obj, int? employeeId, bool isUpdate)
     {
         try
         {
-            if (accountId != null)
-                switch (obj?.AccountId)
+            if (employeeId != null)
+                switch (obj?.EmployeeId)
                 {
-                    case { } when obj.AccountId != accountId:
-                        ValidatorResult.Failures.Add("Account id mismatch");
+                    case { } when obj.EmployeeId != employeeId:
+                        ValidatorResult.Failures.Add("Employee id mismatch");
                         break;
                     case null:
-                        ValidatorResult.Failures.Add("Account is required");
+                        ValidatorResult.Failures.Add("Employee is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.AccountCheck(obj.AccountId) == null)
-                            ValidatorResult.Failures.Add("Account provided does not exist");
+                        if (await _conditionCheckHelper.EmployeeCheck(obj.EmployeeId) == null)
+                            ValidatorResult.Failures.Add("Employee provided does not exist");
                         break;
                 }
 
@@ -45,9 +45,9 @@ public class AccountValidator : BaseValidator, IAccountValidator
                     break;
                 case not null:
                     /*
-                    if (accountId == null)
+                    if (employeeId == null)
                     {
-                        if (await _conditionCheckHelper.AccountUsernameExist(obj.Username) != null)
+                        if (await _conditionCheckHelper.EmployeeUsernameExist(obj.Username) != null)
                             ValidatorResult.Failures.Add("Username is duplicated");
                         if (await _conditionCheckHelper.RenterUsernameCheck(obj.Username) != null)
                             ValidatorResult.Failures.Add("Username is duplicated");
@@ -66,15 +66,16 @@ public class AccountValidator : BaseValidator, IAccountValidator
                     break;
             }
 
-            switch (obj?.Password)
-            {
-                case { } when obj.Password.Length > 100:
-                    ValidatorResult.Failures.Add("Password cannot exceed 100 characters");
-                    break;
-                case { } when string.IsNullOrWhiteSpace(obj.Password):
-                    ValidatorResult.Failures.Add("Password is required");
-                    break;
-            }
+            if (!isUpdate)
+                switch (obj?.Password)
+                {
+                    case { } when obj.Password.Length > 100:
+                        ValidatorResult.Failures.Add("Password cannot exceed 100 characters");
+                        break;
+                    case { } when string.IsNullOrWhiteSpace(obj.Password):
+                        ValidatorResult.Failures.Add("Password is required");
+                        break;
+                }
 
             switch (obj?.Email)
             {
@@ -90,9 +91,9 @@ public class AccountValidator : BaseValidator, IAccountValidator
                 /*
 
 case not null:
-if (accountId == null)
+if (employeeId == null)
 {
-   if (await _conditionCheckHelper.AccountUsernameExist(obj.Username) != null)
+   if (await _conditionCheckHelper.EmployeeUsernameExist(obj.Username) != null)
        ValidatorResult.Failures.Add("Username is duplicated");
    if (await _conditionCheckHelper.RenterUsernameCheck(obj.Username) != null)
        ValidatorResult.Failures.Add("Username is duplicated");
@@ -143,7 +144,7 @@ break;
         }
         catch (Exception e)
         {
-            ValidatorResult.Failures.Add("An error occurred while validating the account");
+            ValidatorResult.Failures.Add("An error occurred while validating the employee");
             Console.WriteLine(e.Message, e.Data);
         }
 

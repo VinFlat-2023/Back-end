@@ -17,14 +17,14 @@ public class GetIdService : IGetIdService
         return await _repositoryWrapper.GetId.GetBuildingIdBasedOnRenter(renterId);
     }
 
-    public async Task<int> GetAccountIdBasedOnBuildingId(int buildingId)
+    public async Task<int> GetEmployeeIdBasedOnBuildingId(int buildingId)
     {
-        return await _repositoryWrapper.GetId.GetAccountIdBasedOnBuildingId(buildingId);
+        return await _repositoryWrapper.GetId.GetEmployeeIdBasedOnBuildingId(buildingId);
     }
 
-    public async Task<int> GetBuildingIdBasedOnSupervisorId(int accountId)
+    public async Task<int> GetBuildingIdBasedOnSupervisorId(int employeeId)
     {
-        return await _repositoryWrapper.GetId.GetBuildingIdBasedOnSupervisorId(accountId);
+        return await _repositoryWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId);
     }
 
     public async Task<int> GetContractIdBasedOnRenterId(int renterId)

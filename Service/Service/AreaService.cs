@@ -56,6 +56,11 @@ public class AreaService : IAreaService
         return await _repositoryWrapper.Areas.DeleteArea(areaId);
     }
 
+    public async Task<RepositoryResponse> UpdateAreaImage(Area updateArea)
+    {
+        return await _repositoryWrapper.Areas.UpdateAreaImage(updateArea);
+    }
+
     public async Task<RepositoryResponse> ToggleAreaStatus(int areaId)
     {
         return await _repositoryWrapper.Areas.ToggleArea(areaId);

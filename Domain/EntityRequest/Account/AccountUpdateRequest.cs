@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Domain.EntityRequest.Account;
+namespace Domain.EntityRequest.Employee;
 
-public class AccountUpdateRequest
+public class EmployeeUpdateRequest
 {
     [StringLength(100, MinimumLength = 6, ErrorMessage = "Username length must be 6-35")]
     [RegularExpression("^[a-zA-Z0-9]{6,100}$", ErrorMessage = "Username only accept alphabet characters and numbers")]

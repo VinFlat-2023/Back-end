@@ -4,11 +4,10 @@ using Domain.CustomEntities.MomoEntities;
 using Domain.EntitiesDTO.MailMessageDTO;
 using Domain.EntitiesDTO.NotificationDTO;
 using Domain.EntitiesForManagement;
-using Domain.EntityRequest.Account;
 using Domain.EntityRequest.Area;
-using Domain.EntityRequest.Attribute;
 using Domain.EntityRequest.Building;
 using Domain.EntityRequest.Contract;
+using Domain.EntityRequest.Employee;
 using Domain.EntityRequest.FeedBack;
 using Domain.EntityRequest.FeedbackType;
 using Domain.EntityRequest.Flat;
@@ -16,32 +15,28 @@ using Domain.EntityRequest.FlatType;
 using Domain.EntityRequest.Invoice;
 using Domain.EntityRequest.InvoiceDetail;
 using Domain.EntityRequest.InvoiceType;
-using Domain.EntityRequest.Major;
 using Domain.EntityRequest.Renter;
 using Domain.EntityRequest.Role;
 using Domain.EntityRequest.Service;
 using Domain.EntityRequest.ServiceType;
 using Domain.EntityRequest.Ticket;
 using Domain.EntityRequest.TicketType;
-using Domain.EntityRequest.University;
 using Domain.EntityRequest.Wallet;
 using Domain.EnumEntities;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.Responses;
 using Domain.Utils;
-using Domain.ViewModel.AccountEntity;
 using Domain.ViewModel.AreaEntity;
-using Domain.ViewModel.Attribute;
 using Domain.ViewModel.BuildingEntity;
 using Domain.ViewModel.ContractEntity;
+using Domain.ViewModel.EmployeeEntity;
 using Domain.ViewModel.FeedbackEntity;
 using Domain.ViewModel.FeedbackTypeDetail;
 using Domain.ViewModel.FlatEntity;
 using Domain.ViewModel.FlatTypeEntity;
 using Domain.ViewModel.InvoiceEntity;
 using Domain.ViewModel.InvoiceTypeEntity;
-using Domain.ViewModel.MajorEntity;
 using Domain.ViewModel.PlaceholderForFeeEntity;
 using Domain.ViewModel.RenterEntity;
 using Domain.ViewModel.RoleEntity;
@@ -50,7 +45,6 @@ using Domain.ViewModel.RoomTypeEntity;
 using Domain.ViewModel.ServiceEntity;
 using Domain.ViewModel.ServiceTypeEntity;
 using Domain.ViewModel.TicketTypeEntity;
-using Domain.ViewModel.UniversityEntity;
 using Domain.ViewModel.UtilitiesFlatEntity;
 using Domain.ViewModel.UtilityEntity;
 using MimeKit;
@@ -62,7 +56,7 @@ public class AutoMapper : Profile
     public AutoMapper()
     {
         // Basic DTOs
-        MapAccount();
+        MapEmployee();
         MapArea();
         MapBuilding();
         MapContract();
@@ -74,19 +68,16 @@ public class AutoMapper : Profile
         MapInvoice();
         MapInvoiceDetail();
         MapInvoiceType();
-        MapMajor();
         MapRenter();
         MapTicket();
         MapRequestType();
         MapRole();
         MapService();
         MapServiceType();
-        MapUniversity();
         MapWalletAndWalletType();
         MapMail();
         MapNotiAndNotiType();
         MapPlaceholder();
-        MapAttribute();
         MapUtilitiesFlat();
         MapUtility();
         MapRoom();
@@ -124,22 +115,6 @@ public class AutoMapper : Profile
 
         CreateMap<RoomFilterRequest, RoomFilter>()
             .ReverseMap();
-    }
-
-    private void MapUniversity()
-    {
-        CreateMap<UniversityCreateRequest, University>()
-            .ReverseMap();
-        CreateMap<UniversityUpdateRequest, University>()
-            .ReverseMap();
-
-        CreateMap<UniversityFilterRequest, UniversityFilter>()
-            .ReverseMap();
-
-        CreateMap<University, UniversityDetailEntity>()
-            .ReverseMap();
-        CreateMap<UniversityDetailEntity, University>()
-            .ForAllMembers(o => o.ExplicitExpansion());
     }
 
     private void MapInvoiceType()
@@ -181,22 +156,6 @@ public class AutoMapper : Profile
             .ReverseMap();
 
         CreateMap<UtilitiesFlatDetailEntity, UtilitiesFlat>()
-            .ReverseMap();
-    }
-
-    private void MapAttribute()
-    {
-        CreateMap<AttributeForNumeric, AttributeDetailEntity>()
-            .ReverseMap();
-        CreateMap<AttributeDetailEntity, AttributeForNumeric>()
-            .ReverseMap();
-        CreateMap<AttributeForNumeric, AttributeForNumericFilter>()
-            .ForAllMembers(o => o.ExplicitExpansion());
-        CreateMap<AttributeForNumericFilterRequest, AttributeForNumericFilter>()
-            .ReverseMap();
-        CreateMap<AttributeForNumeric, AttributeCreateRequest>()
-            .ReverseMap();
-        CreateMap<AttributeForNumeric, AttributeUpdateRequest>()
             .ReverseMap();
     }
 
@@ -308,20 +267,6 @@ public class AutoMapper : Profile
         CreateMap<Ticket, TicketUpdateRequest>()
             .ReverseMap();
         CreateMap<TicketFilterRequest, TicketFilter>()
-            .ReverseMap();
-    }
-
-    private void MapMajor()
-    {
-        CreateMap<MajorCreateRequest, Major>()
-            .ReverseMap();
-        CreateMap<MajorUpdateRequest, Major>()
-            .ReverseMap();
-        CreateMap<MajorFilterRequest, MajorFilter>()
-            .ReverseMap();
-        CreateMap<MajorDetailEntity, Major>()
-            .ForAllMembers(o => o.ExplicitExpansion());
-        CreateMap<Major, MajorDetailEntity>()
             .ReverseMap();
     }
 
@@ -480,6 +425,11 @@ public class AutoMapper : Profile
             .ForAllMembers(o => o.ExplicitExpansion());
         CreateMap<ContractMeterDetailEntity, Contract>()
             .ReverseMap();
+
+        CreateMap<Contract, ContactDetailRenterEntity>()
+            .ForAllMembers(o => o.ExplicitExpansion());
+        CreateMap<ContactDetailRenterEntity, Contract>()
+            .ReverseMap();
     }
 
     private void MapArea()
@@ -521,28 +471,28 @@ public class AutoMapper : Profile
             .ReverseMap();
     }
 
-    private void MapAccount()
+    private void MapEmployee()
     {
-        CreateMap<AccountCreateRequest, Account>()
+        CreateMap<EmployeeCreateRequest, Employee>()
             .ReverseMap();
-        CreateMap<AccountUpdateRequest, Account>()
+        CreateMap<EmployeeUpdateRequest, Employee>()
             .ReverseMap();
-        CreateMap<AccountFilterRequest, AccountFilter>()
-            .ReverseMap();
-
-        CreateMap<Account, AccountBuildingDetailEntity>()
-            .ForAllMembers(o => o.ExplicitExpansion());
-        CreateMap<AccountBuildingDetailEntity, Account>()
+        CreateMap<EmployeeFilterRequest, EmployeeFilter>()
             .ReverseMap();
 
-        CreateMap<Account, AccountDetailEntity>()
+        CreateMap<Employee, EmployeeBuildingDetailEntity>()
             .ForAllMembers(o => o.ExplicitExpansion());
-        CreateMap<AccountDetailEntity, Account>()
+        CreateMap<EmployeeBuildingDetailEntity, Employee>()
             .ReverseMap();
 
-        CreateMap<Account, AccountBasicDetailEntity>()
+        CreateMap<Employee, EmployeeDetailEntity>()
             .ForAllMembers(o => o.ExplicitExpansion());
-        CreateMap<AccountBasicDetailEntity, Account>()
+        CreateMap<EmployeeDetailEntity, Employee>()
+            .ReverseMap();
+
+        CreateMap<Employee, EmployeeBasicDetailEntity>()
+            .ForAllMembers(o => o.ExplicitExpansion());
+        CreateMap<EmployeeBasicDetailEntity, Employee>()
             .ReverseMap();
     }
 
@@ -560,9 +510,9 @@ public class AutoMapper : Profile
         CreateMap<BuildingContractDetailEntity, Building>()
             .ReverseMap();
 
-        CreateMap<Building, AccountBuildingDetailEntity>()
+        CreateMap<Building, EmployeeBuildingDetailEntity>()
             .ForAllMembers(o => o.ExplicitExpansion());
-        CreateMap<AccountBuildingDetailEntity, Building>()
+        CreateMap<EmployeeBuildingDetailEntity, Building>()
             .ReverseMap();
 
         CreateMap<Building, BuildingBasicDetailEntity>()

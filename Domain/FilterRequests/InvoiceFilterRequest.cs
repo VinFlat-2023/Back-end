@@ -24,9 +24,9 @@ public class InvoiceFilterRequest : PagingFilter
 
     public string? RenterName { get; set; }
 
-    public int? AccountId { get; set; }
+    public int? EmployeeId { get; set; }
 
-    public string? AccountName { get; set; }
+    public string? EmployeeName { get; set; }
 
     public int? InvoiceTypeId { get; set; }
 }

@@ -10,7 +10,7 @@ public class ApplicationContext : DbContext
     {
     }
 
-    public virtual DbSet<Account> Accounts { get; set; } = null!;
+    public virtual DbSet<Employee> Employees { get; set; } = null!;
     public virtual DbSet<Area> Areas { get; set; } = null!;
     public virtual DbSet<Building> Buildings { get; set; } = null!;
     public virtual DbSet<Contract> Contracts { get; set; } = null!;
@@ -19,7 +19,6 @@ public class ApplicationContext : DbContext
     public virtual DbSet<Flat> Flats { get; set; } = null!;
     public virtual DbSet<FlatType> FlatTypes { get; set; } = null!;
     public virtual DbSet<Invoice> Invoices { get; set; } = null!;
-    public virtual DbSet<Major> Majors { get; set; } = null!;
     public virtual DbSet<InvoiceDetail> InvoiceDetails { get; set; } = null!;
     public virtual DbSet<InvoiceType> InvoiceTypes { get; set; } = null!;
     public virtual DbSet<Renter> Renters { get; set; } = null!;
@@ -28,7 +27,6 @@ public class ApplicationContext : DbContext
     public virtual DbSet<Role> Roles { get; set; } = null!;
     public virtual DbSet<ServiceEntity> Services { get; set; } = null!;
     public virtual DbSet<ServiceType> ServiceTypes { get; set; } = null!;
-    public virtual DbSet<University> University { get; set; } = null!;
     public virtual DbSet<Wallet> Wallets { get; set; } = null!;
     public virtual DbSet<WalletType> WalletTypes { get; set; } = null!;
     public virtual DbSet<Transaction> Transactions { get; set; } = null!;
@@ -37,7 +35,6 @@ public class ApplicationContext : DbContext
     public virtual DbSet<NotificationType> NotificationTypes { get; set; } = null!;
     public virtual DbSet<Room> Rooms { get; set; } = null!;
     public virtual DbSet<RoomType> RoomTypes { get; set; } = null!;
-    public virtual DbSet<AttributeForNumeric> AttributeForNumerics { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -96,7 +93,7 @@ public class ApplicationContext : DbContext
             entity.Property(e => e.Status).HasDefaultValueSql("((1))");
         });
 
-        modelBuilder.Entity<Account>(entity =>
+        modelBuilder.Entity<Employee>(entity =>
         {
             entity.HasIndex(e => e.Username)
                 .IsUnique();
@@ -104,89 +101,67 @@ public class ApplicationContext : DbContext
                 .IsUnique();
         });
 
-        modelBuilder.Entity<AttributeForNumeric>().HasData(
-            new AttributeForNumeric
-            {
-                AttributeForNumericId = 1,
-                WaterAttribute = "1",
-                ElectricityAttribute = "1.1"
-            },
-            new AttributeForNumeric
-            {
-                AttributeForNumericId = 2,
-                WaterAttribute = "1",
-                ElectricityAttribute = "0.9"
-            },
-            new AttributeForNumeric
-            {
-                AttributeForNumericId = 3,
-                WaterAttribute = "1",
-                ElectricityAttribute = "1.2"
-            },
-            new AttributeForNumeric
-            {
-                AttributeForNumericId = 4,
-                WaterAttribute = "0.9",
-                ElectricityAttribute = "1.4"
-            }
-        );
 
-
-        modelBuilder.Entity<Account>().HasData(
-            new Account
+        modelBuilder.Entity<Employee>().HasData(
+            new Employee
             {
-                AccountId = 1,
-                FullName = "Super admin account",
+                EmployeeId = 1,
+                FullName = "Super admin employee",
                 Username = "superadmin",
                 Password = "superadmin",
                 Email = "superadmin@mail",
                 Phone = "0123543125",
                 Status = true,
-                RoleId = 1
+                RoleId = 1,
+                Address = "Admin address"
             },
-            new Account
+            new Employee
             {
-                AccountId = 2,
+                EmployeeId = 2,
                 Username = "admin",
-                FullName = "Admin account",
+                FullName = "Admin employee",
                 Password = "admin",
                 Email = "admin@mail",
                 Phone = "0123543532",
                 Status = true,
-                RoleId = 2
+                RoleId = 2,
+                Address = "Admin address"
             },
-            new Account
+            new Employee
             {
-                AccountId = 3,
+                EmployeeId = 3,
                 Username = "supervisor",
-                FullName = "Supervisor account",
+                FullName = "Supervisor employee",
                 Password = "supervisor",
                 Email = "supervisor@mail",
                 Phone = "0123543554",
                 Status = true,
-                RoleId = 3
+                RoleId = 3,
+                Address = "Supervisor address"
             },
-            new Account
+            new Employee
             {
-                AccountId = 4,
+                EmployeeId = 4,
                 Username = "employee1",
-                FullName = "Employee account 1",
+                FullName = "Employee employee 1",
                 Password = "employee1",
                 Email = "employee1@mail",
                 Phone = "0123543235",
                 Status = true,
-                RoleId = 4
+                RoleId = 4,
+                Address = "Employee address"
             },
-            new Account
+            new Employee
             {
-                AccountId = 5,
+                EmployeeId = 5,
                 Username = "employee2",
-                FullName = "Employee account 2",
+                FullName = "Employee employee 2",
                 Password = "employee2",
                 Email = "employee2@mail",
                 Phone = "0123123235",
                 Status = true,
-                RoleId = 4
+                RoleId = 4,
+                Address = "Employee address"
             }
         );
 
@@ -223,8 +198,6 @@ public class ApplicationContext : DbContext
                 .IsUnique();
             entity.HasIndex(e => e.Email)
                 .IsUnique();
-            entity.HasIndex(e => e.MajorId)
-                .IsUnique(false);
         });
 
         modelBuilder.Entity<Renter>().HasData(
@@ -271,9 +244,7 @@ public class ApplicationContext : DbContext
                 CitizenNumber = "3214324523",
                 Address = "DN",
                 Gender = "Female",
-                DeviceToken = "123221ad145ad423sa",
-                MajorId = 2,
-                UniversityId = 1
+                DeviceToken = "123221ad145ad423sa"
             }, new Renter
             {
                 RenterId = 4,
@@ -287,9 +258,7 @@ public class ApplicationContext : DbContext
                 CitizenNumber = "3214324523",
                 Address = "HN",
                 Gender = "Female",
-                DeviceToken = "ewasdv12344",
-                MajorId = 1,
-                UniversityId = 1
+                DeviceToken = "ewasdv12344"
             }, new Renter
             {
                 RenterId = 5,
@@ -303,9 +272,7 @@ public class ApplicationContext : DbContext
                 CitizenNumber = "3214324523",
                 Address = "HCM",
                 Gender = "Male",
-                DeviceToken = "ewasdv12344",
-                MajorId = 1,
-                UniversityId = 1
+                DeviceToken = "ewasdv12344"
             }, new Renter
             {
                 RenterId = 6,
@@ -319,9 +286,7 @@ public class ApplicationContext : DbContext
                 CitizenNumber = "3214324523",
                 Address = "HCM",
                 Gender = "Male",
-                DeviceToken = "ewasdv12344",
-                MajorId = 1,
-                UniversityId = 1
+                DeviceToken = "ewasdv12344"
             }, new Renter
             {
                 RenterId = 7,
@@ -335,92 +300,7 @@ public class ApplicationContext : DbContext
                 CitizenNumber = "3214324523",
                 Address = "HCM",
                 Gender = "Male",
-                DeviceToken = "ewasdv12344",
-                MajorId = 1,
-                UniversityId = 1
-            }
-        );
-
-        modelBuilder.Entity<University>().HasData(
-            new University
-            {
-                UniversityId = 1,
-                UniversityName = "HCM University of Technology",
-                Address = "HCM",
-                Status = "Active",
-                Description = "HCM University of Technology"
-            },
-            new University
-            {
-                UniversityId = 2,
-                UniversityName = "HCM University of Science",
-                Address = "HCM",
-                Status = "Active",
-                Description = "HCM University of Science"
-            },
-            new University
-            {
-                UniversityId = 3,
-                UniversityName = "HCM University of Pedagogy",
-                Address = "HCM",
-                Status = "Active",
-                Description = "HCM University of Pedagogy"
-            },
-            new University
-            {
-                UniversityId = 4,
-                UniversityName = "HCM University of Physical",
-                Address = "HCM",
-                Status = "Active",
-                Description = "HCM University of Physical"
-            },
-            new University
-            {
-                UniversityId = 5,
-                UniversityName = "HCM University of Math",
-                Address = "HCM",
-                Status = "Active",
-                Description = "HCM University of Math"
-            },
-            new University
-            {
-                UniversityId = 6,
-                UniversityName = "HCM University of History",
-                Address = "HCM",
-                Status = "Active",
-                Description = "HCM University of History"
-            }
-        );
-
-        modelBuilder.Entity<Major>().HasData(
-            new Major
-            {
-                MajorId = 1,
-                Name = "Computer Science",
-                UniversityId = 1
-            },
-            new Major
-            {
-                MajorId = 2,
-                Name = "Information Technology",
-                UniversityId = 1
-            },
-            new Major
-            {
-                MajorId = 3,
-                Name = "Software Engineering",
-                UniversityId = 2
-            },
-            new Major
-            {
-                MajorId = 4,
-                Name = "Information Technology",
-                UniversityId = 2
-            }, new Major
-            {
-                MajorId = 5,
-                Name = "Information Technology",
-                UniversityId = 3
+                DeviceToken = "ewasdv12344"
             }
         );
 
@@ -428,58 +308,69 @@ public class ApplicationContext : DbContext
             new Area
             {
                 AreaId = 1,
-                Name = "HCM",
+                Name = "Quận 1",
                 Location = "HCM",
-                Status = true
+                Status = true,
+                ImageUrl =
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/PANO0002-Pano.jpg/1200px-PANO0002-Pano.jpg"
             },
             new Area
             {
                 AreaId = 2,
-                Name = "HN",
-                Location = "HN",
-                Status = true
+                Name = "Quận 2",
+                Location = "HCM",
+                Status = true,
+                ImageUrl =
+                    "https://i1-vnexpress.vnecdn.net/2022/11/17/Ve-may-bay-di-sai-gon-600x399-4356-2813-1668672299.jpg?w=0&h=0&q=100&dpr=2&fit=crop&s=8All1Mq-so56XkVbZXvdFA"
             },
             new Area
             {
                 AreaId = 3,
-                Name = "DN",
-                Location = "DN",
-                Status = true
+                Name = "Quận 3",
+                Location = "HCM",
+                Status = true,
+                ImageUrl =
+                    "https://images.pexels.com/photos/11742806/pexels-photo-11742806.jpeg?cs=srgb&dl=pexels-th%E1%BB%8Bnh-la-11742806.jpg&fm=jpg"
             },
             new Area
             {
                 AreaId = 4,
-                Name = "Hue",
-                Location = "Hue",
-                Status = true
+                Name = "Quận 9",
+                Location = "HCM",
+                Status = true,
+                ImageUrl = ""
             },
             new Area
             {
                 AreaId = 5,
-                Name = "Thanh Hoa",
-                Location = "TH",
-                Status = true
+                Name = "Quận Phú Nhuận",
+                Location = "HCM",
+                Status = true,
+                ImageUrl = ""
             },
             new Area
             {
                 AreaId = 6,
-                Name = "Hai Phong",
-                Location = "HP",
-                Status = true
+                Name = "Quận 7",
+                Location = "HCM",
+                Status = true,
+                ImageUrl = ""
             },
             new Area
             {
                 AreaId = 7,
-                Name = "Dong Nai",
-                Location = "DN",
-                Status = true
+                Name = "Quận 8",
+                Location = "HCM",
+                Status = true,
+                ImageUrl = ""
             },
             new Area
             {
                 AreaId = 8,
-                Name = "Hoa Lac",
-                Location = "HN",
-                Status = true
+                Name = "Quận 1",
+                Location = "HCM",
+                Status = true,
+                ImageUrl = ""
             }
         );
 
@@ -493,7 +384,7 @@ public class ApplicationContext : DbContext
                 CoordinateX = 231,
                 CoordinateY = 324,
                 AreaId = 1,
-                AccountId = 5,
+                EmployeeId = 5,
                 ImageUrl = "",
                 BuildingAddress = "Quajan 9",
                 BuildingPhoneNumber = "012323123"
@@ -507,7 +398,7 @@ public class ApplicationContext : DbContext
                 CoordinateX = 21233,
                 CoordinateY = 334,
                 AreaId = 1,
-                AccountId = 2,
+                EmployeeId = 2,
                 ImageUrl = "",
                 BuildingAddress = "Quận 9",
                 BuildingPhoneNumber = "012323123"
@@ -521,7 +412,7 @@ public class ApplicationContext : DbContext
                 CoordinateX = 423,
                 CoordinateY = 3214,
                 AreaId = 2,
-                AccountId = 2,
+                EmployeeId = 2,
                 ImageUrl = "",
                 BuildingAddress = "Quận 2",
                 BuildingPhoneNumber = "012323123"
@@ -535,7 +426,7 @@ public class ApplicationContext : DbContext
                 CoordinateX = 2323,
                 CoordinateY = 314,
                 AreaId = 2,
-                AccountId = 4,
+                EmployeeId = 4,
                 ImageUrl = "",
                 BuildingAddress = "Quận 3",
                 BuildingPhoneNumber = "012323123"
@@ -548,8 +439,8 @@ public class ApplicationContext : DbContext
                 Status = true,
                 CoordinateX = 23431,
                 CoordinateY = 3245,
-                AreaId = 3,
-                AccountId = 3,
+                AreaId = 2,
+                EmployeeId = 3,
                 ImageUrl = "",
                 BuildingAddress = "Quận 4",
                 BuildingPhoneNumber = "012323123"
@@ -563,7 +454,7 @@ public class ApplicationContext : DbContext
                 CoordinateX = 21233,
                 CoordinateY = 334,
                 AreaId = 3,
-                AccountId = 4,
+                EmployeeId = 4,
                 ImageUrl = "",
                 BuildingAddress = "Quận 7",
                 BuildingPhoneNumber = "012323123"
@@ -576,7 +467,7 @@ public class ApplicationContext : DbContext
                 FlatTypeId = 1,
                 FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 10,
-                Status = "Active",
+                Status = true,
                 BuildingId = 5
             },
             new FlatType
@@ -584,7 +475,7 @@ public class ApplicationContext : DbContext
                 FlatTypeId = 2,
                 FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 2,
-                Status = "Active",
+                Status = true,
                 BuildingId = 5
             },
             new FlatType
@@ -592,7 +483,7 @@ public class ApplicationContext : DbContext
                 FlatTypeId = 3,
                 FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 4,
-                Status = "Active",
+                Status = true,
                 BuildingId = 5
             },
             new FlatType
@@ -600,7 +491,7 @@ public class ApplicationContext : DbContext
                 FlatTypeId = 4,
                 FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 5,
-                Status = "Active",
+                Status = true,
                 BuildingId = 5
             },
             new FlatType
@@ -608,7 +499,7 @@ public class ApplicationContext : DbContext
                 FlatTypeId = 5,
                 FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 6,
-                Status = "Active",
+                Status = true,
                 BuildingId = 5
             }
         );
@@ -663,8 +554,7 @@ public class ApplicationContext : DbContext
                 WaterMeterAfter = 0,
                 ElectricityMeterAfter = 0,
                 FlatTypeId = 1,
-                BuildingId = 1,
-                AttributeForNumericId = 4
+                BuildingId = 1
             },
             new Flat
             {
@@ -677,8 +567,7 @@ public class ApplicationContext : DbContext
                 WaterMeterAfter = 0,
                 ElectricityMeterAfter = 0,
                 FlatTypeId = 3,
-                BuildingId = 3,
-                AttributeForNumericId = 3
+                BuildingId = 3
             },
             new Flat
             {
@@ -692,8 +581,7 @@ public class ApplicationContext : DbContext
                 ElectricityMeterAfter = 0,
                 FlatTypeId = 2,
                 BuildingId = 2,
-                AvailableRoom = 0,
-                AttributeForNumericId = 2
+                AvailableRoom = 0
             },
             new Flat
             {
@@ -706,8 +594,7 @@ public class ApplicationContext : DbContext
                 WaterMeterAfter = 0,
                 ElectricityMeterAfter = 0,
                 FlatTypeId = 5,
-                BuildingId = 2,
-                AttributeForNumericId = 1
+                BuildingId = 2
             }
         );
 
@@ -813,7 +700,7 @@ public class ApplicationContext : DbContext
                 Status = "Active",
                 SolveDate = null,
                 TicketTypeId = 1,
-                AccountId = 2,
+                EmployeeId = 2,
                 ContractId = 3
             },
             new Ticket
@@ -824,7 +711,7 @@ public class ApplicationContext : DbContext
                 Status = "Processing",
                 SolveDate = null,
                 TicketTypeId = 2,
-                AccountId = 2,
+                EmployeeId = 2,
                 ContractId = 3
             },
             new Ticket
@@ -835,7 +722,7 @@ public class ApplicationContext : DbContext
                 Status = "Completed",
                 SolveDate = null,
                 TicketTypeId = 3,
-                AccountId = 2,
+                EmployeeId = 2,
                 ContractId = 3
             },
             new Ticket
@@ -846,7 +733,7 @@ public class ApplicationContext : DbContext
                 Status = "Active",
                 SolveDate = null,
                 TicketTypeId = 1,
-                AccountId = 2,
+                EmployeeId = 2,
                 ContractId = 3
             }
         );
@@ -993,7 +880,7 @@ public class ApplicationContext : DbContext
                 Detail = "Detail for invoice 1",
                 CreatedTime = DateTime.UtcNow,
                 RenterId = 1,
-                AccountId = 2,
+                EmployeeId = 2,
                 InvoiceTypeId = 1
             },
             new Invoice
@@ -1005,7 +892,7 @@ public class ApplicationContext : DbContext
                 Detail = "Detail for invoice 2",
                 CreatedTime = DateTime.UtcNow,
                 RenterId = 2,
-                AccountId = 3,
+                EmployeeId = 3,
                 InvoiceTypeId = 1
             },
             new Invoice
@@ -1017,7 +904,7 @@ public class ApplicationContext : DbContext
                 Detail = "Detail for invoice 3",
                 CreatedTime = DateTime.UtcNow,
                 RenterId = 3,
-                AccountId = 4,
+                EmployeeId = 4,
                 InvoiceTypeId = 1
             },
             new Invoice
@@ -1029,7 +916,7 @@ public class ApplicationContext : DbContext
                 Detail = "Detail for invoice 3 (2)",
                 CreatedTime = DateTime.UtcNow,
                 RenterId = 3,
-                AccountId = 2,
+                EmployeeId = 2,
                 InvoiceTypeId = 1
             },
             new Invoice
@@ -1041,7 +928,7 @@ public class ApplicationContext : DbContext
                 Detail = "Detail for invoice 3 (3)",
                 CreatedTime = DateTime.UtcNow,
                 RenterId = 3,
-                AccountId = 2,
+                EmployeeId = 2,
                 InvoiceTypeId = 1
             },
             new Invoice
@@ -1053,7 +940,7 @@ public class ApplicationContext : DbContext
                 Detail = "Detail for invoice 3 (4)",
                 CreatedTime = DateTime.UtcNow,
                 RenterId = 3,
-                AccountId = 2,
+                EmployeeId = 2,
                 InvoiceTypeId = 1
             },
             new Invoice
@@ -1065,7 +952,7 @@ public class ApplicationContext : DbContext
                 Detail = "Detail for invoice 3 (5)",
                 CreatedTime = DateTime.UtcNow,
                 RenterId = 3,
-                AccountId = 2,
+                EmployeeId = 2,
                 InvoiceTypeId = 1
             }
         );

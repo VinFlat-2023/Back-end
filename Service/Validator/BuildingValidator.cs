@@ -102,14 +102,14 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
                     break;
             }
 
-            switch (obj?.AccountId)
+            switch (obj?.EmployeeId)
             {
                 case null:
-                    ValidatorResult.Failures.Add("Management account is required");
+                    ValidatorResult.Failures.Add("Management employee is required");
                     break;
                 case not null:
-                    if (await _conditionCheckHelper.AreaCheck(obj.AccountId) == null)
-                        ValidatorResult.Failures.Add("Management account provided does not exist");
+                    if (await _conditionCheckHelper.AreaCheck(obj.EmployeeId) == null)
+                        ValidatorResult.Failures.Add("Management employee provided does not exist");
                     break;
             }
 

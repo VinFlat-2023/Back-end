@@ -1,4 +1,4 @@
-﻿namespace Domain.EntityRequest.Account;
+﻿namespace Domain.EntityRequest.Employee;
 
 public class LoginRequest
 {

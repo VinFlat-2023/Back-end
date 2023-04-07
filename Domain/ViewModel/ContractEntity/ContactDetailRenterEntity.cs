@@ -1,6 +1,6 @@
 namespace Domain.ViewModel.ContractEntity;
 
-public class ContractMeterDetailEntity
+public class ContactDetailRenterEntity
 {
     public int ContractId { get; set; }
     public string ContractName { get; set; }
@@ -16,6 +16,4 @@ public class ContractMeterDetailEntity
     public string PriceForWater { get; set; }
     public string PriceForElectricity { get; set; }
     public string PriceForService { get; set; }
-
-    // TODO : Add Flat
 }

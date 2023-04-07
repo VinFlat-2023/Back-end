@@ -46,14 +46,14 @@ public class TicketValidator : BaseValidator, ITicketValidator
                 ValidatorResult.Failures.Add("Create date is required");
 
 
-            switch (obj?.AccountId)
+            switch (obj?.EmployeeId)
             {
                 case null:
-                    ValidatorResult.Failures.Add("Management account id is required");
+                    ValidatorResult.Failures.Add("Management employee id is required");
                     break;
                 case not null:
-                    if (await _conditionCheckHelper.AccountCheck(obj.AccountId) == null)
-                        ValidatorResult.Failures.Add("Management account provided does not exist");
+                    if (await _conditionCheckHelper.EmployeeCheck(obj.EmployeeId) == null)
+                        ValidatorResult.Failures.Add("Management employee provided does not exist");
                     break;
             }
 

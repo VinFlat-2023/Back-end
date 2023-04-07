@@ -119,6 +119,98 @@ public class TestUploadImageController : ControllerBase
         };
     }
 
+    [SwaggerOperation]
+    [Authorize(Roles = "Admin")]
+    [HttpPut("area/{areaId:int}")]
+    public async Task<IActionResult> PutArea(int areaId, [FromForm] ImageUploadRequest imageUploadRequest)
+    {
+        var area = await _serviceWrapper.Areas.GetAreaById(areaId);
+
+        if (area == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Area not found",
+                data = ""
+            });
+
+        var fileNameUserImage = area.ImageUrl?.Split('/').Last();
+
+        var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image?.FileName);
+
+        var updateArea = new Area
+        {
+            AreaId = areaId,
+            ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image, fileNameUserImage,
+                "Area", imageExtension))?.Blob.Uri
+        };
+
+        var result = await _serviceWrapper.Areas.UpdateAreaImage(updateArea);
+
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
+    }
+
+    [SwaggerOperation]
+    [Authorize(Roles = "Admin, Supervisor, Technician")]
+    [HttpPut("employee")]
+    public async Task<IActionResult> PutEmployee([FromForm] ImageUploadRequest imageUploadRequest)
+    {
+        var employeeId = int.Parse(User.Identity?.Name);
+
+        var employeeCheck = await _serviceWrapper.Employees.GetEmployeeById(employeeId);
+
+        if (employeeCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Employee not found",
+                data = ""
+            });
+
+        var fileNameUserImage = employeeCheck.ImageUrl?.Split('/').Last();
+
+        var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image?.FileName);
+
+        var updateArea = new Employee
+        {
+            EmployeeId = employeeId,
+            ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image, fileNameUserImage,
+                "Employee", imageExtension))?.Blob.Uri
+        };
+
+        var result = await _serviceWrapper.Employees.UpdateEmployeeProfilePicture(updateArea);
+
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
+    }
+
 
     [HttpPut]
     [Authorize(Roles = "Supervisor")]

@@ -27,7 +27,7 @@ public class GetIdRepository : IGetIdRepository
             .FirstOrDefaultAsync();
     }
 
-    public async Task<int> GetAccountIdBasedOnBuildingId(int buildingId)
+    public async Task<int> GetEmployeeIdBasedOnBuildingId(int buildingId)
     {
         var room = await _context.Buildings
             .FirstOrDefaultAsync(x => x.BuildingId == buildingId);
@@ -37,7 +37,7 @@ public class GetIdRepository : IGetIdRepository
 
         return await _context.Buildings
             .Where(x => x.BuildingId == buildingId)
-            .Select(x => x.AccountId)
+            .Select(x => x.EmployeeId)
             .FirstOrDefaultAsync();
     }
 
@@ -65,10 +65,10 @@ public class GetIdRepository : IGetIdRepository
             .FirstOrDefaultAsync();
     }
 
-    public async Task<int> GetBuildingIdBasedOnSupervisorId(int accountId)
+    public async Task<int> GetBuildingIdBasedOnSupervisorId(int employeeId)
     {
         return await _context.Buildings
-            .Where(x => x.AccountId == accountId)
+            .Where(x => x.EmployeeId == employeeId)
             .Select(x => x.BuildingId)
             .FirstOrDefaultAsync();
     }
@@ -77,10 +77,10 @@ public class GetIdRepository : IGetIdRepository
     {
         return await _context.Buildings
             .Where(x => x.BuildingId == entityBuildingId)
-            .Include(x => x.Account)
+            .Include(x => x.Employee)
             .ThenInclude(x => x.Role)
-            .Where(x => x.Account.Role.RoleName == "Supervisor")
-            .Select(x => x.Account.AccountId)
+            .Where(x => x.Employee.Role.RoleName == "Supervisor")
+            .Select(x => x.Employee.EmployeeId)
             .FirstOrDefaultAsync();
     }
 }

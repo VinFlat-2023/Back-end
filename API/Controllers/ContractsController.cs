@@ -161,7 +161,7 @@ public class ContractsController : ControllerBase
 
     // GET: api/Contract/5
     [SwaggerOperation(Summary = "[Authorize] Get Contract using id (For management)")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetContractManagement(int id)
     {
@@ -194,14 +194,13 @@ public class ContractsController : ControllerBase
                 PriceForRent = entity.PriceForRent.DecimalToString(),
                 PriceForService = entity.PriceForService.DecimalToString(),
                 PriceForWater = entity.PriceForWater.DecimalToString(),
-                PriceForElectricity = entity.PriceForElectricity.DecimalToString(),
-                RoomId = entity.RoomId
+                PriceForElectricity = entity.PriceForElectricity.DecimalToString()
             }
         });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get Contract using contract id with renter id (For renter)")]
-    [Authorize(Roles = "Renter")]
+    [Authorize(Roles = "Supervisor, Renter")]
     [HttpGet("{id:int}/user/{renterId:int}")]
     public async Task<IActionResult> GetContract(int id, int renterId)
     {
@@ -268,7 +267,7 @@ public class ContractsController : ControllerBase
 
                 var buildingDetail = new BuildingContractDetailEntity
                 {
-                    AccountId = supervisorId,
+                    EmployeeId = supervisorId,
                     BuildingName = building.BuildingName,
                     BuildingPhoneNumber = building.BuildingPhoneNumber,
                     BuildingAddress = building.BuildingAddress
@@ -289,8 +288,7 @@ public class ContractsController : ControllerBase
                     PriceForRent = entity.PriceForRent.DecimalToString(),
                     PriceForService = entity.PriceForService.DecimalToString(),
                     PriceForWater = entity.PriceForWater.DecimalToString(),
-                    PriceForElectricity = entity.PriceForElectricity.DecimalToString(),
-                    RoomId = entity.RoomId
+                    PriceForElectricity = entity.PriceForElectricity.DecimalToString()
                 };
 
                 var contractViewModel = new ContractDetailEntity
@@ -484,7 +482,7 @@ public class ContractsController : ControllerBase
 
         var supervisorId = Parse(User.Identity?.Name);
 
-        var buildingId = await _serviceWrapper.GetId.GetAccountIdBasedOnBuildingId(supervisorId);
+        var buildingId = await _serviceWrapper.GetId.GetEmployeeIdBasedOnBuildingId(supervisorId);
 
         var newContract = new Contract
         {

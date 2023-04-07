@@ -3,7 +3,7 @@
 public interface IRepositoryWrapper
 {
     public IAzureStorageRepository AzureStorage { get; }
-    public IAccountRepository Accounts { get; }
+    public IEmployeeRepository Employees { get; }
     public IAreaRepository Areas { get; }
     public IBuildingRepository Buildings { get; }
     public IContractRepository Contracts { get; }
@@ -12,7 +12,6 @@ public interface IRepositoryWrapper
     public IFlatRepository Flats { get; }
     public IFlatTypeRepository FlatTypes { get; }
     public IInvoiceRepository Invoices { get; }
-    public IMajorRepository Majors { get; }
     public IRenterRepository Renters { get; }
     public ITicketRepository Tickets { get; }
     public ITicketTypeRepository TicketTypes { get; }
@@ -21,12 +20,10 @@ public interface IRepositoryWrapper
     public IInvoiceDetailRepository InvoiceDetails { get; }
     public IServiceEntityRepository ServiceEntities { get; }
     public IServiceTypeRepository ServiceTypes { get; }
-    public IUniversityRepository Universities { get; }
     public IWalletRepository Wallets { get; }
     public IDeviceRepository Devices { get; }
     public INotificationRepository Notifications { get; }
     public IRoomRepository Rooms { get; }
     public IRoomTypeRepository RoomType { get; }
     public IGetIdRepository GetId { get; }
-    public IAttributeRepository Attributes { get; }
 }

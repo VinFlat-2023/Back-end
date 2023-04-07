@@ -13,9 +13,9 @@ public class ConditionCheckHelper : IConditionCheckHelper
         _serviceWrapper = serviceWrapper;
     }
 
-    public async Task<Account?> AccountCheck(int? id)
+    public async Task<Employee?> EmployeeCheck(int? id)
     {
-        return await _serviceWrapper.Accounts.GetAccountById(id) ?? null;
+        return await _serviceWrapper.Employees.GetEmployeeById(id) ?? null;
     }
 
     public async Task<Renter?> RenterCheck(int? id)
@@ -26,16 +26,6 @@ public class ConditionCheckHelper : IConditionCheckHelper
     public async Task<Role?> RoleCheck(int? id)
     {
         return await _serviceWrapper.Roles.GetRoleById(id) ?? null;
-    }
-
-    public async Task<Major?> MajorCheck(int? id)
-    {
-        return await _serviceWrapper.Majors.GetMajorById(id) ?? null;
-    }
-
-    public async Task<University?> UniversityCheck(int? id)
-    {
-        return await _serviceWrapper.Universities.GetUniversityById(id) ?? null;
     }
 
     public async Task<Renter?> RenterEmailCheck(string? email)
@@ -119,9 +109,9 @@ public class ConditionCheckHelper : IConditionCheckHelper
         return await _serviceWrapper.Areas.GetAreaById(id) ?? null;
     }
 
-    public async Task<Account?> AccountUsernameExist(string? username)
+    public async Task<Employee?> EmployeeUsernameExist(string? username)
     {
-        return await _serviceWrapper.Accounts.IsAccountUsernameExist(username);
+        return await _serviceWrapper.Employees.IsEmployeeUsernameExist(username);
     }
 
     public async Task<Room?> RoomCheck(int? roomId)
@@ -136,13 +126,8 @@ public class ConditionCheckHelper : IConditionCheckHelper
     }
     */
 
-    public async Task<AttributeForNumeric?> AttributeCheck(int? attributeId)
+    public async Task<Employee?> EmployeeEmailCheck(string? email)
     {
-        return await _serviceWrapper.Attributes.GetAttributeById(attributeId);
-    }
-
-    public async Task<Account?> AccountEmailCheck(string? email)
-    {
-        return await _serviceWrapper.Accounts.IsAccountEmailExist(email);
+        return await _serviceWrapper.Employees.IsEmployeeEmailExist(email);
     }
 }

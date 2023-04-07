@@ -56,12 +56,12 @@ public class NotificationService : INotificationService
     public async Task PushAndSaveNotification(string userName, Notification notification)
     {
         var user = await _repositoryWrapper.Renters.GetARenterByUserName(userName);
-        var account = new Account();
+        var account = new Employee();
         if (user == null) return;
 
         await _repositoryWrapper.Notifications.SaveNotification(notification);
 
-        if (user == null) account = await _repositoryWrapper.Accounts.GetAccountByUserName(userName);
+        if (user == null) account = await _repositoryWrapper.Employees.GetEmployeeByUserName(userName);
 
 
         if (user != null)
@@ -117,10 +117,10 @@ public class NotificationService : INotificationService
         try
         {
             var user = await _repositoryWrapper.Renters.GetARenterByUserName(userName);
-            var account = new Account();
+            var account = new Employee();
             if (user == null)
             {
-                account = await _repositoryWrapper.Accounts.GetAccountByUserName(userName);
+                account = await _repositoryWrapper.Employees.GetEmployeeByUserName(userName);
                 if (user == null) return false;
             }
 

@@ -316,9 +316,9 @@ public class InvoicesController : ControllerBase
     [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> PostInvoice([FromBody] InvoiceCreateRequest invoice)
     {
-        var accountId = User.Identity?.Name;
+        var employeeId = User.Identity?.Name;
 
-        if (accountId == null)
+        if (employeeId == null)
             return BadRequest(new
             {
                 status = "Bad Request",
@@ -336,7 +336,7 @@ public class InvoicesController : ControllerBase
             PaymentTime = null,
             CreatedTime = DateTime.UtcNow,
             InvoiceTypeId = invoice.InvoiceTypeId,
-            AccountId = int.Parse(accountId)
+            EmployeeId = int.Parse(employeeId)
         };
 
         switch (addNewInvoice.InvoiceTypeId)

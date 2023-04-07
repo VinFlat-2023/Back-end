@@ -29,12 +29,12 @@ public class WalletController : ControllerBase
     [Authorize(Roles = "Admin, Renter, Supervisor")]
     [Route("wallets")]
     [SwaggerOperation(Summary = "[Authorize] Get Wallet By authorized renter")]
-    public async Task<IActionResult> GetWalletByAccountId()
+    public async Task<IActionResult> GetWalletByEmployeeId()
     {
-        var accountId = User.Identity.Name;
-        if (accountId.IsNullOrEmpty() || accountId == "0")
-            return BadRequest("The account is not available in our system!");
-        var wallets = await _serviceWrapper.Wallets.GetWalletsByAccountId(int.Parse(accountId)).ToListAsync();
+        var employeeId = User.Identity.Name;
+        if (employeeId.IsNullOrEmpty() || employeeId == "0")
+            return BadRequest("The employee is not available in our system!");
+        var wallets = await _serviceWrapper.Wallets.GetWalletsByEmployeeId(int.Parse(employeeId)).ToListAsync();
         if (wallets.Count == 0)
             return NotFound("This user does not have any wallet yet!");
 
@@ -50,7 +50,7 @@ public class WalletController : ControllerBase
         var renterId = User.Identity.Name;
 
         if (renterId.IsNullOrEmpty() || renterId == "0")
-            return BadRequest("The account is not available in our system!");
+            return BadRequest("The employee is not available in our system!");
 
         var newWallet = new Wallet
         {
@@ -78,7 +78,7 @@ public class WalletController : ControllerBase
         var renterId = User.Identity.Name;
 
         if (renterId.IsNullOrEmpty() || renterId == "0")
-            return BadRequest("The account is not available in our system!");
+            return BadRequest("The employee is not available in our system!");
 
         var wallet = new Wallet
         {
@@ -98,13 +98,13 @@ public class WalletController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Disable a Wallet")]
     public async Task<IActionResult> DisableWallet(Guid id)
     {
-        var accountId = User.Identity?.Name;
+        var employeeId = User.Identity?.Name;
 
-        if (accountId.IsNullOrEmpty() || accountId == "0")
-            return BadRequest("The account is not available in our system!");
+        if (employeeId.IsNullOrEmpty() || employeeId == "0")
+            return BadRequest("The employee is not available in our system!");
 
         var result = await _serviceWrapper.Wallets
-            .DisableWallet(id, int.Parse(accountId));
+            .DisableWallet(id, int.Parse(employeeId));
         return !result
             ? BadRequest("Cannot delete this wallet, please try again")
             : StatusCode(200, "Deleted");

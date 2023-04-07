@@ -1,10 +1,10 @@
 using AutoMapper;
 using Domain.EntitiesForManagement;
-using Domain.EntityRequest.Account;
+using Domain.EntityRequest.Employee;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.Utils;
-using Domain.ViewModel.AccountEntity;
+using Domain.ViewModel.EmployeeEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -14,17 +14,17 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace API.Controllers;
 
-[Route("api/accounts")]
+[Route("api/employees")]
 [ApiController]
-public class AccountsController : ControllerBase
+public class EmployeesController : ControllerBase
 {
-    private readonly IAccountValidator _accountValidator;
+    private readonly IEmployeeValidator _accountValidator;
     private readonly IMapper _mapper;
     private readonly IPasswordValidator _passwordValidator;
     private readonly IServiceWrapper _serviceWrapper;
 
-    public AccountsController(IServiceWrapper serviceWrapper, IMapper mapper,
-        IAccountValidator accountValidator, IPasswordValidator passwordValidator)
+    public EmployeesController(IServiceWrapper serviceWrapper, IMapper mapper,
+        IEmployeeValidator accountValidator, IPasswordValidator passwordValidator)
     {
         _serviceWrapper = serviceWrapper;
         _mapper = mapper;
@@ -32,23 +32,23 @@ public class AccountsController : ControllerBase
         _passwordValidator = passwordValidator;
     }
 
-    // GET: api/Accounts
-    [SwaggerOperation(Summary = "[Authorize] Get account list")]
+    // GET: api/Employees
+    [SwaggerOperation(Summary = "[Authorize] Get employee list")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpGet]
-    public async Task<IActionResult> GetAccounts([FromQuery] AccountFilterRequest request, CancellationToken token)
+    public async Task<IActionResult> GetEmployees([FromQuery] EmployeeFilterRequest request, CancellationToken token)
     {
-        var filter = _mapper.Map<AccountFilter>(request);
+        var filter = _mapper.Map<EmployeeFilter>(request);
 
-        var list = await _serviceWrapper.Accounts.GetAccountList(filter, token);
+        var list = await _serviceWrapper.Employees.GetEmployeeList(filter, token);
 
-        var resultList = _mapper.Map<IEnumerable<AccountDetailEntity>>(list);
+        var resultList = _mapper.Map<IEnumerable<EmployeeDetailEntity>>(list);
 
         if (list == null || !list.Any())
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Account list is empty",
+                message = "Employee list is empty",
                 data = ""
             });
 
@@ -62,45 +62,69 @@ public class AccountsController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get account by ID")]
+    [SwaggerOperation(Summary = "[Authorize] Get employee by ID")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetAccount(int id)
+    public async Task<IActionResult> GetEmployee(int id)
     {
-        var entity = await _serviceWrapper.Accounts.GetAccountById(id);
+        var entity = await _serviceWrapper.Employees.GetEmployeeById(id);
         if (entity == null)
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Account not found",
+                message = "Employee not found",
                 data = ""
             });
         return Ok(
             new
             {
                 status = "Success",
-                message = "Account found",
-                data = _mapper.Map<AccountDetailEntity>(entity)
+                message = "Employee found",
+                data = _mapper.Map<EmployeeDetailEntity>(entity)
             });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Create Account")]
+    [SwaggerOperation(Summary = "[Authorize] Get current logged in employee")]
+    [Authorize(Roles = "Admin, Supervisor")]
+    [HttpGet("profile")]
+    public async Task<IActionResult> GetCurrentLoginEmployee()
+    {
+        var employeeId = int.Parse(User.Identity?.Name);
+        var entity = await _serviceWrapper.Employees.GetEmployeeById(employeeId);
+        if (entity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Employee not found",
+                data = ""
+            });
+        return Ok(
+            new
+            {
+                status = "Success",
+                message = "Employee found",
+                data = _mapper.Map<EmployeeDetailEntity>(entity)
+            });
+    }
+
+
+    [SwaggerOperation(Summary = "[Authorize] Create Employee")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpPost("register")]
-    public async Task<IActionResult> CreateAccount([FromBody] AccountCreateRequest account)
+    public async Task<IActionResult> CreateEmployee([FromBody] EmployeeCreateRequest account)
     {
-        var newAccount = new Account
+        var newEmployee = new Employee
         {
             Username = account.Username,
             FullName = account.Fullname,
-            Password = account.Password,
+            Password = "123456",
             Email = account.Email,
             Phone = account.Phone,
             Status = true,
             RoleId = account.RoleId
         };
 
-        var validation = await _accountValidator.ValidateParams(newAccount, null, false);
+        var validation = await _accountValidator.ValidateParams(newEmployee, null, false);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -110,17 +134,17 @@ public class AccountsController : ControllerBase
             });
 
         // Create User Device token
-        var result = await _serviceWrapper.Accounts.AddAccount(newAccount);
+        var result = await _serviceWrapper.Employees.AddEmployee(newEmployee);
         if (result == null)
             return BadRequest(new
             {
                 status = "Bad Request",
-                message = "Account failed to create",
+                message = "Employee failed to create",
                 data = ""
             });
 
         if (!StringUtils.IsNotEmpty(account.DeviceToken))
-            return CreatedAtAction("GetAccount", new { id = result.AccountId }, result);
+            return CreatedAtAction("GetEmployee", new { id = result.EmployeeId }, result);
 
         var userDeviceFound = await _serviceWrapper.Devices.GetUdByDeviceToken(account.DeviceToken);
 
@@ -144,33 +168,33 @@ public class AccountsController : ControllerBase
         });
     }
 
-    // PUT: api/Accounts/5
+    // PUT: api/Employees/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [SwaggerOperation(Summary = "Update account info")]
+    [SwaggerOperation(Summary = "Update employee info")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountUpdateRequest account)
+    public async Task<IActionResult> UpdateEmployee(int id, [FromBody] EmployeeUpdateRequest account)
     {
-        var accountEntity = await _serviceWrapper.Accounts.GetAccountById(id);
+        var accountEntity = await _serviceWrapper.Employees.GetEmployeeById(id);
 
         if (accountEntity == null)
             return NotFound(new
             {
                 status = "Bad Request",
-                message = "This account does not exist",
+                message = "This employee does not exist",
                 data = ""
             });
 
-        var updateAccount = new Account
+        var updateEmployee = new Employee
         {
-            AccountId = id,
+            EmployeeId = id,
             Username = account.Username ?? accountEntity.Username,
             Email = account.Email ?? accountEntity.Email,
             Phone = account.Phone ?? accountEntity.Phone,
             FullName = account.Fullname ?? accountEntity.FullName
         };
 
-        var validation = await _accountValidator.ValidateParams(updateAccount, id, true);
+        var validation = await _accountValidator.ValidateParams(updateEmployee, id, true);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -180,7 +204,7 @@ public class AccountsController : ControllerBase
                 data = ""
             });
 
-        var result = await _serviceWrapper.Accounts.UpdateAccount(updateAccount);
+        var result = await _serviceWrapper.Employees.UpdateEmployee(updateEmployee);
 
         return result.IsSuccess switch
         {
@@ -199,30 +223,30 @@ public class AccountsController : ControllerBase
         };
     }
 
-    [SwaggerOperation(Summary = "Update account password")]
+    [SwaggerOperation(Summary = "Update employee password")]
     [Authorize(Roles = "Admin, Supervisor, Technician")]
     [HttpPut("change-password")]
-    public async Task<IActionResult> UpdateAccountPassword([FromBody] AccountUpdatePasswordRequest account)
+    public async Task<IActionResult> UpdateEmployeePassword([FromBody] EmployeeUpdatePasswordRequest account)
     {
-        var accountId = int.Parse(User.Identity?.Name);
-        var accountEntity = await _serviceWrapper.Accounts.GetAccountById(accountId);
+        var employeeId = int.Parse(User.Identity?.Name);
+        var accountEntity = await _serviceWrapper.Employees.GetEmployeeById(employeeId);
 
         if (accountEntity == null)
             return NotFound(new
             {
                 status = "Bad Request",
-                message = "This account does not exist",
+                message = "This employee does not exist",
                 data = ""
             });
 
-        var updatePasswordAccount = new Account
+        var updatePasswordEmployee = new Employee
         {
-            AccountId = accountId,
+            EmployeeId = employeeId,
             Password = account.Password
         };
 
         var validation = await _passwordValidator
-            .ValidateParams(updatePasswordAccount.Password, accountId, false);
+            .ValidateParams(updatePasswordEmployee.Password, employeeId, false);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -232,7 +256,7 @@ public class AccountsController : ControllerBase
                 data = ""
             });
 
-        var result = await _serviceWrapper.Accounts.UpdatePasswordAccount(updatePasswordAccount);
+        var result = await _serviceWrapper.Employees.UpdatePasswordEmployee(updatePasswordEmployee);
 
         return result.IsSuccess switch
         {
@@ -252,14 +276,14 @@ public class AccountsController : ControllerBase
     }
 
 
-    [SwaggerOperation(Summary = "Activate and Deactivate Account")]
+    [SwaggerOperation(Summary = "Activate and Deactivate Employee")]
     [Authorize(Roles = "Admin, Supervisor")]
-    [HttpPut("toggle-account/status")]
-    public async Task<IActionResult> ToggleAccountStatus()
+    [HttpPut("toggle-employee/status")]
+    public async Task<IActionResult> ToggleEmployeeStatus()
     {
-        var accountId = int.Parse(User.Identity?.Name);
+        var employeeId = int.Parse(User.Identity?.Name);
 
-        var result = await _serviceWrapper.Accounts.ToggleAccountStatus(accountId);
+        var result = await _serviceWrapper.Employees.ToggleEmployeeStatus(employeeId);
 
         return result.IsSuccess switch
         {
@@ -278,19 +302,19 @@ public class AccountsController : ControllerBase
         };
     }
 
-    // DELETE: api/Accounts/5
-    [SwaggerOperation(Summary = "Remove Account")]
+    // DELETE: api/Employees/5
+    [SwaggerOperation(Summary = "Remove Employee")]
     [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteAccount(int id)
+    public async Task<IActionResult> DeleteEmployee(int id)
     {
-        var account = await _serviceWrapper.Accounts.GetAccountById(id);
+        var account = await _serviceWrapper.Employees.GetEmployeeById(id);
 
         if (account == null)
             return BadRequest(new
             {
                 status = "Bad Request",
-                message = "Account not found",
+                message = "Employee not found",
                 data = ""
             });
 
@@ -300,7 +324,7 @@ public class AccountsController : ControllerBase
         if (!listUserDevice.IsNullOrEmpty())
             await _serviceWrapper.Devices.DeleteUserDevice(listUserDevice);
 
-        var result = await _serviceWrapper.Accounts.DeleteAccount(id);
+        var result = await _serviceWrapper.Employees.DeleteEmployee(id);
 
         return result.IsSuccess switch
         {

@@ -1,9 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Domain.CustomAttribute;
-using Microsoft.AspNetCore.Http;
-
-namespace Domain.EntityRequest.Renter;
+﻿namespace Domain.EntityRequest.Renter;
 
 public class RenterCreateRequest
 {
@@ -15,7 +10,7 @@ public class RenterCreateRequest
     public DateTime BirthDate { get; set; }
 
     public bool? Status { get; set; }
-
+    /*
     public string? ImageUrl { get; set; }
 
     [MaxUploadedFileSize(1 * 1024 * 1024)]
@@ -23,7 +18,6 @@ public class RenterCreateRequest
     [NotMapped]
     public IFormFile? Image { get; set; }
 
-    public string? CitizenNumber { get; set; }
 
     public string? CitizenImageUrl { get; set; }
 
@@ -32,6 +26,9 @@ public class RenterCreateRequest
     [DataType(DataType.Upload)]
     [NotMapped]
     public IFormFile? CitizenImage { get; set; }
+    */
+
+    public string? CitizenNumber { get; set; }
 
     public int? ContractId { get; set; }
     public string Address { get; set; } = null!;

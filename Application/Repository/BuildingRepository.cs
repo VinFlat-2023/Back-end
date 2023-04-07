@@ -24,7 +24,7 @@ public class BuildingRepository : IBuildingRepository
     {
         return _context.Buildings
             .Include(x => x.Area)
-            .Include(x => x.Account)
+            .Include(x => x.Employee)
             .Include(x => x.Flats)
             .ThenInclude(x => x.Rooms)
             // Filter starts here
@@ -36,7 +36,8 @@ public class BuildingRepository : IBuildingRepository
                 && (filter.TotalFlats == null || x.TotalFlats == filter.TotalFlats)
                 && (filter.Status == null || x.Status == filter.Status)
                 && (filter.BuildingPhoneNumber == null || x.BuildingPhoneNumber.Contains(filter.BuildingPhoneNumber))
-                && (filter.AccountName == null || x.Account.Username.ToLower().Contains(filter.AccountName.ToLower()))
+                && (filter.EmployeeName == null ||
+                    x.Employee.Username.ToLower().Contains(filter.EmployeeName.ToLower()))
                 && (filter.AreaName == null || x.Area.Name.ToLower().Contains(filter.AreaName.ToLower())))
             .AsNoTracking();
     }
@@ -45,7 +46,7 @@ public class BuildingRepository : IBuildingRepository
     {
         return _context.Buildings
             .Include(x => x.Area)
-            .Include(x => x.Account)
+            .Include(x => x.Employee)
             .ThenInclude(x => x.Role)
             .Include(flat => flat.Flats)
             .ThenInclude(x => x.Rooms.Where(room => room.AvailableSlots > 0))
@@ -61,7 +62,7 @@ public class BuildingRepository : IBuildingRepository
     {
         return _context.Buildings
             .Include(x => x.Area)
-            .Include(x => x.Account)
+            .Include(x => x.Employee)
             .ThenInclude(x => x.Role)
             .Where(x => x.BuildingId == buildingId);
     }
@@ -74,12 +75,13 @@ public class BuildingRepository : IBuildingRepository
     public async Task<RepositoryResponse> AddBuilding(Building building)
     {
         var buildingCheck =
-            await _context.Buildings.FirstOrDefaultAsync(x => x.AccountId == building.AccountId);
+            await _context.Buildings
+                .FirstOrDefaultAsync(x => x.EmployeeId == building.EmployeeId && x.Status == true);
         if (buildingCheck != null)
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "This account is already assigned to a building"
+                Message = "This employee is already assigned to a building"
             };
 
         await _context.Buildings.AddAsync(building);
@@ -87,7 +89,7 @@ public class BuildingRepository : IBuildingRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Building added successfully for this account"
+            Message = "Building added successfully for this employee"
         };
     }
 
@@ -187,7 +189,7 @@ public class BuildingRepository : IBuildingRepository
     {
         return _context.Buildings
             .Include(x => x.Area)
-            .Include(x => x.Account)
+            .Include(x => x.Employee)
             .ThenInclude(x => x.Role)
             // Filter starts here
             .OrderBy(x => x.BuildingName)

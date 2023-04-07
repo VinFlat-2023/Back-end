@@ -1,6 +1,6 @@
 namespace Domain.QueryFilter;
 
-public class AccountFilter : PagingFilter
+public class EmployeeFilter : PagingFilter
 {
     public string? Username { get; set; }
 

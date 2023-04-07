@@ -7,7 +7,7 @@ public class Role
 {
     public Role()
     {
-        Accounts = new HashSet<Account>();
+        Employees = new HashSet<Employee>();
     }
 
     [Key]
@@ -16,5 +16,5 @@ public class Role
 
     public string RoleName { get; set; }
     public bool Status { get; set; }
-    public virtual ICollection<Account> Accounts { get; set; }
+    public virtual ICollection<Employee> Employees { get; set; }
 }

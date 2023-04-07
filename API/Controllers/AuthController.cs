@@ -27,8 +27,8 @@ public class AuthController : ControllerBase
     [HttpPost("management/v1/login")]
     public async Task<IActionResult> LoginManagement([FromBody] LoginModel loginModel)
     {
-        var account = await _serviceWrapper.Accounts
-            .AccountLogin(loginModel.Username, loginModel.Password);
+        var account = await _serviceWrapper.Employees
+            .EmployeeLogin(loginModel.Username, loginModel.Password);
 
         if (account == null)
             return Unauthorized(new
@@ -56,14 +56,14 @@ public class AuthController : ControllerBase
             }
         }
 
-        var jwtToken = _serviceWrapper.Tokens.CreateTokenForAccount(account);
+        var jwtToken = _serviceWrapper.Tokens.CreateTokenForEmployee(account);
         return Ok(new
         {
             status = "Success",
             message = "User logged in successfully",
             data = new
             {
-                id = account.AccountId,
+                id = account.EmployeeId,
                 roleId = account.RoleId,
                 token = jwtToken
             }

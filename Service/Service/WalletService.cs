@@ -18,9 +18,9 @@ public class WalletService : IWalletService
         return await _repositoryWrapper.Wallets.CreateWallet(wallet);
     }
 
-    public async Task<bool> DisableWallet(Guid walletId, int accountId)
+    public async Task<bool> DisableWallet(Guid walletId, int employeeId)
     {
-        return await _repositoryWrapper.Wallets.DisableWallet(walletId, accountId);
+        return await _repositoryWrapper.Wallets.DisableWallet(walletId, employeeId);
     }
 
     public IQueryable<WalletType?> GetAllWalletType()
@@ -28,9 +28,9 @@ public class WalletService : IWalletService
         return _repositoryWrapper.Wallets.GetAllWalletType();
     }
 
-    public Task<Wallet?> GetWalletByRenterIdAndType(int accountId, int type)
+    public Task<Wallet?> GetWalletByRenterIdAndType(int employeeId, int type)
     {
-        return _repositoryWrapper.Wallets.GetWalletByRenterIdAndType(accountId, type);
+        return _repositoryWrapper.Wallets.GetWalletByRenterIdAndType(employeeId, type);
     }
 
     public Task<Wallet?> GetWalletById(Guid walletId)
@@ -38,9 +38,9 @@ public class WalletService : IWalletService
         return _repositoryWrapper.Wallets.GetWalletById(walletId);
     }
 
-    public IQueryable<Wallet> GetWalletsByAccountId(int accountId)
+    public IQueryable<Wallet> GetWalletsByEmployeeId(int employeeId)
     {
-        return _repositoryWrapper.Wallets.GetWalletsByRenterId(accountId);
+        return _repositoryWrapper.Wallets.GetWalletsByRenterId(employeeId);
     }
 
     public async Task<Wallet?> UpdateWallet(Wallet? wallet)

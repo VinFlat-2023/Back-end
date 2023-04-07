@@ -24,7 +24,7 @@ public class InvoiceRepository : IInvoiceRepository
     public IQueryable<Invoice> GetInvoiceList(InvoiceFilter filter)
     {
         return _context.Invoices
-            .Include(x => x.Account)
+            .Include(x => x.Employee)
             .Include(x => x.Renter)
             .Include(x => x.InvoiceDetails)
             .Include(x => x.InvoiceType)
@@ -36,8 +36,9 @@ public class InvoiceRepository : IInvoiceRepository
                 && (filter.Detail == null || x.Detail == filter.Detail)
                 && (filter.RenterId == null || x.RenterId == filter.RenterId)
                 && (filter.RenterName == null || x.Renter.FullName.ToLower().Contains(filter.RenterName.ToLower()))
-                && (filter.AccountId == null || x.AccountId == filter.AccountId)
-                && (filter.AccountName == null || x.Account.FullName.ToLower().Contains(filter.AccountName.ToLower()))
+                && (filter.EmployeeId == null || x.EmployeeId == filter.EmployeeId)
+                && (filter.EmployeeName == null ||
+                    x.Employee.FullName.ToLower().Contains(filter.EmployeeName.ToLower()))
                 && (filter.InvoiceTypeId == null || x.InvoiceTypeId == filter.InvoiceTypeId))
             .AsNoTracking();
     }
@@ -50,7 +51,7 @@ public class InvoiceRepository : IInvoiceRepository
     public async Task<Invoice?> GetInvoiceDetail(int invoiceId)
     {
         return await _context.Invoices
-            .Include(x => x.Account)
+            .Include(x => x.Employee)
             .Include(x => x.Renter)
             .Include(x => x.InvoiceDetails)
             .Include(x => x.InvoiceType)
@@ -124,7 +125,7 @@ public class InvoiceRepository : IInvoiceRepository
         invoiceData.Status = invoice?.Status ?? invoiceData.Status;
         invoiceData.ImageUrl = invoice?.ImageUrl ?? invoiceData.ImageUrl;
         invoiceData.Detail = invoice?.Detail ?? invoiceData.Detail;
-        invoiceData.AccountId = invoice?.AccountId ?? invoiceData.AccountId;
+        invoiceData.EmployeeId = invoice?.EmployeeId ?? invoiceData.EmployeeId;
         invoiceData.RenterId = invoice?.RenterId ?? invoiceData.RenterId;
         invoiceData.InvoiceTypeId = invoice?.InvoiceTypeId ?? invoiceData.InvoiceTypeId;
 
@@ -221,7 +222,7 @@ public class InvoiceRepository : IInvoiceRepository
                              DueDate = DateTime.Now.AddMonths(1),
                              Status = true,
                              Detail = invoice.Detail,
-                             AccountId = invoice.AccountId,
+                             EmployeeId = invoice.EmployeeId,
                              RenterId = invoice.RenterId,
                              InvoiceTypeId = invoice.InvoiceTypeId,
                              CreatedTime = DateTime.Now

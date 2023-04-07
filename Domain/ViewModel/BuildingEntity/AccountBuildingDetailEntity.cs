@@ -1,8 +1,8 @@
 namespace Domain.ViewModel.BuildingEntity;
 
-public class AccountBuildingDetailEntity
+public class EmployeeBuildingDetailEntity
 {
-    public int AccountId { get; set; }
+    public int EmployeeId { get; set; }
     public string FullName { get; set; }
     public string Phone { get; set; }
 }

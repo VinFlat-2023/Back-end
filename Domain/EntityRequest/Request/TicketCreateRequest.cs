@@ -9,5 +9,5 @@ public class TicketCreateRequest
     public string Status { get; set; } = null!;
     public int TicketTypeId { get; set; }
     public int RenterId { get; set; }
-    public int AccountId { get; set; }
+    public int EmployeeId { get; set; }
 }

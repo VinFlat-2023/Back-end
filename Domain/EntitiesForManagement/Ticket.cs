@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Domain.CustomAttribute;
+using Microsoft.AspNetCore.Http;
 
 namespace Domain.EntitiesForManagement;
 
@@ -15,7 +17,29 @@ public class Ticket
     public decimal? Amount { get; set; }
     public string Status { get; set; } = null!;
 
+    [MaxUploadedFileSize(4 * 1024 * 1024)]
+    [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]
+    [DataType(DataType.Upload)]
+    [NotMapped]
+    public IFormFile? Image { get; set; }
+
     public string? ImageUrl { get; set; }
+
+    [MaxUploadedFileSize(4 * 1024 * 1024)]
+    [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]
+    [DataType(DataType.Upload)]
+    [NotMapped]
+    public IFormFile? Image2 { get; set; }
+
+    public string? ImageUrl2 { get; set; }
+
+    [MaxUploadedFileSize(4 * 1024 * 1024)]
+    [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]
+    [DataType(DataType.Upload)]
+    [NotMapped]
+    public IFormFile? Image3 { get; set; }
+
+    public string? ImageUrl3 { get; set; }
 
     // Contract
     public int ContractId { get; set; }
@@ -23,8 +47,8 @@ public class Ticket
     public virtual Contract Contract { get; set; } = null!;
 
     // Management
-    public int AccountId { get; set; }
-    public virtual Account Account { get; set; } = null!;
+    public int EmployeeId { get; set; }
+    public virtual Employee Employee { get; set; } = null!;
     public int TicketTypeId { get; set; }
     public virtual TicketType TicketType { get; set; } = null!;
 }

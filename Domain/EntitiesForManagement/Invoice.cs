@@ -33,13 +33,13 @@ public class Invoice
 
     public DateTime CreatedTime { get; set; }
 
-    // Receiver account
+    // Receiver employee
     public int? RenterId { get; set; }
     public virtual Renter? Renter { get; set; }
 
-    // Management account
-    public int AccountId { get; set; }
-    public virtual Account Account { get; set; }
+    // Management employee
+    public int EmployeeId { get; set; }
+    public virtual Employee Employee { get; set; }
     public int InvoiceTypeId { get; set; }
 
     public virtual InvoiceType InvoiceType { get; set; } = null!;

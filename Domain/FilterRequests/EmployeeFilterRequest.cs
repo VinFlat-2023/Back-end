@@ -2,7 +2,7 @@ using Domain.QueryFilter;
 
 namespace Domain.FilterRequests;
 
-public class AccountFilterRequest : PagingFilter
+public class EmployeeFilterRequest : PagingFilter
 {
     public string? Username { get; set; }
 

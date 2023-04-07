@@ -1,14 +1,15 @@
 using Domain.ViewModel.RoleEntity;
 
-namespace Domain.ViewModel.AccountEntity;
+namespace Domain.ViewModel.EmployeeEntity;
 
-public class AccountDetailEntity
+public class EmployeeDetailEntity
 {
-    public int AccountId { get; set; }
+    public int EmployeeId { get; set; }
     public string Username { get; set; }
     public string FullName { get; set; }
     public string Email { get; set; }
     public string Phone { get; set; }
     public bool Status { get; set; }
+    public string Address { get; set; }
     public RoleDetailEntity Role { get; set; }
 }

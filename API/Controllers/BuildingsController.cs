@@ -29,8 +29,7 @@ public class BuildingsController : ControllerBase
     }
 
     // GET: api/Buildings
-    [SwaggerOperation(Summary = "[Authorize] Get building list (For management (Admin only))")]
-    [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "[Authorize] Get building list using query")]
     [HttpGet]
     public async Task<IActionResult> GetBuildings([FromQuery] BuildingFilterRequest request, CancellationToken token)
     {
@@ -58,8 +57,33 @@ public class BuildingsController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get building list")]
-    [HttpGet]
-    public async Task<IActionResult> GetBasicBuildingsList([FromQuery] string areaName, CancellationToken token)
+    [HttpGet("order/all")]
+    public async Task<IActionResult> GetBuildings(CancellationToken token)
+    {
+        var list = await _serviceWrapper.Buildings.GetBuildingList(new BuildingFilter(), token);
+
+        var resultList = _mapper.Map<IEnumerable<BuildingDetailEntity>>(list);
+
+        if (list == null || !list.Any())
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Building list is empty",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
+    }
+
+    [SwaggerOperation(Summary = "[Authorize] Get building list")]
+    [HttpGet("order/{areaName}")]
+    public async Task<IActionResult> GetBasicBuildingsListByAreaName(string areaName, CancellationToken token)
     {
         var list = await _serviceWrapper.Buildings.GetBuildingList(new BuildingFilter
         {
@@ -86,7 +110,7 @@ public class BuildingsController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get building list by number of spare slot")]
-    [HttpGet]
+    [HttpGet("spare-slot")]
     public async Task<IActionResult> GetBasicBuildingsListFromSpareSlot(CancellationToken token)
     {
         var list = await _serviceWrapper.Buildings.GetBuildingListBySpareSlotWithTrue(token);
@@ -139,7 +163,7 @@ public class BuildingsController : ControllerBase
 
     // GET: api/Buildings/5
     [SwaggerOperation(Summary = "[Authorize] Get building info (For management and renter)")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Admin")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetBuilding(int id)
     {
@@ -217,7 +241,7 @@ public class BuildingsController : ControllerBase
     {
         var supervisorId = int.Parse(User.Identity.Name);
 
-        var supervisor = await _serviceWrapper.Accounts.GetAccountById(supervisorId);
+        var supervisor = await _serviceWrapper.Employees.GetEmployeeById(supervisorId);
 
         if (supervisor == null)
             return NotFound(new
@@ -236,7 +260,7 @@ public class BuildingsController : ControllerBase
             CoordinateY = building.CoordinateY ?? 0,
             TotalFlats = 0,
             AveragePrice = building.AveragePrice ?? 0,
-            AccountId = supervisorId,
+            EmployeeId = supervisorId,
             Status = building.Status ?? true,
             AreaId = building.AreaId,
             BuildingPhoneNumber = building.BuildingPhoneNumber ?? "0"
@@ -273,7 +297,7 @@ public class BuildingsController : ControllerBase
 
     // DELETE: api/Buildings/5
     [SwaggerOperation(Summary = "[Authorize] Remove building (For management)")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteBuilding(int id)
     {
