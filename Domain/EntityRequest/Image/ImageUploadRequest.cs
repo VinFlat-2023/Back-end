@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Domain.CustomAttribute;
 using Microsoft.AspNetCore.Http;
 
@@ -10,6 +9,5 @@ public class ImageUploadRequest
     [MaxUploadedFileSize(10 * 1024 * 1024)]
     [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]
     [DataType(DataType.Upload)]
-    [NotMapped]
     public IFormFile Image { get; set; }
 }

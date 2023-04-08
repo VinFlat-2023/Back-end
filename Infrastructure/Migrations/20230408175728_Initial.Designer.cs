@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230407213745_Initial")]
+    [Migration("20230408175728_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -203,7 +203,7 @@ namespace Infrastructure.Migrations
                             CoordinateX = 231m,
                             CoordinateY = 324m,
                             Description = "Building 1a",
-                            EmployeeId = 5,
+                            EmployeeId = 1,
                             ImageUrl = "",
                             Status = true,
                             TotalFlats = 0
@@ -235,7 +235,7 @@ namespace Infrastructure.Migrations
                             CoordinateX = 423m,
                             CoordinateY = 3214m,
                             Description = "Building 1c",
-                            EmployeeId = 2,
+                            EmployeeId = 3,
                             ImageUrl = "",
                             Status = true,
                             TotalFlats = 0
@@ -267,7 +267,7 @@ namespace Infrastructure.Migrations
                             CoordinateX = 23431m,
                             CoordinateY = 3245m,
                             Description = "Building 1e",
-                            EmployeeId = 3,
+                            EmployeeId = 5,
                             ImageUrl = "",
                             Status = true,
                             TotalFlats = 0
@@ -283,7 +283,7 @@ namespace Infrastructure.Migrations
                             CoordinateX = 21233m,
                             CoordinateY = 334m,
                             Description = "Building 1f",
-                            EmployeeId = 4,
+                            EmployeeId = 6,
                             ImageUrl = "",
                             Status = true,
                             TotalFlats = 0
@@ -398,18 +398,18 @@ namespace Infrastructure.Migrations
                             ContractName = "Contract for renter 1",
                             ContractStatus = "Active",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 6, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            DateSigned = new DateTime(2023, 7, 5, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             Description = "Contract description for renter 1",
                             FlatId = 2,
                             ImageUrl = "No image",
-                            LastUpdated = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            LastUpdated = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             PriceForElectricity = 0m,
                             PriceForRent = 1800000m,
                             PriceForService = 0m,
                             PriceForWater = 0m,
                             RenterId = 1,
                             RoomId = 1,
-                            StartDate = new DateTime(2023, 6, 9, 21, 37, 45, 0, DateTimeKind.Unspecified)
+                            StartDate = new DateTime(2023, 7, 10, 17, 57, 27, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -418,18 +418,18 @@ namespace Infrastructure.Migrations
                             ContractName = "Contract for renter 2",
                             ContractStatus = "Active",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 6, 5, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            DateSigned = new DateTime(2023, 7, 6, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             Description = "Contract description for renter 2",
                             FlatId = 3,
                             ImageUrl = "No image",
-                            LastUpdated = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            LastUpdated = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             PriceForElectricity = 0m,
                             PriceForRent = 2800000m,
                             PriceForService = 0m,
                             PriceForWater = 0m,
                             RenterId = 2,
                             RoomId = 1,
-                            StartDate = new DateTime(2023, 6, 7, 21, 37, 45, 0, DateTimeKind.Unspecified)
+                            StartDate = new DateTime(2023, 7, 8, 17, 57, 27, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -438,18 +438,18 @@ namespace Infrastructure.Migrations
                             ContractName = "Contract for renter 3",
                             ContractStatus = "Active",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 6, 5, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            DateSigned = new DateTime(2023, 7, 6, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             Description = "Contract description for renter 3",
                             FlatId = 3,
                             ImageUrl = "No image",
-                            LastUpdated = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            LastUpdated = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             PriceForElectricity = 120m,
                             PriceForRent = 2800000m,
                             PriceForService = 10000m,
                             PriceForWater = 1000m,
                             RenterId = 3,
                             RoomId = 2,
-                            StartDate = new DateTime(2023, 6, 7, 21, 37, 45, 0, DateTimeKind.Unspecified)
+                            StartDate = new DateTime(2023, 7, 8, 17, 57, 27, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -458,18 +458,18 @@ namespace Infrastructure.Migrations
                             ContractName = "Contract for renter 3 (2)",
                             ContractStatus = "Active",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 6, 5, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            DateSigned = new DateTime(2023, 7, 6, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             Description = "Contract description for renter 3",
                             FlatId = 4,
                             ImageUrl = "No image",
-                            LastUpdated = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            LastUpdated = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             PriceForElectricity = 120m,
                             PriceForRent = 2800000m,
                             PriceForService = 10000m,
                             PriceForWater = 1000m,
                             RenterId = 3,
                             RoomId = 1,
-                            StartDate = new DateTime(2023, 6, 7, 21, 37, 45, 0, DateTimeKind.Unspecified)
+                            StartDate = new DateTime(2023, 7, 8, 17, 57, 27, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -478,18 +478,18 @@ namespace Infrastructure.Migrations
                             ContractName = "Contract for renter 3 (3)",
                             ContractStatus = "Inactive",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 6, 5, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            DateSigned = new DateTime(2023, 7, 6, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             Description = "Contract description for renter 3",
                             FlatId = 3,
                             ImageUrl = "No image",
-                            LastUpdated = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            LastUpdated = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             PriceForElectricity = 120m,
                             PriceForRent = 2800000m,
                             PriceForService = 10000m,
                             PriceForWater = 1000m,
                             RenterId = 3,
                             RoomId = 2,
-                            StartDate = new DateTime(2023, 6, 7, 21, 37, 45, 0, DateTimeKind.Unspecified)
+                            StartDate = new DateTime(2023, 7, 8, 17, 57, 27, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -498,18 +498,18 @@ namespace Infrastructure.Migrations
                             ContractName = "Contract for renter 3 (4)",
                             ContractStatus = "Inactive",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 6, 5, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            DateSigned = new DateTime(2023, 7, 6, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             Description = "Contract description for renter 3",
                             FlatId = 3,
                             ImageUrl = "No image",
-                            LastUpdated = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            LastUpdated = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             PriceForElectricity = 120m,
                             PriceForRent = 2800000m,
                             PriceForService = 10000m,
                             PriceForWater = 1000m,
                             RenterId = 3,
                             RoomId = 2,
-                            StartDate = new DateTime(2023, 6, 7, 21, 37, 45, 0, DateTimeKind.Unspecified)
+                            StartDate = new DateTime(2023, 7, 8, 17, 57, 27, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -570,62 +570,86 @@ namespace Infrastructure.Migrations
                         new
                         {
                             EmployeeId = 1,
-                            Address = "Admin address",
-                            Email = "superadmin@mail",
-                            FullName = "Super admin employee",
-                            Password = "superadmin",
-                            Phone = "0123543125",
-                            RoleId = 1,
+                            Address = "Sup1 address",
+                            Email = "sup13@mail",
+                            FullName = "supervisor 31",
+                            Password = "123",
+                            Phone = "0123543423125",
+                            RoleId = 2,
                             Status = true,
-                            Username = "superadmin"
+                            Username = "sup1"
                         },
                         new
                         {
                             EmployeeId = 2,
-                            Address = "Admin address",
-                            Email = "admin@mail",
-                            FullName = "Admin employee",
-                            Password = "admin",
-                            Phone = "0123543532",
+                            Address = "Sup2 address",
+                            Email = "sup21@mail",
+                            FullName = "sup2",
+                            Password = "123",
+                            Phone = "012354353432",
                             RoleId = 2,
                             Status = true,
-                            Username = "admin"
+                            Username = "supervisor 24"
                         },
                         new
                         {
                             EmployeeId = 3,
-                            Address = "Supervisor address",
-                            Email = "supervisor@mail",
-                            FullName = "Supervisor employee",
+                            Address = "Sup3 address",
+                            Email = "supervisor32@mail",
+                            FullName = "sup3",
                             Password = "supervisor",
-                            Phone = "0123543554",
-                            RoleId = 3,
+                            Phone = "012354433554",
+                            RoleId = 2,
                             Status = true,
                             Username = "supervisor"
                         },
                         new
                         {
                             EmployeeId = 4,
-                            Address = "Employee address",
-                            Email = "employee1@mail",
-                            FullName = "Employee employee 1",
-                            Password = "employee1",
-                            Phone = "0123543235",
-                            RoleId = 4,
+                            Address = "Sup4 address",
+                            Email = "employee211@mail",
+                            FullName = "sup4",
+                            Password = "123",
+                            Phone = "012323543235",
+                            RoleId = 2,
                             Status = true,
-                            Username = "employee1"
+                            Username = "supervisor 4"
                         },
                         new
                         {
                             EmployeeId = 5,
-                            Address = "Employee address",
-                            Email = "employee2@mail",
-                            FullName = "Employee employee 2",
-                            Password = "employee2",
-                            Phone = "0123123235",
-                            RoleId = 4,
+                            Address = "Sup5 address",
+                            Email = "employee233@mail",
+                            FullName = "sup5",
+                            Password = "123",
+                            Phone = "043123123235",
+                            RoleId = 2,
                             Status = true,
-                            Username = "employee2"
+                            Username = "supervisor 5"
+                        },
+                        new
+                        {
+                            EmployeeId = 6,
+                            Address = "Employee address",
+                            Email = "employee232@mail",
+                            FullName = "sup6",
+                            Password = "123",
+                            Phone = "012312323235",
+                            RoleId = 2,
+                            Status = true,
+                            Username = "supervisor 6"
+                        },
+                        new
+                        {
+                            EmployeeId = 7,
+                            Address = "Admin address",
+                            Email = "admin12@mail",
+                            FullName = "Admin account",
+                            Password = "admin",
+                            Phone = "012343123235",
+                            RoleId = 1,
+                            Status = true,
+                            Username = "admin"
                         });
                 });
 
@@ -982,7 +1006,7 @@ namespace Infrastructure.Migrations
                         {
                             InvoiceId = 1,
                             Amount = 0,
-                            CreatedTime = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            CreatedTime = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             Detail = "Detail for invoice 1",
                             EmployeeId = 2,
                             InvoiceTypeId = 1,
@@ -994,7 +1018,7 @@ namespace Infrastructure.Migrations
                         {
                             InvoiceId = 2,
                             Amount = 0,
-                            CreatedTime = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            CreatedTime = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             Detail = "Detail for invoice 2",
                             EmployeeId = 3,
                             InvoiceTypeId = 1,
@@ -1006,7 +1030,7 @@ namespace Infrastructure.Migrations
                         {
                             InvoiceId = 3,
                             Amount = 0,
-                            CreatedTime = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            CreatedTime = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             Detail = "Detail for invoice 3",
                             EmployeeId = 4,
                             InvoiceTypeId = 1,
@@ -1018,7 +1042,7 @@ namespace Infrastructure.Migrations
                         {
                             InvoiceId = 4,
                             Amount = 0,
-                            CreatedTime = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            CreatedTime = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             Detail = "Detail for invoice 3 (2)",
                             EmployeeId = 2,
                             InvoiceTypeId = 1,
@@ -1030,7 +1054,7 @@ namespace Infrastructure.Migrations
                         {
                             InvoiceId = 5,
                             Amount = 0,
-                            CreatedTime = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            CreatedTime = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             Detail = "Detail for invoice 3 (3)",
                             EmployeeId = 2,
                             InvoiceTypeId = 1,
@@ -1042,7 +1066,7 @@ namespace Infrastructure.Migrations
                         {
                             InvoiceId = 6,
                             Amount = 0,
-                            CreatedTime = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            CreatedTime = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             Detail = "Detail for invoice 3 (4)",
                             EmployeeId = 2,
                             InvoiceTypeId = 1,
@@ -1054,7 +1078,7 @@ namespace Infrastructure.Migrations
                         {
                             InvoiceId = 7,
                             Amount = 0,
-                            CreatedTime = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            CreatedTime = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             Detail = "Detail for invoice 3 (5)",
                             EmployeeId = 2,
                             InvoiceTypeId = 1,
@@ -1415,7 +1439,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 1,
                             Address = "HCM",
-                            BirthDate = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            BirthDate = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             CitizenNumber = "3214324523",
                             DeviceToken = "12321fdsg45adsa",
                             Email = "renter1@mail.com",
@@ -1430,7 +1454,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 2,
                             Address = "Hue",
-                            BirthDate = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            BirthDate = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             CitizenNumber = "3214324523",
                             DeviceToken = "dsavvf",
                             Email = "renter2@mail.com",
@@ -1445,7 +1469,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 3,
                             Address = "DN",
-                            BirthDate = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            BirthDate = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             CitizenNumber = "3214324523",
                             DeviceToken = "123221ad145ad423sa",
                             Email = "renter3@mail.com",
@@ -1460,7 +1484,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 4,
                             Address = "HN",
-                            BirthDate = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            BirthDate = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             CitizenNumber = "3214324523",
                             DeviceToken = "ewasdv12344",
                             Email = "renter4@mail.com",
@@ -1475,7 +1499,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 5,
                             Address = "HCM",
-                            BirthDate = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            BirthDate = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             CitizenNumber = "3214324523",
                             DeviceToken = "ewasdv12344",
                             Email = "trankhaimnhkhoi10a3@mail.com",
@@ -1490,7 +1514,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 6,
                             Address = "HCM",
-                            BirthDate = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            BirthDate = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             CitizenNumber = "3214324523",
                             DeviceToken = "ewasdv12344",
                             Email = "trankhaimnhkhoi@mail.com",
@@ -1505,7 +1529,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 7,
                             Address = "HCM",
-                            BirthDate = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            BirthDate = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             CitizenNumber = "3214324523",
                             DeviceToken = "ewasdv12344",
                             Email = "khoitkmse150850@fpt",
@@ -1541,25 +1565,19 @@ namespace Infrastructure.Migrations
                         new
                         {
                             RoleId = 1,
-                            RoleName = "SuperAdmin",
-                            Status = true
-                        },
-                        new
-                        {
-                            RoleId = 2,
                             RoleName = "Admin",
                             Status = true
                         },
                         new
                         {
-                            RoleId = 3,
+                            RoleId = 2,
                             RoleName = "Supervisor",
                             Status = true
                         },
                         new
                         {
-                            RoleId = 4,
-                            RoleName = "Employee",
+                            RoleId = 3,
+                            RoleName = "Technician",
                             Status = true
                         });
                 });
@@ -1930,7 +1948,7 @@ namespace Infrastructure.Migrations
                         {
                             TicketId = 1,
                             ContractId = 3,
-                            CreateDate = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            CreateDate = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             Description = "Sự cố 1",
                             EmployeeId = 2,
                             Status = "Active",
@@ -1940,7 +1958,7 @@ namespace Infrastructure.Migrations
                         {
                             TicketId = 2,
                             ContractId = 3,
-                            CreateDate = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            CreateDate = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             Description = "Sự cố 2",
                             EmployeeId = 2,
                             Status = "Processing",
@@ -1950,7 +1968,7 @@ namespace Infrastructure.Migrations
                         {
                             TicketId = 3,
                             ContractId = 3,
-                            CreateDate = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            CreateDate = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             Description = "Sự cố 3",
                             EmployeeId = 2,
                             Status = "Completed",
@@ -1960,7 +1978,7 @@ namespace Infrastructure.Migrations
                         {
                             TicketId = 4,
                             ContractId = 3,
-                            CreateDate = new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified),
+                            CreateDate = new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified),
                             Description = "Sự cố 4",
                             EmployeeId = 2,
                             Status = "Active",
@@ -2232,7 +2250,7 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.EntitiesForManagement.Employee", "Employee")
-                        .WithMany()
+                        .WithMany("Building")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2517,6 +2535,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.EntitiesForManagement.Employee", b =>
                 {
+                    b.Navigation("Building");
+
                     b.Navigation("Invoices");
 
                     b.Navigation("UserDevices");

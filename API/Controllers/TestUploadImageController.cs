@@ -345,12 +345,121 @@ public class TestUploadImageController : ControllerBase
     [SwaggerOperation]
     [Authorize(Roles = "Supervisor")]
     [HttpPut("building/image")]
-    public async Task<IActionResult> PutBuilding1([FromForm] MultipleImageUploadRequest multipleImageUploadRequest)
+    public async Task<IActionResult> PutBuildingSupervisor(
+        [FromForm] MultipleImageUploadRequest multipleImageUploadRequest, CancellationToken token)
     {
         var employeeId = int.Parse(User.Identity?.Name);
 
-        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
 
+        var buildingCheck = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
+
+        if (buildingCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Building not found",
+                data = ""
+            });
+
+        if (multipleImageUploadRequest.ImageUploadRequest.Count == 0 ||
+            !multipleImageUploadRequest.ImageUploadRequest.Any())
+            return Ok(new
+            {
+                status = "Success",
+                message = "No image uploaded",
+                data = ""
+            });
+
+        var counter = 0;
+
+        foreach (var image in multipleImageUploadRequest.ImageUploadRequest)
+        {
+            counter++;
+            var imageExtension = ImageExtension.ImageExtensionChecker(image.FileName);
+
+            switch (counter)
+            {
+                case 1:
+                    var fileNameCheck1 = buildingCheck.ImageUrl?.Split('/').Last();
+
+                    var finalizeUpdate1 = new Building
+                    {
+                        BuildingId = buildingId,
+                        ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
+                            "Building", imageExtension, false))?.Blob.Uri
+                    };
+                    var result1 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate1, counter);
+                    if (!result1.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result1.Message,
+                            data = ""
+                        });
+                    break;
+
+                case 2:
+                    var fileNameCheck2 = buildingCheck.ImageUrl2?.Split('/').Last();
+
+                    var finalizeUpdate2 = new Building
+                    {
+                        BuildingId = buildingId,
+                        ImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck2,
+                            "Building", imageExtension, false))?.Blob.Uri
+                    };
+                    var result2 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate2, counter);
+                    if (!result2.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result2.Message,
+                            data = ""
+                        });
+                    break;
+
+                case 3:
+                    var fileNameCheck3 = buildingCheck.ImageUrl3?.Split('/').Last();
+
+                    var finalizeUpdate3 = new Building
+                    {
+                        BuildingId = buildingId,
+                        ImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck3,
+                            "Building", imageExtension, false))?.Blob.Uri
+                    };
+                    var result3 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate3, counter);
+                    if (!result3.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result3.Message,
+                            data = ""
+                        });
+                    break;
+                case >= 4:
+                    return BadRequest(new
+                    {
+                        status = "Bad Request",
+                        message = "You can only upload 3 images",
+                        data = ""
+                    });
+            }
+        }
+
+        return Ok(new
+        {
+            status = "Success",
+            message = counter + " image(s) uploaded successfully",
+            data = ""
+        });
+    }
+
+    [SwaggerOperation]
+    [Authorize(Roles = "Admin")]
+    [HttpPut("building/{buildingId:int}/image")]
+    public async Task<IActionResult> PutBuildingAdmin([FromForm] MultipleImageUploadRequest multipleImageUploadRequest,
+        int buildingId)
+    {
         var buildingCheck = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
 
         if (buildingCheck == null)

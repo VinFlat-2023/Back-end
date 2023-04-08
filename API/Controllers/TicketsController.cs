@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Security.Claims;
+using API.Extension;
 using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Ticket;
@@ -269,7 +270,8 @@ public class TicketsController : ControllerBase
     [HttpPost]
     [Authorize(Roles = "Renter")]
     [SwaggerOperation(Summary = "[Authorize] Create ticket (For renter)", Description = "date format d/M/YYYY")]
-    public async Task<IActionResult> PostTicket([FromBody] TicketCreateRequest ticketCreateRequest)
+    public async Task<IActionResult> PostTicket([FromForm] TicketCreateRequest ticketCreateRequest,
+        CancellationToken token)
     {
         var userId = int.Parse(User.Identity?.Name);
 
@@ -283,7 +285,7 @@ public class TicketsController : ControllerBase
                 data = ""
             });
 
-        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnRenter(userId);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnRenter(userId, token);
 
         if (buildingId == 0)
             return NotFound(new
@@ -293,16 +295,18 @@ public class TicketsController : ControllerBase
                 data = ""
             });
 
-        var managementEmployeeId = await _serviceWrapper.GetId.GetEmployeeIdBasedOnBuildingId(buildingId);
+        var supervisorId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(buildingId, token);
 
-        if (managementEmployeeId == 0)
+        if (supervisorId == 0)
             return NotFound(new
             {
                 status = "Not Found",
                 message = "Management employee not found",
                 data = ""
             });
-        var contractId = await _serviceWrapper.GetId.GetContractIdBasedOnRenterId(userId);
+
+        var contractId = await _serviceWrapper.GetId.GetContractIdBasedOnRenterId(userId, token);
+
         if (contractId == 0)
             return NotFound(new
             {
@@ -319,14 +323,53 @@ public class TicketsController : ControllerBase
             TicketTypeId = ticketCreateRequest.TicketTypeId,
             // TODO : Auto assign to active invoice -> invoice detail if not assigned manually
             Status = "Active",
-            ImageUrl = ticketCreateRequest.ImageUrl,
             Amount = 0,
             ContractId = contractId,
-            EmployeeId = managementEmployeeId
+            EmployeeId = supervisorId
         };
 
-        if (newTicket.TicketTypeId == 1 || newTicket.TicketTypeId == 2)
-            newTicket.EmployeeId = null;
+        var counter = 0;
+
+        if (ticketCreateRequest.ImageUploadRequest != null)
+            foreach (var image in ticketCreateRequest.ImageUploadRequest)
+            {
+                counter++;
+                var imageExtension = ImageExtension.ImageExtensionChecker(image.FileName);
+
+                switch (counter)
+                {
+                    case 1:
+                        var fileNameCheck1 = newTicket.ImageUrl?.Split('/').Last();
+
+                        newTicket.ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
+                            "Ticket", imageExtension, false))?.Blob.Uri;
+
+                        break;
+
+                    case 2:
+                        var fileNameCheck2 = newTicket.ImageUrl2?.Split('/').Last();
+
+                        newTicket.ImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck2,
+                            "Ticket", imageExtension, false))?.Blob.Uri;
+
+                        break;
+
+                    case 3:
+                        var fileNameCheck3 = newTicket.ImageUrl3?.Split('/').Last();
+
+                        newTicket.ImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck3,
+                            "Ticket", imageExtension, false))?.Blob.Uri;
+
+                        break;
+                    case >= 4:
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = "You can only upload 3 images",
+                            data = ""
+                        });
+                }
+            }
 
         var validation = await _validator.ValidateParams(newTicket, null);
         if (!validation.IsValid)

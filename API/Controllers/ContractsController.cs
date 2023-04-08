@@ -113,7 +113,7 @@ public class ContractsController : ControllerBase
         {
             status = "Success",
             message = "Contract list found",
-            data = _mapper.Map<ContractDetailEntity>(latestContract)
+            data = _mapper.Map<ContractBasicDetailEntity>(latestContract)
         });
     }
 
@@ -228,7 +228,7 @@ public class ContractsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get Contract using contract id with renter id (For renter)")]
     [Authorize(Roles = "Supervisor, Renter")]
     [HttpGet("{id:int}/user/{renterId:int}")]
-    public async Task<IActionResult> GetContract(int id, int renterId)
+    public async Task<IActionResult> GetContract(int id, int renterId, CancellationToken token)
     {
         var userRole = User.Identities
             .FirstOrDefault()?.Claims
@@ -289,7 +289,7 @@ public class ContractsController : ControllerBase
                         data = ""
                     });
 
-                var employeeId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(entity.BuildingId);
+                var employeeId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(entity.BuildingId, token);
 
                 var buildingDetail = new BuildingContractDetailEntity
                 {
@@ -484,7 +484,7 @@ public class ContractsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create Contract (For management)", Description = "date format d/M/YYYY")]
     [Authorize(Roles = "Supervisor")]
     [HttpPost("sign")]
-    public async Task<IActionResult> PostContract([FromBody] ContractCreateRequest contract)
+    public async Task<IActionResult> PostContract([FromBody] ContractCreateRequest contract, CancellationToken token)
     {
         var newRenter = new Renter
         {
@@ -509,7 +509,7 @@ public class ContractsController : ControllerBase
 
         var employeeId = Parse(User.Identity?.Name);
 
-        var buildingId = await _serviceWrapper.GetId.GetEmployeeIdBasedOnBuildingId(employeeId);
+        var buildingId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(employeeId, token);
 
         var newContract = new Contract
         {

@@ -28,7 +28,6 @@ public class Employee
     public IFormFile? Image { get; set; }
 
     public string? ImageUrl { get; set; }
-
     public string Phone { get; set; }
     public bool Status { get; set; }
     public string Address { get; set; }
@@ -37,6 +36,7 @@ public class Employee
     public int RoleId { get; set; }
 
     public virtual Role Role { get; set; }
+    public virtual ICollection<Building> Building { get; set; }
     public virtual ICollection<Invoice> Invoices { get; set; }
     public virtual ICollection<UserDevice> UserDevices { get; set; }
 }

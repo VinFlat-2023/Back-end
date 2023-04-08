@@ -12,38 +12,33 @@ public class GetIdService : IGetIdService
         _repositoryWrapper = repositoryWrapper;
     }
 
-    public async Task<int> GetBuildingIdBasedOnRenter(int renterId)
+    public async Task<int> GetBuildingIdBasedOnRenter(int renterId, CancellationToken token)
     {
-        return await _repositoryWrapper.GetId.GetBuildingIdBasedOnRenter(renterId);
+        return await _repositoryWrapper.GetId.GetBuildingIdBasedOnRenter(renterId, token);
     }
 
-    public async Task<int> GetEmployeeIdBasedOnBuildingId(int buildingId)
+    public async Task<int> GetBuildingIdBasedOnSupervisorId(int employeeId, CancellationToken token)
     {
-        return await _repositoryWrapper.GetId.GetEmployeeIdBasedOnBuildingId(buildingId);
+        return await _repositoryWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
     }
 
-    public async Task<int> GetBuildingIdBasedOnSupervisorId(int employeeId)
+    public async Task<int> GetContractIdBasedOnRenterId(int renterId, CancellationToken token)
     {
-        return await _repositoryWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId);
+        return await _repositoryWrapper.GetId.GetContractIdBasedOnRenterId(renterId, token);
     }
 
-    public async Task<int> GetContractIdBasedOnRenterId(int renterId)
+    public async Task<int> GetActiveContractIdBasedOnRenterId(int renterId, CancellationToken token)
     {
-        return await _repositoryWrapper.GetId.GetContractIdBasedOnRenterId(renterId);
+        return await _repositoryWrapper.GetId.GetActiveContractIdBasedOnRenterId(renterId, token);
     }
 
-    public async Task<int> GetActiveContractIdBasedOnRenterId(int renterId)
+    public async Task<int> GetRoomIdBasedOnFlatId(int flatId, CancellationToken token)
     {
-        return await _repositoryWrapper.GetId.GetActiveContractIdBasedOnRenterId(renterId);
+        return await _repositoryWrapper.GetId.GetRoomIdBasedOnFlatId(flatId, token);
     }
 
-    public async Task<int> GetRoomIdBasedOnFlatId(int flatId)
+    public async Task<int> GetSupervisorIdByBuildingId(int entityBuildingId, CancellationToken token)
     {
-        return await _repositoryWrapper.GetId.GetRoomIdBasedOnFlatId(flatId);
-    }
-
-    public async Task<int> GetSupervisorIdByBuildingId(int entityBuildingId)
-    {
-        return await _repositoryWrapper.GetId.GetSupervisorIdByBuildingId(entityBuildingId);
+        return await _repositoryWrapper.GetId.GetSupervisorIdByBuildingId(entityBuildingId, token);
     }
 }

@@ -789,13 +789,13 @@ namespace Infrastructure.Migrations
                 columns: new[] { "RenterId", "Address", "BirthDate", "CitizenImageUrl", "CitizenNumber", "DeviceToken", "Email", "FullName", "Gender", "ImageUrl", "Password", "Phone", "RenterAddress", "Status", "Username" },
                 values: new object[,]
                 {
-                    { 1, "HCM", new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), null, "3214324523", "12321fdsg45adsa", "renter1@mail.com", "Nguyen Van A", "Male", null, "renter1", "0123543125", null, true, "renter1" },
-                    { 2, "Hue", new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), null, "3214324523", "dsavvf", "renter2@mail.com", "Nguyen Van B", "Male", null, "renter2", "0123543125", null, true, "renter2" },
-                    { 3, "DN", new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), null, "3214324523", "123221ad145ad423sa", "renter3@mail.com", "Nguyen Van C", "Female", null, "renter3", "0123543125", null, true, "renter3" },
-                    { 4, "HN", new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), null, "3214324523", "ewasdv12344", "renter4@mail.com", "Nguyen Van D", "Female", null, "renter4", "0123543125", null, true, "renter4" },
-                    { 5, "HCM", new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), null, "3214324523", "ewasdv12344", "trankhaimnhkhoi10a3@mail.com", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", null, true, "minhkhoi10a3" },
-                    { 6, "HCM", new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), null, "3214324523", "ewasdv12344", "trankhaimnhkhoi@mail.com", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", null, true, "minhkhoi" },
-                    { 7, "HCM", new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), null, "3214324523", "ewasdv12344", "khoitkmse150850@fpt", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", null, true, "minhkhoitkm" }
+                    { 1, "HCM", new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), null, "3214324523", "12321fdsg45adsa", "renter1@mail.com", "Nguyen Van A", "Male", null, "renter1", "0123543125", null, true, "renter1" },
+                    { 2, "Hue", new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), null, "3214324523", "dsavvf", "renter2@mail.com", "Nguyen Van B", "Male", null, "renter2", "0123543125", null, true, "renter2" },
+                    { 3, "DN", new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), null, "3214324523", "123221ad145ad423sa", "renter3@mail.com", "Nguyen Van C", "Female", null, "renter3", "0123543125", null, true, "renter3" },
+                    { 4, "HN", new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), null, "3214324523", "ewasdv12344", "renter4@mail.com", "Nguyen Van D", "Female", null, "renter4", "0123543125", null, true, "renter4" },
+                    { 5, "HCM", new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), null, "3214324523", "ewasdv12344", "trankhaimnhkhoi10a3@mail.com", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", null, true, "minhkhoi10a3" },
+                    { 6, "HCM", new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), null, "3214324523", "ewasdv12344", "trankhaimnhkhoi@mail.com", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", null, true, "minhkhoi" },
+                    { 7, "HCM", new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), null, "3214324523", "ewasdv12344", "khoitkmse150850@fpt", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", null, true, "minhkhoitkm" }
                 });
 
             migrationBuilder.InsertData(
@@ -803,10 +803,9 @@ namespace Infrastructure.Migrations
                 columns: new[] { "RoleId", "RoleName", "Status" },
                 values: new object[,]
                 {
-                    { 1, "SuperAdmin", true },
-                    { 2, "Admin", true },
-                    { 3, "Supervisor", true },
-                    { 4, "Employee", true }
+                    { 1, "Admin", true },
+                    { 2, "Supervisor", true },
+                    { 3, "Technician", true }
                 });
 
             migrationBuilder.InsertData(
@@ -847,13 +846,9 @@ namespace Infrastructure.Migrations
                 values: new object[,]
                 {
                     { 1, null, null, null, null, null, "Air Conditioner" },
-                    { 2, null, null, null, null, null, "Water Heater" }
+                    { 2, null, null, null, null, null, "Water Heater" },
+                    { 3, null, null, null, null, null, "Wifi" }
                 });
-
-            migrationBuilder.InsertData(
-                table: "Utility",
-                columns: new[] { "UtilityId", "Description", "ImageUrl", "ImageUrl2", "ImageUrl3", "ImageUrl4", "UtilitiesName" },
-                values: new object[] { 3, null, null, null, null, null, "Wifi" });
 
             migrationBuilder.InsertData(
                 table: "Utility",
@@ -865,11 +860,13 @@ namespace Infrastructure.Migrations
                 columns: new[] { "EmployeeId", "Address", "Email", "FullName", "ImageUrl", "Password", "Phone", "RoleId", "Status", "Username" },
                 values: new object[,]
                 {
-                    { 1, "Admin address", "superadmin@mail", "Super admin employee", null, "superadmin", "0123543125", 1, true, "superadmin" },
-                    { 2, "Admin address", "admin@mail", "Admin employee", null, "admin", "0123543532", 2, true, "admin" },
-                    { 3, "Supervisor address", "supervisor@mail", "Supervisor employee", null, "supervisor", "0123543554", 3, true, "supervisor" },
-                    { 4, "Employee address", "employee1@mail", "Employee employee 1", null, "employee1", "0123543235", 4, true, "employee1" },
-                    { 5, "Employee address", "employee2@mail", "Employee employee 2", null, "employee2", "0123123235", 4, true, "employee2" }
+                    { 1, "Sup1 address", "sup13@mail", "supervisor 31", null, "123", "0123543423125", 2, true, "sup1" },
+                    { 2, "Sup2 address", "sup21@mail", "sup2", null, "123", "012354353432", 2, true, "supervisor 24" },
+                    { 3, "Sup3 address", "supervisor32@mail", "sup3", null, "supervisor", "012354433554", 2, true, "supervisor" },
+                    { 4, "Sup4 address", "employee211@mail", "sup4", null, "123", "012323543235", 2, true, "supervisor 4" },
+                    { 5, "Sup5 address", "employee233@mail", "sup5", null, "123", "043123123235", 2, true, "supervisor 5" },
+                    { 6, "Employee address", "employee232@mail", "sup6", null, "123", "012312323235", 2, true, "supervisor 6" },
+                    { 7, "Admin address", "admin12@mail", "Admin account", null, "admin", "012343123235", 1, true, "admin" }
                 });
 
             migrationBuilder.InsertData(
@@ -877,12 +874,12 @@ namespace Infrastructure.Migrations
                 columns: new[] { "BuildingId", "AreaId", "AveragePrice", "BuildingAddress", "BuildingName", "BuildingPhoneNumber", "CoordinateX", "CoordinateY", "Description", "EmployeeId", "ImageUrl", "ImageUrl2", "ImageUrl3", "ImageUrl4", "Status", "TotalFlats" },
                 values: new object[,]
                 {
-                    { 1, 1, 0m, "Quajan 9", "Building 1a", "012323123", 231m, 324m, "Building 1a", 5, "", null, null, null, true, 0 },
+                    { 1, 1, 0m, "Quajan 9", "Building 1a", "012323123", 231m, 324m, "Building 1a", 1, "", null, null, null, true, 0 },
                     { 2, 1, 0m, "Quận 9", "Building 1b", "012323123", 21233m, 334m, "Building 1b", 2, "", null, null, null, true, 0 },
-                    { 3, 2, 0m, "Quận 2", "Building 1c", "012323123", 423m, 3214m, "Building 1c", 2, "", null, null, null, true, 0 },
+                    { 3, 2, 0m, "Quận 2", "Building 1c", "012323123", 423m, 3214m, "Building 1c", 3, "", null, null, null, true, 0 },
                     { 4, 2, 0m, "Quận 3", "Building 1d", "012323123", 2323m, 314m, "Building 1d", 4, "", null, null, null, true, 0 },
-                    { 5, 2, 0m, "Quận 4", "Building 1e", "012323123", 23431m, 3245m, "Building 1e", 3, "", null, null, null, true, 0 },
-                    { 6, 3, 0m, "Quận 7", "Building 1f", "012323123", 21233m, 334m, "Building 1f", 4, "", null, null, null, true, 0 }
+                    { 5, 2, 0m, "Quận 4", "Building 1e", "012323123", 23431m, 3245m, "Building 1e", 5, "", null, null, null, true, 0 },
+                    { 6, 3, 0m, "Quận 7", "Building 1f", "012323123", 21233m, 334m, "Building 1f", 6, "", null, null, null, true, 0 }
                 });
 
             migrationBuilder.InsertData(
@@ -890,13 +887,13 @@ namespace Infrastructure.Migrations
                 columns: new[] { "InvoiceId", "Amount", "CreatedTime", "Detail", "DueDate", "EmployeeId", "ImageUrl", "InvoiceTypeId", "Name", "PaymentTime", "RenterId", "Status" },
                 values: new object[,]
                 {
-                    { 1, 0, new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), "Detail for invoice 1", null, 2, null, 1, "Hoá đơn điện tử cho renter 1", null, 1, true },
-                    { 2, 0, new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), "Detail for invoice 2", null, 3, null, 1, "Hoá đơn điện tử cho renter 2", null, 2, true },
-                    { 3, 0, new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), "Detail for invoice 3", null, 4, null, 1, "Hoá đơn điện tử cho renter 3", null, 3, false },
-                    { 4, 0, new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), "Detail for invoice 3 (2)", null, 2, null, 1, "Hoá đơn điện tử cho renter 3 (2)", null, 3, false },
-                    { 5, 0, new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), "Detail for invoice 3 (3)", null, 2, null, 1, "Hoá đơn điện tử cho renter 3 (3)", null, 3, false },
-                    { 6, 0, new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), "Detail for invoice 3 (4)", null, 2, null, 1, "Hoá đơn điện tử cho renter 3 (4)", null, 3, true },
-                    { 7, 0, new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), "Detail for invoice 3 (5)", null, 2, null, 1, "Hoá đơn điện tử cho renter 3 (5)", null, 3, true }
+                    { 1, 0, new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), "Detail for invoice 1", null, 2, null, 1, "Hoá đơn điện tử cho renter 1", null, 1, true },
+                    { 2, 0, new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), "Detail for invoice 2", null, 3, null, 1, "Hoá đơn điện tử cho renter 2", null, 2, true },
+                    { 3, 0, new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), "Detail for invoice 3", null, 4, null, 1, "Hoá đơn điện tử cho renter 3", null, 3, false },
+                    { 4, 0, new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), "Detail for invoice 3 (2)", null, 2, null, 1, "Hoá đơn điện tử cho renter 3 (2)", null, 3, false },
+                    { 5, 0, new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), "Detail for invoice 3 (3)", null, 2, null, 1, "Hoá đơn điện tử cho renter 3 (3)", null, 3, false },
+                    { 6, 0, new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), "Detail for invoice 3 (4)", null, 2, null, 1, "Hoá đơn điện tử cho renter 3 (4)", null, 3, true },
+                    { 7, 0, new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), "Detail for invoice 3 (5)", null, 2, null, 1, "Hoá đơn điện tử cho renter 3 (5)", null, 3, true }
                 });
 
             migrationBuilder.InsertData(
@@ -937,12 +934,12 @@ namespace Infrastructure.Migrations
                 columns: new[] { "ContractId", "BuildingId", "ContractName", "ContractStatus", "CreatedDate", "DateSigned", "Description", "EndDate", "FlatId", "ImageUrl", "ImageUrl2", "ImageUrl3", "ImageUrl4", "LastUpdated", "PriceForElectricity", "PriceForRent", "PriceForService", "PriceForWater", "RenterId", "RoomId", "StartDate" },
                 values: new object[,]
                 {
-                    { 1, 1, "Contract for renter 1", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 6, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), "Contract description for renter 1", null, 2, "No image", null, null, null, new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), 0m, 1800000m, 0m, 0m, 1, 1, new DateTime(2023, 6, 9, 21, 37, 45, 0, DateTimeKind.Unspecified) },
-                    { 2, 2, "Contract for renter 2", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 6, 5, 21, 37, 45, 0, DateTimeKind.Unspecified), "Contract description for renter 2", null, 3, "No image", null, null, null, new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), 0m, 2800000m, 0m, 0m, 2, 1, new DateTime(2023, 6, 7, 21, 37, 45, 0, DateTimeKind.Unspecified) },
-                    { 3, 3, "Contract for renter 3", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 6, 5, 21, 37, 45, 0, DateTimeKind.Unspecified), "Contract description for renter 3", null, 3, "No image", null, null, null, new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 6, 7, 21, 37, 45, 0, DateTimeKind.Unspecified) },
-                    { 4, 3, "Contract for renter 3 (2)", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 6, 5, 21, 37, 45, 0, DateTimeKind.Unspecified), "Contract description for renter 3", null, 4, "No image", null, null, null, new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), 120m, 2800000m, 10000m, 1000m, 3, 1, new DateTime(2023, 6, 7, 21, 37, 45, 0, DateTimeKind.Unspecified) },
-                    { 5, 3, "Contract for renter 3 (3)", "Inactive", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 6, 5, 21, 37, 45, 0, DateTimeKind.Unspecified), "Contract description for renter 3", null, 3, "No image", null, null, null, new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 6, 7, 21, 37, 45, 0, DateTimeKind.Unspecified) },
-                    { 6, 3, "Contract for renter 3 (4)", "Inactive", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 6, 5, 21, 37, 45, 0, DateTimeKind.Unspecified), "Contract description for renter 3", null, 3, "No image", null, null, null, new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 6, 7, 21, 37, 45, 0, DateTimeKind.Unspecified) }
+                    { 1, 1, "Contract for renter 1", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 7, 5, 17, 57, 27, 0, DateTimeKind.Unspecified), "Contract description for renter 1", null, 2, "No image", null, null, null, new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), 0m, 1800000m, 0m, 0m, 1, 1, new DateTime(2023, 7, 10, 17, 57, 27, 0, DateTimeKind.Unspecified) },
+                    { 2, 2, "Contract for renter 2", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 7, 6, 17, 57, 27, 0, DateTimeKind.Unspecified), "Contract description for renter 2", null, 3, "No image", null, null, null, new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), 0m, 2800000m, 0m, 0m, 2, 1, new DateTime(2023, 7, 8, 17, 57, 27, 0, DateTimeKind.Unspecified) },
+                    { 3, 3, "Contract for renter 3", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 7, 6, 17, 57, 27, 0, DateTimeKind.Unspecified), "Contract description for renter 3", null, 3, "No image", null, null, null, new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 7, 8, 17, 57, 27, 0, DateTimeKind.Unspecified) },
+                    { 4, 3, "Contract for renter 3 (2)", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 7, 6, 17, 57, 27, 0, DateTimeKind.Unspecified), "Contract description for renter 3", null, 4, "No image", null, null, null, new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), 120m, 2800000m, 10000m, 1000m, 3, 1, new DateTime(2023, 7, 8, 17, 57, 27, 0, DateTimeKind.Unspecified) },
+                    { 5, 3, "Contract for renter 3 (3)", "Inactive", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 7, 6, 17, 57, 27, 0, DateTimeKind.Unspecified), "Contract description for renter 3", null, 3, "No image", null, null, null, new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 7, 8, 17, 57, 27, 0, DateTimeKind.Unspecified) },
+                    { 6, 3, "Contract for renter 3 (4)", "Inactive", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 7, 6, 17, 57, 27, 0, DateTimeKind.Unspecified), "Contract description for renter 3", null, 3, "No image", null, null, null, new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 7, 8, 17, 57, 27, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
@@ -991,10 +988,10 @@ namespace Infrastructure.Migrations
                 columns: new[] { "TicketId", "Amount", "ContractId", "CreateDate", "Description", "EmployeeId", "ImageUrl", "ImageUrl2", "ImageUrl3", "SolveDate", "Status", "TicketTypeId" },
                 values: new object[,]
                 {
-                    { 1, null, 3, new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), "Sự cố 1", 2, null, null, null, null, "Active", 1 },
-                    { 2, null, 3, new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), "Sự cố 2", 2, null, null, null, null, "Processing", 2 },
-                    { 3, null, 3, new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), "Sự cố 3", 2, null, null, null, null, "Completed", 3 },
-                    { 4, null, 3, new DateTime(2023, 7, 4, 21, 37, 45, 0, DateTimeKind.Unspecified), "Sự cố 4", 2, null, null, null, null, "Active", 1 }
+                    { 1, null, 3, new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), "Sự cố 1", 2, null, null, null, null, "Active", 1 },
+                    { 2, null, 3, new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), "Sự cố 2", 2, null, null, null, null, "Processing", 2 },
+                    { 3, null, 3, new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), "Sự cố 3", 2, null, null, null, null, "Completed", 3 },
+                    { 4, null, 3, new DateTime(2023, 8, 4, 17, 57, 27, 0, DateTimeKind.Unspecified), "Sự cố 4", 2, null, null, null, null, "Active", 1 }
                 });
 
             migrationBuilder.CreateIndex(

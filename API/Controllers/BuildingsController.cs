@@ -137,11 +137,11 @@ public class BuildingsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get current building (For management (Supervisor only)")]
     [Authorize(Roles = "Supervisor")]
     [HttpGet("current")]
-    public async Task<IActionResult> GetBuildingBasedOnSupervisor()
+    public async Task<IActionResult> GetBuildingBasedOnSupervisor(CancellationToken token)
     {
         var employeeId = int.Parse(User.Identity?.Name);
 
-        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
 
         var entity = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
 

@@ -107,62 +107,86 @@ public class ApplicationContext : DbContext
             new Employee
             {
                 EmployeeId = 1,
-                FullName = "Super admin employee",
-                Username = "superadmin",
-                Password = "superadmin",
-                Email = "superadmin@mail",
-                Phone = "0123543125",
+                FullName = "supervisor 31",
+                Username = "sup1",
+                Password = "123",
+                Email = "sup13@mail",
+                Phone = "0123543423125",
                 Status = true,
-                RoleId = 1,
-                Address = "Admin address"
+                RoleId = 2,
+                Address = "Sup1 address"
             },
             new Employee
             {
                 EmployeeId = 2,
-                Username = "admin",
-                FullName = "Admin employee",
-                Password = "admin",
-                Email = "admin@mail",
-                Phone = "0123543532",
+                Username = "supervisor 24",
+                FullName = "sup2",
+                Password = "123",
+                Email = "sup21@mail",
+                Phone = "012354353432",
                 Status = true,
                 RoleId = 2,
-                Address = "Admin address"
+                Address = "Sup2 address"
             },
             new Employee
             {
                 EmployeeId = 3,
                 Username = "supervisor",
-                FullName = "Supervisor employee",
+                FullName = "sup3",
                 Password = "supervisor",
-                Email = "supervisor@mail",
-                Phone = "0123543554",
+                Email = "supervisor32@mail",
+                Phone = "012354433554",
                 Status = true,
-                RoleId = 3,
-                Address = "Supervisor address"
+                RoleId = 2,
+                Address = "Sup3 address"
             },
             new Employee
             {
                 EmployeeId = 4,
-                Username = "employee1",
-                FullName = "Employee employee 1",
-                Password = "employee1",
-                Email = "employee1@mail",
-                Phone = "0123543235",
+                Username = "supervisor 4",
+                FullName = "sup4",
+                Password = "123",
+                Email = "employee211@mail",
+                Phone = "012323543235",
                 Status = true,
-                RoleId = 4,
-                Address = "Employee address"
+                RoleId = 2,
+                Address = "Sup4 address"
             },
             new Employee
             {
                 EmployeeId = 5,
-                Username = "employee2",
-                FullName = "Employee employee 2",
-                Password = "employee2",
-                Email = "employee2@mail",
-                Phone = "0123123235",
+                Username = "supervisor 5",
+                FullName = "sup5",
+                Password = "123",
+                Email = "employee233@mail",
+                Phone = "043123123235",
                 Status = true,
-                RoleId = 4,
+                RoleId = 2,
+                Address = "Sup5 address"
+            },
+            new Employee
+            {
+                EmployeeId = 6,
+                Username = "supervisor 6",
+                FullName = "sup6",
+                Password = "123",
+                Email = "employee232@mail",
+                Phone = "012312323235",
+                Status = true,
+                RoleId = 2,
                 Address = "Employee address"
+            },
+            new Employee
+            {
+                EmployeeId = 7,
+                Username = "admin",
+                FullName = "Admin account",
+                Password = "admin",
+                Email = "admin12@mail",
+                Phone = "012343123235",
+                Status = true,
+                RoleId = 1,
+                Address = "Admin address"
             }
         );
 
@@ -171,25 +195,19 @@ public class ApplicationContext : DbContext
             {
                 Status = true,
                 RoleId = 1,
-                RoleName = "SuperAdmin"
-            },
-            new Role
-            {
-                Status = true,
-                RoleId = 2,
                 RoleName = "Admin"
             },
             new Role
             {
                 Status = true,
-                RoleId = 3,
+                RoleId = 2,
                 RoleName = "Supervisor"
             },
             new Role
             {
                 Status = true,
-                RoleId = 4,
-                RoleName = "Employee"
+                RoleId = 3,
+                RoleName = "Technician"
             }
         );
 
@@ -392,9 +410,9 @@ public class ApplicationContext : DbContext
                 CoordinateX = 231,
                 CoordinateY = 324,
                 AreaId = 1,
-                EmployeeId = 5,
-                ImageUrl = "",
-                BuildingAddress = "Quajan 9",
+                EmployeeId = 1,
+                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/6716250e-8169-446d-a54e-37094c30ae70thumbnail-202303031027054744.jpg",
+                BuildingAddress = "Quận 9",
                 BuildingPhoneNumber = "012323123"
             },
             new Building
@@ -407,7 +425,7 @@ public class ApplicationContext : DbContext
                 CoordinateY = 334,
                 AreaId = 1,
                 EmployeeId = 2,
-                ImageUrl = "",
+                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/be39f244-45d1-48cc-94dc-7e1b138caa3athumbnail-202302251636284394.jpg",
                 BuildingAddress = "Quận 9",
                 BuildingPhoneNumber = "012323123"
             },
@@ -420,8 +438,8 @@ public class ApplicationContext : DbContext
                 CoordinateX = 423,
                 CoordinateY = 3214,
                 AreaId = 2,
-                EmployeeId = 2,
-                ImageUrl = "",
+                EmployeeId = 3,
+                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/8a8ea225-ea25-422c-a20d-299c7ed42456thumbnail-202302041627581789.jpg",
                 BuildingAddress = "Quận 2",
                 BuildingPhoneNumber = "012323123"
             },
@@ -435,7 +453,7 @@ public class ApplicationContext : DbContext
                 CoordinateY = 314,
                 AreaId = 2,
                 EmployeeId = 4,
-                ImageUrl = "",
+                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/69d0767f-ff29-49dc-88fc-c3bc87cba986thumbnail-202212291740189478.jpg",
                 BuildingAddress = "Quận 3",
                 BuildingPhoneNumber = "012323123"
             },
@@ -448,8 +466,8 @@ public class ApplicationContext : DbContext
                 CoordinateX = 23431,
                 CoordinateY = 3245,
                 AreaId = 2,
-                EmployeeId = 3,
-                ImageUrl = "",
+                EmployeeId = 5,
+                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a3f9897c-800e-4d5e-92b7-e388eefdf64bthumbnail-202212151636139810.jpg",
                 BuildingAddress = "Quận 4",
                 BuildingPhoneNumber = "012323123"
             },
@@ -462,8 +480,8 @@ public class ApplicationContext : DbContext
                 CoordinateX = 21233,
                 CoordinateY = 334,
                 AreaId = 3,
-                EmployeeId = 4,
-                ImageUrl = "",
+                EmployeeId = 6,
+                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 7",
                 BuildingPhoneNumber = "012323123"
             }

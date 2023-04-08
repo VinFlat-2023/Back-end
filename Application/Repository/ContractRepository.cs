@@ -79,13 +79,13 @@ public class ContractRepository : IContractRepository
     public IQueryable<Contract?> GetContractByRenterId(int renterId)
     {
         return _context.Contracts
+            .Include(x => x.Renter)
             .Where(x => x.RenterId == renterId);
     }
 
     public IQueryable<Contract?> GetContractHistoryDetail(int contractId)
     {
         return _context.Contracts
-            .Reverse()
             .Where(x => x.ContractId == contractId);
     }
 
