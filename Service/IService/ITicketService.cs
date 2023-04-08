@@ -11,6 +11,8 @@ public interface ITicketService
     public Task<PagedList<Ticket>?> GetTicketList(TicketFilter filters, int employeeId, bool isManagement,
         CancellationToken token);
 
+    public Task<RepositoryResponse> UpdateTicketImage(Ticket ticket, int number);
+
     public Task<Ticket?> GetTicketById(int? ticketId);
     public Task<Ticket?> GetTicketById(int? ticketId, int? renterId);
     public Task<Ticket?> AddTicket(Ticket ticket);

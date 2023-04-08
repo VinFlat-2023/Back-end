@@ -11,6 +11,6 @@ public interface IBuildingRepository
     public IQueryable<Building?> GetBuildingDetail(int? buildingId);
     public Task<RepositoryResponse> AddBuilding(Building building);
     public Task<RepositoryResponse> UpdateBuilding(Building building);
-    public Task<RepositoryResponse> UpdateBuildingImages(Building building);
+    public Task<RepositoryResponse> UpdateBuildingImages(Building building, int number);
     public Task<RepositoryResponse> DeleteBuilding(int id);
 }

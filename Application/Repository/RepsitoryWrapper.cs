@@ -40,8 +40,8 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if (_accounts == null) _accounts = new EmployeeRepository(_context);
-            return _accounts;
+            if (_employees == null) _employees = new EmployeeRepository(_context);
+            return _employees;
         }
     }
 
@@ -239,7 +239,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IAzureStorageRepository _azureStorage;
     private IInvoiceTypeRepository _invoiceTypes;
     private IInvoiceDetailRepository _invoiceDetails;
-    private IEmployeeRepository _accounts;
+    private IEmployeeRepository _employees;
     private IAreaRepository _areas;
     private IBuildingRepository _buildings;
     private IContractRepository _contracts;

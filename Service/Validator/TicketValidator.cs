@@ -45,18 +45,6 @@ public class TicketValidator : BaseValidator, ITicketValidator
             if (obj?.CreateDate == null)
                 ValidatorResult.Failures.Add("Create date is required");
 
-
-            switch (obj?.EmployeeId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Management employee id is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.EmployeeCheck(obj.EmployeeId) == null)
-                        ValidatorResult.Failures.Add("Management employee provided does not exist");
-                    break;
-            }
-
             switch (obj?.Amount)
             {
                 case { } when obj.Amount < 0:
@@ -85,6 +73,10 @@ public class TicketValidator : BaseValidator, ITicketValidator
                 case not null:
                     if (await _conditionCheckHelper.TicketTypeCheck(obj.TicketTypeId) == null)
                         ValidatorResult.Failures.Add("Ticket type provided does not exist");
+
+                    if ((obj.TicketTypeId != 1 || obj.TicketTypeId != 2) && obj.EmployeeId == null)
+                        ValidatorResult.Failures.Add("Ticket type provided is invalid");
+
                     break;
             }
 

@@ -15,7 +15,7 @@ public interface IEmployeeService
     public Task<RepositoryResponse> DeleteEmployee(int employeeId);
     public Task<Employee> IsEmployeeEmailExist(string? email);
     public Task<Employee> IsEmployeeUsernameExist(string? email);
-    public Task<Employee?> EmployeeLogin(string username, string password);
+    public Task<Employee?> EmployeeLogin(string usernameOrPhoneNumber, string password);
     public Task<Employee?> GetSupervisorEmployee(int employeeId);
     public Task<RepositoryResponse> UpdateEmployeeProfilePicture(Employee employee);
 }

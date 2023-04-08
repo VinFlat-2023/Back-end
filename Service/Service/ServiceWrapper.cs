@@ -63,8 +63,8 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_account == null) _account = new EmployeeService(_repositories, _paginationOptions);
-            return _account;
+            if (_employee == null) _employee = new EmployeeService(_repositories, _paginationOptions);
+            return _employee;
         }
     }
 
@@ -288,7 +288,7 @@ public class ServiceWrapper : IServiceWrapper
     #region fields
 
     private IAzureStorageService _azureStorage;
-    private IEmployeeService _account;
+    private IEmployeeService _employee;
     private IAreaService _area;
     private IBuildingService _building;
     private IContractService _contract;

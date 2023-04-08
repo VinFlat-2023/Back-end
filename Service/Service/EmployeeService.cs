@@ -89,9 +89,9 @@ public class EmployeeService : IEmployeeService
         return await _repositoryWrapper.Employees.IsEmployeeEmailExist(email);
     }
 
-    public async Task<Employee?> EmployeeLogin(string username, string password)
+    public async Task<Employee?> EmployeeLogin(string usernameOrPhoneNumber, string password)
     {
-        return await _repositoryWrapper.Employees.GetEmployee(username, password)
+        return await _repositoryWrapper.Employees.GetEmployee(usernameOrPhoneNumber, password)
             .FirstOrDefaultAsync();
     }
 }

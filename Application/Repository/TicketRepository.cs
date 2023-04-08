@@ -161,6 +161,38 @@ internal class TicketRepository : ITicketRepository
         };
     }
 
+    public async Task<RepositoryResponse> UpdateTicketImage(Ticket ticket, int number)
+    {
+        var ticketData = await _context.Tickets
+            .FirstOrDefaultAsync(x => x.TicketId == ticket!.TicketId);
+        if (ticketData == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Ticket not found"
+            };
+
+        switch (number)
+        {
+            case 1:
+                ticketData.ImageUrl = ticket.ImageUrl;
+                break;
+            case 2:
+                ticketData.ImageUrl2 = ticket.ImageUrl2;
+                break;
+            case 3:
+                ticketData.ImageUrl3 = ticket.ImageUrl3;
+                break;
+        }
+
+        await _context.SaveChangesAsync();
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Ticket updated successfully"
+        };
+    }
+
     /// <summary>
     ///     DeleteFeedback ticket by id
     /// </summary>

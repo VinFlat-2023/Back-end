@@ -24,7 +24,6 @@ public class Ticket
     public IFormFile? Image { get; set; }
 
     public string? ImageUrl { get; set; }
-
     public string? ImageUrl2 { get; set; }
 
     public string? ImageUrl3 { get; set; }
@@ -32,11 +31,11 @@ public class Ticket
     // Contract
     public int ContractId { get; set; }
 
-    public virtual Contract Contract { get; set; } = null!;
+    public virtual Contract Contract { get; set; }
 
     // Management
-    public int EmployeeId { get; set; }
-    public virtual Employee Employee { get; set; } = null!;
+    public int? EmployeeId { get; set; }
+    public virtual Employee Employee { get; set; }
     public int TicketTypeId { get; set; }
-    public virtual TicketType TicketType { get; set; } = null!;
+    public virtual TicketType TicketType { get; set; }
 }

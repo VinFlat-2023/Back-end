@@ -30,7 +30,9 @@ public class GetIdRepository : IGetIdRepository
     public async Task<int> GetEmployeeIdBasedOnBuildingId(int buildingId)
     {
         var room = await _context.Buildings
-            .FirstOrDefaultAsync(x => x.BuildingId == buildingId);
+            .Include(x => x.Employee)
+            .ThenInclude(x => x.Role)
+            .FirstOrDefaultAsync(x => x.BuildingId == buildingId && x.Employee.Role.RoleName == "Supervisor");
 
         if (room == null)
             return 0;

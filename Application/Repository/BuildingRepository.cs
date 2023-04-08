@@ -97,8 +97,9 @@ public class BuildingRepository : IBuildingRepository
     ///     UpdateExpenseHistory building detail using building id
     /// </summary>
     /// <param name="building"></param>
+    /// <param name="number"></param>
     /// <returns></returns>
-    public async Task<RepositoryResponse> UpdateBuildingImages(Building building)
+    public async Task<RepositoryResponse> UpdateBuildingImages(Building building, int number)
     {
         var buildingData = await _context.Buildings
             .FirstOrDefaultAsync(x => x.BuildingId == building.BuildingId);
@@ -110,7 +111,18 @@ public class BuildingRepository : IBuildingRepository
                 Message = "Building not found"
             };
 
-        buildingData.ImageUrl = building.ImageUrl;
+        switch (number)
+        {
+            case 1:
+                buildingData.ImageUrl = building.ImageUrl;
+                break;
+            case 2:
+                buildingData.ImageUrl2 = building.ImageUrl;
+                break;
+            case 3:
+                buildingData.ImageUrl3 = building.ImageUrl;
+                break;
+        }
 
         await _context.SaveChangesAsync();
 

@@ -241,13 +241,14 @@ public class RenterRepository : IRenterRepository
     /// <summary>
     ///     Get renter based on username and passowrd
     /// </summary>
-    /// <param name="username"></param>
+    /// <param name="usernameOrPhoneNumber"></param>
     /// <param name="password"></param>
     /// <returns></returns>
-    public IQueryable<Renter> GetRenter(string username, string password)
+    public IQueryable<Renter> GetRenter(string usernameOrPhoneNumber, string password)
     {
         return _context.Renters
-            .Where(a => a.Username == username && a.Password == password);
+            .Where(a => (a.Username == usernameOrPhoneNumber || a.Phone == usernameOrPhoneNumber)
+                        && a.Password == password);
     }
 
     public async Task<Renter?> GetARenterByUserName(string userName)

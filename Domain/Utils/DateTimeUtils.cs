@@ -21,13 +21,13 @@ public static class DateTimeUtils
             //  5/8/2009 14:40:52
             //  yyyy-MM-dd HH:mm:ss,fff
 
-            string[] formats =
+            var formats = new[]
             {
-                "d/M/yyyy HH:mm:ss", "d/M/yyyy",
-                "d/M/yyyy HH:mm: ss", "d / M / yyyy"
+                "dd/MM/yyyy HH:mm:ss",
+                "dd/MM/yyyy",
+                "dd/MM/yyyy HH:mm: ss",
+                "dd / MM / yyyy"
             };
-            var myDate = DateTime.ParseExact(dateString, formats,
-                CultureInfo.InvariantCulture);
             return DateTime.ParseExact(dateString, formats,
                 CultureInfo.InvariantCulture);
         }
@@ -36,5 +36,23 @@ public static class DateTimeUtils
             Console.WriteLine(ex.Message);
             return null;
         }
+    }
+
+    public static DateTime ToDateTime(this string s,
+        string format = "dd/MM/yyyy HH:mm:ss", string cultureString = "tr-TR")
+    {
+        var r = DateTime.ParseExact(
+            s,
+            format,
+            CultureInfo.GetCultureInfo(cultureString));
+        return r;
+    }
+
+    public static DateTime ToDateTime(this string s,
+        string format, CultureInfo culture)
+    {
+        var r = DateTime.ParseExact(s, format,
+            culture);
+        return r;
     }
 }

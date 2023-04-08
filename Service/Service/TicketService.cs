@@ -79,4 +79,9 @@ public class TicketService : ITicketService
     {
         return await _repositoryWrapper.Tickets.DeleteTicket(ticketId);
     }
+
+    public async Task<RepositoryResponse> UpdateTicketImage(Ticket ticket, int number)
+    {
+        return await _repositoryWrapper.Tickets.UpdateTicketImage(ticket, number);
+    }
 }

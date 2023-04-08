@@ -78,21 +78,21 @@ public class EmployeeRepository : IEmployeeRepository
     /// <returns></returns>
     public async Task<RepositoryResponse> UpdateEmployee(Employee employee)
     {
-        var accountData = await _context.Employees
+        var employeeData = await _context.Employees
             .FirstOrDefaultAsync(x => x.EmployeeId == employee.EmployeeId);
 
-        if (accountData == null)
+        if (employeeData == null)
             return new RepositoryResponse
             {
                 IsSuccess = false,
                 Message = "Employee not found"
             };
 
-        accountData.Email = employee.Email;
-        accountData.Password = employee.Password;
-        accountData.Phone = employee.Phone;
-        accountData.Username = employee.Username;
-        accountData.FullName = employee.FullName;
+        employeeData.Email = employee.Email;
+        employeeData.Password = employee.Password;
+        employeeData.Phone = employee.Phone;
+        employeeData.Username = employee.Username;
+        employeeData.FullName = employee.FullName;
 
         await _context.SaveChangesAsync();
 
@@ -105,17 +105,17 @@ public class EmployeeRepository : IEmployeeRepository
 
     public async Task<RepositoryResponse> UpdateEmployeePassword(Employee employee)
     {
-        var accountData = await _context.Employees
+        var employeeData = await _context.Employees
             .FirstOrDefaultAsync(x => x.EmployeeId == employee.EmployeeId);
 
-        if (accountData == null)
+        if (employeeData == null)
             return new RepositoryResponse
             {
                 IsSuccess = false,
                 Message = "Employee not found"
             };
 
-        accountData.Password = employee.Password;
+        employeeData.Password = employee.Password;
 
         await _context.SaveChangesAsync();
 
@@ -133,17 +133,17 @@ public class EmployeeRepository : IEmployeeRepository
     /// <returns></returns>
     public async Task<RepositoryResponse> ToggleEmployee(int employeeId)
     {
-        var accountFound = await _context.Employees
+        var employeeFound = await _context.Employees
             .FirstOrDefaultAsync(x => x.EmployeeId == employeeId);
 
-        if (accountFound == null)
+        if (employeeFound == null)
             return new RepositoryResponse
             {
                 IsSuccess = false,
                 Message = "Employee not found"
             };
 
-        accountFound.Status = !accountFound.Status;
+        employeeFound.Status = !employeeFound.Status;
 
         await _context.SaveChangesAsync();
         return new RepositoryResponse
@@ -160,17 +160,17 @@ public class EmployeeRepository : IEmployeeRepository
     /// <returns></returns>
     public async Task<RepositoryResponse> DeleteEmployee(int employeeId)
     {
-        var accountFound = await _context.Employees
+        var employeeFound = await _context.Employees
             .FirstOrDefaultAsync(x => x.EmployeeId == employeeId);
 
-        if (accountFound == null)
+        if (employeeFound == null)
             return new RepositoryResponse
             {
                 IsSuccess = false,
                 Message = "Employee not found"
             };
 
-        _context.Employees.Remove(accountFound);
+        _context.Employees.Remove(employeeFound);
 
         await _context.SaveChangesAsync();
 
@@ -184,14 +184,15 @@ public class EmployeeRepository : IEmployeeRepository
     /// <summary>
     ///     Get employee based on username and password
     /// </summary>
-    /// <param name="username"></param>
+    /// <param name="usernameOrPhoneNumber"></param>
     /// <param name="password"></param>
     /// <returns></returns>
-    public IQueryable<Employee> GetEmployee(string username, string password)
+    public IQueryable<Employee> GetEmployee(string usernameOrPhoneNumber, string password)
     {
         return _context.Employees
-            .Where(a => a.Username == username && a.Password == password)
-            .Include(b => b.Role);
+            .Include(b => b.Role)
+            .Where(a => (a.Username == usernameOrPhoneNumber || a.Phone == usernameOrPhoneNumber)
+                        && a.Password == password);
     }
 
     public async Task<Employee?> GetEmployeeByUserName(string userName)

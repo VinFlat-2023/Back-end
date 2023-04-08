@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Globalization;
+using System.Security.Claims;
 using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Ticket;
@@ -156,7 +157,6 @@ public class TicketsController : ControllerBase
             });
 
         /*
-
         if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
             return BadRequest(new
             {
@@ -164,7 +164,6 @@ public class TicketsController : ControllerBase
                 message = "You are not authorized to access this resource",
                 data = ""
             });
-
         */
 
         switch (userRole)
@@ -240,7 +239,7 @@ public class TicketsController : ControllerBase
             ImageUrl = ticketUpdateRequest.ImageUrl ?? ticketEntity.ImageUrl,
             Amount = ticketUpdateRequest.Amount ?? ticketEntity.Amount ?? 0,
             SolveDate = ticketUpdateRequest.SolveDate.ConvertToDateTime() ?? ticketEntity.SolveDate,
-            EmployeeId = int.Parse(User.Identity?.Name)
+            EmployeeId = ticketUpdateRequest.EmployeeId ?? int.Parse(User.Identity?.Name)
         };
 
         var validation = await _validator.ValidateParams(updateTicket, id);
@@ -253,19 +252,21 @@ public class TicketsController : ControllerBase
             });
 
         var result = await _serviceWrapper.Tickets.UpdateTicket(updateTicket);
-        if (result == null)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Ticket failed to update",
-                data = ""
-            });
-        return Ok(new
+        return result.IsSuccess switch
         {
-            status = "Success",
-            message = "Ticket updated successfully",
-            data = ""
-        });
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
     }
 
 
@@ -307,7 +308,6 @@ public class TicketsController : ControllerBase
                 message = "Management employee not found",
                 data = ""
             });
-
         var contractId = await _serviceWrapper.GetId.GetContractIdBasedOnRenterId(userId);
         if (contractId == 0)
             return NotFound(new
@@ -320,7 +320,8 @@ public class TicketsController : ControllerBase
         var newTicket = new Ticket
         {
             Description = ticketCreateRequest.Description,
-            CreateDate = DateTime.UtcNow,
+            CreateDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                "dd/MM/yyyy HH:mm:ss", null),
             TicketTypeId = ticketCreateRequest.TicketTypeId,
             // TODO : Auto assign to active invoice -> invoice detail if not assigned manually
             Status = "Active",
@@ -329,6 +330,9 @@ public class TicketsController : ControllerBase
             ContractId = contractId,
             EmployeeId = managementEmployeeId
         };
+
+        if (newTicket.TicketTypeId == 1 || newTicket.TicketTypeId == 2)
+            newTicket.EmployeeId = null;
 
         var validation = await _validator.ValidateParams(newTicket, null);
         if (!validation.IsValid)

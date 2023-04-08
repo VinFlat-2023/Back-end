@@ -1,5 +1,6 @@
 using AutoMapper;
 using Domain.EntitiesForManagement;
+using Domain.EntityRequest.Account;
 using Domain.EntityRequest.Employee;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
@@ -18,17 +19,17 @@ namespace API.Controllers;
 [ApiController]
 public class EmployeesController : ControllerBase
 {
-    private readonly IEmployeeValidator _accountValidator;
+    private readonly IEmployeeValidator _employeeValidator;
     private readonly IMapper _mapper;
     private readonly IPasswordValidator _passwordValidator;
     private readonly IServiceWrapper _serviceWrapper;
 
     public EmployeesController(IServiceWrapper serviceWrapper, IMapper mapper,
-        IEmployeeValidator accountValidator, IPasswordValidator passwordValidator)
+        IEmployeeValidator employeeValidator, IPasswordValidator passwordValidator)
     {
         _serviceWrapper = serviceWrapper;
         _mapper = mapper;
-        _accountValidator = accountValidator;
+        _employeeValidator = employeeValidator;
         _passwordValidator = passwordValidator;
     }
 
@@ -111,20 +112,21 @@ public class EmployeesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create Employee")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpPost("register")]
-    public async Task<IActionResult> CreateEmployee([FromBody] EmployeeCreateRequest account)
+    public async Task<IActionResult> CreateEmployee([FromBody] EmployeeCreateRequest employee)
     {
         var newEmployee = new Employee
         {
-            Username = account.Username,
-            FullName = account.Fullname,
+            Username = employee.Username,
+            FullName = employee.Fullname,
             Password = "123456",
-            Email = account.Email,
-            Phone = account.Phone,
+            Address = employee.Address,
+            Email = employee.Email,
+            Phone = employee.Phone,
             Status = true,
-            RoleId = account.RoleId
+            RoleId = employee.RoleId
         };
 
-        var validation = await _accountValidator.ValidateParams(newEmployee, null, false);
+        var validation = await _employeeValidator.ValidateParams(newEmployee, null, false);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -143,10 +145,10 @@ public class EmployeesController : ControllerBase
                 data = ""
             });
 
-        if (!StringUtils.IsNotEmpty(account.DeviceToken))
+        if (!StringUtils.IsNotEmpty(employee.DeviceToken))
             return CreatedAtAction("GetEmployee", new { id = result.EmployeeId }, result);
 
-        var userDeviceFound = await _serviceWrapper.Devices.GetUdByDeviceToken(account.DeviceToken);
+        var userDeviceFound = await _serviceWrapper.Devices.GetUdByDeviceToken(employee.DeviceToken);
 
         if (userDeviceFound.UserName == result.Username)
             return Ok(new
@@ -173,11 +175,11 @@ public class EmployeesController : ControllerBase
     [SwaggerOperation(Summary = "Update employee info")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateEmployee(int id, [FromBody] EmployeeUpdateRequest account)
+    public async Task<IActionResult> UpdateEmployee(int id, [FromBody] EmployeeUpdateRequest employee)
     {
-        var accountEntity = await _serviceWrapper.Employees.GetEmployeeById(id);
+        var employeeEntity = await _serviceWrapper.Employees.GetEmployeeById(id);
 
-        if (accountEntity == null)
+        if (employeeEntity == null)
             return NotFound(new
             {
                 status = "Bad Request",
@@ -188,13 +190,68 @@ public class EmployeesController : ControllerBase
         var updateEmployee = new Employee
         {
             EmployeeId = id,
-            Username = account.Username ?? accountEntity.Username,
-            Email = account.Email ?? accountEntity.Email,
-            Phone = account.Phone ?? accountEntity.Phone,
-            FullName = account.Fullname ?? accountEntity.FullName
+            Username = employee.Username ?? employeeEntity.Username,
+            Email = employee.Email ?? employeeEntity.Email,
+            Phone = employee.Phone ?? employeeEntity.Phone,
+            FullName = employee.Fullname ?? employeeEntity.FullName
         };
 
-        var validation = await _accountValidator.ValidateParams(updateEmployee, id, true);
+        var validation = await _employeeValidator.ValidateParams(updateEmployee, id, true);
+
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
+        var result = await _serviceWrapper.Employees.UpdateEmployee(updateEmployee);
+
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
+    }
+
+    [SwaggerOperation(Summary = "Update employee info")]
+    [Authorize(Roles = "Admin, Supervisor")]
+    [HttpPut("profile/update")]
+    public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeUpdateRequest employee)
+    {
+        var employeeId = int.Parse(User.Identity?.Name);
+
+        var employeeEntity = await _serviceWrapper.Employees.GetEmployeeById(employeeId);
+
+        if (employeeEntity == null)
+            return NotFound(new
+            {
+                status = "Bad Request",
+                message = "This employee does not exist",
+                data = ""
+            });
+
+        var updateEmployee = new Employee
+        {
+            EmployeeId = employeeId,
+            Username = employee.Username ?? employeeEntity.Username,
+            Email = employee.Email ?? employeeEntity.Email,
+            Phone = employee.Phone ?? employeeEntity.Phone,
+            FullName = employee.Fullname ?? employeeEntity.FullName
+        };
+
+        var validation = await _employeeValidator.ValidateParams(updateEmployee, employeeId, true);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -226,12 +283,12 @@ public class EmployeesController : ControllerBase
     [SwaggerOperation(Summary = "Update employee password")]
     [Authorize(Roles = "Admin, Supervisor, Technician")]
     [HttpPut("change-password")]
-    public async Task<IActionResult> UpdateEmployeePassword([FromBody] EmployeeUpdatePasswordRequest account)
+    public async Task<IActionResult> UpdateEmployeePassword([FromBody] EmployeeUpdatePasswordRequest employee)
     {
         var employeeId = int.Parse(User.Identity?.Name);
-        var accountEntity = await _serviceWrapper.Employees.GetEmployeeById(employeeId);
+        var employeeEntity = await _serviceWrapper.Employees.GetEmployeeById(employeeId);
 
-        if (accountEntity == null)
+        if (employeeEntity == null)
             return NotFound(new
             {
                 status = "Bad Request",
@@ -242,7 +299,7 @@ public class EmployeesController : ControllerBase
         var updatePasswordEmployee = new Employee
         {
             EmployeeId = employeeId,
-            Password = account.Password
+            Password = employee.Password
         };
 
         var validation = await _passwordValidator
@@ -308,9 +365,9 @@ public class EmployeesController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteEmployee(int id)
     {
-        var account = await _serviceWrapper.Employees.GetEmployeeById(id);
+        var employee = await _serviceWrapper.Employees.GetEmployeeById(id);
 
-        if (account == null)
+        if (employee == null)
             return BadRequest(new
             {
                 status = "Bad Request",
@@ -319,7 +376,7 @@ public class EmployeesController : ControllerBase
             });
 
         var listUserDevice =
-            await _serviceWrapper.Devices.GetDeviceByUserName(account.Username);
+            await _serviceWrapper.Devices.GetDeviceByUserName(employee.Username);
 
         if (!listUserDevice.IsNullOrEmpty())
             await _serviceWrapper.Devices.DeleteUserDevice(listUserDevice);

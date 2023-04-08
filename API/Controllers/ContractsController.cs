@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Claims;
 using API.Extension;
 using AutoMapper;
@@ -415,7 +416,8 @@ public class ContractsController : ControllerBase
             DateSigned = contract.DateSigned.ConvertToDateTime() ?? contractEntity.DateSigned,
             StartDate = contract.StartDate.ConvertToDateTime() ?? contractEntity.StartDate,
             EndDate = contract.EndDate.ConvertToDateTime() ?? contractEntity.EndDate,
-            LastUpdated = DateTime.UtcNow,
+            LastUpdated = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                "dd/MM/yyyy HH:mm:ss", null),
             ContractStatus = contract.ContractStatus ?? contractEntity.ContractStatus,
             PriceForRent = contract.PriceForRent ?? contractEntity.PriceForRent,
             PriceForElectricity = contract.PriceForElectricity ?? contractEntity.PriceForElectricity,
