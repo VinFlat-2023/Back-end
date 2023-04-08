@@ -11,5 +11,5 @@ public class ImageUploadRequest
     [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]
     [DataType(DataType.Upload)]
     [NotMapped]
-    public IFormFile? Image { get; set; }
+    public IFormFile Image { get; set; }
 }

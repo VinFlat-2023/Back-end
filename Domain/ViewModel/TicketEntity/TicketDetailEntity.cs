@@ -1,3 +1,4 @@
+using Domain.ViewModel.ContractEntity;
 using Domain.ViewModel.EmployeeEntity;
 using Domain.ViewModel.TicketTypeEntity;
 
@@ -12,6 +13,10 @@ public class TicketDetailEntity
     public decimal? Amount { get; set; }
     public string Status { get; set; }
     public string? ImageUrl { get; set; }
+    public string? ImageUrl2 { get; set; }
+    public string? ImageUrl3 { get; set; }
+    public int ContractId { get; set; }
+    public ContractBasicDetailEntity Contract { get; set; }
     public int EmployeeId { get; set; }
     public EmployeeBasicDetailEntity Employee { get; set; }
     public int TicketTypeId { get; set; }

@@ -86,11 +86,13 @@ public class TicketsController : ControllerBase
                         data = ""
                     });
 
+                var supervisorTicketList = _mapper.Map<IEnumerable<TicketDetailEntity>>(supervisorTicketCheck);
+
                 return Ok(new
                 {
                     status = "Success",
                     message = "List found",
-                    data = supervisorTicketCheck,
+                    data = supervisorTicketList,
                     totalPage = supervisorTicketCheck.TotalPages,
                     totalCount = supervisorTicketCheck.TotalCount
                 });
@@ -109,11 +111,13 @@ public class TicketsController : ControllerBase
                         data = ""
                     });
 
+                var renterTicketList = _mapper.Map<IEnumerable<TicketDetailEntity>>(renterTicketCheck);
+
                 return Ok(new
                 {
                     status = "Success",
                     message = "List found",
-                    data = renterTicketCheck,
+                    data = renterTicketList,
                     totalPage = renterTicketCheck.TotalPages,
                     totalCount = renterTicketCheck.TotalCount
                 });
@@ -155,16 +159,6 @@ public class TicketsController : ControllerBase
                 message = "No ticket found",
                 data = ""
             });
-
-        /*
-        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "You are not authorized to access this resource",
-                data = ""
-            });
-        */
 
         switch (userRole)
         {

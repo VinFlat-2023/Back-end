@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Domain.EntityRequest.Account;
+namespace Domain.EntityRequest.Employee;
 
 public class EmployeeCreateRequest
 {

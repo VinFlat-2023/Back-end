@@ -4,7 +4,6 @@ using Domain.CustomEntities.MomoEntities;
 using Domain.EntitiesDTO.MailMessageDTO;
 using Domain.EntitiesDTO.NotificationDTO;
 using Domain.EntitiesForManagement;
-using Domain.EntityRequest.Account;
 using Domain.EntityRequest.Area;
 using Domain.EntityRequest.Building;
 using Domain.EntityRequest.Contract;
@@ -45,6 +44,7 @@ using Domain.ViewModel.RoomEntity;
 using Domain.ViewModel.RoomTypeEntity;
 using Domain.ViewModel.ServiceEntity;
 using Domain.ViewModel.ServiceTypeEntity;
+using Domain.ViewModel.TicketEntity;
 using Domain.ViewModel.TicketTypeEntity;
 using Domain.ViewModel.UtilitiesFlatEntity;
 using Domain.ViewModel.UtilityEntity;
@@ -268,6 +268,11 @@ public class AutoMapper : Profile
         CreateMap<Ticket, TicketUpdateRequest>()
             .ReverseMap();
         CreateMap<TicketFilterRequest, TicketFilter>()
+            .ReverseMap();
+
+        CreateMap<Ticket, TicketDetailEntity>()
+            .ReverseMap();
+        CreateMap<TicketDetailEntity, TicketFilter>()
             .ReverseMap();
     }
 

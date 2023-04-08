@@ -68,17 +68,17 @@ public class ContractsController : ControllerBase
     //TODO get contract by renter ID
 
     // GET: api/Contract
-    [SwaggerOperation(Summary = "Get contract list (For renter)")]
+    [SwaggerOperation(Summary = "Get all contract list of logged in renter (For renter)")]
     [Authorize(Roles = "Renter")]
     [HttpGet("renter")]
-    public async Task<IActionResult> GetContractsByRenterId([FromQuery] ContractFilterRequest request,
-        CancellationToken token)
+    public async Task<IActionResult> GetContractsByRenterId(CancellationToken token)
     {
         var renterId = Parse(User.Identity?.Name);
 
-        var filter = _mapper.Map<ContractFilter>(request);
-
-        var list = await _serviceWrapper.Contracts.GetContractList(filter, renterId, token);
+        var list = await _serviceWrapper.Contracts.GetContractList(new ContractFilter
+        {
+            RenterId = renterId
+        }, token);
 
         var resultList = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(list);
 
@@ -100,15 +100,37 @@ public class ContractsController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "Get active contract list (For renter)")]
+    [SwaggerOperation(Summary = "Get all contract list of logged in renter (For renter)")]
+    [Authorize(Roles = "Renter")]
+    [HttpGet("latest/renter/current")]
+    public async Task<IActionResult> GetFirstContractsByRenter(CancellationToken token)
+    {
+        var renterId = Parse(User.Identity?.Name);
+
+        var latestContract = await _serviceWrapper.Contracts.GetLatestContractByUserId(renterId, token);
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Contract list found",
+            data = _mapper.Map<ContractDetailEntity>(latestContract)
+        });
+    }
+
+
+    [SwaggerOperation(Summary = "Get active contract list of logged in renter (For renter)")]
     [Authorize(Roles = "Renter")]
     [HttpGet("renter/active")]
-    public async Task<IActionResult> GetActiveContractsByRenterId(CancellationToken token)
+    public async Task<IActionResult> GetActiveContractsByRenter(CancellationToken token)
     {
         var renterId = Parse(User.Identity?.Name);
 
-        var list = await _serviceWrapper.Contracts.GetContractList(new ContractFilter { ContractStatus = "Active" },
-            renterId, token);
+        var list = await _serviceWrapper.Contracts.GetContractList(new ContractFilter
+            {
+                ContractStatus = "Active",
+                RenterId = renterId
+            },
+            token);
 
         var resultList = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(list);
 
@@ -130,15 +152,18 @@ public class ContractsController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "Get inactive contract list (For renter)")]
+    [SwaggerOperation(Summary = "Get inactive contract list of logged in renter (For renter)")]
     [Authorize(Roles = "Renter")]
     [HttpGet("renter/inactive")]
-    public async Task<IActionResult> GetInactiveContractsByRenterId(CancellationToken token)
+    public async Task<IActionResult> GetInactiveContractsByRenter(CancellationToken token)
     {
         var renterId = Parse(User.Identity?.Name);
 
-        var list = await _serviceWrapper.Contracts.GetContractList(new ContractFilter { ContractStatus = "Inactive" },
-            renterId, token);
+        var list = await _serviceWrapper.Contracts.GetContractList(new ContractFilter
+        {
+            ContractStatus = "Inactive",
+            RenterId = renterId
+        }, token);
 
         var resultList = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(list);
 
@@ -340,7 +365,7 @@ public class ContractsController : ControllerBase
                 data = ""
             });
 
-        var entity = await _serviceWrapper.Contracts.GetContractByUserId(userId);
+        var entity = await _serviceWrapper.Contracts.GetLatestContractByUserId(userId);
 
         if (entity == null)
             return NotFound(new

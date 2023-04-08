@@ -73,10 +73,17 @@ public class TicketValidator : BaseValidator, ITicketValidator
                 case not null:
                     if (await _conditionCheckHelper.TicketTypeCheck(obj.TicketTypeId) == null)
                         ValidatorResult.Failures.Add("Ticket type provided does not exist");
+                    break;
+            }
 
-                    if ((obj.TicketTypeId != 1 || obj.TicketTypeId != 2) && obj.EmployeeId == null)
-                        ValidatorResult.Failures.Add("Ticket type provided is invalid");
-
+            switch (obj?.EmployeeId)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Employee is required");
+                    break;
+                case not null:
+                    if (await _conditionCheckHelper.EmployeeCheck(obj.EmployeeId) == null)
+                        ValidatorResult.Failures.Add("Employee provided does not exist");
                     break;
             }
 

@@ -23,8 +23,9 @@ internal class TicketRepository : ITicketRepository
     public IQueryable<Ticket> GetTicketList(TicketFilter filters)
     {
         return _context.Tickets
-            .Include(x => x.TicketType)
+            .Include(x => x.Employee)
             .Include(x => x.Contract)
+            .Include(x => x.TicketType)
             // Filter starts here
             .Where(x =>
                 (filters.Status == null || x.Status == filters.Status)
@@ -49,6 +50,8 @@ internal class TicketRepository : ITicketRepository
         return isManagement switch
         {
             true => _context.Tickets
+                .Include(x => x.Employee)
+                .Include(x => x.Contract)
                 .Include(x => x.TicketType)
                 .Where(x => x.EmployeeId == id)
                 // Filter starts here

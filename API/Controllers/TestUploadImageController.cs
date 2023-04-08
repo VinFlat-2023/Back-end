@@ -41,7 +41,7 @@ public class TestUploadImageController : ControllerBase
 
         var fileNameUserImage = renterCheck.ImageUrl?.Split('/').Last() ?? "";
 
-        var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image?.FileName);
+        var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image.FileName);
 
         var finalizeUpdate = new Renter
         {
@@ -65,153 +65,6 @@ public class TestUploadImageController : ControllerBase
                 status = "Success",
                 message = "Image uploaded successfully",
                 data = finalizeUpdate.ImageUrl
-            })
-        };
-    }
-
-    [SwaggerOperation]
-    [Authorize(Roles = "Supervisor")]
-    [HttpPut("building/image/1")]
-    public async Task<IActionResult> PutBuilding1([FromForm] ImageUploadRequest imageUploadRequest)
-    {
-        var employeeId = int.Parse(User.Identity?.Name);
-
-        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId);
-
-        var buildingCheck = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
-
-        if (buildingCheck == null)
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Building not found",
-                data = ""
-            });
-
-        var fileNameUserImage = buildingCheck.ImageUrl?.Split('/').Last();
-
-        var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image?.FileName);
-
-        var updateBuilding = new Building
-        {
-            BuildingId = buildingId,
-            ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image, fileNameUserImage,
-                "Building", imageExtension, false))?.Blob.Uri
-        };
-
-        var result = await _serviceWrapper.Buildings.UpdateBuildingImages(updateBuilding, 1);
-
-        return result.IsSuccess switch
-        {
-            true => Ok(new
-            {
-                status = "Success",
-                message = result.Message,
-                data = ""
-            }),
-            false => NotFound(new
-            {
-                status = "Not Found",
-                message = result.Message,
-                data = ""
-            })
-        };
-    }
-
-    [SwaggerOperation]
-    [Authorize(Roles = "Supervisor")]
-    [HttpPut("building/image/2")]
-    public async Task<IActionResult> PutBuilding2([FromForm] ImageUploadRequest imageUploadRequest)
-    {
-        var employeeId = int.Parse(User.Identity?.Name);
-
-        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId);
-
-        var buildingCheck = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
-
-        if (buildingCheck == null)
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Building not found",
-                data = ""
-            });
-
-        var fileNameUserImage = buildingCheck.ImageUrl?.Split('/').Last();
-
-        var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image?.FileName);
-
-        var updateBuilding = new Building
-        {
-            BuildingId = buildingId,
-            ImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image, fileNameUserImage,
-                "Building", imageExtension, false))?.Blob.Uri
-        };
-
-        var result = await _serviceWrapper.Buildings.UpdateBuildingImages(updateBuilding, 2);
-
-        return result.IsSuccess switch
-        {
-            true => Ok(new
-            {
-                status = "Success",
-                message = result.Message,
-                data = ""
-            }),
-            false => NotFound(new
-            {
-                status = "Not Found",
-                message = result.Message,
-                data = ""
-            })
-        };
-    }
-
-    [SwaggerOperation]
-    [Authorize(Roles = "Supervisor")]
-    [HttpPut("building/image/3")]
-    public async Task<IActionResult> PutBuilding3([FromForm] ImageUploadRequest imageUploadRequest)
-    {
-        var employeeId = int.Parse(User.Identity?.Name);
-
-        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId);
-
-        var buildingCheck = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
-
-        if (buildingCheck == null)
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Building not found",
-                data = ""
-            });
-
-        var fileNameUserImage = buildingCheck.ImageUrl?.Split('/').Last();
-
-        var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image?.FileName);
-
-        var updateBuilding = new Building
-        {
-            BuildingId = buildingId,
-            ImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image, fileNameUserImage,
-                "Building", imageExtension, false))?.Blob.Uri
-        };
-
-        var result = await _serviceWrapper.Buildings.UpdateBuildingImages(updateBuilding, 3);
-
-        return result.IsSuccess switch
-        {
-            true => Ok(new
-            {
-                status = "Success",
-                message = result.Message,
-                data = ""
-            }),
-            false => NotFound(new
-            {
-                status = "Not Found",
-                message = result.Message,
-                data = ""
             })
         };
     }
@@ -339,7 +192,7 @@ public class TestUploadImageController : ControllerBase
 
         var fileNameContract = contract.ImageUrl?.Split('/').Last();
 
-        var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image?.FileName);
+        var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image.FileName);
 
         var finalizeUpdate = new Contract
         {
@@ -369,8 +222,9 @@ public class TestUploadImageController : ControllerBase
 
     [HttpPut]
     [Authorize(Roles = "Renter")]
-    [Route("ticket/image/1")]
-    public async Task<IActionResult> UploadTicketImage1([FromForm] ImageUploadRequest imageUploadRequest, int ticketId)
+    [Route("ticket/{ticketId:int}/image")]
+    public async Task<IActionResult> UploadTicketImage([FromForm] MultipleImageUploadRequest multipleImageUploadRequest,
+        int ticketId)
     {
         var renterId = int.Parse(User.Identity?.Name);
 
@@ -395,149 +249,207 @@ public class TestUploadImageController : ControllerBase
             });
 
 
-        var fileNameContract = renterTicketCheck.ImageUrl?.Split('/').Last();
+        var counter = 0;
 
-        var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image?.FileName);
-
-        var finalizeUpdate = new Ticket
-        {
-            ContractId = renterId,
-            ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(renterTicketCheck.Image, fileNameContract,
-                "Ticket", imageExtension, false))?.Blob.Uri
-        };
-
-        var result = await _serviceWrapper.Tickets.UpdateTicketImage(finalizeUpdate, 1);
-
-        return result.IsSuccess switch
-        {
-            false => BadRequest(new
-            {
-                status = "Bad Request",
-                message = result.Message,
-                data = ""
-            }),
-            true => Ok(new
+        if (multipleImageUploadRequest.ImageUploadRequest.Count == 0 ||
+            !multipleImageUploadRequest.ImageUploadRequest.Any())
+            return Ok(new
             {
                 status = "Success",
-                message = "Image uploaded successfully",
-                data = result
-            })
-        };
+                message = "No image uploaded",
+                data = ""
+            });
+
+        foreach (var image in multipleImageUploadRequest.ImageUploadRequest)
+        {
+            counter++;
+            var imageExtension = ImageExtension.ImageExtensionChecker(image.FileName);
+
+            switch (counter)
+            {
+                case 1:
+                    var fileNameCheck1 = renterTicketCheck.ImageUrl?.Split('/').Last();
+
+                    var finalizeUpdate1 = new Ticket
+                    {
+                        TicketId = ticketId,
+                        ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
+                            "Ticket", imageExtension, false))?.Blob.Uri
+                    };
+                    var result1 = await _serviceWrapper.Tickets.UpdateTicketImage(finalizeUpdate1, counter);
+                    if (!result1.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result1.Message,
+                            data = ""
+                        });
+                    break;
+
+                case 2:
+                    var fileNameCheck2 = renterTicketCheck.ImageUrl2?.Split('/').Last();
+
+                    var finalizeUpdate2 = new Ticket
+                    {
+                        TicketId = ticketId,
+                        ImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck2,
+                            "Ticket", imageExtension, false))?.Blob.Uri
+                    };
+                    var result2 = await _serviceWrapper.Tickets.UpdateTicketImage(finalizeUpdate2, counter);
+                    if (!result2.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result2.Message,
+                            data = ""
+                        });
+                    break;
+
+                case 3:
+                    var fileNameCheck3 = renterTicketCheck.ImageUrl3?.Split('/').Last();
+
+                    var finalizeUpdate3 = new Ticket
+                    {
+                        TicketId = ticketId,
+                        ImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck3,
+                            "Ticket", imageExtension, false))?.Blob.Uri
+                    };
+                    var result3 = await _serviceWrapper.Tickets.UpdateTicketImage(finalizeUpdate3, counter);
+                    if (!result3.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result3.Message,
+                            data = ""
+                        });
+                    break;
+                case >= 4:
+                    return BadRequest(new
+                    {
+                        status = "Bad Request",
+                        message = "You can only upload 3 images",
+                        data = ""
+                    });
+            }
+        }
+
+        return Ok(new
+        {
+            status = "Success",
+            message = counter + " image(s) uploaded successfully",
+            data = ""
+        });
     }
 
-    [HttpPut]
-    [Authorize(Roles = "Renter")]
-    [Route("ticket/image/2")]
-    public async Task<IActionResult> UploadTicketImage2([FromForm] ImageUploadRequest imageUploadRequest, int ticketId)
+
+    [SwaggerOperation]
+    [Authorize(Roles = "Supervisor")]
+    [HttpPut("building/image")]
+    public async Task<IActionResult> PutBuilding1([FromForm] MultipleImageUploadRequest multipleImageUploadRequest)
     {
-        var renterId = int.Parse(User.Identity?.Name);
+        var employeeId = int.Parse(User.Identity?.Name);
 
-        var renterCheck = await _serviceWrapper.Renters.GetRenterById(renterId);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId);
 
-        if (renterCheck == null)
+        var buildingCheck = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
+
+        if (buildingCheck == null)
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Renters not found",
+                message = "Building not found",
                 data = ""
             });
 
-        var renterTicketCheck = await _serviceWrapper.Tickets.GetTicketById(ticketId, renterId);
-
-        if (renterTicketCheck == null)
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "No ticket with this id found with this user",
-                data = ""
-            });
-
-
-        var fileNameContract = renterTicketCheck.ImageUrl?.Split('/').Last();
-
-        var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image?.FileName);
-
-        var finalizeUpdate = new Ticket
-        {
-            ContractId = renterId,
-            ImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(renterTicketCheck.Image, fileNameContract,
-                "Ticket", imageExtension, false))?.Blob.Uri
-        };
-
-        var result = await _serviceWrapper.Tickets.UpdateTicketImage(finalizeUpdate, 2);
-
-        return result.IsSuccess switch
-        {
-            false => BadRequest(new
-            {
-                status = "Bad Request",
-                message = result.Message,
-                data = ""
-            }),
-            true => Ok(new
+        if (multipleImageUploadRequest.ImageUploadRequest.Count == 0 ||
+            !multipleImageUploadRequest.ImageUploadRequest.Any())
+            return Ok(new
             {
                 status = "Success",
-                message = "Image uploaded successfully",
-                data = result
-            })
-        };
-    }
-
-    [HttpPut]
-    [Authorize(Roles = "Renter")]
-    [Route("ticket/image/3")]
-    public async Task<IActionResult> UploadTicketImage3([FromForm] ImageUploadRequest imageUploadRequest, int ticketId)
-    {
-        var renterId = int.Parse(User.Identity?.Name);
-
-        var renterCheck = await _serviceWrapper.Renters.GetRenterById(renterId);
-
-        if (renterCheck == null)
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Renters not found",
+                message = "No image uploaded",
                 data = ""
             });
 
-        var renterTicketCheck = await _serviceWrapper.Tickets.GetTicketById(ticketId, renterId);
+        var counter = 0;
 
-        if (renterTicketCheck == null)
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "No ticket with this id found with this user",
-                data = ""
-            });
-
-
-        var fileNameContract = renterTicketCheck.ImageUrl?.Split('/').Last();
-
-        var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image?.FileName);
-
-        var finalizeUpdate = new Ticket
+        foreach (var image in multipleImageUploadRequest.ImageUploadRequest)
         {
-            ContractId = renterId,
-            ImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(renterTicketCheck.Image, fileNameContract,
-                "Ticket", imageExtension, false))?.Blob.Uri
-        };
+            counter++;
+            var imageExtension = ImageExtension.ImageExtensionChecker(image.FileName);
 
-        var result = await _serviceWrapper.Tickets.UpdateTicketImage(finalizeUpdate, 3);
+            switch (counter)
+            {
+                case 1:
+                    var fileNameCheck1 = buildingCheck.ImageUrl?.Split('/').Last();
 
-        return result.IsSuccess switch
+                    var finalizeUpdate1 = new Building
+                    {
+                        BuildingId = buildingId,
+                        ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
+                            "Building", imageExtension, false))?.Blob.Uri
+                    };
+                    var result1 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate1, counter);
+                    if (!result1.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result1.Message,
+                            data = ""
+                        });
+                    break;
+
+                case 2:
+                    var fileNameCheck2 = buildingCheck.ImageUrl2?.Split('/').Last();
+
+                    var finalizeUpdate2 = new Building
+                    {
+                        BuildingId = buildingId,
+                        ImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck2,
+                            "Building", imageExtension, false))?.Blob.Uri
+                    };
+                    var result2 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate2, counter);
+                    if (!result2.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result2.Message,
+                            data = ""
+                        });
+                    break;
+
+                case 3:
+                    var fileNameCheck3 = buildingCheck.ImageUrl3?.Split('/').Last();
+
+                    var finalizeUpdate3 = new Building
+                    {
+                        BuildingId = buildingId,
+                        ImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck3,
+                            "Building", imageExtension, false))?.Blob.Uri
+                    };
+                    var result3 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate3, counter);
+                    if (!result3.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result3.Message,
+                            data = ""
+                        });
+                    break;
+                case >= 4:
+                    return BadRequest(new
+                    {
+                        status = "Bad Request",
+                        message = "You can only upload 3 images",
+                        data = ""
+                    });
+            }
+        }
+
+        return Ok(new
         {
-            false => BadRequest(new
-            {
-                status = "Bad Request",
-                message = result.Message,
-                data = ""
-            }),
-            true => Ok(new
-            {
-                status = "Success",
-                message = "Image uploaded successfully",
-                data = result
-            })
-        };
+            status = "Success",
+            message = counter + " image(s) uploaded successfully",
+            data = ""
+        });
     }
 }

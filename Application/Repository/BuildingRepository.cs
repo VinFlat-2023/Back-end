@@ -131,7 +131,6 @@ public class BuildingRepository : IBuildingRepository
             IsSuccess = true,
             Message = "Building image updated successfully"
         };
-        ;
     }
 
     public async Task<RepositoryResponse> UpdateBuilding(Building building)

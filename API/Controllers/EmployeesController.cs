@@ -1,6 +1,5 @@
 using AutoMapper;
 using Domain.EntitiesForManagement;
-using Domain.EntityRequest.Account;
 using Domain.EntityRequest.Employee;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
@@ -191,6 +190,7 @@ public class EmployeesController : ControllerBase
         {
             EmployeeId = id,
             Username = employee.Username ?? employeeEntity.Username,
+            Address = employee.Address ?? employeeEntity.Address,
             Email = employee.Email ?? employeeEntity.Email,
             Phone = employee.Phone ?? employeeEntity.Phone,
             FullName = employee.Fullname ?? employeeEntity.FullName
@@ -246,6 +246,7 @@ public class EmployeesController : ControllerBase
         {
             EmployeeId = employeeId,
             Username = employee.Username ?? employeeEntity.Username,
+            Address = employee.Address ?? employeeEntity.Address,
             Email = employee.Email ?? employeeEntity.Email,
             Phone = employee.Phone ?? employeeEntity.Phone,
             FullName = employee.Fullname ?? employeeEntity.FullName

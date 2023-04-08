@@ -8,6 +8,7 @@ public class EmployeeUpdateRequest
     [RegularExpression("^[a-zA-Z0-9]{6,100}$", ErrorMessage = "Username only accept alphabet characters and numbers")]
     public string? Username { get; set; }
 
+    public string? Address { get; set; }
     [DataType(DataType.EmailAddress)] public string? Email { get; set; }
     public string? Fullname { get; set; }
     public string? Phone { get; set; }
