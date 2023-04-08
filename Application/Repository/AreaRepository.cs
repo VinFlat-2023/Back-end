@@ -138,4 +138,27 @@ internal class AreaRepository : IAreaRepository
             IsSuccess = true
         };
     }
+
+    public async Task<RepositoryResponse> UpdateAreaImage(Area updateArea)
+    {
+        var areaData = await _context.Areas
+            .FirstOrDefaultAsync(x => x.AreaId == updateArea.AreaId);
+
+        if (areaData == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Area not found"
+            };
+
+        areaData.ImageUrl = updateArea.ImageUrl;
+
+        await _context.SaveChangesAsync();
+
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Area image updated successfully"
+        };
+    }
 }

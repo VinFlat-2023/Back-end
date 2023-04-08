@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Claims;
 using API.Extension;
 using AutoMapper;
@@ -67,17 +68,17 @@ public class ContractsController : ControllerBase
     //TODO get contract by renter ID
 
     // GET: api/Contract
-    [SwaggerOperation(Summary = "Get contract list (For renter)")]
+    [SwaggerOperation(Summary = "Get all contract list of logged in renter (For renter)")]
     [Authorize(Roles = "Renter")]
     [HttpGet("renter")]
-    public async Task<IActionResult> GetContractsByRenterId([FromQuery] ContractFilterRequest request,
-        CancellationToken token)
+    public async Task<IActionResult> GetContractsByRenterId(CancellationToken token)
     {
         var renterId = Parse(User.Identity?.Name);
 
-        var filter = _mapper.Map<ContractFilter>(request);
-
-        var list = await _serviceWrapper.Contracts.GetContractList(filter, renterId, token);
+        var list = await _serviceWrapper.Contracts.GetContractList(new ContractFilter
+        {
+            RenterId = renterId
+        }, token);
 
         var resultList = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(list);
 
@@ -99,15 +100,37 @@ public class ContractsController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "Get active contract list (For renter)")]
+    [SwaggerOperation(Summary = "Get all contract list of logged in renter (For renter)")]
+    [Authorize(Roles = "Renter")]
+    [HttpGet("latest/renter/current")]
+    public async Task<IActionResult> GetFirstContractsByRenter(CancellationToken token)
+    {
+        var renterId = Parse(User.Identity?.Name);
+
+        var latestContract = await _serviceWrapper.Contracts.GetLatestContractByUserId(renterId, token);
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Contract list found",
+            data = _mapper.Map<ContractBasicDetailEntity>(latestContract)
+        });
+    }
+
+
+    [SwaggerOperation(Summary = "Get active contract list of logged in renter (For renter)")]
     [Authorize(Roles = "Renter")]
     [HttpGet("renter/active")]
-    public async Task<IActionResult> GetActiveContractsByRenterId(CancellationToken token)
+    public async Task<IActionResult> GetActiveContractsByRenter(CancellationToken token)
     {
         var renterId = Parse(User.Identity?.Name);
 
-        var list = await _serviceWrapper.Contracts.GetContractList(new ContractFilter { ContractStatus = "Active" },
-            renterId, token);
+        var list = await _serviceWrapper.Contracts.GetContractList(new ContractFilter
+            {
+                ContractStatus = "Active",
+                RenterId = renterId
+            },
+            token);
 
         var resultList = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(list);
 
@@ -129,15 +152,18 @@ public class ContractsController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "Get inactive contract list (For renter)")]
+    [SwaggerOperation(Summary = "Get inactive contract list of logged in renter (For renter)")]
     [Authorize(Roles = "Renter")]
     [HttpGet("renter/inactive")]
-    public async Task<IActionResult> GetInactiveContractsByRenterId(CancellationToken token)
+    public async Task<IActionResult> GetInactiveContractsByRenter(CancellationToken token)
     {
         var renterId = Parse(User.Identity?.Name);
 
-        var list = await _serviceWrapper.Contracts.GetContractList(new ContractFilter { ContractStatus = "Inactive" },
-            renterId, token);
+        var list = await _serviceWrapper.Contracts.GetContractList(new ContractFilter
+        {
+            ContractStatus = "Inactive",
+            RenterId = renterId
+        }, token);
 
         var resultList = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(list);
 
@@ -161,7 +187,7 @@ public class ContractsController : ControllerBase
 
     // GET: api/Contract/5
     [SwaggerOperation(Summary = "[Authorize] Get Contract using id (For management)")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetContractManagement(int id)
     {
@@ -194,16 +220,15 @@ public class ContractsController : ControllerBase
                 PriceForRent = entity.PriceForRent.DecimalToString(),
                 PriceForService = entity.PriceForService.DecimalToString(),
                 PriceForWater = entity.PriceForWater.DecimalToString(),
-                PriceForElectricity = entity.PriceForElectricity.DecimalToString(),
-                RoomId = entity.RoomId
+                PriceForElectricity = entity.PriceForElectricity.DecimalToString()
             }
         });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get Contract using contract id with renter id (For renter)")]
-    [Authorize(Roles = "Renter")]
+    [Authorize(Roles = "Supervisor, Renter")]
     [HttpGet("{id:int}/user/{renterId:int}")]
-    public async Task<IActionResult> GetContract(int id, int renterId)
+    public async Task<IActionResult> GetContract(int id, int renterId, CancellationToken token)
     {
         var userRole = User.Identities
             .FirstOrDefault()?.Claims
@@ -264,11 +289,11 @@ public class ContractsController : ControllerBase
                         data = ""
                     });
 
-                var supervisorId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(entity.BuildingId);
+                var employeeId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(entity.BuildingId, token);
 
                 var buildingDetail = new BuildingContractDetailEntity
                 {
-                    AccountId = supervisorId,
+                    EmployeeId = employeeId,
                     BuildingName = building.BuildingName,
                     BuildingPhoneNumber = building.BuildingPhoneNumber,
                     BuildingAddress = building.BuildingAddress
@@ -289,8 +314,7 @@ public class ContractsController : ControllerBase
                     PriceForRent = entity.PriceForRent.DecimalToString(),
                     PriceForService = entity.PriceForService.DecimalToString(),
                     PriceForWater = entity.PriceForWater.DecimalToString(),
-                    PriceForElectricity = entity.PriceForElectricity.DecimalToString(),
-                    RoomId = entity.RoomId
+                    PriceForElectricity = entity.PriceForElectricity.DecimalToString()
                 };
 
                 var contractViewModel = new ContractDetailEntity
@@ -341,7 +365,7 @@ public class ContractsController : ControllerBase
                 data = ""
             });
 
-        var entity = await _serviceWrapper.Contracts.GetContractByUserId(userId);
+        var entity = await _serviceWrapper.Contracts.GetLatestContractByUserId(userId);
 
         if (entity == null)
             return NotFound(new
@@ -417,7 +441,8 @@ public class ContractsController : ControllerBase
             DateSigned = contract.DateSigned.ConvertToDateTime() ?? contractEntity.DateSigned,
             StartDate = contract.StartDate.ConvertToDateTime() ?? contractEntity.StartDate,
             EndDate = contract.EndDate.ConvertToDateTime() ?? contractEntity.EndDate,
-            LastUpdated = DateTime.UtcNow,
+            LastUpdated = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                "dd/MM/yyyy HH:mm:ss", null),
             ContractStatus = contract.ContractStatus ?? contractEntity.ContractStatus,
             PriceForRent = contract.PriceForRent ?? contractEntity.PriceForRent,
             PriceForElectricity = contract.PriceForElectricity ?? contractEntity.PriceForElectricity,
@@ -459,7 +484,7 @@ public class ContractsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create Contract (For management)", Description = "date format d/M/YYYY")]
     [Authorize(Roles = "Supervisor")]
     [HttpPost("sign")]
-    public async Task<IActionResult> PostContract([FromBody] ContractCreateRequest contract)
+    public async Task<IActionResult> PostContract([FromBody] ContractCreateRequest contract, CancellationToken token)
     {
         var newRenter = new Renter
         {
@@ -482,9 +507,9 @@ public class ContractsController : ControllerBase
                 data = ""
             });
 
-        var supervisorId = Parse(User.Identity?.Name);
+        var employeeId = Parse(User.Identity?.Name);
 
-        var buildingId = await _serviceWrapper.GetId.GetAccountIdBasedOnBuildingId(supervisorId);
+        var buildingId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(employeeId, token);
 
         var newContract = new Contract
         {

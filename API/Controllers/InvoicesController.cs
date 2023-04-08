@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Globalization;
+using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Invoice;
 using Domain.EntityRequest.InvoiceType;
@@ -85,7 +86,7 @@ public class InvoicesController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice list by renter Id (For management)")]
     [HttpGet("user/{userId:int}")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     public async Task<IActionResult> GetInvoiceRenter(int userId, CancellationToken token)
     {
         var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
@@ -121,7 +122,7 @@ public class InvoicesController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get invoice list by renter (For renter)")]
+    [SwaggerOperation(Summary = "[Authorize] Get all invoice list by renter (For renter)")]
     [HttpGet("user/all")]
     [Authorize(Roles = "Renter")]
     public async Task<IActionResult> GetInvoiceRenter(CancellationToken token)
@@ -162,25 +163,11 @@ public class InvoicesController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice list by renter Id (For renter and management)")]
-    [HttpGet("user/{userId:int}/status/{status:bool}")]
+    [HttpGet("user/current/status/{status:bool}")]
     [Authorize(Roles = "Admin, Supervisor, Renter")]
-    public async Task<IActionResult> GetInvoiceListRenterWithStatus(int userId, bool status, CancellationToken token)
+    public async Task<IActionResult> GetInvoiceListRenterWithStatus([FromQuery] bool status, CancellationToken token)
     {
-        /*
-        var userRole = User.Identities
-            .FirstOrDefault()?.Claims
-            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
-            ?.Value ?? string.Empty;
-
-        if (userRole is not ("Admin" or "Supervisor") ||
-            (User.Identity?.Name != userId.ToString() && userRole != "Renter"))
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "You are not authorized to access this resource",
-                data = ""
-            });
-        */
+        var userId = int.Parse(User.Identity?.Name);
 
         var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
         if (userCheck == null)
@@ -222,22 +209,6 @@ public class InvoicesController : ControllerBase
     [Authorize(Roles = "Renter")]
     public async Task<IActionResult> GetInvoiceRenterUsingId(int invoiceId)
     {
-        /*
-        var userRole = User.Identities
-            .FirstOrDefault()?.Claims
-            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
-            ?.Value ?? string.Empty;
-
-        if (userRole is not ("Admin" or "Supervisor") ||
-            (User.Identity?.Name != userId.ToString() && userRole != "Renter"))
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "You are not authorized to access this resource",
-                data = ""
-            });
-        */
-
         var userId = int.Parse(User.Identity?.Name);
 
         var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
@@ -316,9 +287,9 @@ public class InvoicesController : ControllerBase
     [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> PostInvoice([FromBody] InvoiceCreateRequest invoice)
     {
-        var accountId = User.Identity?.Name;
+        var employeeId = User.Identity?.Name;
 
-        if (accountId == null)
+        if (employeeId == null)
             return BadRequest(new
             {
                 status = "Bad Request",
@@ -334,9 +305,10 @@ public class InvoicesController : ControllerBase
             Detail = invoice.Detail,
             ImageUrl = invoice.ImageUrl,
             PaymentTime = null,
-            CreatedTime = DateTime.UtcNow,
+            CreatedTime = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                "dd/MM/yyyy HH:mm:ss", null),
             InvoiceTypeId = invoice.InvoiceTypeId,
-            AccountId = int.Parse(accountId)
+            EmployeeId = int.Parse(employeeId)
         };
 
         switch (addNewInvoice.InvoiceTypeId)

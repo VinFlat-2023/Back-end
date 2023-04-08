@@ -1,10 +1,8 @@
-using API.Extension;
 using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Renter;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
-using Domain.Utils;
 using Domain.ViewModel.BuildingEntity;
 using Domain.ViewModel.FlatEntity;
 using Domain.ViewModel.RentalEntity;
@@ -70,26 +68,34 @@ public class RentersController : ControllerBase
 
     // GET: api/Renters/5
     [HttpGet("{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Get renter by id (For management and renter)")]
+    [Authorize(Roles = "Supervisor")]
+    [SwaggerOperation(Summary = "[Authorize] Get renter by id (For management)")]
     public async Task<IActionResult> GetRenter(int id)
     {
-        /*
-        var userRole = User.Identities
-            .FirstOrDefault()?.Claims
-            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
-            ?.Value ?? string.Empty;
-
-        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "You are not authorized to access this resource",
-                data = ""
-            });
-        */
-
         var entity = await _serviceWrapper.Renters.GetRenterById(id);
+
+        return entity == null
+            ? NotFound(new
+            {
+                status = "Not Found",
+                message = "Renter not found",
+                data = ""
+            })
+            : Ok(new
+            {
+                status = "Success",
+                message = "Renter found",
+                data = _mapper.Map<RenterProfileEntity>(entity)
+            });
+    }
+
+    [HttpGet("profile")]
+    [Authorize(Roles = "Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Get renter profile by logged in user (For Renter)")]
+    public async Task<IActionResult> GetRenter()
+    {
+        var renterId = int.Parse(User.Identity?.Name);
+        var entity = await _serviceWrapper.Renters.GetRenterById(renterId);
 
         return entity == null
             ? NotFound(new
@@ -186,11 +192,11 @@ public class RentersController : ControllerBase
             ElectricityMeterAfter = contract.Flat.ElectricityMeterAfter
         };
 
-        var buildingManager = new AccountBuildingDetailEntity
+        var buildingManager = new EmployeeBuildingDetailEntity
         {
-            AccountId = building.AccountId,
-            FullName = building.Account.FullName,
-            Phone = building.Account.Phone
+            EmployeeId = building.EmployeeId,
+            FullName = building.Employee.FullName,
+            Phone = building.Employee.Phone
         };
 
         var buildingDetail = new BuildingContractDetailEntity
@@ -199,8 +205,8 @@ public class RentersController : ControllerBase
             BuildingName = building.BuildingName,
             BuildingPhoneNumber = building.BuildingPhoneNumber,
             BuildingAddress = building.BuildingAddress,
-            AccountId = building.AccountId,
-            Account = buildingManager
+            EmployeeId = building.EmployeeId,
+            Employee = buildingManager
         };
 
         var rentalDetailEntity = new RentalDetailEntity
@@ -224,29 +230,13 @@ public class RentersController : ControllerBase
     // PUT: api/Renters/5
     // To protect from over posting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Update renter by id (For management and renter)")]
-    public async Task<IActionResult> PutRenter([FromBody] RenterUpdateRequest renter, int id)
+    [Authorize(Roles = "Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Update renter by id (For renter)")]
+    public async Task<IActionResult> PutRenter([FromBody] RenterUpdateRequest renter)
     {
-        // TODO : implement back jwt validator here
-        /*
-        var userRole = User.Identities
-            .FirstOrDefault()?.Claims
-            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
-            ?.Value ?? string.Empty;
+        var userId = int.Parse(User.Identity?.Name);
 
-        Console.WriteLine(userRole);
-
-        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "You are not authorized to access this resource",
-                data = ""
-            });
-        */
-
-        var renterCheck = await _serviceWrapper.Renters.GetRenterById(id);
+        var renterCheck = await _serviceWrapper.Renters.GetRenterById(userId);
 
         if (renterCheck == null)
             return NotFound(new
@@ -256,36 +246,30 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
-        var imageExtension = ImageExtension.ImageExtensionChecker(renter.Image?.FileName);
+        //var imageExtension = ImageExtension.ImageExtensionChecker(renter.Image?.FileName);
 
-        var fileNameUserImage = renterCheck.ImageUrl?.Split('/').Last();
-        var fileNameCitizenImage = renterCheck.CitizenImageUrl?.Split('/').Last();
+        //var fileNameUserImage = renterCheck.ImageUrl?.Split('/').Last();
+        //var fileNameCitizenImage = renterCheck.CitizenImageUrl?.Split('/').Last();
 
         var finalizeUpdate = new Renter
         {
-            RenterId = id,
+            RenterId = userId,
             Email = renter.Email,
-            Password = renter.Password,
             Phone = renter.Phone,
             FullName = renter.FullName,
             BirthDate = renter.BirthDate ?? null,
-
             /*
-
             ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(renter.Image, fileNameUserImage,
                 "User", imageExtension))?.Blob.Uri,
             CitizenNumber = renter.CitizenNumber,
             CitizenImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(renter.CitizenImage, fileNameCitizenImage,
                 "Citizen", imageExtension))?.Blob.Uri,
             */
-
             Address = renter.Address,
-            Gender = renter.Gender,
-            UniversityId = renter.UniversityId ?? null,
-            MajorId = renter.MajorId ?? null
+            Gender = renter.Gender
         };
 
-        var validation = await _renterValidator.ValidateParams(finalizeUpdate, id);
+        var validation = await _renterValidator.ValidateParams(finalizeUpdate, userId);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -316,26 +300,9 @@ public class RentersController : ControllerBase
 
     [HttpPut("change-password")]
     [Authorize(Roles = "Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Update renter by id (For management and renter)")]
+    [SwaggerOperation(Summary = "[Authorize] Update renter password (For renter)")]
     public async Task<IActionResult> ChangePassword([FromBody] RenterUpdatePasswordRequest renter)
     {
-        /*
-        var userRole = User.Identities
-            .FirstOrDefault()?.Claims
-            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
-            ?.Value ?? string.Empty;
-
-        Console.WriteLine(userRole);
-
-        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "You are not authorized to access this resource",
-                data = ""
-            });
-        */
-
         var renterId = int.Parse(User.Identity?.Name);
 
         var renterCheck = await _serviceWrapper.Renters.GetRenterById(renterId);
@@ -386,6 +353,7 @@ public class RentersController : ControllerBase
     }
 
 
+    /*
     // POST: api/Renters
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
@@ -404,15 +372,17 @@ public class RentersController : ControllerBase
             FullName = renter.FullName,
             BirthDate = renter.BirthDate,
             Status = true,
+            CitizenNumber = renter.CitizenNumber,
+
+        
             ImageUrl = (await _serviceWrapper.AzureStorage.UploadAsync(renter.Image,
                 "User", imageExtension))?.Blob.Uri,
-            CitizenNumber = renter.CitizenNumber,
             CitizenImageUrl = (await _serviceWrapper.AzureStorage.UploadAsync(renter.CitizenImage,
                 "Citizen", imageExtension))?.Blob.Uri,
+            
+            
             Address = renter.Address,
             Gender = renter.Gender,
-            UniversityId = renter.UniversityId ?? null,
-            MajorId = renter.MajorId ?? null
         };
 
         var validation = await _renterValidator.ValidateParams(finalizeCreation, null);
@@ -458,6 +428,8 @@ public class RentersController : ControllerBase
             data = ""
         });
     }
+    
+    */
 
 
     // DELETE: api/Renters/5

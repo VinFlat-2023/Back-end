@@ -45,10 +45,6 @@ public class Renter
 
     public string Address { get; set; }
     public string Gender { get; set; }
-    public int? UniversityId { get; set; }
-    public int? MajorId { get; set; }
-    public virtual Major Major { get; set; }
-    public virtual University University { get; set; }
     public string? DeviceToken { get; set; }
     public virtual ICollection<Contract> Contracts { get; set; }
     public virtual ICollection<Invoice> Invoices { get; set; }

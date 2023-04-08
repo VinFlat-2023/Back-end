@@ -68,9 +68,9 @@ public class BuildingService : IBuildingService
         return await _repositoryWrapper.Buildings.UpdateBuilding(building);
     }
 
-    public async Task<RepositoryResponse> UpdateBuildingImages(Building building)
+    public async Task<RepositoryResponse> UpdateBuildingImages(Building building, int number)
     {
-        return await _repositoryWrapper.Buildings.UpdateBuildingImages(building);
+        return await _repositoryWrapper.Buildings.UpdateBuildingImages(building, number);
     }
 
     public async Task<RepositoryResponse> DeleteBuilding(int buildingId)

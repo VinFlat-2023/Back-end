@@ -49,7 +49,7 @@ public class RenterValidator : BaseValidator, IRenterValidator
 case not null:
 if (renterId == null)
 {
-    if (await _conditionCheckHelper.AccountUsernameExist(obj.Username) != null)
+    if (await _conditionCheckHelper.EmployeeUsernameExist(obj.Username) != null)
         ValidatorResult.Failures.Add("Username is duplicated");
     if (await _conditionCheckHelper.RenterUsernameCheck(obj.Username) != null)
         ValidatorResult.Failures.Add("Username is duplicated");
@@ -73,7 +73,7 @@ break;
                 /*
                 case not null:
                 
-                    if (await _conditionCheckHelper.AccountEmailCheck(obj.Email) != null)
+                    if (await _conditionCheckHelper.EmployeeEmailCheck(obj.Email) != null)
                         ValidatorResult.Failures.Add("Email is duplicated");
                     if (await _conditionCheckHelper.RenterEmailCheck(obj.Email) != null)
                         ValidatorResult.Failures.Add("Email is duplicated");
@@ -134,26 +134,6 @@ break;
                 case { } when string.IsNullOrWhiteSpace(obj.Address):
                     ValidatorResult.Failures.Add("Address is required");
                     break;
-            }
-
-            if (obj?.MajorId != null && await _conditionCheckHelper.MajorCheck(obj.MajorId) == null)
-                ValidatorResult.Failures.Add("Major provided does not exist");
-
-            if (obj is { MajorId: { }, UniversityId: null })
-                ValidatorResult.Failures.Add("University is required when major is provided");
-
-            if (obj?.UniversityId != null)
-            {
-                if (await _conditionCheckHelper.UniversityCheck(obj.UniversityId) == null)
-                    ValidatorResult.Failures.Add("University not found");
-
-                if (obj.MajorId != null)
-                {
-                    var majorList = await _serviceWrapper.Majors.GetMajorListByUniversity(obj.UniversityId);
-                    var majorExist = majorList.FirstOrDefault(x => x.MajorId == obj.MajorId);
-                    if (majorExist == null)
-                        ValidatorResult.Failures.Add("Major not found in this university");
-                }
             }
         }
         catch (Exception e)

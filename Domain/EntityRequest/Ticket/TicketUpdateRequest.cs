@@ -9,4 +9,5 @@ public class TicketUpdateRequest
     public string? ImageUrl { get; set; }
     public string? Status { get; set; }
     public int? TicketTypeId { get; set; }
+    public int? EmployeeId { get; set; }
 }

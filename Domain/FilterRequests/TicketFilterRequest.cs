@@ -13,6 +13,6 @@ public class TicketFilterRequest : PagingFilter
     public string? TicketTypeName { get; set; }
     public int? ContractId { get; set; }
     public string? ContractName { get; set; }
-    public int? AccountId { get; set; }
+    public int? EmployeeId { get; set; }
     public string? FullName { get; set; }
 }

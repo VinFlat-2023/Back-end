@@ -59,12 +59,12 @@ public class ServiceWrapper : IServiceWrapper
     }
 
 
-    public IAccountService Accounts
+    public IEmployeeService Employees
     {
         get
         {
-            if (_account == null) _account = new AccountService(_repositories, _paginationOptions);
-            return _account;
+            if (_employee == null) _employee = new EmployeeService(_repositories, _paginationOptions);
+            return _employee;
         }
     }
 
@@ -140,15 +140,6 @@ public class ServiceWrapper : IServiceWrapper
         }
     }
 
-    public IMajorService Majors
-    {
-        get
-        {
-            if (_major == null) _major = new MajorService(_repositories, _paginationOptions);
-            return _major;
-        }
-    }
-
     public IRenterService Renters
     {
         get
@@ -200,15 +191,6 @@ public class ServiceWrapper : IServiceWrapper
         {
             if (_serviceType == null) _serviceType = new ServiceTypeService(_repositories, _paginationOptions);
             return _serviceType;
-        }
-    }
-
-    public IUniversityService Universities
-    {
-        get
-        {
-            if (_university == null) _university = new UniversityService(_repositories, _paginationOptions);
-            return _university;
         }
     }
 
@@ -276,16 +258,6 @@ public class ServiceWrapper : IServiceWrapper
         }
     }
 
-    public IAttributeForNumericService Attributes
-    {
-        get
-        {
-            if (_attribute == null) _attribute = new AttributeForNumericService(_repositories, _paginationOptions);
-            return _attribute;
-        }
-    }
-
-
     public INotificationService Notifications
     {
         get
@@ -316,7 +288,7 @@ public class ServiceWrapper : IServiceWrapper
     #region fields
 
     private IAzureStorageService _azureStorage;
-    private IAccountService _account;
+    private IEmployeeService _employee;
     private IAreaService _area;
     private IBuildingService _building;
     private IContractService _contract;
@@ -327,14 +299,12 @@ public class ServiceWrapper : IServiceWrapper
     private IInvoiceService _invoice;
     private IInvoiceTypeService _invoiceType;
     private IInvoiceDetailService _invoiceDetail;
-    private IMajorService _major;
     private IRenterService _renter;
     private ITicketService _ticket;
     private ITicketTypeService _ticketType;
     private IRoleService _roles;
     private IServiceEntityService _serviceEntity;
     private IServiceTypeService _serviceType;
-    private IUniversityService _university;
     private IWalletService _wallet;
     private ITokenService _tokens;
     private IDeviceService _device;
@@ -343,7 +313,6 @@ public class ServiceWrapper : IServiceWrapper
     private IRoomService _room;
     private IRoomTypeService _roomType;
     private IGetIdService _getId;
-    private IAttributeForNumericService _attribute;
 
     #endregion
 }

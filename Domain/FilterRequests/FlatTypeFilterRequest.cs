@@ -8,5 +8,5 @@ public class FlatTypeFilterRequest : PagingFilter
 
     public int? RoomCapacity { get; set; }
 
-    public string? Status { get; set; }
+    public bool? Status { get; set; }
 }

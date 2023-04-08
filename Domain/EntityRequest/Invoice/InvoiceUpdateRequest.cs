@@ -22,6 +22,6 @@ public class InvoiceUpdateRequest
     public int ContractId { get; set; }
     public string? PaymentTime { get; set; }
     public int RenterId { get; set; }
-    public int AccountId { get; set; }
+    public int EmployeeId { get; set; }
     public int InvoiceTypeId { get; set; }
 }

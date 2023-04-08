@@ -14,9 +14,9 @@ public interface IRenterService
     public Task<RepositoryResponse> UpdateImageRenter(Renter renter);
     public Task<RepositoryResponse> ToggleRenterStatus(int renterId);
     public Task<RepositoryResponse> DeleteRenter(int renterId);
-    public Task<Renter?> RenterLogin(string username, string password);
+    public Task<Renter?> RenterLogin(string usernameOrPhoneNumber, string password);
     public Task<Renter?> GetRenterByUsername(string username);
     public Task<Renter?> RenterUsernameCheck(string? username);
     public Task<Renter?> RenterEmailCheck(string? email);
-    public Task<Renter?> RenterDetailWithAccountId(int userId);
+    public Task<Renter?> RenterDetailWithEmployeeId(int userId);
 }

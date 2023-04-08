@@ -36,12 +36,12 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
-    public IAccountRepository Accounts
+    public IEmployeeRepository Employees
     {
         get
         {
-            if (_accounts == null) _accounts = new AccountRepository(_context);
-            return _accounts;
+            if (_employees == null) _employees = new EmployeeRepository(_context);
+            return _employees;
         }
     }
 
@@ -117,15 +117,6 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
-    public IMajorRepository Majors
-    {
-        get
-        {
-            if (_majors == null) _majors = new MajorRepository(_context);
-            return _majors;
-        }
-    }
-
     public IRenterRepository Renters
     {
         get
@@ -177,15 +168,6 @@ public class RepositoryWrapper : IRepositoryWrapper
         {
             if (_serviceTypes == null) _serviceTypes = new ServiceTypeRepository(_context);
             return _serviceTypes;
-        }
-    }
-
-    public IUniversityRepository Universities
-    {
-        get
-        {
-            if (_universities == null) _universities = new UniversityRepository(_context);
-            return _universities;
         }
     }
 
@@ -252,21 +234,12 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
-    public IAttributeRepository Attributes
-    {
-        get
-        {
-            if (_attribute == null) _attribute = new AttributeRepository(_context);
-            return _attribute;
-        }
-    }
-
     #region fields
 
     private IAzureStorageRepository _azureStorage;
     private IInvoiceTypeRepository _invoiceTypes;
     private IInvoiceDetailRepository _invoiceDetails;
-    private IAccountRepository _accounts;
+    private IEmployeeRepository _employees;
     private IAreaRepository _areas;
     private IBuildingRepository _buildings;
     private IContractRepository _contracts;
@@ -275,21 +248,18 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IFlatRepository _flats;
     private IFlatTypeRepository _flatTypes;
     private IInvoiceRepository _invoices;
-    private IMajorRepository _majors;
     private IRenterRepository _renters;
     private ITicketRepository _tickets;
     private ITicketTypeRepository _ticketTypes;
     private IRoleRepository _roles;
     private IServiceEntityRepository _servicesEntity;
     private IServiceTypeRepository _serviceTypes;
-    private IUniversityRepository _universities;
     private IWalletRepository _wallets;
     private IDeviceRepository _devices;
     private INotificationRepository _notification;
     private IRoomRepository _room;
     private IRoomTypeRepository _roomType;
     private IGetIdRepository _getId;
-    private IAttributeRepository _attribute;
 
     #endregion
 }

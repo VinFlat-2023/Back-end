@@ -19,19 +19,13 @@ public class RenterRepository : IRenterRepository
     public IQueryable<Renter> GetRenterList(RenterFilter filters)
     {
         return _context.Renters
-            .Include(x => x.University)
-            .ThenInclude(x => x.Majors)
-            .Include(x => x.Major)
             // Filter starts here
             .Where(x =>
                 (filters.Username == null || x.Username.ToLower().Contains(filters.Username.ToLower()))
                 && (filters.Status == null || x.Status == filters.Status)
                 && (filters.Address == null || x.Address.ToLower().Contains(filters.Address.ToLower()))
                 && (filters.Phone == null || x.Phone.Contains(filters.Phone))
-                && (filters.Email == null || x.Email.Contains(filters.Email.ToLower()))
-                && (filters.UniversityId == null || x.UniversityId == filters.UniversityId)
-                && (filters.UniversityName == null ||
-                    x.University.UniversityName.Contains(filters.UniversityName.ToLower()))
+                && (filters.Email == null || x.Email.ToLower().Contains(filters.Email.ToLower()))
                 && (filters.Gender == null || x.Gender == filters.Gender)
                 && (filters.FullName == null || x.FullName.ToLower().Contains(filters.FullName.ToLower())))
             .AsNoTracking();
@@ -57,9 +51,6 @@ public class RenterRepository : IRenterRepository
     public IQueryable<Renter> GetRenterDetail(int? userId)
     {
         return _context.Renters
-            .Include(x => x.University)
-            .ThenInclude(x => x.Majors)
-            .Include(x => x.Major)
             .Include(x => x.Contracts
                 .Where(y => y.ContractStatus == "Active"))
             .Where(x => x.RenterId == userId);
@@ -128,11 +119,8 @@ public class RenterRepository : IRenterRepository
 
         userData.FullName = renter.FullName;
         userData.Email = renter.Email;
-        userData.Password = renter.Password;
         userData.Phone = renter.Phone;
-        userData.MajorId = renter.MajorId;
         userData.Address = renter.Address;
-        userData.UniversityId = renter.UniversityId;
         userData.Gender = renter.Gender;
         userData.BirthDate = renter.BirthDate;
 
@@ -253,13 +241,14 @@ public class RenterRepository : IRenterRepository
     /// <summary>
     ///     Get renter based on username and passowrd
     /// </summary>
-    /// <param name="username"></param>
+    /// <param name="usernameOrPhoneNumber"></param>
     /// <param name="password"></param>
     /// <returns></returns>
-    public IQueryable<Renter> GetRenter(string username, string password)
+    public IQueryable<Renter> GetRenter(string usernameOrPhoneNumber, string password)
     {
         return _context.Renters
-            .Where(a => a.Username == username && a.Password == password);
+            .Where(a => (a.Username == usernameOrPhoneNumber || a.Phone == usernameOrPhoneNumber)
+                        && a.Password == password);
     }
 
     public async Task<Renter?> GetARenterByUserName(string userName)

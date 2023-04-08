@@ -12,9 +12,10 @@ public class ContractMeterDetailEntity
     public DateTime LastUpdated { get; set; }
     public string ContractStatus { get; set; }
     public string? ImageUrl { get; set; }
-    public string PriceForRent { get; set; } = null!;
-    public string PriceForWater { get; set; } = null!;
-    public string PriceForElectricity { get; set; } = null!;
+    public string PriceForRent { get; set; }
+    public string PriceForWater { get; set; }
+    public string PriceForElectricity { get; set; }
     public string PriceForService { get; set; }
-    public int? RoomId { get; set; }
+
+    // TODO : Add Flat
 }

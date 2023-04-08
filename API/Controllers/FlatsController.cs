@@ -143,6 +143,8 @@ public class FlatsController : ControllerBase
             ElectricityMeterBefore = 0,
             WaterMeterAfter = 0,
             ElectricityMeterAfter = 0,
+            MaxRoom = flat.MaxRoom ?? 1,
+            AvailableRoom = flat.MaxRoom ?? 1,
             FlatTypeId = flat.FlatTypeId,
             BuildingId = flat.BuildingId
         };

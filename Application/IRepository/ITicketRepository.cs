@@ -13,4 +13,5 @@ public interface ITicketRepository
     public Task<Ticket> CreateTicket(Ticket ticket);
     public Task<RepositoryResponse> UpdateTicket(Ticket ticket);
     public Task<RepositoryResponse> DeleteTicket(int ticketId);
+    public Task<RepositoryResponse> UpdateTicketImage(Ticket ticket, int number);
 }

@@ -18,18 +18,19 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
     {
         try
         {
-            switch (obj?.BuildingId)
-            {
-                case { } when obj.BuildingId != buildingId:
-                    ValidatorResult.Failures.Add("Building id mismatch");
-                    break;
-                case { } when await _conditionCheckHelper.BuildingCheck(obj.BuildingId) == null:
-                    ValidatorResult.Failures.Add("Building provided does not exist");
-                    break;
-                case null:
-                    ValidatorResult.Failures.Add("Building is required");
-                    break;
-            }
+            if (buildingId != null)
+                switch (obj?.BuildingId)
+                {
+                    case { } when obj.BuildingId != buildingId:
+                        ValidatorResult.Failures.Add("Building id mismatch");
+                        break;
+                    case { } when await _conditionCheckHelper.BuildingCheck(obj.BuildingId) == null:
+                        ValidatorResult.Failures.Add("Building provided does not exist");
+                        break;
+                    case null:
+                        ValidatorResult.Failures.Add("Building is required");
+                        break;
+                }
 
             switch (obj?.BuildingName)
             {
@@ -102,14 +103,14 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
                     break;
             }
 
-            switch (obj?.AccountId)
+            switch (obj?.EmployeeId)
             {
                 case null:
-                    ValidatorResult.Failures.Add("Management account is required");
+                    ValidatorResult.Failures.Add("Management employee is required");
                     break;
                 case not null:
-                    if (await _conditionCheckHelper.AreaCheck(obj.AccountId) == null)
-                        ValidatorResult.Failures.Add("Management account provided does not exist");
+                    if (await _conditionCheckHelper.EmployeeCheck(obj.EmployeeId) == null)
+                        ValidatorResult.Failures.Add("Management employee provided does not exist");
                     break;
             }
 

@@ -11,6 +11,6 @@ public class BuildingFilterRequest : PagingFilter
     public string? BuildingPhoneNumber { get; set; }
     public string? BuildingAddress { get; set; }
     public string? AreaName { get; set; }
-    public string? AccountName { get; set; }
+    public string? EmployeeName { get; set; }
     public bool? SpareSlots { get; set; }
 }

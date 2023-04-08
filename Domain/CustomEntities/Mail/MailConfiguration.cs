@@ -25,7 +25,7 @@ public class MailConfiguration
 
     /// <summary>
     ///     For gmail
-    ///     generrated password for less secured app to login to email account
+    ///     generrated password for less secured app to login to email employee
     ///     see detail at https://support.google.com/mail/answer/7126229
     ///     see how to generate at https://support.google.com/accounts/answer/185833
     ///     For other mail services

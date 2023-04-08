@@ -1,4 +1,4 @@
-using Domain.ViewModel.AccountEntity;
+using Domain.ViewModel.EmployeeEntity;
 using Domain.ViewModel.InvoiceTypeEntity;
 using Domain.ViewModel.RenterEntity;
 
@@ -17,8 +17,8 @@ public class InvoiceRenterDetailEntity
     public DateTime CreatedTime { get; set; }
     public int? RenterId { get; set; }
     public RenterBasicDetailEntity? Renter { get; set; }
-    public int AccountId { get; set; }
-    public AccountBasicDetailEntity Account { get; set; }
+    public int EmployeeId { get; set; }
+    public EmployeeBasicDetailEntity Employee { get; set; }
     public int InvoiceTypeId { get; set; }
     public InvoiceTypeDetailEntity InvoiceType { get; set; }
     public ICollection<InvoiceDataDetailEntity> InvoiceDetails { get; set; }

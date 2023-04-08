@@ -27,7 +27,6 @@ public class FlatRepository : IFlatRepository
             .ThenInclude(x => x.Area)
             //.Where(x => x.BuildingId == x.Building.BuildingId)
             .Include(x => x.FlatType)
-            .Include(x => x.AttributeForNumeric)
             .Include(x => x.UtilitiesFlats)
             .ThenInclude(x => x.Utility)
             //.Where(x => x.FlatTypeId == x.FlatType.FlatTypeId)
@@ -56,7 +55,6 @@ public class FlatRepository : IFlatRepository
             .Include(x => x.Building)
             .ThenInclude(x => x.Area)
             .Include(x => x.FlatType)
-            .Include(x => x.AttributeForNumeric)
             .Include(x => x.UtilitiesFlats)
             .ThenInclude(x => x.Utility)
             .Where(x => x.FlatId == flatId);

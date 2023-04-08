@@ -23,8 +23,9 @@ internal class TicketRepository : ITicketRepository
     public IQueryable<Ticket> GetTicketList(TicketFilter filters)
     {
         return _context.Tickets
-            .Include(x => x.TicketType)
+            .Include(x => x.Employee)
             .Include(x => x.Contract)
+            .Include(x => x.TicketType)
             // Filter starts here
             .Where(x =>
                 (filters.Status == null || x.Status == filters.Status)
@@ -33,14 +34,14 @@ internal class TicketRepository : ITicketRepository
                 && (filters.Amount == null || x.Amount == filters.Amount)
                 && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
                 && (filters.ContractId == null || x.ContractId == filters.ContractId)
-                && (filters.AccountId == null || x.AccountId == filters.AccountId)
+                && (filters.EmployeeId == null || x.EmployeeId == filters.EmployeeId)
                 && (filters.Description == null || x.Description.Contains(filters.Description.ToLower()))
                 && (filters.TicketTypeName == null ||
                     x.TicketType.TicketTypeName.Contains(filters.TicketTypeName.ToLower()))
                 && (filters.ContractName == null || x.Contract.ContractName.Contains(filters.ContractName.ToLower()))
                 && (filters.TicketTypeName == null ||
                     x.TicketType.TicketTypeName.Contains(filters.TicketTypeName.ToLower()))
-                && (filters.FullName == null || x.Account.FullName.Contains(filters.FullName.ToLower())))
+                && (filters.FullName == null || x.Employee.FullName.Contains(filters.FullName.ToLower())))
             .AsNoTracking();
     }
 
@@ -49,8 +50,10 @@ internal class TicketRepository : ITicketRepository
         return isManagement switch
         {
             true => _context.Tickets
+                .Include(x => x.Employee)
+                .Include(x => x.Contract)
                 .Include(x => x.TicketType)
-                .Where(x => x.AccountId == id)
+                .Where(x => x.EmployeeId == id)
                 // Filter starts here
                 .Where(x =>
                     (filters.Status == null || x.Status == filters.Status)
@@ -59,7 +62,7 @@ internal class TicketRepository : ITicketRepository
                     && (filters.Amount == null || x.Amount == filters.Amount)
                     && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
                     && (filters.ContractId == null || x.ContractId == filters.ContractId)
-                    && (filters.AccountId == null || x.AccountId == filters.AccountId)
+                    && (filters.EmployeeId == null || x.EmployeeId == filters.EmployeeId)
                     && (filters.Description == null || x.Description.Contains(filters.Description.ToLower()))
                     && (filters.TicketTypeName == null ||
                         x.TicketType.TicketTypeName.Contains(filters.TicketTypeName.ToLower()))
@@ -67,7 +70,7 @@ internal class TicketRepository : ITicketRepository
                         x.Contract.ContractName.Contains(filters.ContractName.ToLower()))
                     && (filters.TicketTypeName == null ||
                         x.TicketType.TicketTypeName.Contains(filters.TicketTypeName.ToLower()))
-                    && (filters.FullName == null || x.Account.FullName.Contains(filters.FullName.ToLower())))
+                    && (filters.FullName == null || x.Employee.FullName.Contains(filters.FullName.ToLower())))
                 .AsNoTracking(),
 
             false => _context.Tickets
@@ -83,7 +86,7 @@ internal class TicketRepository : ITicketRepository
                     && (filters.Amount == null || x.Amount == filters.Amount)
                     && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
                     && (filters.ContractId == null || x.ContractId == filters.ContractId)
-                    && (filters.AccountId == null || x.AccountId == filters.AccountId)
+                    && (filters.EmployeeId == null || x.EmployeeId == filters.EmployeeId)
                     && (filters.Description == null || x.Description.Contains(filters.Description.ToLower()))
                     && (filters.TicketTypeName == null ||
                         x.TicketType.TicketTypeName.Contains(filters.TicketTypeName.ToLower()))
@@ -91,7 +94,7 @@ internal class TicketRepository : ITicketRepository
                         x.Contract.ContractName.Contains(filters.ContractName.ToLower()))
                     && (filters.TicketTypeName == null ||
                         x.TicketType.TicketTypeName.Contains(filters.TicketTypeName.ToLower()))
-                    && (filters.FullName == null || x.Account.FullName.Contains(filters.FullName.ToLower())))
+                    && (filters.FullName == null || x.Employee.FullName.Contains(filters.FullName.ToLower())))
                 .AsNoTracking()
         };
     }
@@ -152,6 +155,38 @@ internal class TicketRepository : ITicketRepository
         ticketData.Description = ticket.Description;
         ticketData.SolveDate = ticket.SolveDate ?? ticketData.SolveDate;
         ticketData.TicketTypeId = ticket.TicketTypeId;
+
+        await _context.SaveChangesAsync();
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Ticket updated successfully"
+        };
+    }
+
+    public async Task<RepositoryResponse> UpdateTicketImage(Ticket ticket, int number)
+    {
+        var ticketData = await _context.Tickets
+            .FirstOrDefaultAsync(x => x.TicketId == ticket!.TicketId);
+        if (ticketData == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Ticket not found"
+            };
+
+        switch (number)
+        {
+            case 1:
+                ticketData.ImageUrl = ticket.ImageUrl;
+                break;
+            case 2:
+                ticketData.ImageUrl2 = ticket.ImageUrl2;
+                break;
+            case 3:
+                ticketData.ImageUrl3 = ticket.ImageUrl3;
+                break;
+        }
 
         await _context.SaveChangesAsync();
         return new RepositoryResponse

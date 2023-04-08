@@ -82,7 +82,7 @@ public class ServicesController : ControllerBase
                 data = ""
             });
 
-        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnRenter(userCheck.RenterId);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnRenter(userCheck.RenterId, token);
 
         var list = await _serviceWrapper.ServicesEntity.GetServiceEntityList(filter, buildingId, token);
 
@@ -219,11 +219,12 @@ public class ServicesController : ControllerBase
     [HttpPut("{id:int}")]
     [Authorize(Roles = "Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Update service by id (For management)")]
-    public async Task<IActionResult> PutServiceEntity(int id, [FromBody] ServiceUpdateRequest service)
+    public async Task<IActionResult> PutServiceEntity(int id, [FromBody] ServiceUpdateRequest service,
+        CancellationToken token)
     {
         var managementId = int.Parse(User.Identity?.Name);
 
-        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(managementId);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(managementId, token);
 
         var updateService = new ServiceEntity
         {
@@ -267,11 +268,11 @@ public class ServicesController : ControllerBase
     [HttpPost]
     [Authorize(Roles = "Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Add new service (For management)")]
-    public async Task<IActionResult> PostServiceEntity([FromBody] ServiceCreateRequest service)
+    public async Task<IActionResult> PostServiceEntity([FromBody] ServiceCreateRequest service, CancellationToken token)
     {
         var managementId = int.Parse(User.Identity?.Name);
 
-        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(managementId);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(managementId, token);
 
         var newService = new ServiceEntity
         {

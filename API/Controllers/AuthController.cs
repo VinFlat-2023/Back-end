@@ -27,10 +27,10 @@ public class AuthController : ControllerBase
     [HttpPost("management/v1/login")]
     public async Task<IActionResult> LoginManagement([FromBody] LoginModel loginModel)
     {
-        var account = await _serviceWrapper.Accounts
-            .AccountLogin(loginModel.Username, loginModel.Password);
+        var employee = await _serviceWrapper.Employees
+            .EmployeeLogin(loginModel.UsernameOrPhoneNumber, loginModel.Password);
 
-        if (account == null)
+        if (employee == null)
             return Unauthorized(new
             {
                 status = "Success",
@@ -45,26 +45,25 @@ public class AuthController : ControllerBase
                 var userDevice = new UserDevice
                 {
                     DeviceToken = loginModel.DeviceToken,
-                    UserName = account.Username
+                    UserName = employee.Username
                 };
                 await _serviceWrapper.Devices.AddUserDeviceInfo(userDevice);
             }
-            else if (userDeviceFound.UserName != account.Username)
+            else if (userDeviceFound.UserName != employee.Username)
             {
-                userDeviceFound.UserName = account.Username;
+                userDeviceFound.UserName = employee.Username;
                 await _serviceWrapper.Devices.UpdateUserDeviceInfo(userDeviceFound);
             }
         }
 
-        var jwtToken = _serviceWrapper.Tokens.CreateTokenForAccount(account);
+        var jwtToken = _serviceWrapper.Tokens.CreateTokenForEmployee(employee);
         return Ok(new
         {
             status = "Success",
             message = "User logged in successfully",
             data = new
             {
-                id = account.AccountId,
-                roleId = account.RoleId,
+                id = employee.EmployeeId,
                 token = jwtToken
             }
         });
@@ -80,7 +79,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> LoginRenter([FromBody] LoginModel loginModel)
     {
         var renter = await _serviceWrapper.Renters
-            .RenterLogin(loginModel.Username, loginModel.Password);
+            .RenterLogin(loginModel.UsernameOrPhoneNumber, loginModel.Password);
 
         if (renter == null)
             return Unauthorized(new

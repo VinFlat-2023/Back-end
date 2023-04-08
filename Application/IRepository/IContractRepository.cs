@@ -7,10 +7,9 @@ namespace Application.IRepository;
 public interface IContractRepository
 {
     public IQueryable<Contract> GetContractList(ContractFilter filters);
-    public IQueryable<Contract> GetContractList(ContractFilter filters, int renterId);
     public IQueryable<Contract> GetContractHistoryList(ContractHistoryFilter filters);
     public IQueryable<Contract?> GetContractDetail(int contractId);
-    public IQueryable<Contract?> GetContractByUserId(int userId);
+    public IQueryable<Contract?> GetContractByRenterId(int renterId);
     public IQueryable<Contract?> GetContractHistoryDetail(int contractId);
     public Task<Contract?> AddContract(Contract contract);
     public Task<RepositoryResponse> UpdateContract(Contract contract);

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Domain.EntitiesForManagement;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,7 @@ public class ApplicationContext : DbContext
     {
     }
 
-    public virtual DbSet<Account> Accounts { get; set; } = null!;
+    public virtual DbSet<Employee> Employees { get; set; } = null!;
     public virtual DbSet<Area> Areas { get; set; } = null!;
     public virtual DbSet<Building> Buildings { get; set; } = null!;
     public virtual DbSet<Contract> Contracts { get; set; } = null!;
@@ -19,7 +20,6 @@ public class ApplicationContext : DbContext
     public virtual DbSet<Flat> Flats { get; set; } = null!;
     public virtual DbSet<FlatType> FlatTypes { get; set; } = null!;
     public virtual DbSet<Invoice> Invoices { get; set; } = null!;
-    public virtual DbSet<Major> Majors { get; set; } = null!;
     public virtual DbSet<InvoiceDetail> InvoiceDetails { get; set; } = null!;
     public virtual DbSet<InvoiceType> InvoiceTypes { get; set; } = null!;
     public virtual DbSet<Renter> Renters { get; set; } = null!;
@@ -28,7 +28,6 @@ public class ApplicationContext : DbContext
     public virtual DbSet<Role> Roles { get; set; } = null!;
     public virtual DbSet<ServiceEntity> Services { get; set; } = null!;
     public virtual DbSet<ServiceType> ServiceTypes { get; set; } = null!;
-    public virtual DbSet<University> University { get; set; } = null!;
     public virtual DbSet<Wallet> Wallets { get; set; } = null!;
     public virtual DbSet<WalletType> WalletTypes { get; set; } = null!;
     public virtual DbSet<Transaction> Transactions { get; set; } = null!;
@@ -37,7 +36,6 @@ public class ApplicationContext : DbContext
     public virtual DbSet<NotificationType> NotificationTypes { get; set; } = null!;
     public virtual DbSet<Room> Rooms { get; set; } = null!;
     public virtual DbSet<RoomType> RoomTypes { get; set; } = null!;
-    public virtual DbSet<AttributeForNumeric> AttributeForNumerics { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -96,7 +94,7 @@ public class ApplicationContext : DbContext
             entity.Property(e => e.Status).HasDefaultValueSql("((1))");
         });
 
-        modelBuilder.Entity<Account>(entity =>
+        modelBuilder.Entity<Employee>(entity =>
         {
             entity.HasIndex(e => e.Username)
                 .IsUnique();
@@ -104,89 +102,91 @@ public class ApplicationContext : DbContext
                 .IsUnique();
         });
 
-        modelBuilder.Entity<AttributeForNumeric>().HasData(
-            new AttributeForNumeric
-            {
-                AttributeForNumericId = 1,
-                WaterAttribute = "1",
-                ElectricityAttribute = "1.1"
-            },
-            new AttributeForNumeric
-            {
-                AttributeForNumericId = 2,
-                WaterAttribute = "1",
-                ElectricityAttribute = "0.9"
-            },
-            new AttributeForNumeric
-            {
-                AttributeForNumericId = 3,
-                WaterAttribute = "1",
-                ElectricityAttribute = "1.2"
-            },
-            new AttributeForNumeric
-            {
-                AttributeForNumericId = 4,
-                WaterAttribute = "0.9",
-                ElectricityAttribute = "1.4"
-            }
-        );
 
-
-        modelBuilder.Entity<Account>().HasData(
-            new Account
+        modelBuilder.Entity<Employee>().HasData(
+            new Employee
             {
-                AccountId = 1,
-                FullName = "Super admin account",
-                Username = "superadmin",
-                Password = "superadmin",
-                Email = "superadmin@mail",
-                Phone = "0123543125",
+                EmployeeId = 1,
+                FullName = "supervisor 31",
+                Username = "sup1",
+                Password = "123",
+                Email = "sup13@mail",
+                Phone = "0123543423125",
                 Status = true,
-                RoleId = 1
+                RoleId = 2,
+                Address = "Sup1 address"
             },
-            new Account
+            new Employee
             {
-                AccountId = 2,
+                EmployeeId = 2,
+                Username = "supervisor 24",
+                FullName = "sup2",
+                Password = "123",
+                Email = "sup21@mail",
+                Phone = "012354353432",
+                Status = true,
+                RoleId = 2,
+                Address = "Sup2 address"
+            },
+            new Employee
+            {
+                EmployeeId = 3,
+                Username = "supervisor",
+                FullName = "sup3",
+                Password = "supervisor",
+                Email = "supervisor32@mail",
+                Phone = "012354433554",
+                Status = true,
+                RoleId = 2,
+                Address = "Sup3 address"
+            },
+            new Employee
+            {
+                EmployeeId = 4,
+                Username = "supervisor 4",
+                FullName = "sup4",
+                Password = "123",
+                Email = "employee211@mail",
+                Phone = "012323543235",
+                Status = true,
+                RoleId = 2,
+                Address = "Sup4 address"
+            },
+            new Employee
+            {
+                EmployeeId = 5,
+                Username = "supervisor 5",
+                FullName = "sup5",
+                Password = "123",
+                Email = "employee233@mail",
+                Phone = "043123123235",
+                Status = true,
+                RoleId = 2,
+                Address = "Sup5 address"
+            },
+            new Employee
+            {
+                EmployeeId = 6,
+                Username = "supervisor 6",
+                FullName = "sup6",
+                Password = "123",
+                Email = "employee232@mail",
+                Phone = "012312323235",
+                Status = true,
+                RoleId = 2,
+                Address = "Employee address"
+            },
+            new Employee
+            {
+                EmployeeId = 7,
                 Username = "admin",
                 FullName = "Admin account",
                 Password = "admin",
-                Email = "admin@mail",
-                Phone = "0123543532",
+                Email = "admin12@mail",
+                Phone = "012343123235",
                 Status = true,
-                RoleId = 2
-            },
-            new Account
-            {
-                AccountId = 3,
-                Username = "supervisor",
-                FullName = "Supervisor account",
-                Password = "supervisor",
-                Email = "supervisor@mail",
-                Phone = "0123543554",
-                Status = true,
-                RoleId = 3
-            },
-            new Account
-            {
-                AccountId = 4,
-                Username = "employee1",
-                FullName = "Employee account 1",
-                Password = "employee1",
-                Email = "employee1@mail",
-                Phone = "0123543235",
-                Status = true,
-                RoleId = 4
-            },
-            new Account
-            {
-                AccountId = 5,
-                Username = "employee2",
-                FullName = "Employee account 2",
-                Password = "employee2",
-                Email = "employee2@mail",
-                Phone = "0123123235",
-                Status = true,
-                RoleId = 4
+                RoleId = 1,
+                Address = "Admin address"
             }
         );
 
@@ -195,25 +195,19 @@ public class ApplicationContext : DbContext
             {
                 Status = true,
                 RoleId = 1,
-                RoleName = "SuperAdmin"
-            },
-            new Role
-            {
-                Status = true,
-                RoleId = 2,
                 RoleName = "Admin"
             },
             new Role
             {
                 Status = true,
-                RoleId = 3,
+                RoleId = 2,
                 RoleName = "Supervisor"
             },
             new Role
             {
                 Status = true,
-                RoleId = 4,
-                RoleName = "Employee"
+                RoleId = 3,
+                RoleName = "Technician"
             }
         );
 
@@ -223,8 +217,6 @@ public class ApplicationContext : DbContext
                 .IsUnique();
             entity.HasIndex(e => e.Email)
                 .IsUnique();
-            entity.HasIndex(e => e.MajorId)
-                .IsUnique(false);
         });
 
         modelBuilder.Entity<Renter>().HasData(
@@ -236,7 +228,8 @@ public class ApplicationContext : DbContext
                 Password = "renter1",
                 Phone = "0123543125",
                 FullName = "Nguyen Van A",
-                BirthDate = DateTime.UtcNow,
+                BirthDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "HCM",
@@ -251,7 +244,8 @@ public class ApplicationContext : DbContext
                 Password = "renter2",
                 Phone = "0123543125",
                 FullName = "Nguyen Van B",
-                BirthDate = DateTime.UtcNow,
+                BirthDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "Hue",
@@ -266,14 +260,13 @@ public class ApplicationContext : DbContext
                 Password = "renter3",
                 Phone = "0123543125",
                 FullName = "Nguyen Van C",
-                BirthDate = DateTime.UtcNow,
+                BirthDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "DN",
                 Gender = "Female",
-                DeviceToken = "123221ad145ad423sa",
-                MajorId = 2,
-                UniversityId = 1
+                DeviceToken = "123221ad145ad423sa"
             }, new Renter
             {
                 RenterId = 4,
@@ -282,14 +275,13 @@ public class ApplicationContext : DbContext
                 Password = "renter4",
                 Phone = "0123543125",
                 FullName = "Nguyen Van D",
-                BirthDate = DateTime.UtcNow,
+                BirthDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "HN",
                 Gender = "Female",
-                DeviceToken = "ewasdv12344",
-                MajorId = 1,
-                UniversityId = 1
+                DeviceToken = "ewasdv12344"
             }, new Renter
             {
                 RenterId = 5,
@@ -298,14 +290,13 @@ public class ApplicationContext : DbContext
                 Password = "123456789",
                 Phone = "0123543125",
                 FullName = "Tran Minh Khoi",
-                BirthDate = DateTime.UtcNow,
+                BirthDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "HCM",
                 Gender = "Male",
-                DeviceToken = "ewasdv12344",
-                MajorId = 1,
-                UniversityId = 1
+                DeviceToken = "ewasdv12344"
             }, new Renter
             {
                 RenterId = 6,
@@ -314,14 +305,13 @@ public class ApplicationContext : DbContext
                 Password = "123456789",
                 Phone = "0123543125",
                 FullName = "Tran Minh Khoi",
-                BirthDate = DateTime.UtcNow,
+                BirthDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "HCM",
                 Gender = "Male",
-                DeviceToken = "ewasdv12344",
-                MajorId = 1,
-                UniversityId = 1
+                DeviceToken = "ewasdv12344"
             }, new Renter
             {
                 RenterId = 7,
@@ -330,97 +320,13 @@ public class ApplicationContext : DbContext
                 Password = "123456789",
                 Phone = "0123543125",
                 FullName = "Tran Minh Khoi",
-                BirthDate = DateTime.UtcNow,
+                BirthDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "HCM",
                 Gender = "Male",
-                DeviceToken = "ewasdv12344",
-                MajorId = 1,
-                UniversityId = 1
-            }
-        );
-
-        modelBuilder.Entity<University>().HasData(
-            new University
-            {
-                UniversityId = 1,
-                UniversityName = "HCM University of Technology",
-                Address = "HCM",
-                Status = "Active",
-                Description = "HCM University of Technology"
-            },
-            new University
-            {
-                UniversityId = 2,
-                UniversityName = "HCM University of Science",
-                Address = "HCM",
-                Status = "Active",
-                Description = "HCM University of Science"
-            },
-            new University
-            {
-                UniversityId = 3,
-                UniversityName = "HCM University of Pedagogy",
-                Address = "HCM",
-                Status = "Active",
-                Description = "HCM University of Pedagogy"
-            },
-            new University
-            {
-                UniversityId = 4,
-                UniversityName = "HCM University of Physical",
-                Address = "HCM",
-                Status = "Active",
-                Description = "HCM University of Physical"
-            },
-            new University
-            {
-                UniversityId = 5,
-                UniversityName = "HCM University of Math",
-                Address = "HCM",
-                Status = "Active",
-                Description = "HCM University of Math"
-            },
-            new University
-            {
-                UniversityId = 6,
-                UniversityName = "HCM University of History",
-                Address = "HCM",
-                Status = "Active",
-                Description = "HCM University of History"
-            }
-        );
-
-        modelBuilder.Entity<Major>().HasData(
-            new Major
-            {
-                MajorId = 1,
-                Name = "Computer Science",
-                UniversityId = 1
-            },
-            new Major
-            {
-                MajorId = 2,
-                Name = "Information Technology",
-                UniversityId = 1
-            },
-            new Major
-            {
-                MajorId = 3,
-                Name = "Software Engineering",
-                UniversityId = 2
-            },
-            new Major
-            {
-                MajorId = 4,
-                Name = "Information Technology",
-                UniversityId = 2
-            }, new Major
-            {
-                MajorId = 5,
-                Name = "Information Technology",
-                UniversityId = 3
+                DeviceToken = "ewasdv12344"
             }
         );
 
@@ -428,58 +334,69 @@ public class ApplicationContext : DbContext
             new Area
             {
                 AreaId = 1,
-                Name = "HCM",
+                Name = "Quận 1",
                 Location = "HCM",
-                Status = true
+                Status = true,
+                ImageUrl =
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/PANO0002-Pano.jpg/1200px-PANO0002-Pano.jpg"
             },
             new Area
             {
                 AreaId = 2,
-                Name = "HN",
-                Location = "HN",
-                Status = true
+                Name = "Quận 2",
+                Location = "HCM",
+                Status = true,
+                ImageUrl =
+                    "https://i1-vnexpress.vnecdn.net/2022/11/17/Ve-may-bay-di-sai-gon-600x399-4356-2813-1668672299.jpg?w=0&h=0&q=100&dpr=2&fit=crop&s=8All1Mq-so56XkVbZXvdFA"
             },
             new Area
             {
                 AreaId = 3,
-                Name = "DN",
-                Location = "DN",
-                Status = true
+                Name = "Quận 3",
+                Location = "HCM",
+                Status = true,
+                ImageUrl =
+                    "https://images.pexels.com/photos/11742806/pexels-photo-11742806.jpeg?cs=srgb&dl=pexels-th%E1%BB%8Bnh-la-11742806.jpg&fm=jpg"
             },
             new Area
             {
                 AreaId = 4,
-                Name = "Hue",
-                Location = "Hue",
-                Status = true
+                Name = "Quận 9",
+                Location = "HCM",
+                Status = true,
+                ImageUrl = ""
             },
             new Area
             {
                 AreaId = 5,
-                Name = "Thanh Hoa",
-                Location = "TH",
-                Status = true
+                Name = "Quận Phú Nhuận",
+                Location = "HCM",
+                Status = true,
+                ImageUrl = ""
             },
             new Area
             {
                 AreaId = 6,
-                Name = "Hai Phong",
-                Location = "HP",
-                Status = true
+                Name = "Quận 7",
+                Location = "HCM",
+                Status = true,
+                ImageUrl = ""
             },
             new Area
             {
                 AreaId = 7,
-                Name = "Dong Nai",
-                Location = "DN",
-                Status = true
+                Name = "Quận 8",
+                Location = "HCM",
+                Status = true,
+                ImageUrl = ""
             },
             new Area
             {
                 AreaId = 8,
-                Name = "Hoa Lac",
-                Location = "HN",
-                Status = true
+                Name = "Quận 1",
+                Location = "HCM",
+                Status = true,
+                ImageUrl = ""
             }
         );
 
@@ -493,9 +410,9 @@ public class ApplicationContext : DbContext
                 CoordinateX = 231,
                 CoordinateY = 324,
                 AreaId = 1,
-                AccountId = 5,
-                ImageUrl = "",
-                BuildingAddress = "Quajan 9",
+                EmployeeId = 1,
+                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/6716250e-8169-446d-a54e-37094c30ae70thumbnail-202303031027054744.jpg",
+                BuildingAddress = "Quận 9",
                 BuildingPhoneNumber = "012323123"
             },
             new Building
@@ -507,8 +424,8 @@ public class ApplicationContext : DbContext
                 CoordinateX = 21233,
                 CoordinateY = 334,
                 AreaId = 1,
-                AccountId = 2,
-                ImageUrl = "",
+                EmployeeId = 2,
+                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/be39f244-45d1-48cc-94dc-7e1b138caa3athumbnail-202302251636284394.jpg",
                 BuildingAddress = "Quận 9",
                 BuildingPhoneNumber = "012323123"
             },
@@ -521,8 +438,8 @@ public class ApplicationContext : DbContext
                 CoordinateX = 423,
                 CoordinateY = 3214,
                 AreaId = 2,
-                AccountId = 2,
-                ImageUrl = "",
+                EmployeeId = 3,
+                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/8a8ea225-ea25-422c-a20d-299c7ed42456thumbnail-202302041627581789.jpg",
                 BuildingAddress = "Quận 2",
                 BuildingPhoneNumber = "012323123"
             },
@@ -535,8 +452,8 @@ public class ApplicationContext : DbContext
                 CoordinateX = 2323,
                 CoordinateY = 314,
                 AreaId = 2,
-                AccountId = 4,
-                ImageUrl = "",
+                EmployeeId = 4,
+                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/69d0767f-ff29-49dc-88fc-c3bc87cba986thumbnail-202212291740189478.jpg",
                 BuildingAddress = "Quận 3",
                 BuildingPhoneNumber = "012323123"
             },
@@ -548,9 +465,9 @@ public class ApplicationContext : DbContext
                 Status = true,
                 CoordinateX = 23431,
                 CoordinateY = 3245,
-                AreaId = 3,
-                AccountId = 3,
-                ImageUrl = "",
+                AreaId = 2,
+                EmployeeId = 5,
+                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a3f9897c-800e-4d5e-92b7-e388eefdf64bthumbnail-202212151636139810.jpg",
                 BuildingAddress = "Quận 4",
                 BuildingPhoneNumber = "012323123"
             },
@@ -563,8 +480,8 @@ public class ApplicationContext : DbContext
                 CoordinateX = 21233,
                 CoordinateY = 334,
                 AreaId = 3,
-                AccountId = 4,
-                ImageUrl = "",
+                EmployeeId = 6,
+                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 7",
                 BuildingPhoneNumber = "012323123"
             }
@@ -576,7 +493,7 @@ public class ApplicationContext : DbContext
                 FlatTypeId = 1,
                 FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 10,
-                Status = "Active",
+                Status = true,
                 BuildingId = 5
             },
             new FlatType
@@ -584,7 +501,7 @@ public class ApplicationContext : DbContext
                 FlatTypeId = 2,
                 FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 2,
-                Status = "Active",
+                Status = true,
                 BuildingId = 5
             },
             new FlatType
@@ -592,7 +509,7 @@ public class ApplicationContext : DbContext
                 FlatTypeId = 3,
                 FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 4,
-                Status = "Active",
+                Status = true,
                 BuildingId = 5
             },
             new FlatType
@@ -600,7 +517,7 @@ public class ApplicationContext : DbContext
                 FlatTypeId = 4,
                 FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 5,
-                Status = "Active",
+                Status = true,
                 BuildingId = 5
             },
             new FlatType
@@ -608,7 +525,7 @@ public class ApplicationContext : DbContext
                 FlatTypeId = 5,
                 FlatTypeName = "AAAAAAAA",
                 RoomCapacity = 6,
-                Status = "Active",
+                Status = true,
                 BuildingId = 5
             }
         );
@@ -663,8 +580,7 @@ public class ApplicationContext : DbContext
                 WaterMeterAfter = 0,
                 ElectricityMeterAfter = 0,
                 FlatTypeId = 1,
-                BuildingId = 1,
-                AttributeForNumericId = 4
+                BuildingId = 1
             },
             new Flat
             {
@@ -677,8 +593,7 @@ public class ApplicationContext : DbContext
                 WaterMeterAfter = 0,
                 ElectricityMeterAfter = 0,
                 FlatTypeId = 3,
-                BuildingId = 3,
-                AttributeForNumericId = 3
+                BuildingId = 3
             },
             new Flat
             {
@@ -692,8 +607,7 @@ public class ApplicationContext : DbContext
                 ElectricityMeterAfter = 0,
                 FlatTypeId = 2,
                 BuildingId = 2,
-                AvailableRoom = 0,
-                AttributeForNumericId = 2
+                AvailableRoom = 0
             },
             new Flat
             {
@@ -706,8 +620,7 @@ public class ApplicationContext : DbContext
                 WaterMeterAfter = 0,
                 ElectricityMeterAfter = 0,
                 FlatTypeId = 5,
-                BuildingId = 2,
-                AttributeForNumericId = 1
+                BuildingId = 2
             }
         );
 
@@ -809,44 +722,48 @@ public class ApplicationContext : DbContext
             {
                 TicketId = 1,
                 Description = "Sự cố 1",
-                CreateDate = DateTime.UtcNow,
+                CreateDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 Status = "Active",
                 SolveDate = null,
                 TicketTypeId = 1,
-                AccountId = 2,
+                EmployeeId = 2,
                 ContractId = 3
             },
             new Ticket
             {
                 TicketId = 2,
                 Description = "Sự cố 2",
-                CreateDate = DateTime.UtcNow,
+                CreateDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 Status = "Processing",
                 SolveDate = null,
                 TicketTypeId = 2,
-                AccountId = 2,
+                EmployeeId = 2,
                 ContractId = 3
             },
             new Ticket
             {
                 TicketId = 3,
                 Description = "Sự cố 3",
-                CreateDate = DateTime.UtcNow,
+                CreateDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 Status = "Completed",
                 SolveDate = null,
                 TicketTypeId = 3,
-                AccountId = 2,
+                EmployeeId = 2,
                 ContractId = 3
             },
             new Ticket
             {
                 TicketId = 4,
                 Description = "Sự cố 4",
-                CreateDate = DateTime.UtcNow,
+                CreateDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 Status = "Active",
                 SolveDate = null,
                 TicketTypeId = 1,
-                AccountId = 2,
+                EmployeeId = 2,
                 ContractId = 3
             }
         );
@@ -991,9 +908,10 @@ public class ApplicationContext : DbContext
                 Amount = 0,
                 Status = true,
                 Detail = "Detail for invoice 1",
-                CreatedTime = DateTime.UtcNow,
+                CreatedTime = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 RenterId = 1,
-                AccountId = 2,
+                EmployeeId = 2,
                 InvoiceTypeId = 1
             },
             new Invoice
@@ -1003,9 +921,10 @@ public class ApplicationContext : DbContext
                 Amount = 0,
                 Status = true,
                 Detail = "Detail for invoice 2",
-                CreatedTime = DateTime.UtcNow,
+                CreatedTime = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 RenterId = 2,
-                AccountId = 3,
+                EmployeeId = 3,
                 InvoiceTypeId = 1
             },
             new Invoice
@@ -1015,9 +934,10 @@ public class ApplicationContext : DbContext
                 Amount = 0,
                 Status = false,
                 Detail = "Detail for invoice 3",
-                CreatedTime = DateTime.UtcNow,
+                CreatedTime = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 RenterId = 3,
-                AccountId = 4,
+                EmployeeId = 4,
                 InvoiceTypeId = 1
             },
             new Invoice
@@ -1027,9 +947,10 @@ public class ApplicationContext : DbContext
                 Amount = 0,
                 Status = false,
                 Detail = "Detail for invoice 3 (2)",
-                CreatedTime = DateTime.UtcNow,
+                CreatedTime = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 RenterId = 3,
-                AccountId = 2,
+                EmployeeId = 2,
                 InvoiceTypeId = 1
             },
             new Invoice
@@ -1039,9 +960,10 @@ public class ApplicationContext : DbContext
                 Amount = 0,
                 Status = false,
                 Detail = "Detail for invoice 3 (3)",
-                CreatedTime = DateTime.UtcNow,
+                CreatedTime = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 RenterId = 3,
-                AccountId = 2,
+                EmployeeId = 2,
                 InvoiceTypeId = 1
             },
             new Invoice
@@ -1051,9 +973,10 @@ public class ApplicationContext : DbContext
                 Amount = 0,
                 Status = true,
                 Detail = "Detail for invoice 3 (4)",
-                CreatedTime = DateTime.UtcNow,
+                CreatedTime = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 RenterId = 3,
-                AccountId = 2,
+                EmployeeId = 2,
                 InvoiceTypeId = 1
             },
             new Invoice
@@ -1063,9 +986,10 @@ public class ApplicationContext : DbContext
                 Amount = 0,
                 Status = true,
                 Detail = "Detail for invoice 3 (5)",
-                CreatedTime = DateTime.UtcNow,
+                CreatedTime = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                    "dd/MM/yyyy HH:mm:ss", null),
                 RenterId = 3,
-                AccountId = 2,
+                EmployeeId = 2,
                 InvoiceTypeId = 1
             }
         );
@@ -1189,10 +1113,13 @@ public class ApplicationContext : DbContext
                 {
                     ContractId = 1,
                     ContractName = "Contract for renter 1",
-                    DateSigned = DateTime.UtcNow - TimeSpan.FromDays(30),
-                    StartDate = DateTime.UtcNow - TimeSpan.FromDays(25),
+                    DateSigned = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null) - TimeSpan.FromDays(30),
+                    StartDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null) - TimeSpan.FromDays(25),
                     EndDate = null,
-                    LastUpdated = DateTime.UtcNow,
+                    LastUpdated = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null),
                     ContractStatus = "Active",
                     PriceForRent = 1800000,
                     RenterId = 1,
@@ -1206,10 +1133,13 @@ public class ApplicationContext : DbContext
                 {
                     ContractId = 2,
                     ContractName = "Contract for renter 2",
-                    DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
-                    StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
+                    DateSigned = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null) - TimeSpan.FromDays(29),
+                    StartDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null) - TimeSpan.FromDays(27),
                     EndDate = null,
-                    LastUpdated = DateTime.UtcNow,
+                    LastUpdated = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null),
                     ContractStatus = "Active",
                     PriceForRent = 2800000,
                     RenterId = 2,
@@ -1223,10 +1153,13 @@ public class ApplicationContext : DbContext
                 {
                     ContractId = 3,
                     ContractName = "Contract for renter 3",
-                    DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
-                    StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
+                    DateSigned = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null) - TimeSpan.FromDays(29),
+                    StartDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null) - TimeSpan.FromDays(27),
                     EndDate = null,
-                    LastUpdated = DateTime.UtcNow,
+                    LastUpdated = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null),
                     ContractStatus = "Active",
                     PriceForRent = 2800000,
                     PriceForService = 10000,
@@ -1243,10 +1176,13 @@ public class ApplicationContext : DbContext
                 {
                     ContractId = 4,
                     ContractName = "Contract for renter 3 (2)",
-                    DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
-                    StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
+                    DateSigned = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null) - TimeSpan.FromDays(29),
+                    StartDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null) - TimeSpan.FromDays(27),
                     EndDate = null,
-                    LastUpdated = DateTime.UtcNow,
+                    LastUpdated = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null),
                     ContractStatus = "Active",
                     PriceForRent = 2800000,
                     PriceForService = 10000,
@@ -1263,10 +1199,13 @@ public class ApplicationContext : DbContext
                 {
                     ContractId = 5,
                     ContractName = "Contract for renter 3 (3)",
-                    DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
-                    StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
+                    DateSigned = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null) - TimeSpan.FromDays(29),
+                    StartDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null) - TimeSpan.FromDays(27),
                     EndDate = null,
-                    LastUpdated = DateTime.UtcNow,
+                    LastUpdated = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null),
                     ContractStatus = "Inactive",
                     PriceForRent = 2800000,
                     PriceForService = 10000,
@@ -1283,10 +1222,13 @@ public class ApplicationContext : DbContext
                 {
                     ContractId = 6,
                     ContractName = "Contract for renter 3 (4)",
-                    DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
-                    StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
+                    DateSigned = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null) - TimeSpan.FromDays(29),
+                    StartDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null) - TimeSpan.FromDays(27),
                     EndDate = null,
-                    LastUpdated = DateTime.UtcNow,
+                    LastUpdated = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                        "dd/MM/yyyy HH:mm:ss", null),
                     ContractStatus = "Inactive",
                     PriceForRent = 2800000,
                     PriceForService = 10000,

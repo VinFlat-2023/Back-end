@@ -66,7 +66,7 @@ namespace API.Controllers
 
                             var response = new AuthResponse
                             {
-                                Account = model,
+                                Employee = model,
                                 AccessToken = accessToken
                             };
                             return Ok(response);
@@ -209,7 +209,7 @@ namespace API.Controllers
                     
                     var response = new AuthResponse
                     {
-                        Account = userInfo,
+                        Employee = userInfo,
                         AccessToken = accessToken
                     };
 
@@ -272,7 +272,7 @@ namespace API.Controllers
 //                             var accessT = GenerateToken(model);
 //                             RespondObject respond = new RespondObject
 //                             {
-//                                 Account = model,
+//                                 Employee = model,
 //                                 AccessToken = accessT
 //                             };
 //

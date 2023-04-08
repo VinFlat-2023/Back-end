@@ -32,14 +32,14 @@ public class InvoiceValidator : BaseValidator, IInvoiceValidator
                         break;
                 }
 
-            switch (obj?.AccountId)
+            switch (obj?.EmployeeId)
             {
                 case null:
-                    ValidatorResult.Failures.Add("Account is required");
+                    ValidatorResult.Failures.Add("Employee is required");
                     break;
                 case not null:
-                    if (await _conditionCheckHelper.AccountCheck(obj.AccountId) == null)
-                        ValidatorResult.Failures.Add("Account provided does not exist");
+                    if (await _conditionCheckHelper.EmployeeCheck(obj.EmployeeId) == null)
+                        ValidatorResult.Failures.Add("Employee provided does not exist");
                     break;
             }
 

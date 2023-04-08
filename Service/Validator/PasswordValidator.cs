@@ -7,7 +7,7 @@ public class PasswordValidator : BaseValidator, IPasswordValidator
 {
     private readonly IConditionCheckHelper _conditionCheckHelper;
 
-    protected PasswordValidator(IConditionCheckHelper conditionCheckHelper)
+    public PasswordValidator(IConditionCheckHelper conditionCheckHelper)
     {
         _conditionCheckHelper = conditionCheckHelper;
     }
@@ -33,14 +33,14 @@ public class PasswordValidator : BaseValidator, IPasswordValidator
                         ValidatorResult.Failures.Add("Renter provided does not exist");
                     break;
                 case false:
-                    if (await _conditionCheckHelper.AccountCheck(id) == null)
-                        ValidatorResult.Failures.Add("Account provided does not exist");
+                    if (await _conditionCheckHelper.EmployeeCheck(id) == null)
+                        ValidatorResult.Failures.Add("Employee provided does not exist");
                     break;
             }
         }
         catch (Exception e)
         {
-            ValidatorResult.Failures.Add("An error occurred while validating the account");
+            ValidatorResult.Failures.Add("An error occurred while validating the employee");
             Console.WriteLine(e.Message, e.Data);
         }
 

@@ -1,4 +1,6 @@
-﻿using System.Security.Claims;
+﻿using System.Globalization;
+using System.Security.Claims;
+using API.Extension;
 using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Ticket;
@@ -71,11 +73,11 @@ public class TicketsController : ControllerBase
                 });
 
             case "Supervisor":
-                var supervisorId = int.Parse(User.Identity?.Name);
+                var employeeId = int.Parse(User.Identity?.Name);
 
                 // TODO : searching based on renter ID for management
                 var supervisorTicketCheck =
-                    await _serviceWrapper.Tickets.GetTicketList(filter, supervisorId, true, token);
+                    await _serviceWrapper.Tickets.GetTicketList(filter, employeeId, true, token);
 
                 if (supervisorTicketCheck == null)
                     return NotFound(new
@@ -85,11 +87,13 @@ public class TicketsController : ControllerBase
                         data = ""
                     });
 
+                var supervisorTicketList = _mapper.Map<IEnumerable<TicketDetailEntity>>(supervisorTicketCheck);
+
                 return Ok(new
                 {
                     status = "Success",
                     message = "List found",
-                    data = supervisorTicketCheck,
+                    data = supervisorTicketList,
                     totalPage = supervisorTicketCheck.TotalPages,
                     totalCount = supervisorTicketCheck.TotalCount
                 });
@@ -108,11 +112,13 @@ public class TicketsController : ControllerBase
                         data = ""
                     });
 
+                var renterTicketList = _mapper.Map<IEnumerable<TicketDetailEntity>>(renterTicketCheck);
+
                 return Ok(new
                 {
                     status = "Success",
                     message = "List found",
-                    data = renterTicketCheck,
+                    data = renterTicketList,
                     totalPage = renterTicketCheck.TotalPages,
                     totalCount = renterTicketCheck.TotalCount
                 });
@@ -154,18 +160,6 @@ public class TicketsController : ControllerBase
                 message = "No ticket found",
                 data = ""
             });
-
-        /*
-
-        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "You are not authorized to access this resource",
-                data = ""
-            });
-
-        */
 
         switch (userRole)
         {
@@ -240,7 +234,7 @@ public class TicketsController : ControllerBase
             ImageUrl = ticketUpdateRequest.ImageUrl ?? ticketEntity.ImageUrl,
             Amount = ticketUpdateRequest.Amount ?? ticketEntity.Amount ?? 0,
             SolveDate = ticketUpdateRequest.SolveDate.ConvertToDateTime() ?? ticketEntity.SolveDate,
-            AccountId = int.Parse(User.Identity?.Name)
+            EmployeeId = ticketUpdateRequest.EmployeeId ?? int.Parse(User.Identity?.Name)
         };
 
         var validation = await _validator.ValidateParams(updateTicket, id);
@@ -253,19 +247,21 @@ public class TicketsController : ControllerBase
             });
 
         var result = await _serviceWrapper.Tickets.UpdateTicket(updateTicket);
-        if (result == null)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Ticket failed to update",
-                data = ""
-            });
-        return Ok(new
+        return result.IsSuccess switch
         {
-            status = "Success",
-            message = "Ticket updated successfully",
-            data = ""
-        });
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
     }
 
 
@@ -274,7 +270,8 @@ public class TicketsController : ControllerBase
     [HttpPost]
     [Authorize(Roles = "Renter")]
     [SwaggerOperation(Summary = "[Authorize] Create ticket (For renter)", Description = "date format d/M/YYYY")]
-    public async Task<IActionResult> PostTicket([FromBody] TicketCreateRequest ticketCreateRequest)
+    public async Task<IActionResult> PostTicket([FromForm] TicketCreateRequest ticketCreateRequest,
+        CancellationToken token)
     {
         var userId = int.Parse(User.Identity?.Name);
 
@@ -288,7 +285,7 @@ public class TicketsController : ControllerBase
                 data = ""
             });
 
-        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnRenter(userId);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnRenter(userId, token);
 
         if (buildingId == 0)
             return NotFound(new
@@ -298,17 +295,18 @@ public class TicketsController : ControllerBase
                 data = ""
             });
 
-        var managementAccountId = await _serviceWrapper.GetId.GetAccountIdBasedOnBuildingId(buildingId);
+        var supervisorId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(buildingId, token);
 
-        if (managementAccountId == 0)
+        if (supervisorId == 0)
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Management account not found",
+                message = "Management employee not found",
                 data = ""
             });
 
-        var contractId = await _serviceWrapper.GetId.GetContractIdBasedOnRenterId(userId);
+        var contractId = await _serviceWrapper.GetId.GetContractIdBasedOnRenterId(userId, token);
+
         if (contractId == 0)
             return NotFound(new
             {
@@ -320,15 +318,58 @@ public class TicketsController : ControllerBase
         var newTicket = new Ticket
         {
             Description = ticketCreateRequest.Description,
-            CreateDate = DateTime.UtcNow,
+            CreateDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                "dd/MM/yyyy HH:mm:ss", null),
             TicketTypeId = ticketCreateRequest.TicketTypeId,
             // TODO : Auto assign to active invoice -> invoice detail if not assigned manually
             Status = "Active",
-            ImageUrl = ticketCreateRequest.ImageUrl,
             Amount = 0,
             ContractId = contractId,
-            AccountId = managementAccountId
+            EmployeeId = supervisorId
         };
+
+        var counter = 0;
+
+        if (ticketCreateRequest.ImageUploadRequest != null)
+            foreach (var image in ticketCreateRequest.ImageUploadRequest)
+            {
+                counter++;
+                var imageExtension = ImageExtension.ImageExtensionChecker(image.FileName);
+
+                switch (counter)
+                {
+                    case 1:
+                        var fileNameCheck1 = newTicket.ImageUrl?.Split('/').Last();
+
+                        newTicket.ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
+                            "Ticket", imageExtension, false))?.Blob.Uri;
+
+                        break;
+
+                    case 2:
+                        var fileNameCheck2 = newTicket.ImageUrl2?.Split('/').Last();
+
+                        newTicket.ImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck2,
+                            "Ticket", imageExtension, false))?.Blob.Uri;
+
+                        break;
+
+                    case 3:
+                        var fileNameCheck3 = newTicket.ImageUrl3?.Split('/').Last();
+
+                        newTicket.ImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck3,
+                            "Ticket", imageExtension, false))?.Blob.Uri;
+
+                        break;
+                    case >= 4:
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = "You can only upload 3 images",
+                            data = ""
+                        });
+                }
+            }
 
         var validation = await _validator.ValidateParams(newTicket, null);
         if (!validation.IsValid)
@@ -367,7 +408,7 @@ public class TicketsController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        if (userRole is not ("Admin" or "Supervisor") || User.Identity?.Name != id.ToString() && userRole != "Renter")
+        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
             return BadRequest(new
             {
                 status = "Bad Request",
