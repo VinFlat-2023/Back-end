@@ -1,4 +1,5 @@
-﻿using Application.IRepository;
+﻿using System.Globalization;
+using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Invoice;
@@ -48,7 +49,7 @@ public class InvoiceRepository : IInvoiceRepository
     /// </summary>
     /// <param name="invoiceId"></param>
     /// <returns></returns>
-    public async Task<Invoice?> GetInvoiceDetail(int invoiceId)
+    public async Task<Invoice?> GetInvoiceDetail(int? invoiceId)
     {
         return await _context.Invoices
             .Include(x => x.Employee)
@@ -93,7 +94,7 @@ public class InvoiceRepository : IInvoiceRepository
     {
         return await _context.Invoices
             .Where(x => x.Status == false)
-            .FirstOrDefaultAsync(x => x.RenterId == renterId && x.CreatedTime.Month == month);
+            .FirstOrDefaultAsync(x => x.RenterId == renterId && x.CreatedTime.Value.Month == month);
     }
 
     /// <summary>
@@ -168,7 +169,7 @@ public class InvoiceRepository : IInvoiceRepository
     public IEnumerable<Invoice> GetInvoiceListByMonth(int month)
     {
         return _context.Invoices
-            .Where(x => x.Status == false && x.CreatedTime.Month == month);
+            .Where(x => x.Status == false && x.CreatedTime.Value.Month == month);
         //.Where(x.CreatedTime.Month == month);
     }
 
@@ -219,13 +220,15 @@ public class InvoiceRepository : IInvoiceRepository
                          .Select(invoice => new Invoice
                          {
                              Name = invoice.Name,
-                             DueDate = DateTime.Now.AddMonths(1),
+                             DueDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                                 "dd/MM/yyyy HH:mm:ss", null).AddMonths(1),
                              Status = true,
                              Detail = invoice.Detail,
                              EmployeeId = invoice.EmployeeId,
                              RenterId = invoice.RenterId,
                              InvoiceTypeId = invoice.InvoiceTypeId,
-                             CreatedTime = DateTime.Now
+                             CreatedTime = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                                 "dd/MM/yyyy HH:mm:ss", null)
                          }))
                 _context.Invoices.Add(invoiceEntity);
 

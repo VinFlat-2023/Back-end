@@ -35,7 +35,7 @@ public class InvoicesController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice list (For management)")]
     [HttpGet]
-    [Authorize(Roles = "Admin, Supervisor")]
+    // [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> GetInvoices([FromQuery] InvoiceFilterRequest request, CancellationToken token)
     {
         var filter = _mapper.Map<InvoiceFilter>(request);
@@ -81,6 +81,50 @@ public class InvoicesController : ControllerBase
             status = "Success",
             message = "Invoice found",
             data = _mapper.Map<InvoiceRenterDetailEntity>(entity)
+        });
+    }
+
+    [SwaggerOperation(Summary = "[Authorize] Get latest invoice by renter")]
+    [HttpGet("latest")]
+    [Authorize(Roles = "Renter")]
+    public async Task<IActionResult> GetLatestInvoiceByRenter(CancellationToken token)
+    {
+        var renterId = int.Parse(User.Identity.Name);
+
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(renterId);
+
+        if (userCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "User not found",
+                data = ""
+            });
+
+        var invoiceId = await _serviceWrapper.Invoices.GetLatestUnpaidInvoiceByRenter(renterId);
+
+        if (invoiceId == 0)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Invoice not found for this user",
+                data = ""
+            });
+
+        var invoice = await _serviceWrapper.Invoices.GetInvoiceById(invoiceId);
+
+        if (invoice == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Invoice not found for this user",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Invoice found",
+            data = _mapper.Map<InvoiceRenterDetailEntity>(invoice)
         });
     }
 

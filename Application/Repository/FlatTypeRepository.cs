@@ -34,7 +34,7 @@ public class FlatTypeRepository : IFlatTypeRepository
     /// </summary>
     /// <param name="flatTypeId"></param>
     /// <returns></returns>
-    public IQueryable<FlatType> GetFlatTypeDetail(int flatTypeId)
+    public IQueryable<FlatType> GetFlatTypeDetail(int? flatTypeId)
     {
         return _context.FlatTypes
             .Where(x => x.FlatTypeId == flatTypeId);

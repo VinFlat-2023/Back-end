@@ -111,20 +111,23 @@ public class FlatsController : ControllerBase
             });
 
         var result = await _serviceWrapper.Flats.UpdateFlat(updateFlat);
-        if (result == null)
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Flat not found",
-                data = ""
-            });
 
-        return Ok(new
+        return result.IsSuccess switch
         {
-            status = "Success",
-            message = "Flat updated",
-            data = ""
-        });
+            false => BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Renter failed to update",
+                data = ""
+            }),
+            true => Ok(
+                new
+                {
+                    status = "Success",
+                    message = "Renter updated",
+                    data = ""
+                })
+        };
     }
 
     // POST: api/Flats
@@ -278,20 +281,21 @@ public class FlatsController : ControllerBase
 
         var result = await _serviceWrapper.FlatTypes.UpdateFlatType(updateFlatType);
 
-        if (result == null)
-            return NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Flat type not found",
+                message = result.Message,
                 data = ""
-            });
-
-        return Ok(new
-        {
-            status = "Success",
-            message = "Flat type updated",
-            data = ""
-        });
+            })
+        };
     }
 
     // POST: api/FlatTypes

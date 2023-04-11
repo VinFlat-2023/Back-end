@@ -53,7 +53,7 @@ public class ContractService : IContractService
         return pagedList;
     }
 
-    public async Task<Contract?> GetContractById(int contractId)
+    public async Task<Contract?> GetContractById(int? contractId)
     {
         return await _repositoryWrapper.Contracts.GetContractDetail(contractId)
             .FirstOrDefaultAsync();

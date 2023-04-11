@@ -13,8 +13,8 @@ public interface IEmployeeService
     public Task<RepositoryResponse> UpdatePasswordEmployee(Employee employee);
     public Task<RepositoryResponse> ToggleEmployeeStatus(int employeeId);
     public Task<RepositoryResponse> DeleteEmployee(int employeeId);
-    public Task<Employee> IsEmployeeEmailExist(string? email);
-    public Task<Employee> IsEmployeeUsernameExist(string? email);
+    public Task<Employee?> IsEmployeeEmailExist(string? email);
+    public Task<Employee?> IsEmployeeUsernameExist(string? email);
     public Task<Employee?> EmployeeLogin(string usernameOrPhoneNumber, string password);
     public Task<Employee?> GetSupervisorEmployee(int employeeId);
     public Task<RepositoryResponse> UpdateEmployeeProfilePicture(Employee employee);

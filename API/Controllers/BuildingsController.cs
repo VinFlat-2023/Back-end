@@ -109,11 +109,68 @@ public class BuildingsController : ControllerBase
         });
     }
 
+    /*
+    [SwaggerOperation(Summary = "[Authorize] Get building list")]
+    [HttpGet("order/{areaName}")]
+    public async Task<IActionResult> GetBasicBuildingsListByAreaName([FromQuery] string areaName,
+        CancellationToken token)
+    {
+        var list = await _serviceWrapper.Buildings.GetBuildingList(new BuildingFilter
+        {
+            AreaName = areaName
+        }, token);
+
+        var resultList = _mapper.Map<IEnumerable<BuildingDetailEntity>>(list);
+
+        if (list == null || !list.Any())
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Building list is empty",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
+    }
+    */
+
     [SwaggerOperation(Summary = "[Authorize] Get building list by number of spare slot")]
     [HttpGet("spare-slot")]
     public async Task<IActionResult> GetBasicBuildingsListFromSpareSlot(CancellationToken token)
     {
         var list = await _serviceWrapper.Buildings.GetBuildingListBySpareSlotWithTrue(token);
+
+        var resultList = _mapper.Map<IEnumerable<BuildingDetailEntity>>(list);
+
+        if (list == null || !list.Any())
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Building list is empty",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "List found",
+            data = resultList,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
+        });
+    }
+
+    [SwaggerOperation(Summary = "[Authorize] Get current building (For management (Supervisor only)")]
+    [HttpGet("average-price/{amount:decimal}")]
+    public async Task<IActionResult> GetBuildingBasedAveragePrice(decimal amount,
+        CancellationToken token)
+    {
+        var list = await _serviceWrapper.Buildings.GetBuildingListByAveragePrice(amount, token);
 
         var resultList = _mapper.Map<IEnumerable<BuildingDetailEntity>>(list);
 
@@ -195,11 +252,12 @@ public class BuildingsController : ControllerBase
             BuildingId = id,
             BuildingName = building.BuildingName,
             Description = building.Description,
+            BuildingAddress = building.BuildingAddress,
             CoordinateX = building.CoordinateX ?? 0,
             CoordinateY = building.CoordinateY ?? 0,
             AreaId = building.AreaId,
             Status = building.Status,
-            AveragePrice = building.AveragePrice,
+            AveragePrice = building.AveragePrice ?? 0,
             BuildingPhoneNumber = building.BuildingPhoneNumber
         };
 

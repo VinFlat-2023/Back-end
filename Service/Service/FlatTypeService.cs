@@ -36,7 +36,7 @@ public class FlatTypeService : IFlatTypeService
         return pagedList;
     }
 
-    public async Task<FlatType?> GetFlatTypeById(int flatTypeId)
+    public async Task<FlatType?> GetFlatTypeById(int? flatTypeId)
     {
         return await _repositoryWrapper.FlatTypes.GetFlatTypeDetail(flatTypeId)
             .FirstOrDefaultAsync();

@@ -140,18 +140,6 @@ public class InvoiceValidator : BaseValidator, IInvoiceValidator
                     break;
             }
 
-            if (obj?.ServiceId != null)
-                switch (obj.ServiceId)
-                {
-                    case null:
-                        ValidatorResult.Failures.Add("Service is required");
-                        break;
-                    case not null:
-                        if (await _conditionCheckHelper.ServiceCheck(obj.ServiceId) == null)
-                            ValidatorResult.Failures.Add("Service provided does not exist");
-                        break;
-                }
-
             switch (obj?.Amount)
             {
                 case { } when obj.Amount < 0:

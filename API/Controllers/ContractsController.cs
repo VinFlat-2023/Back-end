@@ -37,11 +37,26 @@ public class ContractsController : ControllerBase
     }
 
     // GET: api/Contract
-    [SwaggerOperation(Summary = "Get contract list (For management)")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [SwaggerOperation(Summary = "Get contract list using query (For management and renter)")]
+    [Authorize(Roles = "Admin, Supervisor, Renter")]
     [HttpGet]
     public async Task<IActionResult> GetContracts([FromQuery] ContractFilterRequest request, CancellationToken token)
     {
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
+        /*
+        switch (userRole)
+        {
+            case "Admin" or "Supervisor" : 
+                break;
+            
+            case "Renter" :
+        }
+        */
+
         var filter = _mapper.Map<ContractFilter>(request);
 
         var list = await _serviceWrapper.Contracts.GetContractList(filter, token);
@@ -464,19 +479,21 @@ public class ContractsController : ControllerBase
                 data = ""
             });
         var result = await _serviceWrapper.Contracts.UpdateContract(updateContract);
-        if (result == null)
-            return BadRequest(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Contract failed to update",
+                message = result.Message,
                 data = ""
-            });
-        return Ok(new
-        {
-            status = "Success",
-            message = "Contract updated",
-            data = ""
-        });
+            })
+        };
     }
 
     // POST: api/Contract
@@ -489,6 +506,7 @@ public class ContractsController : ControllerBase
         var newRenter = new Renter
         {
             Username = contract.RenterUsername,
+            FullName = contract.FullName,
             Password = "123456",
             Email = contract.RenterEmail ?? "No email",
             Phone = contract.RenterPhone,
@@ -521,10 +539,10 @@ public class ContractsController : ControllerBase
             EndDate = contract.EndDate.ConvertToDateTime(),
             LastUpdated = DateTimeUtils.GetCurrentDateTime(),
             ContractStatus = contract.ContractStatus ?? "Active",
-            PriceForRent = contract.PriceForRent,
-            PriceForElectricity = contract.PriceForElectricity,
-            PriceForWater = contract.PriceForWater,
-            PriceForService = contract.PriceForService,
+            PriceForRent = decimal.Parse(contract.PriceForRent, CultureInfo.InvariantCulture),
+            PriceForElectricity = decimal.Parse(contract.PriceForElectricity, CultureInfo.InvariantCulture),
+            PriceForWater = decimal.Parse(contract.PriceForWater, CultureInfo.InvariantCulture),
+            PriceForService = decimal.Parse(contract.PriceForService, CultureInfo.InvariantCulture),
             RenterId = renterEntity.RenterId,
             BuildingId = buildingId,
             FlatId = contract.FlatId,

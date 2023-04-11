@@ -35,16 +35,16 @@ public class EmployeeRepository : IEmployeeRepository
             .AsNoTracking();
     }
 
-    public async Task<Employee?> IsEmployeeEmailExist(string email)
+    public IQueryable<Employee> IsEmployeeEmailExist(string? email)
     {
-        return await _context.Employees
-            .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+        return _context.Employees
+            .Where(x => x.Email.ToLower().Equals(email.ToLower()));
     }
 
-    public async Task<Employee?> IsEmployeeUsernameExist(string username)
+    public IQueryable<Employee> IsEmployeeUsernameExist(string? username)
     {
-        return await _context.Employees
-            .FirstOrDefaultAsync(x => x.Username.ToLower().Equals(username.ToLower()));
+        return _context.Employees
+            .Where(x => x.Username.ToLower().Equals(username.ToLower()));
     }
 
     /// <summary>
@@ -64,7 +64,7 @@ public class EmployeeRepository : IEmployeeRepository
     /// </summary>
     /// <param name="employee"></param>
     /// <returns></returns>
-    public async Task<Employee> AddEmployee(Employee employee)
+    public async Task<Employee?> AddEmployee(Employee employee)
     {
         await _context.Employees.AddAsync(employee);
         await _context.SaveChangesAsync();
@@ -88,13 +88,25 @@ public class EmployeeRepository : IEmployeeRepository
                 Message = "Employee not found"
             };
 
-        employeeData.Email = employee.Email;
-        employeeData.Password = employee.Password;
-        employeeData.Phone = employee.Phone;
-        employeeData.Username = employee.Username;
-        employeeData.FullName = employee.FullName;
+        try
+        {
+            employeeData.Email = employee.Email;
+            employeeData.Password = employee.Password;
+            employeeData.Phone = employee.Phone;
+            employeeData.Username = employee.Username;
+            employeeData.FullName = employee.FullName;
 
-        await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+        }
+        catch
+        {
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Updating employee failed"
+            };
+        }
+
 
         return new RepositoryResponse
         {

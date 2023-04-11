@@ -19,4 +19,5 @@ public interface IRenterService
     public Task<Renter?> RenterUsernameCheck(string? username);
     public Task<Renter?> RenterEmailCheck(string? email);
     public Task<Renter?> RenterDetailWithEmployeeId(int userId);
+    public Task<RepositoryResponse> UpdatePasswordRenter(Renter renter);
 }

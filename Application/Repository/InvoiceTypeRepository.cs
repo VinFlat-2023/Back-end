@@ -27,7 +27,7 @@ public class InvoiceTypeRepository : IInvoiceTypeRepository
             .AsNoTracking();
     }
 
-    public async Task<InvoiceType?> GetInvoiceTypeById(int id)
+    public async Task<InvoiceType?> GetInvoiceTypeById(int? id)
     {
         return await _context.InvoiceTypes
             .FirstOrDefaultAsync(x => x.InvoiceTypeId == id);

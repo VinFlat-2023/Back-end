@@ -88,13 +88,13 @@ public class RenterRepository : IRenterRepository
         return user;
     }
 
-    public async Task<Renter?> RenterUsernameCheck(string username)
+    public async Task<Renter?> RenterUsernameCheck(string? username)
     {
         return await _context.Renters
             .FirstOrDefaultAsync(x => x.Username.ToLower().Equals(username.ToLower()));
     }
 
-    public async Task<Renter?> RenterEmailCheck(string email)
+    public async Task<Renter?> RenterEmailCheck(string? email)
     {
         return await _context.Renters
             .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
@@ -173,7 +173,7 @@ public class RenterRepository : IRenterRepository
                 Message = "User not found"
             };
 
-        userData.Password = renter?.Password ?? userData.Password;
+        userData.Password = renter.Password;
 
         await _context.SaveChangesAsync();
 

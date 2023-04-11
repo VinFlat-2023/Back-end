@@ -125,7 +125,7 @@ public class EmployeesController : ControllerBase
             RoleId = employee.RoleId
         };
 
-        var validation = await _employeeValidator.ValidateParams(newEmployee, null, false);
+        var validation = await _employeeValidator.ValidateParams(newEmployee, null);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -136,6 +136,7 @@ public class EmployeesController : ControllerBase
 
         // Create User Device token
         var result = await _serviceWrapper.Employees.AddEmployee(newEmployee);
+
         if (result == null)
             return BadRequest(new
             {
@@ -189,14 +190,13 @@ public class EmployeesController : ControllerBase
         var updateEmployee = new Employee
         {
             EmployeeId = id,
-            Username = employee.Username ?? employeeEntity.Username,
             Address = employee.Address ?? employeeEntity.Address,
             Email = employee.Email ?? employeeEntity.Email,
             Phone = employee.Phone ?? employeeEntity.Phone,
             FullName = employee.Fullname ?? employeeEntity.FullName
         };
 
-        var validation = await _employeeValidator.ValidateParams(updateEmployee, id, true);
+        var validation = await _employeeValidator.ValidateParams(updateEmployee, id);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -245,14 +245,13 @@ public class EmployeesController : ControllerBase
         var updateEmployee = new Employee
         {
             EmployeeId = employeeId,
-            Username = employee.Username ?? employeeEntity.Username,
             Address = employee.Address ?? employeeEntity.Address,
             Email = employee.Email ?? employeeEntity.Email,
             Phone = employee.Phone ?? employeeEntity.Phone,
             FullName = employee.Fullname ?? employeeEntity.FullName
         };
 
-        var validation = await _employeeValidator.ValidateParams(updateEmployee, employeeId, true);
+        var validation = await _employeeValidator.ValidateParams(updateEmployee, employeeId);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -294,6 +293,14 @@ public class EmployeesController : ControllerBase
             {
                 status = "Bad Request",
                 message = "This employee does not exist",
+                data = ""
+            });
+
+        if (employee.Password != employee.ConfirmPassword)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Password and confirm password do not match",
                 data = ""
             });
 

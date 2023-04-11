@@ -48,8 +48,20 @@ internal class AreaRepository : IAreaRepository
     /// <returns></returns>
     public async Task<RepositoryResponse> AddArea(Area area)
     {
-        await _context.Areas.AddAsync(area);
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.Areas.AddAsync(area);
+            await _context.SaveChangesAsync();
+        }
+        catch
+        {
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Area failed to create"
+            };
+        }
+
         return new RepositoryResponse
         {
             IsSuccess = true,
@@ -74,11 +86,22 @@ internal class AreaRepository : IAreaRepository
                 Message = "Area not found"
             };
 
-        areaData.Location = area?.Location ?? areaData.Location;
-        areaData.Name = area?.Name ?? areaData.Name;
-        areaData.Status = area?.Status ?? areaData.Status;
+        try
+        {
+            areaData.Location = area?.Location ?? areaData.Location;
+            areaData.Name = area?.Name ?? areaData.Name;
+            areaData.Status = area?.Status ?? areaData.Status;
+            await _context.SaveChangesAsync();
+        }
+        catch
+        {
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Updating area failed"
+            };
+        }
 
-        await _context.SaveChangesAsync();
 
         return new RepositoryResponse
         {
@@ -103,6 +126,7 @@ internal class AreaRepository : IAreaRepository
                 Message = "Area not found",
                 IsSuccess = false
             };
+
         _ = areaFound.Status == !areaFound.Status;
         await _context.SaveChangesAsync();
 
@@ -130,8 +154,20 @@ internal class AreaRepository : IAreaRepository
                 IsSuccess = false
             };
 
-        _context.Areas.Remove(areaFound);
-        await _context.SaveChangesAsync();
+        try
+        {
+            _context.Areas.Remove(areaFound);
+            await _context.SaveChangesAsync();
+        }
+        catch
+        {
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Area failed to delete"
+            };
+        }
+
         return new RepositoryResponse
         {
             Message = "Area deleted successfully",

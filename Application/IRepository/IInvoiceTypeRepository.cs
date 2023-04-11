@@ -6,7 +6,7 @@ namespace Application.IRepository;
 
 public interface IInvoiceTypeRepository
 {
-    Task<InvoiceType?> GetInvoiceTypeById(int id);
+    Task<InvoiceType?> GetInvoiceTypeById(int? id);
     IQueryable<InvoiceType> GetInvoiceTypes(InvoiceTypeFilter filters);
     Task<RepositoryResponse> UpdateInvoiceType(InvoiceType invoiceType);
     Task<RepositoryResponse> DeleteInvoiceType(int id);

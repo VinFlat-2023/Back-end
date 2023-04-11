@@ -10,4 +10,6 @@ public class BuildingFilter : PagingFilter
     public string? BuildingAddress { get; set; }
     public string? AreaName { get; set; }
     public string? EmployeeName { get; set; }
+    public bool? SpareSlots { get; set; }
+    public decimal? AveragePrice { get; set; }
 }

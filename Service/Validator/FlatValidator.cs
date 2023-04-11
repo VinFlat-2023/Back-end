@@ -67,27 +67,29 @@ public class FlatValidator : BaseValidator, IFlatValidator
             if (obj?.ElectricityMeterAfter == null)
                 ValidatorResult.Failures.Add("Flat electricity meter is required");
 
-            switch (obj?.FlatTypeId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Flat type is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.FlatTypeCheck(obj.FlatTypeId) == null)
-                        ValidatorResult.Failures.Add("Flat type provided does not exist");
-                    break;
-            }
+            if (flatId == null)
+                switch (obj?.FlatTypeId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Flat type is required");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.FlatTypeCheck(obj.FlatTypeId) == null)
+                            ValidatorResult.Failures.Add("Flat type provided does not exist");
+                        break;
+                }
 
-            switch (obj?.BuildingId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Building is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.BuildingCheck(obj.BuildingId) == null)
-                        ValidatorResult.Failures.Add("Building provided does not exist");
-                    break;
-            }
+            if (flatId == null)
+                switch (obj?.BuildingId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Building is required");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.BuildingCheck(obj.BuildingId) == null)
+                            ValidatorResult.Failures.Add("Building provided does not exist");
+                        break;
+                }
         }
         catch (Exception e)
         {
@@ -117,6 +119,7 @@ public class FlatValidator : BaseValidator, IFlatValidator
                         break;
                 }
 
+
             switch (obj?.RoomCapacity)
             {
                 case null:
@@ -129,6 +132,18 @@ public class FlatValidator : BaseValidator, IFlatValidator
                     ValidatorResult.Failures.Add("Flat type capacity must be less than 20");
                     break;
             }
+
+            if (flatTypeId == null)
+                switch (obj?.BuildingId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Building is required");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.BuildingCheck(obj.BuildingId) == null)
+                            ValidatorResult.Failures.Add("Building provided does not exist");
+                        break;
+                }
 
             if (obj?.Status == null)
                 ValidatorResult.Failures.Add("Flat type status is required");

@@ -43,26 +43,81 @@ public class AreaService : IAreaService
 
     public async Task<RepositoryResponse> AddArea(Area area)
     {
-        return await _repositoryWrapper.Areas.AddArea(area);
+        try
+        {
+            return await _repositoryWrapper.Areas.AddArea(area);
+        }
+        catch
+        {
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Area failed to create"
+            };
+        }
     }
 
     public async Task<RepositoryResponse> UpdateArea(Area area)
     {
-        return await _repositoryWrapper.Areas.UpdateArea(area);
+        try
+        {
+            return await _repositoryWrapper.Areas.UpdateArea(area);
+        }
+        catch
+        {
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Area status toggled"
+            };
+        }
     }
 
     public async Task<RepositoryResponse> DeleteArea(int areaId)
     {
-        return await _repositoryWrapper.Areas.DeleteArea(areaId);
+        try
+        {
+            return await _repositoryWrapper.Areas.DeleteArea(areaId);
+        }
+        catch
+        {
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Area failed to delete"
+            };
+        }
     }
 
     public async Task<RepositoryResponse> UpdateAreaImage(Area updateArea)
     {
-        return await _repositoryWrapper.Areas.UpdateAreaImage(updateArea);
+        try
+        {
+            return await _repositoryWrapper.Areas.UpdateAreaImage(updateArea);
+        }
+        catch
+        {
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Area image failed to upload / update"
+            };
+        }
     }
 
     public async Task<RepositoryResponse> ToggleAreaStatus(int areaId)
     {
-        return await _repositoryWrapper.Areas.ToggleArea(areaId);
+        try
+        {
+            return await _repositoryWrapper.Areas.ToggleArea(areaId);
+        }
+        catch
+        {
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Area status failed to toggle"
+            };
+        }
     }
 }

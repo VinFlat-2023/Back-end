@@ -1,3 +1,4 @@
+using System.Globalization;
 using Domain.ViewModel.FeedbackTypeDetail;
 using Domain.ViewModel.FlatEntity;
 using Domain.ViewModel.RenterEntity;
@@ -11,6 +12,10 @@ public class FeedbackDetailEntity
     public string Description { get; set; }
     public string Status { get; set; }
     public DateTime CreateDate { get; set; }
+
+    public string CreateDateReturn
+        => CreateDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+
     public int FlatId { get; set; }
     public FlatBasicDetailEntity Flat { get; set; }
     public int RenterId { get; set; }

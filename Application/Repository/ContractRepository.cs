@@ -1,3 +1,4 @@
+using System.Globalization;
 using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
@@ -64,7 +65,7 @@ public class ContractRepository : IContractRepository
     /// </summary>
     /// <param name="contractId"></param>
     /// <returns></returns>
-    public IQueryable<Contract?> GetContractDetail(int contractId)
+    public IQueryable<Contract?> GetContractDetail(int? contractId)
     {
         return _context.Contracts
             .Include(x => x.Renter)
@@ -128,7 +129,8 @@ public class ContractRepository : IContractRepository
         contractData.PriceForService = contract?.PriceForService ?? contractData.PriceForService;
         contractData.PriceForWater = contract?.PriceForWater ?? contractData.PriceForWater;
         contractData.PriceForRent = contract?.PriceForRent ?? contractData.PriceForRent;
-        contractData.LastUpdated = DateTime.Now;
+        contractData.LastUpdated = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+            "dd/MM/yyyy HH:mm:ss", null);
 
         await _context.SaveChangesAsync();
 

@@ -38,9 +38,24 @@ public class BuildingRepository : IBuildingRepository
                 && (filter.BuildingPhoneNumber == null || x.BuildingPhoneNumber.Contains(filter.BuildingPhoneNumber))
                 && (filter.EmployeeName == null ||
                     x.Employee.Username.ToLower().Contains(filter.EmployeeName.ToLower()))
-                && (filter.AreaName == null || x.Area.Name.ToLower().Contains(filter.AreaName.ToLower())))
+                && (filter.AreaName == null || x.Area.Name.ToLower().Contains(filter.AreaName.ToLower()))
+                && (filter.AveragePrice == null || x.AveragePrice <= filter.AveragePrice)
+                && (filter.SpareSlots == null || x.Flats.Any(flat => flat.Rooms.Any(room => room.AvailableSlots > 0))))
             .AsNoTracking();
     }
+
+
+    public IQueryable<Building> GetBuildingListByAveragePrice(decimal amount)
+    {
+        return _context.Buildings
+            .Where(x => x.AveragePrice <= amount)
+            .Include(x => x.Area)
+            .Include(x => x.Employee)
+            .ThenInclude(x => x.Role)
+            .Include(flat => flat.Flats)
+            .AsNoTracking();
+    }
+
 
     public IQueryable<Building> GetBuildingListBySpareSlotWithTrue()
     {

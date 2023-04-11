@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Globalization;
+using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.FeedBack;
 using Domain.EntityRequest.FeedbackType;
@@ -137,7 +138,8 @@ public class FeedbacksController : ControllerBase
             FeedbackTitle = feedback.FeedbackTitle,
             Description = feedback.Description,
             Status = feedback.Status,
-            CreateDate = DateTime.Now,
+            CreateDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                "dd/MM/yyyy HH:mm:ss", null),
             FlatId = feedback.FlatId,
             RenterId = feedback.RenterId
         };
@@ -268,19 +270,21 @@ public class FeedbacksController : ControllerBase
             });
 
         var result = await _serviceWrapper.FeedbackTypes.UpdateFeedbackType(updateFeedBackType);
-        if (result == null)
-            return NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Feedback type not found",
+                message = result.Message,
                 data = ""
-            });
-        return Ok(new
-        {
-            status = "Success",
-            message = "Feedback type updated",
-            data = ""
-        });
+            })
+        };
     }
 
     // POST: api/FeedbackTypes

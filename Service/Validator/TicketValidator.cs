@@ -55,37 +55,40 @@ public class TicketValidator : BaseValidator, ITicketValidator
                     break;
             }
 
-            switch (obj?.ContractId)
-            {
-                case { } when obj.ContractId < 0:
-                    ValidatorResult.Failures.Add("Contract id cannot be negative");
-                    break;
-                case null:
-                    ValidatorResult.Failures.Add("Contract id is required");
-                    break;
-            }
+            if (ticketId == null)
+                switch (obj?.ContractId)
+                {
+                    case { } when obj.ContractId < 0:
+                        ValidatorResult.Failures.Add("Contract id cannot be negative");
+                        break;
+                    case null:
+                        ValidatorResult.Failures.Add("Contract id is required");
+                        break;
+                }
 
-            switch (obj?.TicketTypeId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Ticket type is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.TicketTypeCheck(obj.TicketTypeId) == null)
-                        ValidatorResult.Failures.Add("Ticket type provided does not exist");
-                    break;
-            }
+            if (ticketId == null)
+                switch (obj?.TicketTypeId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Ticket type is required");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.TicketTypeCheck(obj.TicketTypeId) == null)
+                            ValidatorResult.Failures.Add("Ticket type provided does not exist");
+                        break;
+                }
 
-            switch (obj?.EmployeeId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Employee is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.EmployeeCheck(obj.EmployeeId) == null)
-                        ValidatorResult.Failures.Add("Employee provided does not exist");
-                    break;
-            }
+            if (ticketId == null)
+                switch (obj?.EmployeeId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Employee is required");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.EmployeeCheck(obj.EmployeeId) == null)
+                            ValidatorResult.Failures.Add("Employee provided does not exist");
+                        break;
+                }
 
             if (obj?.Status == null)
                 ValidatorResult.Failures.Add("Ticket status is required");

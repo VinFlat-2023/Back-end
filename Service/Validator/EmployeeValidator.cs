@@ -8,15 +8,13 @@ namespace Service.Validator;
 public class EmployeeValidator : BaseValidator, IEmployeeValidator
 {
     private readonly IConditionCheckHelper _conditionCheckHelper;
-    private readonly IJwtRoleCheckerHelper _jwtRoleCheckerHelper;
 
-    public EmployeeValidator(IConditionCheckHelper conditionCheckHelper, IJwtRoleCheckerHelper jwtRoleCheckerHelper)
+    public EmployeeValidator(IConditionCheckHelper conditionCheckHelper)
     {
         _conditionCheckHelper = conditionCheckHelper;
-        _jwtRoleCheckerHelper = jwtRoleCheckerHelper;
     }
 
-    public async Task<ValidatorResult> ValidateParams(Employee? obj, int? employeeId, bool isUpdate)
+    public async Task<ValidatorResult> ValidateParams(Employee? obj, int? employeeId)
     {
         try
         {
@@ -35,26 +33,25 @@ public class EmployeeValidator : BaseValidator, IEmployeeValidator
                         break;
                 }
 
-            switch (obj?.Username)
-            {
-                case { } when obj.Username.Length > 100:
-                    ValidatorResult.Failures.Add("Username cannot exceed 100 characters");
-                    break;
-                case { } when string.IsNullOrWhiteSpace(obj.Username):
-                    ValidatorResult.Failures.Add("Username is required");
-                    break;
-                case not null:
-                    /*
-                    if (employeeId == null)
-                    {
-                        if (await _conditionCheckHelper.EmployeeUsernameExist(obj.Username) != null)
-                            ValidatorResult.Failures.Add("Username is duplicated");
-                        if (await _conditionCheckHelper.RenterUsernameCheck(obj.Username) != null)
-                            ValidatorResult.Failures.Add("Username is duplicated");
-                    }
-                    */
-                    break;
-            }
+            if (employeeId == null)
+                switch (obj?.Username)
+                {
+                    case { } when obj.Username.Length > 100:
+                        ValidatorResult.Failures.Add("Username cannot exceed 100 characters");
+                        break;
+                    case { } when obj.Username.Length < 4:
+                        ValidatorResult.Failures.Add("Username must be at least 4 characters");
+                        break;
+                    case { } when string.IsNullOrWhiteSpace(obj.Username):
+                        ValidatorResult.Failures.Add("Username is required");
+                        break;
+                    case { } when await _conditionCheckHelper.EmployeeUsernameExist(obj.Username) != null:
+                        ValidatorResult.Failures.Add("Username is duplicated");
+                        break;
+                    case { } when await _conditionCheckHelper.RenterUsernameCheck(obj.Username) != null:
+                        ValidatorResult.Failures.Add("Username is duplicated");
+                        break;
+                }
 
             switch (obj?.FullName)
             {
@@ -66,7 +63,7 @@ public class EmployeeValidator : BaseValidator, IEmployeeValidator
                     break;
             }
 
-            if (!isUpdate)
+            if (employeeId == null)
                 switch (obj?.Password)
                 {
                     case { } when obj.Password.Length > 100:
@@ -79,8 +76,8 @@ public class EmployeeValidator : BaseValidator, IEmployeeValidator
 
             switch (obj?.Email)
             {
-                case { } when obj.Email.Length > 256:
-                    ValidatorResult.Failures.Add("Email cannot exceed 256 characters");
+                case { } when obj.Email.Length > 100:
+                    ValidatorResult.Failures.Add("Email cannot exceed 100 characters");
                     break;
                 case { } when string.IsNullOrWhiteSpace(obj.Email):
                     ValidatorResult.Failures.Add("Email is required");
@@ -88,19 +85,14 @@ public class EmployeeValidator : BaseValidator, IEmployeeValidator
                 case { } when !Regex.IsMatch(obj.Email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"):
                     ValidatorResult.Failures.Add("Email is invalid");
                     break;
-                /*
-
-case not null:
-if (employeeId == null)
-{
-   if (await _conditionCheckHelper.EmployeeUsernameExist(obj.Username) != null)
-       ValidatorResult.Failures.Add("Username is duplicated");
-   if (await _conditionCheckHelper.RenterUsernameCheck(obj.Username) != null)
-       ValidatorResult.Failures.Add("Username is duplicated");
-}
-break;
-*/
+                case { } when await _conditionCheckHelper.EmployeeEmailCheck(obj.Email) != null:
+                    ValidatorResult.Failures.Add("Email is duplicated");
+                    break;
+                case { } when await _conditionCheckHelper.RenterEmailCheck(obj.Email) != null:
+                    ValidatorResult.Failures.Add("Email is duplicated");
+                    break;
             }
+
 
             var validatePhoneNumberRegex =
                 new Regex("^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$");
@@ -124,7 +116,7 @@ break;
             if (obj?.Status == null)
                 ValidatorResult.Failures.Add("Status is required");
 
-            if (isUpdate)
+            if (employeeId == null)
                 switch (obj?.RoleId)
                 {
                     case null:

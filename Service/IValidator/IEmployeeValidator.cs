@@ -5,5 +5,5 @@ namespace Service.IValidator;
 
 public interface IEmployeeValidator
 {
-    Task<ValidatorResult> ValidateParams(Employee obj, int? employeeId, bool isUpdate);
+    Task<ValidatorResult> ValidateParams(Employee obj, int? employeeId);
 }

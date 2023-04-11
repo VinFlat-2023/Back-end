@@ -77,4 +77,21 @@ public class BuildingService : IBuildingService
     {
         return await _repositoryWrapper.Buildings.DeleteBuilding(buildingId);
     }
+
+    public async Task<PagedList<Building>?> GetBuildingListByAveragePrice(decimal amount,
+        CancellationToken token)
+    {
+        var queryable = _repositoryWrapper.Buildings.GetBuildingListByAveragePrice(amount);
+
+        if (!queryable.Any())
+            return null;
+
+        var page = _paginationOptions.DefaultPageNumber;
+        var size = _paginationOptions.DefaultPageSize;
+
+        var pagedList = await PagedList<Building>
+            .Create(queryable, page, size, token);
+
+        return pagedList;
+    }
 }

@@ -69,6 +69,11 @@ public class RenterService : IRenterService
             .FirstOrDefaultAsync();
     }
 
+    public async Task<RepositoryResponse> UpdatePasswordRenter(Renter renter)
+    {
+        return await _repositoryWrapper.Renters.UpdatePasswordRenter(renter);
+    }
+
     public async Task<Renter?> AddRenter(Renter renter)
     {
         return await _repositoryWrapper.Renters.AddRenter(renter);

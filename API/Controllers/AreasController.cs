@@ -170,6 +170,31 @@ public class AreasController : ControllerBase
         };
     }
 
+    [SwaggerOperation(Summary = "Activate and Deactivate area status")]
+    [Authorize(Roles = "Admin")]
+    [HttpPut("{areaId:int}/toggle-area/status")]
+    public async Task<IActionResult> ToggleEmployeeStatus(int areaId)
+    {
+        var result = await _serviceWrapper.Areas.ToggleAreaStatus(areaId);
+
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
+    }
+
+
     // DELETE: api/Areas/5
     [SwaggerOperation(Summary = "[Authorize] Delete area using id (For management)")]
     [Authorize(Roles = "Admin, Supervisor")]

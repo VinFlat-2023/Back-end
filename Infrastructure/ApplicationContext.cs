@@ -411,9 +411,11 @@ public class ApplicationContext : DbContext
                 CoordinateY = 324,
                 AreaId = 1,
                 EmployeeId = 1,
-                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/6716250e-8169-446d-a54e-37094c30ae70thumbnail-202303031027054744.jpg",
+                ImageUrl =
+                    "https://vinflat.blob.core.windows.net/building-image/6716250e-8169-446d-a54e-37094c30ae70thumbnail-202303031027054744.jpg",
                 BuildingAddress = "Quận 9",
-                BuildingPhoneNumber = "012323123"
+                BuildingPhoneNumber = "012323123",
+                AveragePrice = 2500000
             },
             new Building
             {
@@ -425,9 +427,11 @@ public class ApplicationContext : DbContext
                 CoordinateY = 334,
                 AreaId = 1,
                 EmployeeId = 2,
-                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/be39f244-45d1-48cc-94dc-7e1b138caa3athumbnail-202302251636284394.jpg",
+                ImageUrl =
+                    "https://vinflat.blob.core.windows.net/building-image/be39f244-45d1-48cc-94dc-7e1b138caa3athumbnail-202302251636284394.jpg",
                 BuildingAddress = "Quận 9",
-                BuildingPhoneNumber = "012323123"
+                BuildingPhoneNumber = "012323123",
+                AveragePrice = 2600000
             },
             new Building
             {
@@ -439,9 +443,11 @@ public class ApplicationContext : DbContext
                 CoordinateY = 3214,
                 AreaId = 2,
                 EmployeeId = 3,
-                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/8a8ea225-ea25-422c-a20d-299c7ed42456thumbnail-202302041627581789.jpg",
+                ImageUrl =
+                    "https://vinflat.blob.core.windows.net/building-image/8a8ea225-ea25-422c-a20d-299c7ed42456thumbnail-202302041627581789.jpg",
                 BuildingAddress = "Quận 2",
-                BuildingPhoneNumber = "012323123"
+                BuildingPhoneNumber = "012323123",
+                AveragePrice = 3500000
             },
             new Building
             {
@@ -453,9 +459,11 @@ public class ApplicationContext : DbContext
                 CoordinateY = 314,
                 AreaId = 2,
                 EmployeeId = 4,
-                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/69d0767f-ff29-49dc-88fc-c3bc87cba986thumbnail-202212291740189478.jpg",
+                ImageUrl =
+                    "https://vinflat.blob.core.windows.net/building-image/69d0767f-ff29-49dc-88fc-c3bc87cba986thumbnail-202212291740189478.jpg",
                 BuildingAddress = "Quận 3",
-                BuildingPhoneNumber = "012323123"
+                BuildingPhoneNumber = "012323123",
+                AveragePrice = 4500000
             },
             new Building
             {
@@ -467,9 +475,11 @@ public class ApplicationContext : DbContext
                 CoordinateY = 3245,
                 AreaId = 2,
                 EmployeeId = 5,
-                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a3f9897c-800e-4d5e-92b7-e388eefdf64bthumbnail-202212151636139810.jpg",
+                ImageUrl =
+                    "https://vinflat.blob.core.windows.net/building-image/a3f9897c-800e-4d5e-92b7-e388eefdf64bthumbnail-202212151636139810.jpg",
                 BuildingAddress = "Quận 4",
-                BuildingPhoneNumber = "012323123"
+                BuildingPhoneNumber = "012323123",
+                AveragePrice = 4600000
             },
             new Building
             {
@@ -481,9 +491,11 @@ public class ApplicationContext : DbContext
                 CoordinateY = 334,
                 AreaId = 3,
                 EmployeeId = 6,
-                ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
+                ImageUrl =
+                    "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 7",
-                BuildingPhoneNumber = "012323123"
+                BuildingPhoneNumber = "012323123",
+                AveragePrice = 5300000
             }
         );
 
