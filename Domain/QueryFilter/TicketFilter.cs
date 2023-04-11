@@ -12,5 +12,9 @@ public class TicketFilter : PagingFilter
     public int? ContractId { get; set; }
     public string? ContractName { get; set; }
     public int? EmployeeId { get; set; }
-    public string? FullName { get; set; }
+    public string? EmployeeFullName { get; set; }
+    public int? RenterId { get; set; }
+    public string? RenterFullname { get; set; }
+    public string? RenterUsername { get; set; }
+    public string? RenterEmail { get; set; }
 }

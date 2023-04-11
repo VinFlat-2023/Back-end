@@ -14,7 +14,10 @@ public class InvoiceFilter : PagingFilter
 
     public DateTime? CreatedTime { get; set; }
     public int? RenterId { get; set; }
-    public string? RenterName { get; set; }
+    public string? RenterUsername { get; set; }
+    public string? RenterPhoneNumber { get; set; }
+    public string? RenterEmail { get; set; }
+    public string? RenterFullname { get; set; }
     public int? EmployeeId { get; set; }
     public string? EmployeeName { get; set; }
     public int? InvoiceTypeId { get; set; }

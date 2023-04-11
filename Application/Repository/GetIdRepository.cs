@@ -53,10 +53,20 @@ public class GetIdRepository : IGetIdRepository
 
     public async Task<int> GetBuildingIdBasedOnSupervisorId(int employeeId, CancellationToken token)
     {
-        return await _context.Buildings
-            .Where(x => x.EmployeeId == employeeId)
-            .Select(x => x.BuildingId)
-            .FirstOrDefaultAsync(token);
+        var buildingList = _context.Buildings
+            .Where(x => x.EmployeeId == employeeId && x.Status == true)
+            .Select(x => x.BuildingId);
+
+        var count = buildingList.Count();
+
+        return count switch
+        {
+            // -2 = More than one building with status "Active" found
+            > 1 => -2,
+            // -1 = No building found with status "Active" or no building found at all
+            < 1 => -1,
+            _ => await buildingList.FirstOrDefaultAsync(token)
+        };
     }
 
     public async Task<int> GetSupervisorIdByBuildingId(int entityBuildingId, CancellationToken token)

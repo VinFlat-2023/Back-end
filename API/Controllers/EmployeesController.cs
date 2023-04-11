@@ -342,7 +342,7 @@ public class EmployeesController : ControllerBase
 
 
     [SwaggerOperation(Summary = "Activate and Deactivate Employee")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor, Technician")]
     [HttpPut("toggle-employee/status")]
     public async Task<IActionResult> ToggleEmployeeStatus()
     {

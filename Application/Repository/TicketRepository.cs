@@ -31,6 +31,7 @@ internal class TicketRepository : ITicketRepository
                 (filters.Status == null || x.Status == filters.Status)
                 && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
                 && (filters.CreateDate == null || x.CreateDate == filters.CreateDate)
+                && (filters.SolveDate == null || x.SolveDate == filters.SolveDate)
                 && (filters.Amount == null || x.Amount == filters.Amount)
                 && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
                 && (filters.ContractId == null || x.ContractId == filters.ContractId)
@@ -41,7 +42,13 @@ internal class TicketRepository : ITicketRepository
                 && (filters.ContractName == null || x.Contract.ContractName.Contains(filters.ContractName.ToLower()))
                 && (filters.TicketTypeName == null ||
                     x.TicketType.TicketTypeName.Contains(filters.TicketTypeName.ToLower()))
-                && (filters.FullName == null || x.Employee.FullName.Contains(filters.FullName.ToLower())))
+                && (filters.EmployeeFullName == null ||
+                    x.Employee.FullName.Contains(filters.EmployeeFullName.ToLower()))
+                && (filters.RenterId == null || x.Contract.RenterId == filters.RenterId)
+                && (filters.RenterFullname == null ||
+                    x.Contract.Renter.FullName.Contains(filters.RenterFullname.ToLower()))
+                && (filters.RenterUsername == null || x.Contract.Renter.Username.Contains(filters.RenterUsername))
+                && (filters.RenterEmail == null || x.Contract.Renter.Email.Contains(filters.RenterEmail)))
             .AsNoTracking();
     }
 
@@ -70,7 +77,8 @@ internal class TicketRepository : ITicketRepository
                         x.Contract.ContractName.Contains(filters.ContractName.ToLower()))
                     && (filters.TicketTypeName == null ||
                         x.TicketType.TicketTypeName.Contains(filters.TicketTypeName.ToLower()))
-                    && (filters.FullName == null || x.Employee.FullName.Contains(filters.FullName.ToLower())))
+                    && (filters.EmployeeFullName == null ||
+                        x.Employee.FullName.Contains(filters.EmployeeFullName.ToLower())))
                 .AsNoTracking(),
 
             false => _context.Tickets
@@ -94,7 +102,8 @@ internal class TicketRepository : ITicketRepository
                         x.Contract.ContractName.Contains(filters.ContractName.ToLower()))
                     && (filters.TicketTypeName == null ||
                         x.TicketType.TicketTypeName.Contains(filters.TicketTypeName.ToLower()))
-                    && (filters.FullName == null || x.Employee.FullName.Contains(filters.FullName.ToLower())))
+                    && (filters.EmployeeFullName == null ||
+                        x.Employee.FullName.Contains(filters.EmployeeFullName.ToLower())))
                 .AsNoTracking()
         };
     }

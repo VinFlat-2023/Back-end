@@ -57,31 +57,6 @@ public class BuildingsController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get building list")]
-    [HttpGet("order/all")]
-    public async Task<IActionResult> GetBuildings(CancellationToken token)
-    {
-        var list = await _serviceWrapper.Buildings.GetBuildingList(new BuildingFilter(), token);
-
-        var resultList = _mapper.Map<IEnumerable<BuildingDetailEntity>>(list);
-
-        if (list == null || !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Building list is empty",
-                data = ""
-            });
-        return Ok(new
-        {
-            status = "Success",
-            message = "List found",
-            data = resultList,
-            totalPage = list.TotalPages,
-            totalCount = list.TotalCount
-        });
-    }
-
-    [SwaggerOperation(Summary = "[Authorize] Get building list")]
     [HttpGet("order/{areaName}")]
     public async Task<IActionResult> GetBasicBuildingsListByAreaName(string areaName, CancellationToken token)
     {
@@ -89,88 +64,6 @@ public class BuildingsController : ControllerBase
         {
             AreaName = areaName
         }, token);
-
-        var resultList = _mapper.Map<IEnumerable<BuildingDetailEntity>>(list);
-
-        if (list == null || !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Building list is empty",
-                data = ""
-            });
-        return Ok(new
-        {
-            status = "Success",
-            message = "List found",
-            data = resultList,
-            totalPage = list.TotalPages,
-            totalCount = list.TotalCount
-        });
-    }
-
-    /*
-    [SwaggerOperation(Summary = "[Authorize] Get building list")]
-    [HttpGet("order/{areaName}")]
-    public async Task<IActionResult> GetBasicBuildingsListByAreaName([FromQuery] string areaName,
-        CancellationToken token)
-    {
-        var list = await _serviceWrapper.Buildings.GetBuildingList(new BuildingFilter
-        {
-            AreaName = areaName
-        }, token);
-
-        var resultList = _mapper.Map<IEnumerable<BuildingDetailEntity>>(list);
-
-        if (list == null || !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Building list is empty",
-                data = ""
-            });
-        return Ok(new
-        {
-            status = "Success",
-            message = "List found",
-            data = resultList,
-            totalPage = list.TotalPages,
-            totalCount = list.TotalCount
-        });
-    }
-    */
-
-    [SwaggerOperation(Summary = "[Authorize] Get building list by number of spare slot")]
-    [HttpGet("spare-slot")]
-    public async Task<IActionResult> GetBasicBuildingsListFromSpareSlot(CancellationToken token)
-    {
-        var list = await _serviceWrapper.Buildings.GetBuildingListBySpareSlotWithTrue(token);
-
-        var resultList = _mapper.Map<IEnumerable<BuildingDetailEntity>>(list);
-
-        if (list == null || !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Building list is empty",
-                data = ""
-            });
-        return Ok(new
-        {
-            status = "Success",
-            message = "List found",
-            data = resultList,
-            totalPage = list.TotalPages,
-            totalCount = list.TotalCount
-        });
-    }
-
-    [SwaggerOperation(Summary = "[Authorize] Get current building (For management (Supervisor only)")]
-    [HttpGet("average-price/{amount:decimal}")]
-    public async Task<IActionResult> GetBuildingBasedAveragePrice(decimal amount,
-        CancellationToken token)
-    {
-        var list = await _serviceWrapper.Buildings.GetBuildingListByAveragePrice(amount, token);
 
         var resultList = _mapper.Map<IEnumerable<BuildingDetailEntity>>(list);
 
@@ -199,6 +92,24 @@ public class BuildingsController : ControllerBase
         var employeeId = int.Parse(User.Identity?.Name);
 
         var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
+
+        switch (buildingId)
+        {
+            case -1:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Supervisor has no building",
+                    data = ""
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Supervisor has more than 1 building",
+                    data = ""
+                });
+        }
 
         var entity = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
 

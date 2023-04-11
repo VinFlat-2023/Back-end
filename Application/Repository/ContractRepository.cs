@@ -35,13 +35,83 @@ public class ContractRepository : IContractRepository
                 && (filters.PriceForRent == null || x.PriceForRent == filters.PriceForRent)
                 && (filters.PriceForElectricity == null || x.PriceForElectricity == filters.PriceForElectricity)
                 && (filters.PriceForService == null || x.PriceForService == filters.PriceForService)
-                && (filters.ContractStatus == null || x.ContractStatus == filters.ContractStatus)
+                && (filters.ContractStatus == null || x.ContractStatus.ToLower() == filters.ContractStatus.ToLower())
                 && (filters.DateSigned == null || x.DateSigned == filters.DateSigned)
                 && (filters.EndDate == null || x.EndDate == filters.EndDate)
                 && (filters.StartDate == null || x.StartDate == filters.StartDate)
                 && (filters.RenterId == null || x.RenterId == filters.RenterId)
-                && (filters.LastUpdated == null || x.LastUpdated == filters.LastUpdated))
+                && (filters.LastUpdated == null || x.LastUpdated == filters.LastUpdated)
+                && (filters.RenterUsername == null || x.Renter.Username.ToLower()
+                    .Contains(filters.RenterUsername.ToLower()))
+                && (filters.RenterPhoneNumber == null || x.Renter.Phone.ToLower()
+                    .Contains(filters.RenterPhoneNumber.ToLower()))
+                && (filters.RenterEmail == null || x.Renter.Email.ToLower().Contains(filters.RenterEmail.ToLower()))
+                && (filters.RenterFullname == null ||
+                    x.Renter.FullName.ToLower().Contains(filters.RenterFullname.ToLower())))
             .AsNoTracking();
+    }
+
+    public IQueryable<Contract> GetContractList(ContractFilter filters, int userId, bool isManagement)
+    {
+        return isManagement switch
+        {
+            true => _context.Contracts
+                .Include(x => x.Renter)
+                .Where(x => x.RenterId == userId)
+                .Where(x =>
+                    (filters.ContractName == null ||
+                     x.ContractName.ToLower().Contains(filters.ContractName.ToLower()))
+                    && (filters.Description == null ||
+                        x.Description.ToLower().Contains(filters.Description.ToLower()))
+                    && (filters.PriceForWater == null || x.PriceForWater == filters.PriceForWater)
+                    && (filters.PriceForRent == null || x.PriceForRent == filters.PriceForRent)
+                    && (filters.PriceForElectricity == null || x.PriceForElectricity == filters.PriceForElectricity)
+                    && (filters.PriceForService == null || x.PriceForService == filters.PriceForService)
+                    && (filters.ContractStatus == null ||
+                        x.ContractStatus.ToLower() == filters.ContractStatus.ToLower())
+                    && (filters.DateSigned == null || x.DateSigned == filters.DateSigned)
+                    && (filters.EndDate == null || x.EndDate == filters.EndDate)
+                    && (filters.StartDate == null || x.StartDate == filters.StartDate)
+                    && (filters.LastUpdated == null || x.LastUpdated == filters.LastUpdated)
+                    && (filters.RenterUsername == null || x.Renter.Username.ToLower()
+                        .Contains(filters.RenterUsername.ToLower()))
+                    && (filters.RenterPhoneNumber == null || x.Renter.Phone.ToLower()
+                        .Contains(filters.RenterPhoneNumber.ToLower()))
+                    && (filters.RenterEmail == null || x.Renter.Email.ToLower().Contains(filters.RenterEmail.ToLower()))
+                    && (filters.RenterFullname == null ||
+                        x.Renter.FullName.ToLower().Contains(filters.RenterFullname.ToLower())))
+                .AsNoTracking(),
+
+            false => _context.Contracts
+                .Include(x => x.Renter)
+                .Include(x => x.Flat)
+                .ThenInclude(x => x.Building)
+                .Where(x => x.Flat.Building.EmployeeId == userId)
+                .Where(x =>
+                    (filters.ContractName == null ||
+                     x.ContractName.ToLower().Contains(filters.ContractName.ToLower()))
+                    && (filters.Description == null ||
+                        x.Description.ToLower().Contains(filters.Description.ToLower()))
+                    && (filters.PriceForWater == null || x.PriceForWater == filters.PriceForWater)
+                    && (filters.PriceForRent == null || x.PriceForRent == filters.PriceForRent)
+                    && (filters.PriceForElectricity == null || x.PriceForElectricity == filters.PriceForElectricity)
+                    && (filters.PriceForService == null || x.PriceForService == filters.PriceForService)
+                    && (filters.ContractStatus == null ||
+                        x.ContractStatus.ToLower() == filters.ContractStatus.ToLower())
+                    && (filters.DateSigned == null || x.DateSigned == filters.DateSigned)
+                    && (filters.EndDate == null || x.EndDate == filters.EndDate)
+                    && (filters.StartDate == null || x.StartDate == filters.StartDate)
+                    && (filters.RenterId == null || x.RenterId == filters.RenterId)
+                    && (filters.LastUpdated == null || x.LastUpdated == filters.LastUpdated)
+                    && (filters.RenterUsername == null || x.Renter.Username.ToLower()
+                        .Contains(filters.RenterUsername.ToLower()))
+                    && (filters.RenterPhoneNumber == null || x.Renter.Phone.ToLower()
+                        .Contains(filters.RenterPhoneNumber.ToLower()))
+                    && (filters.RenterEmail == null || x.Renter.Email.ToLower().Contains(filters.RenterEmail.ToLower()))
+                    && (filters.RenterFullname == null ||
+                        x.Renter.FullName.ToLower().Contains(filters.RenterFullname.ToLower())))
+                .AsNoTracking()
+        };
     }
 
     public IQueryable<Contract> GetContractHistoryList(ContractHistoryFilter filters)

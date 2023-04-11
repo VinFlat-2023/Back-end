@@ -44,30 +44,6 @@ public class BuildingRepository : IBuildingRepository
             .AsNoTracking();
     }
 
-
-    public IQueryable<Building> GetBuildingListByAveragePrice(decimal amount)
-    {
-        return _context.Buildings
-            .Where(x => x.AveragePrice <= amount)
-            .Include(x => x.Area)
-            .Include(x => x.Employee)
-            .ThenInclude(x => x.Role)
-            .Include(flat => flat.Flats)
-            .AsNoTracking();
-    }
-
-
-    public IQueryable<Building> GetBuildingListBySpareSlotWithTrue()
-    {
-        return _context.Buildings
-            .Include(x => x.Area)
-            .Include(x => x.Employee)
-            .ThenInclude(x => x.Role)
-            .Include(flat => flat.Flats)
-            .ThenInclude(x => x.Rooms.Where(room => room.AvailableSlots > 0))
-            .AsNoTracking();
-    }
-
     /// <summary>
     ///     Get building detail using building id
     /// </summary>

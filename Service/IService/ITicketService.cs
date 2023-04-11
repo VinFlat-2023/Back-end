@@ -8,7 +8,7 @@ public interface ITicketService
 {
     public Task<PagedList<Ticket>?> GetTicketList(TicketFilter filters, CancellationToken token);
 
-    public Task<PagedList<Ticket>?> GetTicketList(TicketFilter filters, int employeeId, bool isManagement,
+    public Task<PagedList<Ticket>?> GetTicketList(TicketFilter filters, int userId, bool isManagement,
         CancellationToken token);
 
     public Task<RepositoryResponse> UpdateTicketImage(Ticket ticket, int number);

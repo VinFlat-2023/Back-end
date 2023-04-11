@@ -47,37 +47,89 @@ public class ContractsController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        /*
-        switch (userRole)
-        {
-            case "Admin" or "Supervisor" : 
-                break;
-            
-            case "Renter" :
-        }
-        */
-
         var filter = _mapper.Map<ContractFilter>(request);
 
-        var list = await _serviceWrapper.Contracts.GetContractList(filter, token);
-
-        var resultList = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(list);
-
-        if (list == null || !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "No contract available",
-                data = ""
-            });
-
-        return Ok(new
+        switch (userRole)
         {
-            status = "Success",
-            message = "Contract list found",
-            data = resultList,
-            totalPage = list.TotalPages,
-            totalCount = list.TotalCount
+            case "Admin":
+                var adminContractList = await _serviceWrapper.Contracts.GetContractList(filter, token);
+
+                if (adminContractList == null || !adminContractList.Any())
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "No contract available",
+                        data = ""
+                    });
+
+                var adminContractListReturn = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(adminContractList);
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "Contract list found",
+                    data = adminContractListReturn,
+                    totalPage = adminContractList.TotalPages,
+                    totalCount = adminContractList.TotalCount
+                });
+
+            case "Supervisor":
+                var supervisorId = Parse(User.Identity?.Name);
+
+                var supervisorContractList =
+                    await _serviceWrapper.Contracts.GetContractList(filter, supervisorId, true, token);
+
+                var supervisorContractListReturn =
+                    _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(supervisorContractList);
+
+                if (supervisorContractList == null)
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "No contract found for this building managed by this supervisor",
+                        data = ""
+                    });
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "Contract list found",
+                    data = supervisorContractListReturn,
+                    totalPage = supervisorContractList.TotalPages,
+                    totalCount = supervisorContractList.TotalCount
+                });
+
+            case "Renter":
+                var renterId = Parse(User.Identity?.Name);
+
+                var renterContractList =
+                    await _serviceWrapper.Contracts.GetContractList(filter, renterId, false, token);
+
+                var renterContractListReturn = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(renterContractList);
+
+                if (renterContractList == null)
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "No contract found for this renter",
+                        data = ""
+                    });
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "Contract list found",
+                    data = renterContractListReturn,
+                    totalPage = renterContractList.TotalPages,
+                    totalCount = renterContractList.TotalCount
+                });
+        }
+
+        return BadRequest(new
+        {
+            status = "Bad Request",
+            message = "Something went wrong",
+            data = ""
         });
     }
     //TODO get contract by renter ID

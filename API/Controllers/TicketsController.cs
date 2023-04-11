@@ -75,11 +75,10 @@ public class TicketsController : ControllerBase
             case "Supervisor":
                 var employeeId = int.Parse(User.Identity?.Name);
 
-                // TODO : searching based on renter ID for management
-                var supervisorTicketCheck =
+                var supervisorTicketList =
                     await _serviceWrapper.Tickets.GetTicketList(filter, employeeId, true, token);
 
-                if (supervisorTicketCheck == null)
+                if (supervisorTicketList == null)
                     return NotFound(new
                     {
                         status = "Not Found",
@@ -87,15 +86,15 @@ public class TicketsController : ControllerBase
                         data = ""
                     });
 
-                var supervisorTicketList = _mapper.Map<IEnumerable<TicketDetailEntity>>(supervisorTicketCheck);
+                var supervisorTicketListReturn = _mapper.Map<IEnumerable<TicketDetailEntity>>(supervisorTicketList);
 
                 return Ok(new
                 {
                     status = "Success",
                     message = "List found",
-                    data = supervisorTicketList,
-                    totalPage = supervisorTicketCheck.TotalPages,
-                    totalCount = supervisorTicketCheck.TotalCount
+                    data = supervisorTicketListReturn,
+                    totalPage = supervisorTicketList.TotalPages,
+                    totalCount = supervisorTicketList.TotalCount
                 });
 
             case "Renter":

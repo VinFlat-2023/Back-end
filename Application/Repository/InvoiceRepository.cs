@@ -36,7 +36,13 @@ public class InvoiceRepository : IInvoiceRepository
                 && (filter.Amount == null || x.Amount == filter.Amount)
                 && (filter.Detail == null || x.Detail == filter.Detail)
                 && (filter.RenterId == null || x.RenterId == filter.RenterId)
-                && (filter.RenterName == null || x.Renter.FullName.ToLower().Contains(filter.RenterName.ToLower()))
+                && (filter.RenterUsername == null ||
+                    x.Renter.Username.ToLower().Contains(filter.RenterUsername.ToLower()))
+                && (filter.RenterFullname == null ||
+                    x.Renter.FullName.ToLower().Contains(filter.RenterFullname.ToLower()))
+                && (filter.RenterPhoneNumber == null ||
+                    x.Renter.Phone.ToLower().Contains(filter.RenterPhoneNumber.ToLower()))
+                && (filter.RenterEmail == null || x.Renter.Email.ToLower().Contains(filter.RenterEmail.ToLower()))
                 && (filter.EmployeeId == null || x.EmployeeId == filter.EmployeeId)
                 && (filter.EmployeeName == null ||
                     x.Employee.FullName.ToLower().Contains(filter.EmployeeName.ToLower()))

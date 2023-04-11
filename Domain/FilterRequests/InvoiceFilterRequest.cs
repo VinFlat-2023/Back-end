@@ -22,7 +22,13 @@ public class InvoiceFilterRequest : PagingFilter
 
     public int? RenterId { get; set; }
 
-    public string? RenterName { get; set; }
+    public string? RenterUsername { get; set; }
+
+    public string? RenterPhoneNumber { get; set; }
+
+    public string? RenterEmail { get; set; }
+
+    public string? RenterFullname { get; set; }
 
     public int? EmployeeId { get; set; }
 

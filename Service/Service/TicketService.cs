@@ -36,10 +36,10 @@ public class TicketService : ITicketService
         return pagedList;
     }
 
-    public async Task<PagedList<Ticket>?> GetTicketList(TicketFilter filters, int id, bool isManagement,
+    public async Task<PagedList<Ticket>?> GetTicketList(TicketFilter filters, int userId, bool isManagement,
         CancellationToken token)
     {
-        var queryable = _repositoryWrapper.Tickets.GetTicketList(filters, id, isManagement);
+        var queryable = _repositoryWrapper.Tickets.GetTicketList(filters, userId, isManagement);
 
         if (!queryable.Any())
             return null;

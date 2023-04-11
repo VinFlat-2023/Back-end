@@ -7,6 +7,10 @@ namespace Service.IService;
 public interface IContractService
 {
     public Task<PagedList<Contract>?> GetContractList(ContractFilter filters, CancellationToken token);
+
+    public Task<PagedList<Contract>?> GetContractList(ContractFilter filters, int userId, bool isManagement,
+        CancellationToken token);
+
     public Task<Contract?> GetContractHistoryById(int contractId);
     public Task<PagedList<Contract>?> GetContractHistoryList(ContractHistoryFilter filters, CancellationToken token);
     public Task<Contract?> GetContractById(int? contractId);

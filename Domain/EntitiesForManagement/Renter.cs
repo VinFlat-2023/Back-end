@@ -26,7 +26,6 @@ public class Renter
     public DateTime? BirthDate { get; set; }
     public bool Status { get; set; }
     public string? ImageUrl { get; set; }
-    public string? RenterAddress { get; set; }
 
     [MaxUploadedFileSize(4 * 1024 * 1024)]
     [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]
