@@ -79,14 +79,16 @@ public class EmployeeService : IEmployeeService
         return await _repositoryWrapper.Employees.DeleteEmployee(employeeId);
     }
 
-    public async Task<Employee> IsEmployeeUsernameExist(string? username)
+    public async Task<Employee?> IsEmployeeUsernameExist(string? username)
     {
-        return await _repositoryWrapper.Employees.IsEmployeeUsernameExist(username);
+        return await _repositoryWrapper.Employees.IsEmployeeUsernameExist(username)
+            .FirstOrDefaultAsync();
     }
 
-    public async Task<Employee> IsEmployeeEmailExist(string? email)
+    public async Task<Employee?> IsEmployeeEmailExist(string? email)
     {
-        return await _repositoryWrapper.Employees.IsEmployeeEmailExist(email);
+        return await _repositoryWrapper.Employees.IsEmployeeEmailExist(email)
+            .FirstOrDefaultAsync();
     }
 
     public async Task<Employee?> EmployeeLogin(string usernameOrPhoneNumber, string password)

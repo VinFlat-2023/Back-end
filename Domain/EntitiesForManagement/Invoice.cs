@@ -31,7 +31,7 @@ public class Invoice
 
     public DateTime? PaymentTime { get; set; }
 
-    public DateTime CreatedTime { get; set; }
+    public DateTime? CreatedTime { get; set; }
 
     // Receiver employee
     public int? RenterId { get; set; }

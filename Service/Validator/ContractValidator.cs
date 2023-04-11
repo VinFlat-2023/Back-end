@@ -104,28 +104,53 @@ public class ContractValidator : BaseValidator, IContractValidator
                     break;
             }
 
-            switch (obj?.RenterId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Renter is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.RenterCheck(obj.RenterId) == null)
-                        ValidatorResult.Failures.Add("Renter provided does not exist");
-                    break;
-            }
+            if (contractId == null)
+                switch (obj?.RenterId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Renter is required");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.RenterCheck(obj.RenterId) == null)
+                            ValidatorResult.Failures.Add("Renter provided does not exist");
+                        break;
+                }
 
-            switch (obj?.BuildingId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Building is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.BuildingCheck(obj.BuildingId) == null)
-                        ValidatorResult.Failures.Add("Building provided does not exist");
-                    break;
-            }
+            if (contractId == null)
+                switch (obj?.BuildingId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Building is required");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.BuildingCheck(obj.BuildingId) == null)
+                            ValidatorResult.Failures.Add("Building provided does not exist");
+                        break;
+                }
 
+            if (contractId == null)
+                switch (obj?.FlatId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Flat is required");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.FlatCheck(obj.FlatId) == null)
+                            ValidatorResult.Failures.Add("Flat provided does not exist");
+                        break;
+                }
+
+            if (contractId == null)
+                switch (obj?.RoomId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Room is required");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.RoomCheck(obj.RoomId) == null)
+                            ValidatorResult.Failures.Add("Room provided does not exist");
+                        break;
+                }
             // TODO : Flat and Room check validation
         }
         catch (Exception e)

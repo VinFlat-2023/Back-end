@@ -16,11 +16,11 @@ public interface IConditionCheckHelper
 
     public Task<Flat?> FlatCheck(int? id);
 
-    public Task<FlatType?> FlatTypeCheck(int id);
+    public Task<FlatType?> FlatTypeCheck(int? id);
 
     public Task<Feedback?> FeedbackCheck(int? id);
 
-    public Task<FeedbackType?> FeedbackTypeCheck(int id);
+    public Task<FeedbackType?> FeedbackTypeCheck(int? id);
 
     public Task<Building?> BuildingCheck(int? id);
 
@@ -28,9 +28,9 @@ public interface IConditionCheckHelper
 
     public Task<ServiceType?> ServiceTypeCheck(int? id);
 
-    public Task<Invoice?> InvoiceCheck(int id);
+    public Task<Invoice?> InvoiceCheck(int? id);
 
-    public Task<Contract?> ContractCheck(int id);
+    public Task<Contract?> ContractCheck(int? id);
 
     public Task<TicketType?> TicketTypeCheck(int? id);
 
@@ -38,7 +38,7 @@ public interface IConditionCheckHelper
 
     public Task<InvoiceDetail?> InvoiceDetailCheck(int? id);
 
-    public Task<InvoiceType?> InvoiceTypeCheck(int id);
+    public Task<InvoiceType?> InvoiceTypeCheck(int? id);
 
     public Task<Area?> AreaCheck(int? id);
 

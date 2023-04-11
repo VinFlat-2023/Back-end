@@ -32,38 +32,41 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
                         break;
                 }
 
-            switch (obj?.RenterId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Renter is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.RenterCheck(obj.RenterId) == null)
-                        ValidatorResult.Failures.Add("Renter provided does not exist");
-                    break;
-            }
+            if (feedbackId == null)
+                switch (obj?.RenterId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Renter is required");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.RenterCheck(obj.RenterId) == null)
+                            ValidatorResult.Failures.Add("Renter provided does not exist");
+                        break;
+                }
 
-            switch (obj?.FlatId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Flat is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.FlatCheck(obj.FlatId) == null)
-                        ValidatorResult.Failures.Add("Flat provided does not exist");
-                    break;
-            }
+            if (feedbackId == null)
+                switch (obj?.FlatId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Flat is required");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.FlatCheck(obj.FlatId) == null)
+                            ValidatorResult.Failures.Add("Flat provided does not exist");
+                        break;
+                }
 
-            switch (obj?.FeedbackTypeId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Feedback type is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.FeedbackTypeCheck(obj.FeedbackTypeId) == null)
-                        ValidatorResult.Failures.Add("Feedback type provided does not exist");
-                    break;
-            }
+            if (feedbackId == null)
+                switch (obj?.FeedbackTypeId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Feedback type is required");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.FeedbackTypeCheck(obj.FeedbackTypeId) == null)
+                            ValidatorResult.Failures.Add("Feedback type provided does not exist");
+                        break;
+                }
 
             switch (obj?.Description)
             {

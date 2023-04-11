@@ -42,17 +42,6 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
                     break;
             }
 
-            switch (obj?.BuildingAddress)
-            {
-                case { } when string.IsNullOrWhiteSpace(obj.BuildingAddress):
-                    ValidatorResult.Failures.Add("Building address is required");
-                    break;
-
-                case { } when obj.BuildingAddress.Length > 500:
-                    ValidatorResult.Failures.Add("Building address cannot exceed 500 characters");
-                    break;
-            }
-
             switch (obj?.Description)
             {
                 case { } when string.IsNullOrWhiteSpace(obj.Description):
@@ -69,6 +58,17 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
             if (obj?.CoordinateY == null)
                 ValidatorResult.Failures.Add("Building coordinate y is required");
 
+            switch (obj?.BuildingAddress)
+            {
+                case { } when string.IsNullOrWhiteSpace(obj.BuildingAddress):
+                    ValidatorResult.Failures.Add("Building address is required");
+                    break;
+
+                case { } when obj.BuildingAddress.Length > 500:
+                    ValidatorResult.Failures.Add("Building address cannot exceed 500 characters");
+                    break;
+            }
+
             var validatePhoneNumberRegex =
                 new Regex("^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$");
 
@@ -79,6 +79,16 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
                     break;
                 case { } when !validatePhoneNumberRegex.IsMatch(obj.BuildingPhoneNumber):
                     ValidatorResult.Failures.Add("Phone number is invalid");
+                    break;
+            }
+
+            switch (obj?.AveragePrice)
+            {
+                case { } when obj.AveragePrice < 0:
+                    ValidatorResult.Failures.Add("Average price cannot be negative");
+                    break;
+                case null:
+                    ValidatorResult.Failures.Add("Average price cannot be empty");
                     break;
             }
 
@@ -103,16 +113,17 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
                     break;
             }
 
-            switch (obj?.EmployeeId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Management employee is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.EmployeeCheck(obj.EmployeeId) == null)
-                        ValidatorResult.Failures.Add("Management employee provided does not exist");
-                    break;
-            }
+            if (buildingId == null)
+                switch (obj?.EmployeeId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Management employee is required");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.EmployeeCheck(obj.EmployeeId) == null)
+                            ValidatorResult.Failures.Add("Management employee provided does not exist");
+                        break;
+                }
 
             if (obj?.Status == null)
                 ValidatorResult.Failures.Add("Status is required");

@@ -12,4 +12,5 @@ public interface IAreaService
     public Task<RepositoryResponse> UpdateArea(Area area);
     public Task<RepositoryResponse> DeleteArea(int areaId);
     public Task<RepositoryResponse> UpdateAreaImage(Area updateArea);
+    public Task<RepositoryResponse> ToggleAreaStatus(int areaId);
 }

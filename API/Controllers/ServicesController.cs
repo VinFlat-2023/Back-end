@@ -247,20 +247,22 @@ public class ServicesController : ControllerBase
             });
 
         var result = await _serviceWrapper.ServicesEntity.UpdateServiceEntity(updateService);
-        if (result == null)
-            return NotFound(new
+
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Service not found",
+                message = result.Message,
                 data = ""
-            });
-
-        return Ok(new
-        {
-            status = "Success",
-            message = "Service updated",
-            data = ""
-        });
+            })
+        };
     }
 
     // POST: api/ServiceEntitiess
@@ -419,19 +421,21 @@ public class ServicesController : ControllerBase
             });
 
         var result = await _serviceWrapper.ServiceTypes.UpdateServiceType(updateServiceType);
-        if (result == null)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Service type failed to update",
-                data = ""
-            });
-        return Ok(new
+        return result.IsSuccess switch
         {
-            status = "Success",
-            message = "Service type updated",
-            data = ""
-        });
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
     }
 
     // POST: api/ServiceTypes

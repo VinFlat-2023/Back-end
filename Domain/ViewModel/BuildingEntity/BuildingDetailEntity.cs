@@ -13,6 +13,7 @@ public class BuildingDetailEntity
     public decimal? CoordinateY { get; set; }
     public bool Status { get; set; }
     public string BuildingAddress { get; set; }
+    public decimal AveragePrice { get; set; }
     public string? ImageUrl2 { get; set; }
     public string? ImageUrl3 { get; set; }
     public int EmployeeId { get; set; }

@@ -13,4 +13,5 @@ public interface IBuildingRepository
     public Task<RepositoryResponse> UpdateBuilding(Building building);
     public Task<RepositoryResponse> UpdateBuildingImages(Building building, int number);
     public Task<RepositoryResponse> DeleteBuilding(int id);
+    public IQueryable<Building> GetBuildingListByAveragePrice(decimal amount);
 }

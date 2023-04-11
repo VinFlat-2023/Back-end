@@ -36,7 +36,7 @@ public class FeedbackTypeService : IFeedbackTypeService
         return pagedList;
     }
 
-    public async Task<FeedbackType?> GetFeedbackTypeById(int feedbackTypeId)
+    public async Task<FeedbackType?> GetFeedbackTypeById(int? feedbackTypeId)
     {
         return await _repositoryWrapper.FeedbackTypes.GetFeedbackTypeDetail(feedbackTypeId)
             .FirstOrDefaultAsync();

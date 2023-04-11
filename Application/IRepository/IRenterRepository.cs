@@ -17,8 +17,8 @@ public interface IRenterRepository
     public Task<RepositoryResponse> DeleteRenter(int renterId);
     public IQueryable<Renter?> GetRenter(string usernameOrPhoneNumber, string password);
     public IQueryable<Renter> GetRenterByUsername(string username);
-    public Task<Renter?> RenterEmailCheck(string email);
-    public Task<Renter?> RenterUsernameCheck(string username);
+    public Task<Renter?> RenterEmailCheck(string? email);
+    public Task<Renter?> RenterUsernameCheck(string? username);
     public Task<Renter?> GetARenterByUserName(string username);
     public IEnumerable<Renter> GetRenterWithActiveContract();
     public IQueryable<Renter> GetRenterDetailWithContractId(int userId);

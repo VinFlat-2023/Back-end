@@ -33,7 +33,7 @@ internal class FeedbackTypeRepository : IFeedbackTypeRepository
     /// </summary>
     /// <param name="feedbackTypeId"></param>
     /// <returns></returns>
-    public IQueryable<FeedbackType> GetFeedbackTypeDetail(int feedbackTypeId)
+    public IQueryable<FeedbackType> GetFeedbackTypeDetail(int? feedbackTypeId)
     {
         return _context.FeedbackTypes
             .Where(x => x.FeedbackTypeId == feedbackTypeId);

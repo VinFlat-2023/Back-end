@@ -229,9 +229,9 @@ public class RentersController : ControllerBase
 
     // PUT: api/Renters/5
     // To protect from over posting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id:int}")]
+    [HttpPut("profile/update")]
     [Authorize(Roles = "Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Update renter by id (For renter)")]
+    [SwaggerOperation(Summary = "[Authorize] Update renter (For renter)")]
     public async Task<IActionResult> PutRenter([FromBody] RenterUpdateRequest renter)
     {
         var userId = int.Parse(User.Identity?.Name);
@@ -257,7 +257,8 @@ public class RentersController : ControllerBase
             Email = renter.Email,
             Phone = renter.Phone,
             FullName = renter.FullName,
-            BirthDate = renter.BirthDate ?? null,
+            BirthDate = DateTime.ParseExact(renter.BirthDate.ToString() ?? string.Empty,
+                "dd/MM/yyyy HH:mm:ss", null),
             /*
             ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(renter.Image, fileNameUserImage,
                 "User", imageExtension))?.Blob.Uri,
@@ -285,14 +286,14 @@ public class RentersController : ControllerBase
             false => BadRequest(new
             {
                 status = "Bad Request",
-                message = "Renter failed to update",
+                message = result.Message,
                 data = ""
             }),
             true => Ok(
                 new
                 {
                     status = "Success",
-                    message = "Renter updated",
+                    message = result.Message,
                     data = ""
                 })
         };
@@ -315,6 +316,15 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
+        if (renter.Password != renter.ConfirmPassword)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Password and confirm password do not match",
+                data = ""
+            });
+
+
         var finalizePasswordUpdate = new Renter
         {
             RenterId = renterId,
@@ -332,7 +342,7 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
-        var result = await _serviceWrapper.Renters.UpdateRenter(finalizePasswordUpdate);
+        var result = await _serviceWrapper.Renters.UpdatePasswordRenter(finalizePasswordUpdate);
 
         return result.IsSuccess switch
         {

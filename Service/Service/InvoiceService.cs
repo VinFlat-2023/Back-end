@@ -36,7 +36,7 @@ public class InvoiceService : IInvoiceService
         return pagedList;
     }
 
-    public async Task<Invoice?> GetInvoiceById(int invoiceId)
+    public async Task<Invoice?> GetInvoiceById(int? invoiceId)
     {
         return await _repositoryWrapper.Invoices.GetInvoiceDetail(invoiceId);
     }

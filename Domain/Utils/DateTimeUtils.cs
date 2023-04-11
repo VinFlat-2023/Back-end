@@ -9,7 +9,8 @@ public static class DateTimeUtils
 
     public static DateTime GetCurrentDateTime()
     {
-        return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, AsiaStandardTime);
+        return TimeZoneInfo
+            .ConvertTimeFromUtc(DateTime.UtcNow, AsiaStandardTime);
     }
 
     public static DateTime? ConvertToDateTime(this string? dateString)

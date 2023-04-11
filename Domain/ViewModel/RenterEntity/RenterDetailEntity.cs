@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Domain.ViewModel.RenterEntity;
 
 public class RenterDetailEntity
@@ -8,6 +10,10 @@ public class RenterDetailEntity
     public string? Phone { get; set; }
     public string? FullName { get; set; }
     public DateTime? BirthDate { get; set; }
+
+    public string? BirthDateReturn
+        => BirthDate?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+
     public string? ImageUrl { get; set; }
     public string? CitizenNumber { get; set; }
     public string? CitizenImageUrl { get; set; }

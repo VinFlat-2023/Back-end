@@ -9,15 +9,16 @@ public class ContractCreateRequest
     public string? Description { get; set; }
     public string? EndDate { get; set; }
     public string? ContractStatus { get; set; }
-    public decimal PriceForWater { get; set; }
-    public decimal PriceForElectricity { get; set; }
-    public decimal PriceForService { get; set; }
-    public decimal PriceForRent { get; set; }
+    public string PriceForWater { get; set; }
+    public string PriceForElectricity { get; set; }
+    public string PriceForService { get; set; }
+    public string PriceForRent { get; set; }
     public int FlatId { get; set; }
     public int RoomId { get; set; }
 
     // Renter
     public string RenterUsername { get; set; }
+    public string FullName { get; set; }
     public string? RenterEmail { get; set; }
     public string RenterPhone { get; set; }
     public DateTime? RenterBirthDate { get; set; }

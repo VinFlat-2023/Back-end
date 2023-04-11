@@ -55,27 +55,29 @@ public class ServiceValidator : BaseValidator, IServiceValidator
             if (obj?.Status == null)
                 ValidatorResult.Failures.Add("Status is required");
 
-            switch (obj?.ServiceTypeId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Service type is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.ServiceTypeCheck(obj.ServiceTypeId) == null)
-                        ValidatorResult.Failures.Add("Service type provided does not exist");
-                    break;
-            }
+            if (serviceId == null)
+                switch (obj?.ServiceTypeId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Service type is required");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.ServiceTypeCheck(obj.ServiceTypeId) == null)
+                            ValidatorResult.Failures.Add("Service type provided does not exist");
+                        break;
+                }
 
-            switch (obj?.BuildingId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Building is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.BuildingCheck(obj.BuildingId) == null)
-                        ValidatorResult.Failures.Add("Building provided does not exist");
-                    break;
-            }
+            if (serviceId == null)
+                switch (obj?.BuildingId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Building is required");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.BuildingCheck(obj.BuildingId) == null)
+                            ValidatorResult.Failures.Add("Building provided does not exist");
+                        break;
+                }
         }
         catch (Exception e)
         {
