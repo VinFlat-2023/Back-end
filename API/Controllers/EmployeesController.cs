@@ -323,13 +323,15 @@ public class EmployeesController : ControllerBase
 
         var result = await _serviceWrapper.Employees.UpdatePasswordEmployee(updatePasswordEmployee);
 
+        var jwtToken = _serviceWrapper.Tokens.CreateTokenForEmployee(employeeEntity);
+
         return result.IsSuccess switch
         {
             true => Ok(new
             {
                 status = "Success",
                 message = result.Message,
-                data = ""
+                data = jwtToken
             }),
             false => NotFound(new
             {

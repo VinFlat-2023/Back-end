@@ -37,8 +37,8 @@ public class FlatValidator : BaseValidator, IFlatValidator
                 case { } when string.IsNullOrWhiteSpace(obj.Name):
                     ValidatorResult.Failures.Add("Flat name is required");
                     break;
-                case { } when obj.Name.Length > 200:
-                    ValidatorResult.Failures.Add("Flat name cannot exceed 200 characters");
+                case { } when obj.Name.Length > 100:
+                    ValidatorResult.Failures.Add("Flat name cannot exceed 100 characters");
                     break;
             }
 
@@ -47,8 +47,8 @@ public class FlatValidator : BaseValidator, IFlatValidator
                 case { } when string.IsNullOrWhiteSpace(obj.Description):
                     ValidatorResult.Failures.Add("Flat description is required");
                     break;
-                case { } when obj.Description.Length > 200:
-                    ValidatorResult.Failures.Add("Flat description cannot exceed 200 characters");
+                case { } when obj.Description.Length > 100:
+                    ValidatorResult.Failures.Add("Flat description cannot exceed 100 characters");
                     break;
             }
 

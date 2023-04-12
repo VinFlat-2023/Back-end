@@ -6,7 +6,7 @@ public class ContractHistoryCreateRequest
 {
     public decimal PriceForRent { get; set; }
 
-    [MaxLength(200, ErrorMessage = "Description length must less than 200")]
+    [MaxLength(100, ErrorMessage = "Description length must less than 100")]
     public string Description { get; set; } = null!;
 
     [MaxLength(20, ErrorMessage = "Status length must less than 20")]

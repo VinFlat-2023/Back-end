@@ -56,34 +56,6 @@ public class BuildingsController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get building list")]
-    [HttpGet("order/{areaName}")]
-    public async Task<IActionResult> GetBasicBuildingsListByAreaName(string areaName, CancellationToken token)
-    {
-        var list = await _serviceWrapper.Buildings.GetBuildingList(new BuildingFilter
-        {
-            AreaName = areaName
-        }, token);
-
-        var resultList = _mapper.Map<IEnumerable<BuildingDetailEntity>>(list);
-
-        if (list == null || !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Building list is empty",
-                data = ""
-            });
-        return Ok(new
-        {
-            status = "Success",
-            message = "List found",
-            data = resultList,
-            totalPage = list.TotalPages,
-            totalCount = list.TotalCount
-        });
-    }
-
     [SwaggerOperation(Summary = "[Authorize] Get current building (For management (Supervisor only)")]
     [Authorize(Roles = "Supervisor")]
     [HttpGet("current")]
@@ -158,21 +130,7 @@ public class BuildingsController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutBuilding(int id, [FromBody] BuildingUpdateRequest building)
     {
-        var updateBuilding = new Building
-        {
-            BuildingId = id,
-            BuildingName = building.BuildingName,
-            Description = building.Description,
-            BuildingAddress = building.BuildingAddress,
-            CoordinateX = building.CoordinateX ?? 0,
-            CoordinateY = building.CoordinateY ?? 0,
-            AreaId = building.AreaId,
-            Status = building.Status,
-            AveragePrice = building.AveragePrice ?? 0,
-            BuildingPhoneNumber = building.BuildingPhoneNumber
-        };
-
-        var validation = await _validator.ValidateParams(updateBuilding, id);
+        var validation = await _validator.ValidateParams(building, id);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -181,6 +139,20 @@ public class BuildingsController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+
+        var updateBuilding = new Building
+        {
+            BuildingId = id,
+            BuildingName = building.BuildingName,
+            BuildingAddress = building.BuildingAddress,
+            Description = building.Description,
+            CoordinateX = building.CoordinateX ?? 0,
+            CoordinateY = building.CoordinateY ?? 0,
+            BuildingPhoneNumber = building.BuildingPhoneNumber,
+            AveragePrice = building.AveragePrice ?? 0,
+            Status = building.Status,
+            AreaId = building.AreaId
+        };
 
         var result = await _serviceWrapper.Buildings.UpdateBuilding(updateBuilding);
 
@@ -220,6 +192,8 @@ public class BuildingsController : ControllerBase
                 data = ""
             });
 
+        var validation = await _validator.ValidateParams(building);
+
         var newBuilding = new Building
         {
             BuildingName = building.BuildingName ?? "Building created by " + supervisor.FullName,
@@ -234,8 +208,6 @@ public class BuildingsController : ControllerBase
             AreaId = building.AreaId,
             BuildingPhoneNumber = building.BuildingPhoneNumber ?? "0"
         };
-
-        var validation = await _validator.ValidateParams(newBuilding, null);
 
         if (!validation.IsValid)
             return BadRequest(new

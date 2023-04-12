@@ -86,22 +86,10 @@ internal class AreaRepository : IAreaRepository
                 Message = "Area not found"
             };
 
-        try
-        {
-            areaData.Location = area?.Location ?? areaData.Location;
-            areaData.Name = area?.Name ?? areaData.Name;
-            areaData.Status = area?.Status ?? areaData.Status;
-            await _context.SaveChangesAsync();
-        }
-        catch
-        {
-            return new RepositoryResponse
-            {
-                IsSuccess = false,
-                Message = "Updating area failed"
-            };
-        }
-
+        areaData.Location = area?.Location ?? areaData.Location;
+        areaData.Name = area?.Name ?? areaData.Name;
+        areaData.Status = area?.Status ?? areaData.Status;
+        await _context.SaveChangesAsync();
 
         return new RepositoryResponse
         {

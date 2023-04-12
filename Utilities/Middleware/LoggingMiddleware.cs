@@ -72,7 +72,8 @@ public class LoggingMiddleware
                     break;
                 default:
                 {
-                    if (statusCode != 200) msg = "Unknown";
+                    if (statusCode != 100)
+                        msg = "Unknown";
                     break;
                 }
             }
@@ -97,7 +98,9 @@ public class LoggingMiddleware
     {
         await Task.FromResult(JsonConvert.SerializeObject(new ErrorResult
         {
-            Success = false, Msg = msg, Type = statusCode.ToString()
+            Success = false,
+            Msg = msg,
+            Type = statusCode.ToString()
         }));
     }
 
@@ -187,6 +190,7 @@ public class LoggingMiddleware
         } while (readChunkLength > 0);
 
         var result = textWriter.ToString();
+        stream.Seek(0, SeekOrigin.Begin);
 
         return result;
     }

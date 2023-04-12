@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Security.Claims;
-using API.Extension;
 using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Contract;
@@ -490,7 +489,7 @@ public class ContractsController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutContract(int id, [FromBody] ContractUpdateRequest contract)
     {
-        var imageExtension = ImageExtension.ImageExtensionChecker(contract.Image?.FileName);
+        //var imageExtension = ImageExtension.ImageExtensionChecker(contract.Image?.FileName);
 
         var contractEntity = await _serviceWrapper.Contracts.GetContractById(id);
 
@@ -501,28 +500,9 @@ public class ContractsController : ControllerBase
                 message = "Contract not found",
                 data = ""
             });
-        var updateContract = new Contract
-        {
-            ContractId = id,
-            ContractName = contract.ContractName ?? "Contract for " + contractEntity.RenterId,
-            DateSigned = contract.DateSigned.ConvertToDateTime() ?? contractEntity.DateSigned,
-            StartDate = contract.StartDate.ConvertToDateTime() ?? contractEntity.StartDate,
-            EndDate = contract.EndDate.ConvertToDateTime() ?? contractEntity.EndDate,
-            LastUpdated = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-                "dd/MM/yyyy HH:mm:ss", null),
-            ContractStatus = contract.ContractStatus ?? contractEntity.ContractStatus,
-            PriceForRent = contract.PriceForRent ?? contractEntity.PriceForRent,
-            PriceForElectricity = contract.PriceForElectricity ?? contractEntity.PriceForElectricity,
-            PriceForWater = contract.PriceForWater ?? contractEntity.PriceForWater,
-            PriceForService = contract.PriceForService ?? contractEntity.PriceForService,
-            RenterId = contractEntity.RenterId,
-            ImageUrl = (await _serviceWrapper.AzureStorage.UploadAsync(contract.Image, "Contract",
-                imageExtension))?.Blob.Uri,
-            Description = contract.Description ?? "No description",
-            CreatedDate = contractEntity.CreatedDate
-        };
 
-        var validation = await _validator.ValidateParams(updateContract, id);
+        var validation = await _validator.ValidateParams(contract, id);
+
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -530,7 +510,32 @@ public class ContractsController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+
+        var updateContract = new Contract
+        {
+            ContractId = id,
+            ContractName = contract.ContractName,
+            DateSigned = contract.DateSigned,
+            StartDate = contract.StartDate,
+            EndDate = contract.EndDate,
+            LastUpdated = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                "dd/MM/yyyy HH:mm:ss", null),
+            ContractStatus = contract.ContractStatus,
+            PriceForRent = decimal.Parse(contract.PriceForRent, CultureInfo.InvariantCulture),
+            PriceForElectricity = decimal.Parse(contract.PriceForElectricity, CultureInfo.InvariantCulture),
+            PriceForWater = decimal.Parse(contract.PriceForWater, CultureInfo.InvariantCulture),
+            PriceForService = decimal.Parse(contract.PriceForService, CultureInfo.InvariantCulture),
+            RenterId = contractEntity.RenterId,
+            /*
+            ImageUrl = (await _serviceWrapper.AzureStorage.UploadAsync(contract.Image, "Contract",
+                imageExtension))?.Blob.Uri,
+            */
+            Description = contract.Description ?? "No description",
+            CreatedDate = contractEntity.CreatedDate
+        };
+
         var result = await _serviceWrapper.Contracts.UpdateContract(updateContract);
+
         return result.IsSuccess switch
         {
             true => Ok(new
@@ -555,6 +560,16 @@ public class ContractsController : ControllerBase
     [HttpPost("sign")]
     public async Task<IActionResult> PostContract([FromBody] ContractCreateRequest contract, CancellationToken token)
     {
+        var contractValidation = await _validator.ValidateParams(contract);
+
+        if (!contractValidation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = contractValidation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
         var newRenter = new Renter
         {
             Username = contract.RenterUsername,
@@ -584,11 +599,11 @@ public class ContractsController : ControllerBase
         var newContract = new Contract
         {
             ContractName = contract.ContractName ?? "Contract for " + renterEntity.FullName,
-            DateSigned = contract.DateSigned.ConvertToDateTime() ?? DateTimeUtils.GetCurrentDateTime(),
-            StartDate = contract.StartDate.ConvertToDateTime() ?? DateTimeUtils.GetCurrentDateTime(),
+            DateSigned = contract.DateSigned ?? DateTimeUtils.GetCurrentDateTime(),
+            StartDate = contract.StartDate ?? DateTimeUtils.GetCurrentDateTime(),
             CreatedDate = DateTimeUtils.GetCurrentDateTime(),
             Description = contract.Description ?? "No description",
-            EndDate = contract.EndDate.ConvertToDateTime(),
+            EndDate = contract.EndDate,
             LastUpdated = DateTimeUtils.GetCurrentDateTime(),
             ContractStatus = contract.ContractStatus ?? "Active",
             PriceForRent = decimal.Parse(contract.PriceForRent, CultureInfo.InvariantCulture),
@@ -600,16 +615,6 @@ public class ContractsController : ControllerBase
             FlatId = contract.FlatId,
             RoomId = contract.RoomId
         };
-
-        var validation = await _validator.ValidateParams(newContract, null);
-
-        if (!validation.IsValid)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = validation.Failures.FirstOrDefault(),
-                data = ""
-            });
 
         var result = await _serviceWrapper.Contracts.AddContract(newContract);
 

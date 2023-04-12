@@ -26,8 +26,6 @@ public class ContractFilterRequest : PagingFilter
 
     public decimal? PriceForRent { get; set; }
 
-    public int? RenterId { get; set; }
-
     public string? RenterUsername { get; set; }
 
     public string? RenterPhoneNumber { get; set; }

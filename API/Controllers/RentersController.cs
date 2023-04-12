@@ -324,15 +324,13 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
+        var validation = await _passwordValidator.ValidateParams(renter.Password, renterId, true);
 
         var finalizePasswordUpdate = new Renter
         {
             RenterId = renterId,
             Password = renter.Password
         };
-
-        var validation = await _passwordValidator
-            .ValidateParams(finalizePasswordUpdate.Password, renterId, true);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -344,6 +342,8 @@ public class RentersController : ControllerBase
 
         var result = await _serviceWrapper.Renters.UpdatePasswordRenter(finalizePasswordUpdate);
 
+        var jwtToken = _serviceWrapper.Tokens.CreateTokenForRenter(renterCheck);
+
         return result.IsSuccess switch
         {
             true => Ok(
@@ -351,7 +351,7 @@ public class RentersController : ControllerBase
                 {
                     status = "Success",
                     message = "Renter updated",
-                    data = ""
+                    data = jwtToken
                 }),
             false => BadRequest(new
             {

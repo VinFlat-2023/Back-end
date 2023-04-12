@@ -30,8 +30,7 @@ public class AreasController : ControllerBase
 
     // GET: api/Areas
     [HttpGet]
-    [SwaggerOperation(Summary = "[Authorize] Get area list (For management and renter))")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Get area list")]
     public async Task<IActionResult> GetAreas([FromQuery] AreaFilterRequest request, CancellationToken token)
     {
         var filter = _mapper.Map<AreaFilter>(request);
@@ -59,8 +58,7 @@ public class AreasController : ControllerBase
     }
 
     // GET: api/Areas/5
-    [SwaggerOperation(Summary = "[Authorize] Get area using id (For management and renter)")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Get area using id")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetArea(int id)
     {
@@ -86,18 +84,11 @@ public class AreasController : ControllerBase
     // PUT: api/Areas/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Update area info using id (For management)")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutArea(int id, [FromBody] AreaUpdateRequest area)
     {
-        var updateArea = new Area
-        {
-            AreaId = id,
-            Name = area.Name,
-            Location = area.Location
-        };
-
-        var validation = await _validator.ValidateParams(updateArea, id);
+        var validation = await _validator.ValidateParams(area, id);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -106,6 +97,14 @@ public class AreasController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+
+        var updateArea = new Area
+        {
+            AreaId = id,
+            Name = area.Name,
+            Location = area.Location,
+            Status = area.Status
+        };
 
         var result = await _serviceWrapper.Areas.UpdateArea(updateArea);
 
@@ -126,7 +125,6 @@ public class AreasController : ControllerBase
         };
     }
 
-
     // POST: api/Areas
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Create area (For management)")]
@@ -134,14 +132,7 @@ public class AreasController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> PostArea([FromBody] AreaCreateRequest area)
     {
-        var newArea = new Area
-        {
-            Name = area.Name,
-            Location = area.Location,
-            Status = area.Status
-        };
-
-        var validation = await _validator.ValidateParams(newArea, null);
+        var validation = await _validator.ValidateParams(area);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -150,6 +141,13 @@ public class AreasController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+
+        var newArea = new Area
+        {
+            Name = area.Name,
+            Location = area.Location,
+            Status = area.Status
+        };
 
         var result = await _serviceWrapper.Areas.AddArea(newArea);
 

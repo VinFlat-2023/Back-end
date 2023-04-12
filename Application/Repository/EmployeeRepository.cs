@@ -91,7 +91,6 @@ public class EmployeeRepository : IEmployeeRepository
         try
         {
             employeeData.Email = employee.Email;
-            employeeData.Password = employee.Password;
             employeeData.Phone = employee.Phone;
             employeeData.Username = employee.Username;
             employeeData.FullName = employee.FullName;

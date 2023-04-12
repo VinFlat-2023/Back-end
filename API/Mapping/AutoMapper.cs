@@ -405,19 +405,19 @@ public class AutoMapper : Profile
     {
         CreateMap<ContractCreateRequest, Contract>()
             .ForMember(c => c.DateSigned,
-                option => option.MapFrom(w => w.DateSigned.ConvertToDateTime()))
+                option => option.MapFrom(w => w.DateSigned))
             .ForMember(c => c.CreatedDate,
-                option => option.MapFrom(w => w.StartDate.ConvertToDateTime()))
+                option => option.MapFrom(w => w.StartDate))
             .ForMember(c => c.EndDate,
-                option => option.MapFrom(w => w.EndDate.ConvertToDateTime()));
+                option => option.MapFrom(w => w.EndDate));
         CreateMap<Contract, ContractCreateRequest>();
         CreateMap<ContractUpdateRequest, Contract>()
             .ForMember(c => c.DateSigned,
-                option => option.MapFrom(w => w.DateSigned.ConvertToDateTime()))
+                option => option.MapFrom(w => w.DateSigned))
             .ForMember(c => c.CreatedDate,
-                option => option.MapFrom(w => w.StartDate.ConvertToDateTime()))
+                option => option.MapFrom(w => w.StartDate))
             .ForMember(c => c.EndDate,
-                option => option.MapFrom(w => w.EndDate.ConvertToDateTime()));
+                option => option.MapFrom(w => w.EndDate));
         CreateMap<Contract, ContractUpdateRequest>();
         CreateMap<ContractFilterRequest, ContractFilter>()
             .ReverseMap();

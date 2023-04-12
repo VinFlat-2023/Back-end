@@ -127,8 +127,8 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
                 case { } when string.IsNullOrWhiteSpace(obj.Name):
                     ValidatorResult.Failures.Add("Feedback type name is required");
                     break;
-                case { } when obj.Name.Length > 200:
-                    ValidatorResult.Failures.Add("Feedback type name cannot exceed 200 characters");
+                case { } when obj.Name.Length > 100:
+                    ValidatorResult.Failures.Add("Feedback type name cannot exceed 100 characters");
                     break;
             }
         }

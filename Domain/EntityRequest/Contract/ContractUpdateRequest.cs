@@ -1,21 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Http;
-
-namespace Domain.EntityRequest.Contract;
+﻿namespace Domain.EntityRequest.Contract;
 
 public class ContractUpdateRequest
 {
-    public string? ContractName { get; set; }
-    public string? DateSigned { get; set; }
-    public string? StartDate { get; set; }
-    public string? Description { get; set; }
-    public string? EndDate { get; set; }
-    public string? ContractStatus { get; set; }
-    public decimal? PriceForWater { get; set; }
-    public decimal? PriceForElectricity { get; set; }
-    public decimal? PriceForService { get; set; }
-    public string? ImageUrl { get; set; }
-    [NotMapped] public IFormFile? Image { get; set; }
-    public decimal? PriceForRent { get; set; }
-    public int? RenterId { get; set; }
+    public string ContractName { get; set; }
+    public DateTime DateSigned { get; set; }
+    public DateTime StartDate { get; set; }
+    public string Description { get; set; }
+    public DateTime EndDate { get; set; }
+    public string ContractStatus { get; set; }
+    public string PriceForWater { get; set; }
+    public string PriceForElectricity { get; set; }
+    public string PriceForService { get; set; }
+    public string PriceForRent { get; set; }
 }

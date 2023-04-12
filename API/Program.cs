@@ -1,7 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Domain.Options;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Newtonsoft.Json;
@@ -81,7 +80,8 @@ builder.Services.AddControllers()
             new DefaultContractResolver();
         options.SerializerSettings.ReferenceLoopHandling =
             ReferenceLoopHandling.Ignore;
-    });
+    })
+    .ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; });
 
 var app = builder.Build();
 
@@ -96,6 +96,8 @@ app.UseSwaggerUI();
 
 app.UseCors("AllowAnyOrigin");
 
+/*
+
 app.UseExceptionHandler("/error");
 
 app.UseExceptionHandler(c => c.Run(async context =>
@@ -106,6 +108,8 @@ app.UseExceptionHandler(c => c.Run(async context =>
     var response = new { error = exception?.Message };
     await context.Response.WriteAsJsonAsync(response);
 }));
+
+*/
 
 app.UseAuthentication();
 

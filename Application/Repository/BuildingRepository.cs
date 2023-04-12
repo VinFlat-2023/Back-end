@@ -139,15 +139,16 @@ public class BuildingRepository : IBuildingRepository
         var count = _context.Flats
             .Count(x => x.BuildingId == building.BuildingId);
 
+        buildingData.BuildingName = building.BuildingName;
+        buildingData.BuildingAddress = buildingData.BuildingAddress;
         buildingData.Description = building.Description;
-        buildingData.AveragePrice = building.AveragePrice;
-        buildingData.Status = building.Status;
+        buildingData.TotalFlats = count;
         buildingData.CoordinateX = building.CoordinateX;
         buildingData.CoordinateY = building.CoordinateY;
-        buildingData.TotalFlats = count;
-        buildingData.BuildingAddress = buildingData.BuildingAddress;
-        buildingData.BuildingName = building.BuildingName;
+        buildingData.AveragePrice = building.AveragePrice;
+        buildingData.Status = building.Status;
         buildingData.BuildingPhoneNumber = building.BuildingPhoneNumber;
+        buildingData.AreaId = building.AreaId;
 
         await _context.SaveChangesAsync();
 
@@ -173,7 +174,7 @@ public class BuildingRepository : IBuildingRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Building failed to delete"
+                Message = "Building not found"
             };
 
         _context.Buildings.Remove(buildingFound);
@@ -185,18 +186,5 @@ public class BuildingRepository : IBuildingRepository
             IsSuccess = true,
             Message = "Building deleted successfully"
         };
-    }
-
-    public IQueryable<Building> GetBuildingListTop15(BuildingFilter filter)
-    {
-        return _context.Buildings
-            .Include(x => x.Area)
-            .Include(x => x.Employee)
-            .ThenInclude(x => x.Role)
-            // Filter starts here
-            .OrderBy(x => x.BuildingName)
-            .Distinct()
-            .Take(15)
-            .AsNoTracking();
     }
 }

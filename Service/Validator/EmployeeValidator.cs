@@ -93,7 +93,6 @@ public class EmployeeValidator : BaseValidator, IEmployeeValidator
                     break;
             }
 
-
             var validatePhoneNumberRegex =
                 new Regex("^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$");
 
