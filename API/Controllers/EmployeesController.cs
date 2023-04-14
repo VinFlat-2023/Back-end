@@ -113,6 +113,16 @@ public class EmployeesController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> CreateEmployee([FromBody] EmployeeCreateRequest employee)
     {
+        var validation = await _employeeValidator.ValidateParams(employee);
+
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+        
         var newEmployee = new Employee
         {
             Username = employee.Username,
@@ -124,15 +134,6 @@ public class EmployeesController : ControllerBase
             Status = true,
             RoleId = employee.RoleId
         };
-
-        var validation = await _employeeValidator.ValidateParams(newEmployee, null);
-        if (!validation.IsValid)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = validation.Failures.FirstOrDefault(),
-                data = ""
-            });
 
         // Create User Device token
         var result = await _serviceWrapper.Employees.AddEmployee(newEmployee);
@@ -177,26 +178,7 @@ public class EmployeesController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateEmployee(int id, [FromBody] EmployeeUpdateRequest employee)
     {
-        var employeeEntity = await _serviceWrapper.Employees.GetEmployeeById(id);
-
-        if (employeeEntity == null)
-            return NotFound(new
-            {
-                status = "Bad Request",
-                message = "This employee does not exist",
-                data = ""
-            });
-
-        var updateEmployee = new Employee
-        {
-            EmployeeId = id,
-            Address = employee.Address ?? employeeEntity.Address,
-            Email = employee.Email ?? employeeEntity.Email,
-            Phone = employee.Phone ?? employeeEntity.Phone,
-            FullName = employee.Fullname ?? employeeEntity.FullName
-        };
-
-        var validation = await _employeeValidator.ValidateParams(updateEmployee, id);
+        var validation = await _employeeValidator.ValidateParams(employee, id);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -205,6 +187,15 @@ public class EmployeesController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+        
+        var updateEmployee = new Employee
+        {
+            EmployeeId = id,
+            Address = employee.Address,
+            Email = employee.Email,
+            Phone = employee.Phone,
+            FullName = employee.Fullname
+        };
 
         var result = await _serviceWrapper.Employees.UpdateEmployee(updateEmployee);
 
@@ -231,27 +222,8 @@ public class EmployeesController : ControllerBase
     public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeUpdateRequest employee)
     {
         var employeeId = int.Parse(User.Identity?.Name);
-
-        var employeeEntity = await _serviceWrapper.Employees.GetEmployeeById(employeeId);
-
-        if (employeeEntity == null)
-            return NotFound(new
-            {
-                status = "Bad Request",
-                message = "This employee does not exist",
-                data = ""
-            });
-
-        var updateEmployee = new Employee
-        {
-            EmployeeId = employeeId,
-            Address = employee.Address ?? employeeEntity.Address,
-            Email = employee.Email ?? employeeEntity.Email,
-            Phone = employee.Phone ?? employeeEntity.Phone,
-            FullName = employee.Fullname ?? employeeEntity.FullName
-        };
-
-        var validation = await _employeeValidator.ValidateParams(updateEmployee, employeeId);
+        
+        var validation = await _employeeValidator.ValidateParams(employee, employeeId);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -261,6 +233,15 @@ public class EmployeesController : ControllerBase
                 data = ""
             });
 
+        var updateEmployee = new Employee
+        {
+            EmployeeId = employeeId,
+            Address = employee.Address,
+            Email = employee.Email,
+            Phone = employee.Phone,
+            FullName = employee.Fullname
+        };
+       
         var result = await _serviceWrapper.Employees.UpdateEmployee(updateEmployee);
 
         return result.IsSuccess switch
@@ -292,7 +273,15 @@ public class EmployeesController : ControllerBase
             return NotFound(new
             {
                 status = "Bad Request",
-                message = "This employee does not exist",
+                message = "Nhân viên không tồn tại",
+                data = ""
+            });
+
+        if (employee.OldPassword != employeeEntity.Password)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Mật khẩu cũ không đúng, vui lòng kiểm tra lại",
                 data = ""
             });
 
@@ -300,9 +289,12 @@ public class EmployeesController : ControllerBase
             return BadRequest(new
             {
                 status = "Bad Request",
-                message = "Password and confirm password do not match",
+                message = "Mật khẩu mới và mật khẩu xác nhận không khớp, vui lòng kiểm tra lại",
                 data = ""
             });
+        
+        var validation = await _passwordValidator
+            .ValidateParams(employee.Password, employeeId, false);
 
         var updatePasswordEmployee = new Employee
         {
@@ -310,9 +302,7 @@ public class EmployeesController : ControllerBase
             Password = employee.Password
         };
 
-        var validation = await _passwordValidator
-            .ValidateParams(updatePasswordEmployee.Password, employeeId, false);
-
+        
         if (!validation.IsValid)
             return BadRequest(new
             {

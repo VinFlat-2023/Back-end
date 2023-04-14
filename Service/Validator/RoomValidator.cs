@@ -20,7 +20,7 @@ public class RoomValidator : BaseValidator, IRoomValidator
             if (roomId != null)
                 switch (obj?.RoomId)
                 {
-                    case { } when obj.RoomId != roomId:
+                    case not null when obj.RoomId != roomId:
                         ValidatorResult.Failures.Add("Room id mismatch");
                         break;
                     case null:

@@ -21,7 +21,7 @@ public class RenterValidator : BaseValidator, IRenterValidator
             if (renterId != null)
                 switch (obj?.RenterId)
                 {
-                    case { } when obj.RenterId != renterId:
+                    case not null when obj.RenterId != renterId:
                         ValidatorResult.Failures.Add("Renter id mismatch");
                         break;
                     case null:
@@ -36,41 +36,41 @@ public class RenterValidator : BaseValidator, IRenterValidator
             if (renterId == null)
                 switch (obj?.Username)
                 {
-                    case { } when obj.Username.Length > 100:
+                    case not null when obj.Username.Length > 100:
                         ValidatorResult.Failures.Add("Username cannot exceed 100 characters");
                         break;
-                    case { } when string.IsNullOrWhiteSpace(obj.Username):
+                    case not null when string.IsNullOrWhiteSpace(obj.Username):
                         ValidatorResult.Failures.Add("Username is required");
                         break;
-                    case { } when obj.Username.Length < 4:
+                    case not null when obj.Username.Length < 4:
                         ValidatorResult.Failures.Add("Username must be at least 4 characters");
                         break;
-                    case { } when await _conditionCheckHelper.EmployeeUsernameExist(obj.Username) != null:
+                    case not null when await _conditionCheckHelper.EmployeeUsernameExist(obj.Username) != null:
                         ValidatorResult.Failures.Add("Username is duplicated");
                         break;
-                    case { } when await _conditionCheckHelper.RenterUsernameCheck(obj.Username) != null:
+                    case not null when await _conditionCheckHelper.RenterUsernameCheck(obj.Username) != null:
                         ValidatorResult.Failures.Add("Username is duplicated");
                         break;
                 }
 
             switch (obj?.Email)
             {
-                case { } when obj.Email.Length > 100:
+                case not null when obj.Email.Length > 100:
                     ValidatorResult.Failures.Add("Email cannot exceed 100 characters");
                     break;
-                case { } when string.IsNullOrWhiteSpace(obj.Email):
+                case not null when string.IsNullOrWhiteSpace(obj.Email):
                     ValidatorResult.Failures.Add("Email is required");
                     break;
-                case { } when obj.Email.Length < 8:
+                case not null when obj.Email.Length < 8:
                     ValidatorResult.Failures.Add("Email must be at least 8 characters");
                     break;
-                case { } when !Regex.IsMatch(obj.Email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"):
+                case not null when !Regex.IsMatch(obj.Email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"):
                     ValidatorResult.Failures.Add("Email is invalid");
                     break;
-                case { } when await _conditionCheckHelper.EmployeeEmailCheck(obj.Email) != null:
+                case not null when await _conditionCheckHelper.EmployeeEmailCheck(obj.Email) != null:
                     ValidatorResult.Failures.Add("Email is duplicated");
                     break;
-                case { } when await _conditionCheckHelper.RenterEmailCheck(obj.Email) != null:
+                case not null when await _conditionCheckHelper.RenterEmailCheck(obj.Email) != null:
                     ValidatorResult.Failures.Add("Email is duplicated");
                     break;
             }
@@ -80,20 +80,20 @@ public class RenterValidator : BaseValidator, IRenterValidator
 
             switch (obj?.Phone)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.Phone):
+                case not null when string.IsNullOrWhiteSpace(obj.Phone):
                     ValidatorResult.Failures.Add("Phone is required");
                     break;
-                case { } when !validatePhoneNumberRegex.IsMatch(obj.Phone):
+                case not null when !validatePhoneNumberRegex.IsMatch(obj.Phone):
                     ValidatorResult.Failures.Add("Phone number is invalid");
                     break;
             }
 
             switch (obj?.FullName)
             {
-                case { } when obj.FullName.Length > 100:
+                case not null when obj.FullName.Length > 100:
                     ValidatorResult.Failures.Add("FullName cannot exceed 100 characters");
                     break;
-                case { } when string.IsNullOrWhiteSpace(obj.FullName):
+                case not null when string.IsNullOrWhiteSpace(obj.FullName):
                     ValidatorResult.Failures.Add("FullName is required");
                     break;
             }
@@ -109,23 +109,23 @@ public class RenterValidator : BaseValidator, IRenterValidator
 
             switch (obj?.CitizenNumber)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.CitizenNumber):
+                case not null when string.IsNullOrWhiteSpace(obj.CitizenNumber):
                     ValidatorResult.Failures.Add("Citizen number is required");
                     break;
-                case { } when !validateNumber.IsMatch(obj.CitizenNumber):
+                case not null when !validateNumber.IsMatch(obj.CitizenNumber):
                     ValidatorResult.Failures.Add("Phone number is invalid");
                     break;
-                case { } when obj.CitizenNumber.Length > 20:
+                case not null when obj.CitizenNumber.Length > 20:
                     ValidatorResult.Failures.Add("Citizen number cannot exceed 20 characters");
                     break;
             }
 
             switch (obj?.Address)
             {
-                case { } when obj.Address.Length > 100:
+                case not null when obj.Address.Length > 100:
                     ValidatorResult.Failures.Add("Address cannot exceed 100 characters");
                     break;
-                case { } when string.IsNullOrWhiteSpace(obj.Address):
+                case not null when string.IsNullOrWhiteSpace(obj.Address):
                     ValidatorResult.Failures.Add("Address is required");
                     break;
             }

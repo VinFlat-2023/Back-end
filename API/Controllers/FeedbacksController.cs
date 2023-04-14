@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using AutoMapper;
+﻿using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.FeedBack;
 using Domain.EntityRequest.FeedbackType;
@@ -138,8 +137,7 @@ public class FeedbacksController : ControllerBase
             FeedbackTitle = feedback.FeedbackTitle,
             Description = feedback.Description,
             Status = feedback.Status,
-            CreateDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-                "dd/MM/yyyy HH:mm:ss", null),
+            CreateDate = DateTime.UtcNow,
             FlatId = feedback.FlatId,
             RenterId = feedback.RenterId
         };

@@ -22,51 +22,50 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
             if (buildingId != null)
                 switch (obj?.BuildingId)
                 {
-                    case { } when obj.BuildingId != buildingId:
-                        ValidatorResult.Failures.Add("Building id mismatch");
+                    case not null when obj.BuildingId != buildingId:
+                        ValidatorResult.Failures.Add("Toà nhà không hợp lệ");
                         break;
-                    case { } when await _conditionCheckHelper.BuildingCheck(obj.BuildingId) == null:
-                        ValidatorResult.Failures.Add("Building provided does not exist");
+                    case not null when await _conditionCheckHelper.BuildingCheck(obj.BuildingId) == null:
+                        ValidatorResult.Failures.Add("Toà nhà không tồn tại");
                         break;
                     case null:
-                        ValidatorResult.Failures.Add("Building is required");
+                        ValidatorResult.Failures.Add("Toà nhà không được để trống");
                         break;
                 }
 
             switch (obj?.BuildingName)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.BuildingName):
-                    ValidatorResult.Failures.Add("Building name is required");
+                case not null when string.IsNullOrWhiteSpace(obj.BuildingName):
+                    ValidatorResult.Failures.Add("Tên toà nhà không được để trống");
                     break;
-                case { } when obj.BuildingName.Length > 100:
-                    ValidatorResult.Failures.Add("Building mame cannot exceed 100 characters");
+                case not null when obj.BuildingName.Length > 100:
+                    ValidatorResult.Failures.Add("Tên toà nhà không được vượt quá 100 ký tự");
                     break;
             }
 
             switch (obj?.Description)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.Description):
-                    ValidatorResult.Failures.Add("Building description is required");
+                case not null when string.IsNullOrWhiteSpace(obj.Description):
+                    ValidatorResult.Failures.Add("Chi tiết toà nhà không được để trống");
                     break;
-                case { } when obj.Description.Length > 500:
-                    ValidatorResult.Failures.Add("Building description cannot exceed 500 characters");
+                case not null when obj.Description.Length > 500:
+                    ValidatorResult.Failures.Add("Chi tiết toà nhà không được vượt quá 500 ký tự");
                     break;
             }
 
             if (obj?.CoordinateX == null)
-                ValidatorResult.Failures.Add("Building coordinate x is required");
+                ValidatorResult.Failures.Add("Toạ độ x không được để trống");
 
             if (obj?.CoordinateY == null)
-                ValidatorResult.Failures.Add("Building coordinate y is required");
+                ValidatorResult.Failures.Add("Toạ độ y không được để trống");
 
             switch (obj?.BuildingAddress)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.BuildingAddress):
-                    ValidatorResult.Failures.Add("Building address is required");
+                case not null when string.IsNullOrWhiteSpace(obj.BuildingAddress):
+                    ValidatorResult.Failures.Add("Địa chỉ toà nhà không được để trống");
                     break;
-
-                case { } when obj.BuildingAddress.Length > 500:
-                    ValidatorResult.Failures.Add("Building address cannot exceed 500 characters");
+                case not null when obj.BuildingAddress.Length > 500:
+                    ValidatorResult.Failures.Add("Địa chỉ toà nhà không được vượt quá 500 ký tự");
                     break;
             }
 
@@ -75,42 +74,32 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
 
             switch (obj?.BuildingPhoneNumber)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.BuildingPhoneNumber):
-                    ValidatorResult.Failures.Add("Phone is required");
+                case not null when string.IsNullOrWhiteSpace(obj.BuildingPhoneNumber):
+                    ValidatorResult.Failures.Add("Số điện thoại toà nhà không được để trống");
                     break;
-                case { } when !validatePhoneNumberRegex.IsMatch(obj.BuildingPhoneNumber):
-                    ValidatorResult.Failures.Add("Phone number is invalid");
+                case not null when !validatePhoneNumberRegex.IsMatch(obj.BuildingPhoneNumber):
+                    ValidatorResult.Failures.Add("Số điện thoại toà nhà không hợp lệ");
                     break;
             }
 
             switch (obj?.AveragePrice)
             {
-                case { } when obj.AveragePrice < 0:
-                    ValidatorResult.Failures.Add("Average price cannot be negative");
+                case not null when obj.AveragePrice < 0:
+                    ValidatorResult.Failures.Add("Giá tiền trung bình không được nhỏ hơn 0");
                     break;
                 case null:
-                    ValidatorResult.Failures.Add("Average price cannot be empty");
+                    ValidatorResult.Failures.Add("Giá tiền trung bình không được để trống");
                     break;
             }
 
             switch (obj?.AreaId)
             {
                 case null:
-                    ValidatorResult.Failures.Add("Area id is required");
+                    ValidatorResult.Failures.Add("Khu vực không được để trống");
                     break;
                 case not null:
                     if (await _conditionCheckHelper.AreaCheck(obj.AreaId) == null)
-                        ValidatorResult.Failures.Add("Area provided does not exist");
-                    break;
-            }
-
-            switch (obj?.AveragePrice)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Average price is required");
-                    break;
-                case { } when obj.AveragePrice < 0:
-                    ValidatorResult.Failures.Add("Average price cannot be less than 0");
+                        ValidatorResult.Failures.Add("Khu vực không tồn tại");
                     break;
             }
 
@@ -118,20 +107,20 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
                 switch (obj?.EmployeeId)
                 {
                     case null:
-                        ValidatorResult.Failures.Add("Management employee is required");
+                        ValidatorResult.Failures.Add("Quản lý toà nhà không được để trống");
                         break;
                     case not null:
                         if (await _conditionCheckHelper.EmployeeCheck(obj.EmployeeId) == null)
-                            ValidatorResult.Failures.Add("Management employee provided does not exist");
+                            ValidatorResult.Failures.Add("Quản lý toà nhà không tồn tại");
                         break;
                 }
 
             if (obj?.Status == null)
-                ValidatorResult.Failures.Add("Status is required");
+                ValidatorResult.Failures.Add("Trạng thái toà nhà không được để trống");
         }
         catch (Exception e)
         {
-            ValidatorResult.Failures.Add("An error occurred while validating the building");
+            ValidatorResult.Failures.Add("Có lỗi xảy ra khi xác thực thông tin toà nhà");
             Console.WriteLine(e.Message, e.Data);
         }
 
@@ -145,48 +134,48 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
             if (buildingId != null)
                 switch (buildingId)
                 {
-                    case { } when await _conditionCheckHelper.BuildingCheck(buildingId) == null:
-                        ValidatorResult.Failures.Add("Building provided does not exist");
+                    case not null when await _conditionCheckHelper.BuildingCheck(buildingId) == null:
+                        ValidatorResult.Failures.Add("Toà nhà không tồn tại");
                         break;
                     case null:
-                        ValidatorResult.Failures.Add("Building is required");
+                        ValidatorResult.Failures.Add("Toà nhà không được để trống");
                         break;
                 }
 
             switch (obj?.BuildingName)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.BuildingName):
-                    ValidatorResult.Failures.Add("Building name is required");
+                case not null when string.IsNullOrWhiteSpace(obj.BuildingName):
+                    ValidatorResult.Failures.Add("Tên toà nhà không được để trống");
                     break;
-                case { } when obj.BuildingName.Length > 100:
-                    ValidatorResult.Failures.Add("Building mame cannot exceed 100 characters");
+                case not null when obj.BuildingName.Length > 100:
+                    ValidatorResult.Failures.Add("Tên toà nhà không được vượt quá 100 ký tự");
                     break;
             }
 
             switch (obj?.Description)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.Description):
-                    ValidatorResult.Failures.Add("Building description is required");
+                case not null when string.IsNullOrWhiteSpace(obj.Description):
+                    ValidatorResult.Failures.Add("Chi tiết không được để trống");
                     break;
-                case { } when obj.Description.Length > 500:
-                    ValidatorResult.Failures.Add("Building description cannot exceed 500 characters");
+                case not null when obj.Description.Length > 500:
+                    ValidatorResult.Failures.Add("Chi tiết không được vượt quá 500 ký tự");
                     break;
             }
 
             if (obj?.CoordinateX == null)
-                ValidatorResult.Failures.Add("Building coordinate x is required");
+                ValidatorResult.Failures.Add("Toạ độ x không được để trống");
 
             if (obj?.CoordinateY == null)
-                ValidatorResult.Failures.Add("Building coordinate y is required");
+                ValidatorResult.Failures.Add("Toạ độ y không được để trống");
 
             switch (obj?.BuildingAddress)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.BuildingAddress):
-                    ValidatorResult.Failures.Add("Building address is required");
+                case not null when string.IsNullOrWhiteSpace(obj.BuildingAddress):
+                    ValidatorResult.Failures.Add("Địa chỉ không được để trống");
                     break;
 
-                case { } when obj.BuildingAddress.Length > 500:
-                    ValidatorResult.Failures.Add("Building address cannot exceed 500 characters");
+                case not null when obj.BuildingAddress.Length > 500:
+                    ValidatorResult.Failures.Add("Địa chỉ không được vượt quá 500 ký tự");
                     break;
             }
 
@@ -195,55 +184,45 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
 
             switch (obj?.BuildingPhoneNumber)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.BuildingPhoneNumber):
-                    ValidatorResult.Failures.Add("Phone is required");
+                case not null when string.IsNullOrWhiteSpace(obj.BuildingPhoneNumber):
+                    ValidatorResult.Failures.Add("Số điện thoại không được để trống");
                     break;
-                case { } when !validatePhoneNumberRegex.IsMatch(obj.BuildingPhoneNumber):
-                    ValidatorResult.Failures.Add("Phone number is invalid");
+                case not null when !validatePhoneNumberRegex.IsMatch(obj.BuildingPhoneNumber):
+                    ValidatorResult.Failures.Add("Số điện thoại không hợp lệ");
                     break;
             }
 
             switch (obj?.AveragePrice)
             {
-                case { } when obj.AveragePrice < 0:
-                    ValidatorResult.Failures.Add("Average price cannot be negative");
+                case not null when obj.AveragePrice < 0:
+                    ValidatorResult.Failures.Add("Giá tiền không được nhỏ hơn 0");
                     break;
                 case null:
-                    ValidatorResult.Failures.Add("Average price cannot be empty");
+                    ValidatorResult.Failures.Add("Giá tiền không được để trống");
                     break;
             }
 
             switch (obj?.AreaId)
             {
                 case null:
-                    ValidatorResult.Failures.Add("Area id is required");
+                    ValidatorResult.Failures.Add("Khu vực không được để trống");
                     break;
                 case not null:
                     if (await _conditionCheckHelper.AreaCheck(obj.AreaId) == null)
-                        ValidatorResult.Failures.Add("Area provided does not exist");
-                    break;
-            }
-
-            switch (obj?.AveragePrice)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Average price is required");
-                    break;
-                case { } when obj.AveragePrice < 0:
-                    ValidatorResult.Failures.Add("Average price cannot be less than 0");
+                        ValidatorResult.Failures.Add("Khu vực không tồn tại");
                     break;
             }
 
             switch (obj?.Status)
             {
                 case null:
-                    ValidatorResult.Failures.Add("Status is required");
+                    ValidatorResult.Failures.Add("Trạng thái không được để trống");
                     break;
             }
         }
         catch (Exception e)
         {
-            ValidatorResult.Failures.Add("An error occurred while validating the building");
+            ValidatorResult.Failures.Add("Có lỗi xảy ra khi xác thực thông tin toà nhà");
             Console.WriteLine(e.Message, e.Data);
         }
 
@@ -256,38 +235,38 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
         {
             switch (obj?.BuildingName)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.BuildingName):
-                    ValidatorResult.Failures.Add("Building name is required");
+                case not null when string.IsNullOrWhiteSpace(obj.BuildingName):
+                    ValidatorResult.Failures.Add("Tên toà nhà không được để trống");
                     break;
-                case { } when obj.BuildingName.Length > 100:
-                    ValidatorResult.Failures.Add("Building mame cannot exceed 100 characters");
+                case not null when obj.BuildingName.Length > 100:
+                    ValidatorResult.Failures.Add("Tên toà nhà không được vượt quá 100 ký tự");
                     break;
             }
 
             switch (obj?.Description)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.Description):
-                    ValidatorResult.Failures.Add("Building description is required");
+                case not null when string.IsNullOrWhiteSpace(obj.Description):
+                    ValidatorResult.Failures.Add("Chi tiết không được để trống");
                     break;
-                case { } when obj.Description.Length > 500:
-                    ValidatorResult.Failures.Add("Building description cannot exceed 500 characters");
+                case not null when obj.Description.Length > 500:
+                    ValidatorResult.Failures.Add("Chi tiết không được vượt quá 500 ký tự");
                     break;
             }
 
             if (obj?.CoordinateX == null)
-                ValidatorResult.Failures.Add("Building coordinate x is required");
+                ValidatorResult.Failures.Add("Toạ độ x không được để trống");
 
             if (obj?.CoordinateY == null)
-                ValidatorResult.Failures.Add("Building coordinate y is required");
+                ValidatorResult.Failures.Add("Toạ độ y không được để trống");
 
             switch (obj?.BuildingAddress)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.BuildingAddress):
-                    ValidatorResult.Failures.Add("Building address is required");
+                case not null when string.IsNullOrWhiteSpace(obj.BuildingAddress):
+                    ValidatorResult.Failures.Add("Địa chỉ không được để trống");
                     break;
 
-                case { } when obj.BuildingAddress.Length > 500:
-                    ValidatorResult.Failures.Add("Building address cannot exceed 500 characters");
+                case not null when obj.BuildingAddress.Length > 500:
+                    ValidatorResult.Failures.Add("Địa chỉ không được vượt quá 500 ký tự");
                     break;
             }
 
@@ -296,55 +275,45 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
 
             switch (obj?.BuildingPhoneNumber)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.BuildingPhoneNumber):
-                    ValidatorResult.Failures.Add("Phone is required");
+                case not null when string.IsNullOrWhiteSpace(obj.BuildingPhoneNumber):
+                    ValidatorResult.Failures.Add("Số điện thoại không được để trống");
                     break;
-                case { } when !validatePhoneNumberRegex.IsMatch(obj.BuildingPhoneNumber):
-                    ValidatorResult.Failures.Add("Phone number is invalid");
+                case not null when !validatePhoneNumberRegex.IsMatch(obj.BuildingPhoneNumber):
+                    ValidatorResult.Failures.Add("Số điện thoại không hợp lệ");
                     break;
             }
 
             switch (obj?.AveragePrice)
             {
-                case { } when obj.AveragePrice < 0:
-                    ValidatorResult.Failures.Add("Average price cannot be negative");
+                case not null when obj.AveragePrice < 0:
+                    ValidatorResult.Failures.Add("Giá tiền không được nhỏ hơn 0");
                     break;
                 case null:
-                    ValidatorResult.Failures.Add("Average price cannot be empty");
+                    ValidatorResult.Failures.Add("Giá tiền không được để trống");
                     break;
             }
 
             switch (obj?.AreaId)
             {
                 case null:
-                    ValidatorResult.Failures.Add("Area id is required");
+                    ValidatorResult.Failures.Add("Khu vực không được để trống");
                     break;
                 case not null:
                     if (await _conditionCheckHelper.AreaCheck(obj.AreaId) == null)
-                        ValidatorResult.Failures.Add("Area provided does not exist");
-                    break;
-            }
-
-            switch (obj?.AveragePrice)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Average price is required");
-                    break;
-                case { } when obj.AveragePrice < 0:
-                    ValidatorResult.Failures.Add("Average price cannot be less than 0");
+                        ValidatorResult.Failures.Add("Khu vực không tồn tại");
                     break;
             }
 
             switch (obj?.Status)
             {
                 case null:
-                    ValidatorResult.Failures.Add("Status is required");
+                    ValidatorResult.Failures.Add("Trạng thái không được để trống");
                     break;
             }
         }
         catch (Exception e)
         {
-            ValidatorResult.Failures.Add("An error occurred while validating the building");
+            ValidatorResult.Failures.Add("Có lỗi xảy ra khi xác thực thông tin toà nhà");
             Console.WriteLine(e.Message, e.Data);
         }
 

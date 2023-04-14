@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using AutoMapper;
+﻿using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Invoice;
 using Domain.EntityRequest.InvoiceType;
@@ -291,21 +290,25 @@ public class InvoicesController : ControllerBase
     [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> PutInvoice(int id, [FromBody] InvoiceUpdateRequest invoice)
     {
+        var validation = await _validator.ValidateParams(invoice, id);
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
         var updateInvoice = new Invoice
         {
             InvoiceId = id,
             Name = invoice.Name,
             Status = invoice.Status,
-            DueDate = invoice.DueDate.ConvertToDateTime(),
+            DueDate = invoice.DueDate,
             Detail = invoice.Detail,
-            ImageUrl = invoice.ImageUrl,
-            PaymentTime = invoice.PaymentTime.ConvertToDateTime() ?? null
+            PaymentTime = invoice.PaymentTime ?? null
         };
-
-        var validation = await _validator.ValidateParams(updateInvoice, id);
-        if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
-
+        
         var result = await _serviceWrapper.Invoices.UpdateInvoice(updateInvoice);
 
         if (result == null)
@@ -328,16 +331,17 @@ public class InvoicesController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Create Invoice (For management)", Description = "date format d/M/YYYY")]
     [HttpPost]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     public async Task<IActionResult> PostInvoice([FromBody] InvoiceCreateRequest invoice)
     {
-        var employeeId = User.Identity?.Name;
-
-        if (employeeId == null)
+        var employeeId = int.Parse(User.Identity?.Name);
+        
+        var validation = await _validator.ValidateParams(invoice, employeeId);
+        if (!validation.IsValid)
             return BadRequest(new
             {
                 status = "Bad Request",
-                message = "You are not authorized to access this resource due to invalid token",
+                message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
 
@@ -345,14 +349,12 @@ public class InvoicesController : ControllerBase
         {
             Name = invoice.Name,
             Status = true,
-            DueDate = invoice.DueDate.ConvertToDateTime() ?? null,
+            DueDate = invoice.DueDate ?? null,
             Detail = invoice.Detail,
-            ImageUrl = invoice.ImageUrl,
             PaymentTime = null,
-            CreatedTime = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-                "dd/MM/yyyy HH:mm:ss", null),
+            CreatedTime = DateTime.UtcNow,
             InvoiceTypeId = invoice.InvoiceTypeId,
-            EmployeeId = int.Parse(employeeId)
+            EmployeeId = employeeId
         };
 
         switch (addNewInvoice.InvoiceTypeId)
@@ -371,15 +373,7 @@ public class InvoicesController : ControllerBase
                 break;
         }
 
-        var validation = await _validator.ValidateParams(addNewInvoice, null);
-        if (!validation.IsValid)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = validation.Failures.FirstOrDefault(),
-                data = ""
-            });
-
+     
         var result = await _serviceWrapper.Invoices.AddInvoice(addNewInvoice);
         if (result == null)
             return BadRequest(new

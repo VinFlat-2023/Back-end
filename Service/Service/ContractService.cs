@@ -53,10 +53,11 @@ public class ContractService : IContractService
         return pagedList;
     }
 
-    public async Task<PagedList<Contract>?> GetContractList(ContractFilter filters, int userId, bool isManagement,
+    public async Task<PagedList<Contract>?> GetContractList(ContractFilter filters, int userId, int? buildingId,
+        bool isManagement,
         CancellationToken token)
     {
-        var queryable = _repositoryWrapper.Contracts.GetContractList(filters, userId, isManagement);
+        var queryable = _repositoryWrapper.Contracts.GetContractList(filters, userId, buildingId, isManagement);
 
         if (!queryable.Any())
             return null;

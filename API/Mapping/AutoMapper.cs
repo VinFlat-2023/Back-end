@@ -280,13 +280,13 @@ public class AutoMapper : Profile
     {
         CreateMap<InvoiceCreateRequest, Invoice>()
             .ForMember(e => e.DueDate,
-                option => option.MapFrom(r => r.DueDate.ConvertToDateTime()));
+                option => option.MapFrom(r => r.DueDate));
         CreateMap<Invoice, InvoiceCreateRequest>();
         CreateMap<InvoiceUpdateRequest, Invoice>()
             .ForMember(e => e.DueDate,
-                option => option.MapFrom(r => r.DueDate.ConvertToDateTime()))
+                option => option.MapFrom(r => r.DueDate))
             .ForMember(e => e.PaymentTime,
-                option => option.MapFrom(r => r.PaymentTime.ConvertToDateTime()));
+                option => option.MapFrom(r => r.PaymentTime));
         CreateMap<Invoice, InvoiceUpdateRequest>()
             .ReverseMap();
         CreateMap<InvoiceFilterRequest, InvoiceFilter>()

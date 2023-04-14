@@ -21,44 +21,44 @@ public class AreaValidator : BaseValidator, IAreaValidator
             if (areaId != null)
                 switch (obj?.AreaId)
                 {
-                    case { } when obj.AreaId != areaId:
-                        ValidatorResult.Failures.Add("Area id mismatch");
+                    case not null when obj.AreaId != areaId:
+                        ValidatorResult.Failures.Add("Khu vực không hợp lệ");
                         break;
                     case null:
-                        ValidatorResult.Failures.Add("Area is required");
+                        ValidatorResult.Failures.Add("Khu vực không được để trống");
                         break;
                     case not null:
                         if (await _conditionCheckHelper.AreaCheck(obj.AreaId) == null)
-                            ValidatorResult.Failures.Add("Area provided does not exist");
+                            ValidatorResult.Failures.Add("Khu vực không tồn tại");
                         break;
                 }
 
             switch (obj?.Name)
             {
-                case { } when obj.Name.Length > 100:
-                    ValidatorResult.Failures.Add("Area name cannot exceed 100 characters");
+                case not null when obj.Name.Length > 100:
+                    ValidatorResult.Failures.Add("Tên khu vực không được vượt quá 100 ký tự");
                     break;
-                case { } when string.IsNullOrWhiteSpace(obj.Name):
-                    ValidatorResult.Failures.Add("Area name is required");
+                case not null when string.IsNullOrWhiteSpace(obj.Name):
+                    ValidatorResult.Failures.Add("Tên khu vực không được để trống");
                     break;
             }
 
             switch (obj?.Location)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.Location):
-                    ValidatorResult.Failures.Add("Location is required");
+                case not null when string.IsNullOrWhiteSpace(obj.Location):
+                    ValidatorResult.Failures.Add("Địa chỉ không được để trống");
                     break;
-                case { } when obj.Location.Length > 100:
-                    ValidatorResult.Failures.Add("Location cannot exceed 100 characters");
+                case not null when obj.Location.Length > 100:
+                    ValidatorResult.Failures.Add("Địa chỉ không được vượt quá 100 ký tự");
                     break;
             }
 
             if (obj?.Status == null)
-                ValidatorResult.Failures.Add("Status is required");
+                ValidatorResult.Failures.Add("Trạng thái khu vực không được để trống");
         }
         catch (Exception e)
         {
-            ValidatorResult.Failures.Add("An error occurred while validating the area");
+            ValidatorResult.Failures.Add("Có lỗi xảy ra khi xác thực thông tin khu vực");
             Console.WriteLine(e.Message, e.Data);
         }
 
@@ -74,43 +74,43 @@ public class AreaValidator : BaseValidator, IAreaValidator
                 {
                     case not null:
                         if (await _conditionCheckHelper.AreaCheck(areaId) == null)
-                            ValidatorResult.Failures.Add("Area provided does not exist");
+                            ValidatorResult.Failures.Add("Khu vực không tồn tại");
                         break;
                     case null:
-                        ValidatorResult.Failures.Add("Area is required");
+                        ValidatorResult.Failures.Add("Khu vực không được để trống");
                         break;
                 }
 
             switch (obj?.Name)
             {
                 case { Length: > 100 }:
-                    ValidatorResult.Failures.Add("Area name cannot exceed 100 characters");
+                    ValidatorResult.Failures.Add("Tên khu vực không được vượt quá 100 ký tự");
                     break;
-                case { } when string.IsNullOrWhiteSpace(obj.Name):
-                    ValidatorResult.Failures.Add("Area name is required");
+                case not null when string.IsNullOrWhiteSpace(obj.Name):
+                    ValidatorResult.Failures.Add("Tên khu vực không được để trống");
                     break;
             }
 
             switch (obj?.Location)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.Location):
-                    ValidatorResult.Failures.Add("Location is required");
+                case not null when string.IsNullOrWhiteSpace(obj.Location):
+                    ValidatorResult.Failures.Add("Địa chỉ không được để trống");
                     break;
                 case { Length: > 100 }:
-                    ValidatorResult.Failures.Add("Location cannot exceed 100 characters");
+                    ValidatorResult.Failures.Add("Địa chỉ không được vượt quá 100 ký tự");
                     break;
             }
 
             switch (obj?.Status)
             {
                 case null:
-                    ValidatorResult.Failures.Add("Status is required");
+                    ValidatorResult.Failures.Add("Trạng thái khu vực không được để trống");
                     break;
             }
         }
         catch (Exception e)
         {
-            ValidatorResult.Failures.Add("An error occurred while validating the area");
+            ValidatorResult.Failures.Add("Có lỗi xảy ra khi xác thực khu vực");
             Console.WriteLine(e.Message, e.Data);
         }
 
@@ -124,33 +124,33 @@ public class AreaValidator : BaseValidator, IAreaValidator
             switch (obj?.Name)
             {
                 case { Length: > 100 }:
-                    ValidatorResult.Failures.Add("Area name cannot exceed 100 characters");
+                    ValidatorResult.Failures.Add("Tên khu vực không được vượt quá 100 ký tự");
                     break;
-                case { } when string.IsNullOrWhiteSpace(obj.Name):
-                    ValidatorResult.Failures.Add("Area name is required");
+                case not null when string.IsNullOrWhiteSpace(obj.Name):
+                    ValidatorResult.Failures.Add("Tên khu vực không được để trống");
                     break;
             }
 
             switch (obj?.Location)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.Location):
-                    ValidatorResult.Failures.Add("Location is required");
+                case not null when string.IsNullOrWhiteSpace(obj.Location):
+                    ValidatorResult.Failures.Add("Địa chỉ không được để trống");
                     break;
                 case { Length: > 100 }:
-                    ValidatorResult.Failures.Add("Location cannot exceed 100 characters");
+                    ValidatorResult.Failures.Add("Địa chỉ không được vượt quá 100 ký tự");
                     break;
             }
 
             switch (obj?.Status)
             {
                 case null:
-                    ValidatorResult.Failures.Add("Status is required");
+                    ValidatorResult.Failures.Add("Trạng thái khu vực không được để trống");
                     break;
             }
         }
         catch (Exception e)
         {
-            ValidatorResult.Failures.Add("An error occurred while validating the area");
+            ValidatorResult.Failures.Add("Có lỗi xảy ra khi xác thực khu vực");
             Console.WriteLine(e.Message, e.Data);
         }
 

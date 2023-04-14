@@ -51,13 +51,14 @@ public class ContractRepository : IContractRepository
             .AsNoTracking();
     }
 
-    public IQueryable<Contract> GetContractList(ContractFilter filters, int userId, bool isManagement)
+    public IQueryable<Contract> GetContractList(ContractFilter filters, int userId, int? buildingId, bool isManagement)
     {
         return isManagement switch
         {
+            // true = supervisor
             true => _context.Contracts
                 .Include(x => x.Renter)
-                .Where(x => x.RenterId == userId)
+                .Where(x => x.RenterId == userId && x.BuildingId == buildingId)
                 .Where(x =>
                     (filters.ContractName == null ||
                      x.ContractName.ToLower().Contains(filters.ContractName.ToLower()))
@@ -82,6 +83,7 @@ public class ContractRepository : IContractRepository
                         x.Renter.FullName.ToLower().Contains(filters.RenterFullname.ToLower())))
                 .AsNoTracking(),
 
+            // false = renter
             false => _context.Contracts
                 .Include(x => x.Renter)
                 .Include(x => x.Flat)

@@ -20,7 +20,7 @@ public class TicketValidator : BaseValidator, ITicketValidator
             if (ticketId != null)
                 switch (obj?.TicketId)
                 {
-                    case { } when obj.TicketId != ticketId:
+                    case not null when obj.TicketId != ticketId:
                         ValidatorResult.Failures.Add("Ticket id mismatch");
                         break;
                     case null:
@@ -34,10 +34,10 @@ public class TicketValidator : BaseValidator, ITicketValidator
 
             switch (obj?.Description)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.Description):
+                case not null when string.IsNullOrWhiteSpace(obj.Description):
                     ValidatorResult.Failures.Add("Ticket description is required");
                     break;
-                case { } when obj.Description.Length > 500:
+                case not null when obj.Description.Length > 500:
                     ValidatorResult.Failures.Add("Ticket description cannot exceed 500 characters");
                     break;
             }
@@ -47,7 +47,7 @@ public class TicketValidator : BaseValidator, ITicketValidator
 
             switch (obj?.Amount)
             {
-                case { } when obj.Amount < 0:
+                case not null when obj.Amount < 0:
                     ValidatorResult.Failures.Add("Invoice detail amount cannot be negative");
                     break;
                 case null:
@@ -58,7 +58,7 @@ public class TicketValidator : BaseValidator, ITicketValidator
             if (ticketId == null)
                 switch (obj?.ContractId)
                 {
-                    case { } when obj.ContractId < 0:
+                    case not null when obj.ContractId < 0:
                         ValidatorResult.Failures.Add("Contract id cannot be negative");
                         break;
                     case null:
@@ -109,7 +109,7 @@ public class TicketValidator : BaseValidator, ITicketValidator
             if (ticketTypeId != null)
                 switch (obj?.TicketTypeId)
                 {
-                    case { } when obj.TicketTypeId != ticketTypeId:
+                    case not null when obj.TicketTypeId != ticketTypeId:
                         ValidatorResult.Failures.Add("Ticket id mismatch");
                         break;
                     case null:
@@ -123,20 +123,20 @@ public class TicketValidator : BaseValidator, ITicketValidator
 
             switch (obj?.Description)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.Description):
+                case not null when string.IsNullOrWhiteSpace(obj.Description):
                     ValidatorResult.Failures.Add("Ticket type description is required");
                     break;
-                case { } when obj.Description.Length > 500:
+                case not null when obj.Description.Length > 500:
                     ValidatorResult.Failures.Add("Ticket type description cannot exceed 500 characters");
                     break;
             }
 
             switch (obj?.TicketTypeName)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.TicketTypeName):
+                case not null when string.IsNullOrWhiteSpace(obj.TicketTypeName):
                     ValidatorResult.Failures.Add("Ticket type name is required");
                     break;
-                case { } when obj.TicketTypeName.Length > 100:
+                case not null when obj.TicketTypeName.Length > 100:
                     ValidatorResult.Failures.Add("Ticket type name cannot exceed 100 characters");
                     break;
             }

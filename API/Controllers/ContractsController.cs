@@ -75,8 +75,28 @@ public class ContractsController : ControllerBase
             case "Supervisor":
                 var supervisorId = Parse(User.Identity?.Name);
 
+                var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(supervisorId, token);
+
+                switch (buildingId)
+                {
+                    case -1:
+                        return NotFound(new
+                        {
+                            status = "Not Found",
+                            message = "No building found for this supervisor",
+                            data = ""
+                        });
+                    case -2:
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = "More than one building found for this supervisor",
+                            data = ""
+                        });
+                }
+
                 var supervisorContractList =
-                    await _serviceWrapper.Contracts.GetContractList(filter, supervisorId, true, token);
+                    await _serviceWrapper.Contracts.GetContractList(filter, supervisorId, buildingId, true, token);
 
                 var supervisorContractListReturn =
                     _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(supervisorContractList);
@@ -102,7 +122,7 @@ public class ContractsController : ControllerBase
                 var renterId = Parse(User.Identity?.Name);
 
                 var renterContractList =
-                    await _serviceWrapper.Contracts.GetContractList(filter, renterId, false, token);
+                    await _serviceWrapper.Contracts.GetContractList(filter, renterId, null, false, token);
 
                 var renterContractListReturn = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(renterContractList);
 
@@ -305,7 +325,7 @@ public class ContractsController : ControllerBase
 
         switch (entity)
         {
-            case { } when userRole is "Renter" && entity.RenterId != Parse(User.Identity.Name):
+            case not null when userRole is "Renter" && entity.RenterId != Parse(User.Identity.Name):
                 return BadRequest(new
                 {
                     status = "Bad Request",
@@ -313,7 +333,7 @@ public class ContractsController : ControllerBase
                     data = ""
                 });
 
-            case { } when userRole is "Renter" && renterId != Parse(User.Identity.Name):
+            case not null when userRole is "Renter" && renterId != Parse(User.Identity.Name):
                 return BadRequest(new
                 {
                     status = "Bad Request",
@@ -321,7 +341,7 @@ public class ContractsController : ControllerBase
                     data = ""
                 });
 
-            case { } when userRole != "Renter":
+            case not null when userRole != "Renter":
                 return BadRequest(new
                 {
                     status = "Bad Request",
@@ -337,7 +357,6 @@ public class ContractsController : ControllerBase
                     data = ""
                 });
             default:
-                var building = await _serviceWrapper.Buildings.GetBuildingById(entity.BuildingId);
                 var renter = await _serviceWrapper.Renters.GetRenterById(entity.RenterId);
                 if (renter == null)
                     return NotFound(new
@@ -346,7 +365,8 @@ public class ContractsController : ControllerBase
                         message = "Renter not found",
                         data = ""
                     });
-
+                
+                var building = await _serviceWrapper.Buildings.GetBuildingById(entity.BuildingId);
                 if (building == null)
                     return NotFound(new
                     {
@@ -356,6 +376,24 @@ public class ContractsController : ControllerBase
                     });
 
                 var employeeId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(entity.BuildingId, token);
+
+                switch (employeeId)
+                {
+                    case 0 : 
+                        return NotFound(new
+                        {
+                            status = "Not Found",
+                            message = "Employee not found for this building",
+                            data = ""
+                        });
+                    case -1 :
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = "Something went wrong",
+                            data = ""
+                        });
+                }
 
                 var buildingDetail = new BuildingContractDetailEntity
                 {
@@ -518,8 +556,7 @@ public class ContractsController : ControllerBase
             DateSigned = contract.DateSigned,
             StartDate = contract.StartDate,
             EndDate = contract.EndDate,
-            LastUpdated = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-                "dd/MM/yyyy HH:mm:ss", null),
+            LastUpdated = DateTime.UtcNow,
             ContractStatus = contract.ContractStatus,
             PriceForRent = decimal.Parse(contract.PriceForRent, CultureInfo.InvariantCulture),
             PriceForElectricity = decimal.Parse(contract.PriceForElectricity, CultureInfo.InvariantCulture),
@@ -594,7 +631,15 @@ public class ContractsController : ControllerBase
 
         var employeeId = Parse(User.Identity?.Name);
 
-        var buildingId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(employeeId, token);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
+
+        if (buildingId <= 0)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Supervisor has more than one building",
+                data = ""
+            });
 
         var newContract = new Contract
         {

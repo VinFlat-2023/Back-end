@@ -20,7 +20,7 @@ public class ServiceValidator : BaseValidator, IServiceValidator
             if (serviceId != null)
                 switch (obj?.ServiceId)
                 {
-                    case { } when obj.ServiceId != serviceId:
+                    case not null when obj.ServiceId != serviceId:
                         ValidatorResult.Failures.Add("Service id mismatch");
                         break;
                     case null:
@@ -34,20 +34,20 @@ public class ServiceValidator : BaseValidator, IServiceValidator
 
             switch (obj?.Name)
             {
-                case { } when obj.Name.Length > 100:
+                case not null when obj.Name.Length > 100:
                     ValidatorResult.Failures.Add("Service cannot exceed 100 characters");
                     break;
-                case { } when string.IsNullOrWhiteSpace(obj.Name):
+                case not null when string.IsNullOrWhiteSpace(obj.Name):
                     ValidatorResult.Failures.Add("Service name is required");
                     break;
             }
 
             switch (obj?.Description)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.Description):
+                case not null when string.IsNullOrWhiteSpace(obj.Description):
                     ValidatorResult.Failures.Add("Service description is required");
                     break;
-                case { } when obj.Description.Length > 500:
+                case not null when obj.Description.Length > 500:
                     ValidatorResult.Failures.Add("Service description cannot exceed 500 characters");
                     break;
             }
@@ -95,7 +95,7 @@ public class ServiceValidator : BaseValidator, IServiceValidator
             if (serviceTypeId != null)
                 switch (obj?.ServiceTypeId)
                 {
-                    case { } when obj.ServiceTypeId != serviceTypeId:
+                    case not null when obj.ServiceTypeId != serviceTypeId:
                         ValidatorResult.Failures.Add("Service type id mismatch");
                         break;
                     case null:
@@ -109,10 +109,10 @@ public class ServiceValidator : BaseValidator, IServiceValidator
 
             switch (obj?.Name)
             {
-                case { } when obj.Name.Length > 100:
+                case not null when obj.Name.Length > 100:
                     ValidatorResult.Failures.Add("Service type cannot exceed 100 characters");
                     break;
-                case { } when string.IsNullOrWhiteSpace(obj.Name):
+                case not null when string.IsNullOrWhiteSpace(obj.Name):
                     ValidatorResult.Failures.Add("Service type name is required");
                     break;
             }

@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using API.Extension;
 using AutoMapper;
 using Domain.EntitiesForManagement;
@@ -296,13 +295,23 @@ public class TicketsController : ControllerBase
 
         var supervisorId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(buildingId, token);
 
-        if (supervisorId == 0)
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Management employee not found",
-                data = ""
-            });
+        switch (buildingId)
+        {
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "No building found for this supervisor",
+                    data = ""
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "More than one building found for this supervisor",
+                    data = ""
+                });
+        }
 
         var contractId = await _serviceWrapper.GetId.GetContractIdBasedOnRenterId(userId, token);
 
@@ -317,8 +326,7 @@ public class TicketsController : ControllerBase
         var newTicket = new Ticket
         {
             Description = ticketCreateRequest.Description,
-            CreateDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-                "dd/MM/yyyy HH:mm:ss", null),
+            CreateDate = DateTime.UtcNow,
             TicketTypeId = ticketCreateRequest.TicketTypeId,
             // TODO : Auto assign to active invoice -> invoice detail if not assigned manually
             Status = "Active",

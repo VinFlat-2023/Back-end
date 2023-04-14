@@ -20,7 +20,7 @@ public class FlatValidator : BaseValidator, IFlatValidator
             if (flatId != null)
                 switch (obj?.FlatId)
                 {
-                    case { } when obj?.FlatId != flatId:
+                    case not null when obj?.FlatId != flatId:
                         ValidatorResult.Failures.Add("Flat id mismatch");
                         break;
                     case null:
@@ -34,20 +34,20 @@ public class FlatValidator : BaseValidator, IFlatValidator
 
             switch (obj?.Name)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.Name):
+                case not null when string.IsNullOrWhiteSpace(obj.Name):
                     ValidatorResult.Failures.Add("Flat name is required");
                     break;
-                case { } when obj.Name.Length > 100:
+                case not null when obj.Name.Length > 100:
                     ValidatorResult.Failures.Add("Flat name cannot exceed 100 characters");
                     break;
             }
 
             switch (obj?.Description)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.Description):
+                case not null when string.IsNullOrWhiteSpace(obj.Description):
                     ValidatorResult.Failures.Add("Flat description is required");
                     break;
-                case { } when obj.Description.Length > 100:
+                case not null when obj.Description.Length > 100:
                     ValidatorResult.Failures.Add("Flat description cannot exceed 100 characters");
                     break;
             }
@@ -107,7 +107,7 @@ public class FlatValidator : BaseValidator, IFlatValidator
             if (flatTypeId != null)
                 switch (obj?.FlatTypeId)
                 {
-                    case { } when obj?.FlatTypeId != flatTypeId:
+                    case not null when obj?.FlatTypeId != flatTypeId:
                         ValidatorResult.Failures.Add("Flat type id mismatch");
                         break;
                     case null:
@@ -125,10 +125,10 @@ public class FlatValidator : BaseValidator, IFlatValidator
                 case null:
                     ValidatorResult.Failures.Add("Flat type capacity is required");
                     break;
-                case { } when obj.RoomCapacity < 1:
+                case not null when obj.RoomCapacity < 1:
                     ValidatorResult.Failures.Add("Flat type capacity must be greater than 0");
                     break;
-                case { } when obj.RoomCapacity > 20:
+                case not null when obj.RoomCapacity > 20:
                     ValidatorResult.Failures.Add("Flat type capacity must be less than 20");
                     break;
             }

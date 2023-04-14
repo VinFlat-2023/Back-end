@@ -20,7 +20,7 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
             if (feedbackId != null)
                 switch (obj?.FeedbackId)
                 {
-                    case { } when obj.FeedbackId != feedbackId:
+                    case not null when obj.FeedbackId != feedbackId:
                         ValidatorResult.Failures.Add("Feedback id mismatch");
                         break;
                     case null:
@@ -73,7 +73,7 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
                 case null:
                     ValidatorResult.Failures.Add("Feedback description is required");
                     break;
-                case { } when obj.Description.Length > 500:
+                case not null when obj.Description.Length > 500:
                     ValidatorResult.Failures.Add("Feedback description cannot exceed 500 characters");
                     break;
             }
@@ -83,7 +83,7 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
                 case null:
                     ValidatorResult.Failures.Add("Feedback title is required");
                     break;
-                case { } when obj.FeedbackTitle.Length > 100:
+                case not null when obj.FeedbackTitle.Length > 100:
                     ValidatorResult.Failures.Add("Feedback title cannot exceed 100 characters");
                     break;
             }
@@ -110,7 +110,7 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
             if (feedbackTypeId != null)
                 switch (obj?.FeedbackTypeId)
                 {
-                    case { } when obj.FeedbackTypeId != feedbackTypeId:
+                    case not null when obj.FeedbackTypeId != feedbackTypeId:
                         ValidatorResult.Failures.Add("Feedback type id mismatch");
                         break;
                     case null:
@@ -124,10 +124,10 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
 
             switch (obj?.Name)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.Name):
+                case not null when string.IsNullOrWhiteSpace(obj.Name):
                     ValidatorResult.Failures.Add("Feedback type name is required");
                     break;
-                case { } when obj.Name.Length > 100:
+                case not null when obj.Name.Length > 100:
                     ValidatorResult.Failures.Add("Feedback type name cannot exceed 100 characters");
                     break;
             }

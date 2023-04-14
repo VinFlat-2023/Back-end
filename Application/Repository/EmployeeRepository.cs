@@ -87,25 +87,13 @@ public class EmployeeRepository : IEmployeeRepository
                 IsSuccess = false,
                 Message = "Employee not found"
             };
+        
+        employeeData.Email = employee.Email;
+        employeeData.Phone = employee.Phone;
+        employeeData.Address = employee.Address;
+        employeeData.FullName = employee.FullName;
 
-        try
-        {
-            employeeData.Email = employee.Email;
-            employeeData.Phone = employee.Phone;
-            employeeData.Username = employee.Username;
-            employeeData.FullName = employee.FullName;
-
-            await _context.SaveChangesAsync();
-        }
-        catch
-        {
-            return new RepositoryResponse
-            {
-                IsSuccess = false,
-                Message = "Updating employee failed"
-            };
-        }
-
+        await _context.SaveChangesAsync();
 
         return new RepositoryResponse
         {

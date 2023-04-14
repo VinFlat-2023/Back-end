@@ -18,11 +18,20 @@ public class PasswordValidator : BaseValidator, IPasswordValidator
         {
             switch (password)
             {
-                case { Length: > 100 }:
-                    ValidatorResult.Failures.Add("Password cannot exceed 100 characters");
+                case { Length: > 30 }:
+                    ValidatorResult.Failures.Add("Password cannot exceed 30 characters");
                     break;
-                case { } when string.IsNullOrWhiteSpace(password):
+                case null or not null when string.IsNullOrWhiteSpace(password):
                     ValidatorResult.Failures.Add("Password is required");
+                    break;
+                case { Length: < 5 }:
+                    ValidatorResult.Failures.Add("Password must be at least 6 characters");
+                    break;
+                case not null when !password.Any(char.IsUpper):
+                    ValidatorResult.Failures.Add("Password must contain at least one uppercase letter");
+                    break;
+                case { } when password.Contains(' '):
+                    ValidatorResult.Failures.Add("Password cannot contain spaces");
                     break;
             }
 

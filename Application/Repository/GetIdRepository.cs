@@ -77,13 +77,21 @@ public class GetIdRepository : IGetIdRepository
             .Select(x => x.EmployeeId)
             .ToListAsync(token);
 
-        return await _context.Buildings
+        if (employeeList.Count == 0)
+            return 0;
+        
+        var employee = _context.Buildings
             .Include(x => x.Employee)
             .ThenInclude(x => x.Role)
             //.Where(x => x.BuildingId == entityBuildingId)
-            .Where(x => x.BuildingId == entityBuildingId
-                        && employeeList.Contains(x.EmployeeId))
-            .Select(x => x.EmployeeId)
-            .FirstOrDefaultAsync(token);
+            .Where(x => x.BuildingId == entityBuildingId 
+                        && employeeList.Contains(x.EmployeeId)
+                        && x.Status == true)
+            .Select(x => x.EmployeeId);
+
+        if (employee.Count() > 1 || !employee.Any())
+            return -1;
+        
+        return await employee.FirstOrDefaultAsync(token);
     }
 }

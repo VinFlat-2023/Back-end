@@ -20,7 +20,7 @@ public class RoleValidator : BaseValidator, IRoleValidator
             if (roleId != null)
                 switch (obj?.RoleId)
                 {
-                    case { } when obj.RoleId != roleId:
+                    case not null when obj.RoleId != roleId:
                         ValidatorResult.Failures.Add("Role id mismatch");
                         break;
                     case null:
@@ -34,10 +34,10 @@ public class RoleValidator : BaseValidator, IRoleValidator
 
             switch (obj?.RoleName)
             {
-                case { } when string.IsNullOrWhiteSpace(obj.RoleName):
+                case not null when string.IsNullOrWhiteSpace(obj.RoleName):
                     ValidatorResult.Failures.Add("Role name is required");
                     break;
-                case { } when obj.RoleName.Length > 100:
+                case not null when obj.RoleName.Length > 100:
                     ValidatorResult.Failures.Add("Role name cannot exceed 100 characters");
                     break;
             }

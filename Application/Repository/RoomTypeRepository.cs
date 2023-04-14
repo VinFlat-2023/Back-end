@@ -53,21 +53,21 @@ public class RoomTypeRepository : IRoomTypeRepository
                     IsSuccess = false,
                     Message = "Room type not found"
                 };
-            case { } when roomTypeData.RoomTypeName == roomType.RoomTypeName:
+            case not null when roomTypeData.RoomTypeName == roomType.RoomTypeName:
                 return new RepositoryResponse
                 {
                     IsSuccess = false,
                     Message = "Room type name already exists"
                 };
 
-            case { } when roomTypeData.BuildingId == 0 || roomTypeData.BuildingId != buildingId:
+            case not null when roomTypeData.BuildingId == 0 || roomTypeData.BuildingId != buildingId:
                 return new RepositoryResponse
                 {
                     IsSuccess = false,
                     Message = "Building id not found"
                 };
 
-            case { } when roomTypeData.NumberOfSlots == roomType.NumberOfSlots:
+            case not null when roomTypeData.NumberOfSlots == roomType.NumberOfSlots:
                 return new RepositoryResponse
                 {
                     IsSuccess = false,

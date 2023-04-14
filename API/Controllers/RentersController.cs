@@ -140,7 +140,6 @@ public class RentersController : ControllerBase
             });
 
         var contract = await _serviceWrapper.Contracts.GetContractByIdWithActiveStatus(rentalCheck.RenterId);
-
         if (contract == null)
             return NotFound(new
             {
@@ -150,7 +149,6 @@ public class RentersController : ControllerBase
             });
 
         var building = await _serviceWrapper.Buildings.GetBuildingById(contract.BuildingId);
-
         if (building == null)
             return NotFound(new
             {
@@ -306,13 +304,21 @@ public class RentersController : ControllerBase
     {
         var renterId = int.Parse(User.Identity?.Name);
 
-        var renterCheck = await _serviceWrapper.Renters.GetRenterById(renterId);
+        var renterEntity = await _serviceWrapper.Renters.GetRenterById(renterId);
 
-        if (renterCheck == null)
+        if (renterEntity == null)
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Renters not found",
+                message = "Khách thuê không tồn tại trong hệ thống",
+                data = ""
+            });
+
+        if (renter.OldPassword != renterEntity.Password)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Mật khẩu cũ không đúng, vui lòng kiểm tra lại",
                 data = ""
             });
 
@@ -342,7 +348,7 @@ public class RentersController : ControllerBase
 
         var result = await _serviceWrapper.Renters.UpdatePasswordRenter(finalizePasswordUpdate);
 
-        var jwtToken = _serviceWrapper.Tokens.CreateTokenForRenter(renterCheck);
+        var jwtToken = _serviceWrapper.Tokens.CreateTokenForRenter(renterEntity);
 
         return result.IsSuccess switch
         {
