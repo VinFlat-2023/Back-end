@@ -1,4 +1,5 @@
 using Domain.EntitiesForManagement;
+using Domain.EntityRequest.FeedBack;
 using Service.IHelper;
 using Service.IValidator;
 
@@ -97,6 +98,159 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
         catch (Exception e)
         {
             ValidatorResult.Failures.Add("An error occurred while validating the feedback");
+            Console.WriteLine(e.Message, e.Data);
+        }
+
+        return ValidatorResult;
+    }
+
+    public async Task<ValidatorResult> ValidateParams(FeedbackUpdateRequest? obj, int? feedbackId)
+    {
+        try
+        {
+            if (feedbackId != null)
+                switch (feedbackId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Phản hồi là bắt buộc");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.FeedbackCheck(feedbackId) == null)
+                            ValidatorResult.Failures.Add("Phản hồi không tồn tại");
+                        break;
+                }
+
+            switch (obj?.RenterId)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Người thuê là bắt buộc");
+                    break;
+                case not null:
+                    if (await _conditionCheckHelper.RenterCheck(obj.RenterId) == null)
+                        ValidatorResult.Failures.Add("Người thuê không tồn tại");
+                    break;
+            }
+
+            switch (obj?.FlatId)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Căn hộ là bắt buộc");
+                    break;
+                case not null:
+                    if (await _conditionCheckHelper.FlatCheck(obj.FlatId) == null)
+                        ValidatorResult.Failures.Add("Căn hộ không tồn tại");
+                    break;
+            }
+
+            switch (obj?.FeedbackTypeId)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Loại phản hồi là bắt buộc");
+                    break;
+                case not null:
+                    if (await _conditionCheckHelper.FeedbackTypeCheck(obj.FeedbackTypeId) == null)
+                        ValidatorResult.Failures.Add("Loại phản hồi không tồn tại");
+                    break;
+            }
+
+            switch (obj?.Description)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Chi tiết là bắt buộc");
+                    break;
+                case not null when obj.Description.Length > 500:
+                    ValidatorResult.Failures.Add("Chi tiết không được vượt quá 500 ký tự");
+                    break;
+            }
+
+            switch (obj?.FeedbackTitle)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Tựa đề phản hồi là bắt buộc");
+                    break;
+                case not null when obj.FeedbackTitle.Length > 100:
+                    ValidatorResult.Failures.Add("Tựa đề không được vượt quá 100 ký tự");
+                    break;
+            }
+
+            if (obj?.CreateDate == null)
+                ValidatorResult.Failures.Add("Ngày tạo là bắt buộc");
+
+            if (obj?.Status == null)
+                ValidatorResult.Failures.Add("Trạng thái là bắt buộc");
+        }
+        catch (Exception e)
+        {
+            ValidatorResult.Failures.Add("Có lỗi xảy ra khi xác thực phản hồi");
+            Console.WriteLine(e.Message, e.Data);
+        }
+
+        return ValidatorResult;
+    }
+
+    public async Task<ValidatorResult> ValidateParams(FeedbackCreateRequest? obj)
+    {
+        try
+        {
+            switch (obj?.RenterId)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Người thuê là bắt buộc");
+                    break;
+                case not null:
+                    if (await _conditionCheckHelper.RenterCheck(obj.RenterId) == null)
+                        ValidatorResult.Failures.Add("Người thuê không tồn tại");
+                    break;
+            }
+
+            switch (obj?.FlatId)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Căn hộ là bắt buộc");
+                    break;
+                case not null:
+                    if (await _conditionCheckHelper.FlatCheck(obj.FlatId) == null)
+                        ValidatorResult.Failures.Add("Căn hộ không tồn tại");
+                    break;
+            }
+
+            switch (obj?.FeedbackTypeId)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Loại phản hồi là bắt buộc");
+                    break;
+                case not null:
+                    if (await _conditionCheckHelper.FeedbackTypeCheck(obj.FeedbackTypeId) == null)
+                        ValidatorResult.Failures.Add("Loại phản hồi không tồn tại");
+                    break;
+            }
+
+            switch (obj?.Description)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Chi tiết là bắt buộc");
+                    break;
+                case not null when obj.Description.Length > 500:
+                    ValidatorResult.Failures.Add("Chi tiết không được vượt quá 500 ký tự");
+                    break;
+            }
+
+            switch (obj?.FeedbackTitle)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Tựa đề là bắt buộc");
+                    break;
+                case not null when obj.FeedbackTitle.Length > 100:
+                    ValidatorResult.Failures.Add("Tựa đề không được vượt quá 100 ký tự");
+                    break;
+            }
+
+            if (obj?.Status == null)
+                ValidatorResult.Failures.Add("Trạng thái là bắt buộc");
+        }
+        catch (Exception e)
+        {
+            ValidatorResult.Failures.Add("Có lỗi xảy ra khi xác thực phản hồi");
             Console.WriteLine(e.Message, e.Data);
         }
 

@@ -24,7 +24,24 @@ public class EmployeeRepository : IEmployeeRepository
     {
         return _context.Employees
             .Include(x => x.Role)
-            // Filter starts here
+            // filter starts here
+            .Where(x =>
+                (filters.Username == null ||
+                 x.Username.Contains(filters.Username))
+                && (filters.Status == null || x.Status == filters.Status)
+                && (filters.RoleName == null || x.Role.RoleName.ToLower().Contains(filters.RoleName.ToLower()))
+                && (filters.FullName == null || x.FullName.ToLower().Contains(filters.FullName.ToLower()))
+                && (filters.Phone == null || x.Phone.Contains(filters.Phone)))
+            .AsNoTracking();
+    }
+
+    public IQueryable<Employee> GetEmployeeList(EmployeeFilter filters, int buildingId)
+    {
+        return _context.Employees
+            .Include(x => x.Role)
+            .Include(x => x.Building
+                .Where(y => y.BuildingId == buildingId))
+            // filter starts here
             .Where(x =>
                 (filters.Username == null ||
                  x.Username.Contains(filters.Username))
@@ -87,7 +104,7 @@ public class EmployeeRepository : IEmployeeRepository
                 IsSuccess = false,
                 Message = "Employee not found"
             };
-        
+
         employeeData.Email = employee.Email;
         employeeData.Phone = employee.Phone;
         employeeData.Address = employee.Address;
@@ -191,7 +208,7 @@ public class EmployeeRepository : IEmployeeRepository
         return await _context.Employees
             .Include(b => b.Role)
             .FirstOrDefaultAsync(a => (a.Username == usernameOrPhoneNumber || a.Phone == usernameOrPhoneNumber)
-                        && a.Password == password);
+                                      && a.Password == password);
     }
 
     public async Task<Employee?> GetEmployeeByUserName(string userName)

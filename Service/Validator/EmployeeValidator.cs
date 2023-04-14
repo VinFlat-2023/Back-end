@@ -52,6 +52,9 @@ public class EmployeeValidator : BaseValidator, IEmployeeValidator
                     case not null when await _conditionCheckHelper.RenterUsernameCheck(obj.Username) != null:
                         ValidatorResult.Failures.Add("Username is duplicated");
                         break;
+                    case { } when obj.Username.Contains(' '):
+                        ValidatorResult.Failures.Add("Username cannot contain spaces");
+                        break;
                 }
 
             switch (obj?.FullName)

@@ -6,7 +6,7 @@ namespace Application.IRepository;
 
 public interface IRenterRepository
 {
-    public IQueryable<Renter> GetRenterList(RenterFilter filter);
+    public IQueryable<Renter> GetRenterList(RenterFilter filter, int buildingId);
     public IQueryable<Renter> GetRenterListBasedOnFlat(int flatId);
     public IQueryable<Renter> GetRenterDetail(int? renterId);
     public Task<Renter> AddRenter(Renter renter);

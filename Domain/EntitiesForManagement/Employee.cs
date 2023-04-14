@@ -31,11 +31,11 @@ public class Employee
     public string Phone { get; set; }
     public bool Status { get; set; }
     public string Address { get; set; }
+    public int? TechnicianBuildingId { get; set; }
 
     [Range(0, 100, ErrorMessage = "Role Id cannot be negative")]
     public int RoleId { get; set; }
 
-    public int? TechnicianBuildingId { get; set; }
     public virtual Role Role { get; set; }
     public virtual ICollection<Building> Building { get; set; }
     public virtual ICollection<Invoice> Invoices { get; set; }

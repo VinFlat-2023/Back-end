@@ -16,10 +16,12 @@ public class RenterRepository : IRenterRepository
         _context = context;
     }
 
-    public IQueryable<Renter> GetRenterList(RenterFilter filters)
+    public IQueryable<Renter> GetRenterList(RenterFilter filters, int buildingId)
     {
         return _context.Renters
-            // Filter starts here
+            .Include(x => x.Contracts
+                .Where(y => y.ContractStatus == "Active" && y.BuildingId == buildingId))
+            // filter starts here
             .Where(x =>
                 (filters.Username == null || x.Username.ToLower().Contains(filters.Username.ToLower()))
                 && (filters.Status == null || x.Status == filters.Status)
@@ -248,7 +250,7 @@ public class RenterRepository : IRenterRepository
     {
         return await _context.Renters
             .FirstOrDefaultAsync(a => (a.Username == usernameOrPhoneNumber || a.Phone == usernameOrPhoneNumber)
-                        && a.Password == password);
+                                      && a.Password == password);
     }
 
     public async Task<Renter?> GetARenterByUserName(string userName)

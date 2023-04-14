@@ -25,4 +25,8 @@
         <ProjectReference Include="..\Service\Service.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Compile Remove="Middleware\ExceptionMiddleware.cs"/>
+    </ItemGroup>
+
 </Project>

@@ -168,6 +168,18 @@ public class ContractValidator : BaseValidator, IContractValidator
     {
         try
         {
+            if (contractId != null)
+                switch (contractId)
+                {
+                    case null:
+                        ValidatorResult.Failures.Add("Hợp đồng là bắt buộc");
+                        break;
+                    case not null:
+                        if (await _conditionCheckHelper.ContractCheck(contractId) == null)
+                            ValidatorResult.Failures.Add("Hợp đồng không tồn tại");
+                        break;
+                }
+            
             switch (obj?.ContractName)
             {
                 case not null when string.IsNullOrWhiteSpace(obj.ContractName):
@@ -220,10 +232,11 @@ public class ContractValidator : BaseValidator, IContractValidator
                 case not null when obj.ContractStatus.ToLower() != "active"
                                    || obj.ContractStatus.ToLower() != "inactive"
                                    || obj.ContractStatus.ToLower() != "suspend":
-                    ValidatorResult.Failures.Add("Trạng thái hợp đồng phải là 'Đang hoạt động', 'Hết hạn' hoặc 'Tạm dừng'");
+                    ValidatorResult.Failures.Add(
+                        "Trạng thái hợp đồng phải là 'Đang hoạt động', 'Hết hạn' hoặc 'Tạm dừng'");
                     break;
             }
-            
+
             switch (obj?.PriceForRent)
             {
                 case not null when string.IsNullOrWhiteSpace(obj.PriceForRent):
@@ -275,7 +288,6 @@ public class ContractValidator : BaseValidator, IContractValidator
                     ValidatorResult.Failures.Add("Tiền dịch vụ toà nhà không được lớn hơn 1,000,000,000");
                     break;
             }
-
         }
         catch (Exception e)
         {
@@ -367,7 +379,7 @@ public class ContractValidator : BaseValidator, IContractValidator
                     ValidatorResult.Failures.Add("Địa chỉ không được để trống");
                     break;
             }
-            
+
             switch (obj?.ContractName)
             {
                 case not null when string.IsNullOrWhiteSpace(obj.ContractName):
@@ -410,7 +422,8 @@ public class ContractValidator : BaseValidator, IContractValidator
                 case not null when obj.ContractStatus.ToLower() != "active"
                                    || obj.ContractStatus.ToLower() != "inactive"
                                    || obj.ContractStatus.ToLower() != "suspend":
-                    ValidatorResult.Failures.Add("Trạng thái hợp đồng phải là 'Đang hoạt động', 'Hết hạn' hoặc 'Tạm dừng'");
+                    ValidatorResult.Failures.Add(
+                        "Trạng thái hợp đồng phải là 'Đang hoạt động', 'Hết hạn' hoặc 'Tạm dừng'");
                     break;
             }
 

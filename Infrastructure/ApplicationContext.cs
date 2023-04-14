@@ -1,4 +1,3 @@
-using System.Globalization;
 using Domain.EntitiesForManagement;
 using Microsoft.EntityFrameworkCore;
 
@@ -98,8 +97,6 @@ public class ApplicationContext : DbContext
         {
             entity.HasIndex(e => e.Username)
                 .IsUnique();
-            entity.HasIndex(e => e.Email)
-                .IsUnique();
         });
 
 
@@ -131,8 +128,8 @@ public class ApplicationContext : DbContext
             new Employee
             {
                 EmployeeId = 3,
-                Username = "Khôi Huy",
-                FullName = "sup3",
+                FullName = "Khôi Huy",
+                Username = "sup3",
                 Password = "123456",
                 Email = "khoihuy@mail",
                 Phone = "0812345678",
@@ -729,8 +726,6 @@ public class ApplicationContext : DbContext
         modelBuilder.Entity<Renter>(entity =>
         {
             entity.HasIndex(e => e.Username)
-                .IsUnique();
-            entity.HasIndex(e => e.Email)
                 .IsUnique();
         });
 

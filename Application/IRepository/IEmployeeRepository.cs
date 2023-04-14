@@ -7,6 +7,7 @@ namespace Application.IRepository;
 public interface IEmployeeRepository
 {
     public IQueryable<Employee> GetEmployeeList(EmployeeFilter filters);
+    public IQueryable<Employee> GetEmployeeList(EmployeeFilter filters, int buildingId);
     public IQueryable<Employee> GetEmployeeDetail(int? employeeId);
     public Task<Employee?> AddEmployee(Employee employee);
     public Task<RepositoryResponse> UpdateEmployee(Employee employee);

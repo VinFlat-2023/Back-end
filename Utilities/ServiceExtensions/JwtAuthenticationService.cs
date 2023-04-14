@@ -58,7 +58,8 @@ public static class JwtAuthenticationService
 
                         var result = new ObjectResult(problemDetails)
                         {
-                            StatusCode = statusCode
+                            StatusCode = statusCode,
+                            DeclaredType = typeof(ProblemDetails)
                         };
 
                         await result.ExecuteResultAsync(actionContext);

@@ -79,18 +79,18 @@ public class ContractsController : ControllerBase
 
                 switch (buildingId)
                 {
-                    case -1:
-                        return NotFound(new
-                        {
-                            status = "Not Found",
-                            message = "No building found for this supervisor",
-                            data = ""
-                        });
                     case -2:
                         return BadRequest(new
                         {
                             status = "Bad Request",
-                            message = "More than one building found for this supervisor",
+                            message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                            data = ""
+                        });
+                    case -1:
+                        return NotFound(new
+                        {
+                            status = "Not Found",
+                            message = "Người quản lý không quản lý tòa nhà nào",
                             data = ""
                         });
                 }
@@ -365,7 +365,7 @@ public class ContractsController : ControllerBase
                         message = "Renter not found",
                         data = ""
                     });
-                
+
                 var building = await _serviceWrapper.Buildings.GetBuildingById(entity.BuildingId);
                 if (building == null)
                     return NotFound(new
@@ -375,29 +375,29 @@ public class ContractsController : ControllerBase
                         data = ""
                     });
 
-                var employeeId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(entity.BuildingId, token);
+                var supervisorId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(entity.BuildingId, token);
 
-                switch (employeeId)
+                switch (supervisorId)
                 {
-                    case 0 : 
+                    case 0:
                         return NotFound(new
                         {
                             status = "Not Found",
                             message = "Employee not found for this building",
                             data = ""
                         });
-                    case -1 :
+                    case -1:
                         return BadRequest(new
                         {
                             status = "Bad Request",
-                            message = "Something went wrong",
+                            message = "More than one employee found for this building",
                             data = ""
                         });
                 }
 
                 var buildingDetail = new BuildingContractDetailEntity
                 {
-                    EmployeeId = employeeId,
+                    EmployeeId = supervisorId,
                     BuildingName = building.BuildingName,
                     BuildingPhoneNumber = building.BuildingPhoneNumber,
                     BuildingAddress = building.BuildingAddress
@@ -633,13 +633,23 @@ public class ContractsController : ControllerBase
 
         var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
 
-        if (buildingId <= 0)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Supervisor has more than one building",
-                data = ""
-            });
+        switch (buildingId)
+        {
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                    data = ""
+                });
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Người quản lý không quản lý tòa nhà nào",
+                    data = ""
+                });
+        }
 
         var newContract = new Contract
         {

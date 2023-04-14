@@ -45,6 +45,8 @@ public class TicketsController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
+        var userId = int.Parse(User.Identity?.Name);
+
         var filter = _mapper.Map<TicketFilter>(ticketFilterRequest);
 
         switch (userRole)
@@ -72,10 +74,8 @@ public class TicketsController : ControllerBase
                 });
 
             case "Supervisor":
-                var employeeId = int.Parse(User.Identity?.Name);
-
                 var supervisorTicketList =
-                    await _serviceWrapper.Tickets.GetTicketList(filter, employeeId, true, token);
+                    await _serviceWrapper.Tickets.GetTicketList(filter, userId, true, token);
 
                 if (supervisorTicketList == null)
                     return NotFound(new
@@ -97,10 +97,8 @@ public class TicketsController : ControllerBase
                 });
 
             case "Renter":
-                var renterId = int.Parse(User.Identity?.Name);
-
                 var renterTicketCheck =
-                    await _serviceWrapper.Tickets.GetTicketList(filter, renterId, false, token);
+                    await _serviceWrapper.Tickets.GetTicketList(filter, userId, false, token);
 
                 if (renterTicketCheck == null)
                     return NotFound(new
@@ -295,20 +293,20 @@ public class TicketsController : ControllerBase
 
         var supervisorId = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(buildingId, token);
 
-        switch (buildingId)
+        switch (supervisorId)
         {
-            case -1:
+            case 0:
                 return NotFound(new
                 {
                     status = "Not Found",
-                    message = "No building found for this supervisor",
+                    message = "Employee not found for this building",
                     data = ""
                 });
-            case -2:
+            case -1:
                 return BadRequest(new
                 {
                     status = "Bad Request",
-                    message = "More than one building found for this supervisor",
+                    message = "More than one employee found for this building",
                     data = ""
                 });
         }
@@ -415,7 +413,7 @@ public class TicketsController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
+        if (userRole is not ("Admin" or "Supervisor") || User.Identity?.Name != id.ToString() && userRole != "Renter")
             return BadRequest(new
             {
                 status = "Bad Request",

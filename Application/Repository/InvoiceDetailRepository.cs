@@ -25,7 +25,7 @@ public class InvoiceDetailRepository : IInvoiceDetailRepository
             //.Where(x => x.TicketId == x.Ticket.TicketId)
             .Include(x => x.Invoice)
             .Where(x => x.InvoiceId == x.Invoice.InvoiceId)
-            // Filter starts here
+            // filter starts here
             .Where(x =>
                 (filters.ServiceId == null || x.ServiceId == filters.ServiceId)
                 && (filters.InvoiceId == null || x.InvoiceId == filters.InvoiceId))

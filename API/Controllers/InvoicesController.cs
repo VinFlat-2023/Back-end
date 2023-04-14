@@ -4,7 +4,6 @@ using Domain.EntityRequest.Invoice;
 using Domain.EntityRequest.InvoiceType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
-using Domain.Utils;
 using Domain.ViewModel.InvoiceEntity;
 using Domain.ViewModel.InvoiceTypeEntity;
 using Microsoft.AspNetCore.Authorization;
@@ -308,7 +307,7 @@ public class InvoicesController : ControllerBase
             Detail = invoice.Detail,
             PaymentTime = invoice.PaymentTime ?? null
         };
-        
+
         var result = await _serviceWrapper.Invoices.UpdateInvoice(updateInvoice);
 
         if (result == null)
@@ -335,7 +334,7 @@ public class InvoicesController : ControllerBase
     public async Task<IActionResult> PostInvoice([FromBody] InvoiceCreateRequest invoice)
     {
         var employeeId = int.Parse(User.Identity?.Name);
-        
+
         var validation = await _validator.ValidateParams(invoice, employeeId);
         if (!validation.IsValid)
             return BadRequest(new
@@ -373,7 +372,7 @@ public class InvoicesController : ControllerBase
                 break;
         }
 
-     
+
         var result = await _serviceWrapper.Invoices.AddInvoice(addNewInvoice);
         if (result == null)
             return BadRequest(new

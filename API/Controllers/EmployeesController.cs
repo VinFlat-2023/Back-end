@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Employee;
@@ -34,31 +35,139 @@ public class EmployeesController : ControllerBase
 
     // GET: api/Employees
     [SwaggerOperation(Summary = "[Authorize] Get employee list")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor, Technician")]
     [HttpGet]
     public async Task<IActionResult> GetEmployees([FromQuery] EmployeeFilterRequest request, CancellationToken token)
     {
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
         var filter = _mapper.Map<EmployeeFilter>(request);
 
-        var list = await _serviceWrapper.Employees.GetEmployeeList(filter, token);
+        var employeeId = int.Parse(User.Identity?.Name);
 
-        var resultList = _mapper.Map<IEnumerable<EmployeeDetailEntity>>(list);
-
-        if (list == null || !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Employee list is empty",
-                data = ""
-            });
-
-        return Ok(new
+        switch (userRole)
         {
-            status = "Success",
-            message = "List found",
-            data = resultList,
-            totalPage = list.TotalPages,
-            totalCount = list.TotalCount
+            case "Admin":
+                var adminList = await _serviceWrapper.Employees.GetEmployeeList(filter, token);
+
+                if (adminList == null || !adminList.Any())
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "Employee list is empty",
+                        data = ""
+                    });
+
+                var adminResultList = _mapper.Map<IEnumerable<EmployeeDetailEntity>>(adminList);
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "List found",
+                    data = adminResultList,
+                    totalPage = adminList.TotalPages,
+                    totalCount = adminList.TotalCount
+                });
+
+            case "Supervisor":
+
+                var buildingSupervisor = await _serviceWrapper.GetId
+                    .GetBuildingIdBasedOnSupervisorId(employeeId, token);
+
+                // buildingId = -2 means there are more than one building with status 'Active' found
+                switch (buildingSupervisor)
+                {
+                    case -2:
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = "Supervisor manage more than one building with status 'Active' found",
+                            data = ""
+                        });
+                    case -1:
+                        return NotFound(new
+                        {
+                            status = "Not Found",
+                            message = "No building found with status Active' or no building found at all for this user",
+                            data = ""
+                        });
+                }
+
+                var supervisorList = await _serviceWrapper.Employees.GetEmployeeList(filter, buildingSupervisor, token);
+
+                if (supervisorList == null || !supervisorList.Any())
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "Employee list is empty",
+                        data = ""
+                    });
+
+                var resultList = _mapper.Map<IEnumerable<EmployeeDetailEntity>>(supervisorList);
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "List found",
+                    data = resultList,
+                    totalPage = supervisorList.TotalPages,
+                    totalCount = supervisorList.TotalCount
+                });
+
+            case "Technician":
+
+                var buildingTechnician = await _serviceWrapper.GetId
+                    .GetBuildingIdBasedOnTechnicianId(employeeId, token);
+
+                // buildingId = -2 means this technician is assigned to more than one building with status 'Active'
+                switch (buildingTechnician)
+                {
+                    case -2:
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = "Technician is assigned more than one building with status 'Active' found",
+                            data = ""
+                        });
+                    case -1:
+                        return NotFound(new
+                        {
+                            status = "Not Found",
+                            message = "No building found with status Active' or no building found at all for this user",
+                            data = ""
+                        });
+                }
+
+                var technicianList = await _serviceWrapper.Employees.GetEmployeeList(filter, buildingTechnician, token);
+
+                if (technicianList == null || !technicianList.Any())
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "Employee list is empty",
+                        data = ""
+                    });
+
+                var technicianResultList = _mapper.Map<IEnumerable<EmployeeDetailEntity>>(technicianList);
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "List found",
+                    data = technicianResultList,
+                    totalPage = technicianList.TotalPages,
+                    totalCount = technicianList.TotalCount
+                });
+        }
+
+        return BadRequest(new
+        {
+            status = "Bad Request",
+            message = "Bad request with employee controller !!!",
+            data = ""
         });
     }
 
@@ -122,7 +231,7 @@ public class EmployeesController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
-        
+
         var newEmployee = new Employee
         {
             Username = employee.Username,
@@ -187,7 +296,7 @@ public class EmployeesController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
-        
+
         var updateEmployee = new Employee
         {
             EmployeeId = id,
@@ -222,7 +331,7 @@ public class EmployeesController : ControllerBase
     public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeUpdateRequest employee)
     {
         var employeeId = int.Parse(User.Identity?.Name);
-        
+
         var validation = await _employeeValidator.ValidateParams(employee, employeeId);
 
         if (!validation.IsValid)
@@ -241,7 +350,7 @@ public class EmployeesController : ControllerBase
             Phone = employee.Phone,
             FullName = employee.Fullname
         };
-       
+
         var result = await _serviceWrapper.Employees.UpdateEmployee(updateEmployee);
 
         return result.IsSuccess switch
@@ -292,7 +401,7 @@ public class EmployeesController : ControllerBase
                 message = "Mật khẩu mới và mật khẩu xác nhận không khớp, vui lòng kiểm tra lại",
                 data = ""
             });
-        
+
         var validation = await _passwordValidator
             .ValidateParams(employee.Password, employeeId, false);
 
@@ -302,7 +411,7 @@ public class EmployeesController : ControllerBase
             Password = employee.Password
         };
 
-        
+
         if (!validation.IsValid)
             return BadRequest(new
             {

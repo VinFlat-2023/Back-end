@@ -67,18 +67,18 @@ public class BuildingsController : ControllerBase
 
         switch (buildingId)
         {
-            case -1:
-                return BadRequest(new
-                {
-                    status = "Bad Request",
-                    message = "Supervisor has no building",
-                    data = ""
-                });
             case -2:
                 return BadRequest(new
                 {
                     status = "Bad Request",
-                    message = "Supervisor has more than 1 building",
+                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                    data = ""
+                });
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Người quản lý không quản lý tòa nhà nào",
                     data = ""
                 });
         }

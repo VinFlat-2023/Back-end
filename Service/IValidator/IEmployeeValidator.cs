@@ -7,7 +7,7 @@ namespace Service.IValidator;
 public interface IEmployeeValidator
 {
     Task<ValidatorResult> ValidateParams(Employee obj, int? employeeId);
-    
+
     Task<ValidatorResult> ValidateParams(EmployeeUpdateRequest? obj, int? employeeId);
 
     Task<ValidatorResult> ValidateParams(EmployeeCreateRequest? obj);

@@ -36,6 +36,23 @@ public class EmployeeService : IEmployeeService
         return pagedList;
     }
 
+    public async Task<PagedList<Employee>?> GetEmployeeList(EmployeeFilter filters, int buildingId,
+        CancellationToken token)
+    {
+        var queryable = _repositoryWrapper.Employees.GetEmployeeList(filters, buildingId);
+
+        if (!queryable.Any())
+            return null;
+
+        var page = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var size = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
+        var pagedList = await PagedList<Employee>
+            .Create(queryable, page, size, token);
+
+        return pagedList;
+    }
+
     public async Task<Employee?> GetEmployeeById(int? employeeId)
     {
         return await _repositoryWrapper.Employees.GetEmployeeDetail(employeeId)

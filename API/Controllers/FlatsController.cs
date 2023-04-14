@@ -46,14 +46,14 @@ public class FlatsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Flat list is empty",
+                message = "Danh sách căn hộ trống",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "List found",
+            message = "Hiển thị danh sách căn hộ",
             data = resultList,
             totalPage = list.TotalPages,
             totalCount = list.TotalCount
@@ -71,14 +71,14 @@ public class FlatsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Flat not found",
+                message = "Không tìm thấy căn hộ",
                 data = ""
             });
         return Ok(
             new
             {
                 status = "Success",
-                message = "Flat found",
+                message = "Đã tìm thấy căn hộ",
                 data = _mapper.Map<FlatDetailEntity>(entity)
             });
     }
@@ -90,17 +90,7 @@ public class FlatsController : ControllerBase
     [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> PutFlat(int id, [FromBody] FlatUpdateRequest flat)
     {
-        var updateFlat = new Flat
-        {
-            FlatId = id,
-            Name = flat.Name,
-            Description = flat.Description ?? "No description",
-            Status = flat.Status,
-            FlatTypeId = flat.FlatTypeId,
-            BuildingId = flat.BuildingId
-        };
-
-        var validation = await _validator.ValidateParams(updateFlat, id);
+        var validation = await _validator.ValidateParams(flat, id);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -109,22 +99,33 @@ public class FlatsController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+        
+        var updateFlat = new Flat
+        {
+            FlatId = id,
+            Name = flat.Name,
+            Description = flat.Description ?? "Không có thông tin mô tả",
+            Status = flat.Status,
+            FlatTypeId = flat.FlatTypeId,
+            BuildingId = flat.BuildingId
+        };
 
         var result = await _serviceWrapper.Flats.UpdateFlat(updateFlat);
 
         return result.IsSuccess switch
         {
-            false => BadRequest(new
+            false => BadRequest(
+                new
             {
                 status = "Bad Request",
-                message = "Renter failed to update",
+                message = "Thông tin người dùng cập nhật thất bại",
                 data = ""
             }),
             true => Ok(
                 new
                 {
                     status = "Success",
-                    message = "Renter updated",
+                    message = "Thông tin người dùng cập nhật thành công",
                     data = ""
                 })
         };
@@ -137,10 +138,20 @@ public class FlatsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> PostFlat([FromBody] FlatCreateRequest flat)
     {
+        var validation = await _validator.ValidateParams(flat);
+
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+        
         var newFlat = new Flat
         {
             Name = flat.Name,
-            Description = flat.Description ?? "No description",
+            Description = flat.Description ?? "Không có mô tả",
             Status = flat.Status,
             WaterMeterBefore = 0,
             ElectricityMeterBefore = 0,
@@ -152,15 +163,7 @@ public class FlatsController : ControllerBase
             BuildingId = flat.BuildingId
         };
 
-        var validation = await _validator.ValidateParams(newFlat, null);
-
-        if (!validation.IsValid)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = validation.Failures.FirstOrDefault(),
-                data = ""
-            });
+      
 
         var result = await _serviceWrapper.Flats.AddFlat(newFlat);
 
@@ -168,14 +171,14 @@ public class FlatsController : ControllerBase
             return BadRequest(new
             {
                 status = "Bad Request",
-                message = "Flat failed to create",
+                message = "Tạo căn hộ thất bại",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "Flat created",
+            message = "Tạo căn hộ thành công",
             data = ""
         });
     }
@@ -220,14 +223,14 @@ public class FlatsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Flat type list is empty",
+                message = "Danh sách loại căn hộ trống",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "List found",
+            message = "Hiện thị danh sách loại căn hộ",
             data = resultList,
             totalPage = list.TotalPages,
             totalCount = list.TotalCount
@@ -245,13 +248,13 @@ public class FlatsController : ControllerBase
             ? NotFound(new
             {
                 status = "Not Found",
-                message = "Flat type not found",
+                message = "Không tìm thấy thông tin loại căn hộ",
                 data = ""
             })
             : Ok(new
             {
                 status = "Success",
-                message = "Flat type found",
+                message = "Tìm thấy thông tin loại căn hộ",
                 data = _mapper.Map<FlatTypeDetailEntity>(entity)
             });
     }
@@ -263,14 +266,7 @@ public class FlatsController : ControllerBase
     [HttpPut("type/{id:int}")]
     public async Task<IActionResult> PutFlatType(int id, [FromBody] FlatTypeUpdateRequest flatType)
     {
-        var updateFlatType = new FlatType
-        {
-            FlatTypeId = id,
-            RoomCapacity = flatType.RoomCapacity,
-            Status = flatType.Status
-        };
-
-        var validation = await _validator.ValidateParams(updateFlatType, id);
+        var validation = await _validator.ValidateParams(flatType, id);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -278,6 +274,13 @@ public class FlatsController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+        
+        var updateFlatType = new FlatType
+        {
+            FlatTypeId = id,
+            RoomCapacity = flatType.RoomCapacity,
+            Status = flatType.Status
+        };
 
         var result = await _serviceWrapper.FlatTypes.UpdateFlatType(updateFlatType);
 
@@ -301,17 +304,11 @@ public class FlatsController : ControllerBase
     // POST: api/FlatTypes
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Create flat type (For management)")]
-    [Authorize(Roles = " Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     [HttpPost("type")]
-    public async Task<IActionResult> PostFlatType([FromBody] FlatTypeCreateRequest flatType)
+    public async Task<IActionResult> PostFlatType([FromBody] FlatTypeCreateRequest flatType, CancellationToken token)
     {
-        var newFlatType = new FlatType
-        {
-            RoomCapacity = flatType.RoomCapacity,
-            Status = flatType.Status
-        };
-
-        var validation = await _validator.ValidateParams(newFlatType, null);
+        var validation = await _validator.ValidateParams(flatType);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -320,21 +317,49 @@ public class FlatsController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+        var supervisorId = int.Parse(User.Identity.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(supervisorId, token);
+
+        switch (buildingId)
+        {
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                    data = ""
+                });
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Người quản lý không quản lý tòa nhà nào",
+                    data = ""
+                });
+        }
+        
+        var newFlatType = new FlatType
+        {
+            RoomCapacity = flatType.RoomCapacity,
+            Status = flatType.Status,
+            BuildingId = buildingId
+        };
 
         var result = await _serviceWrapper.FlatTypes.AddFlatType(newFlatType);
 
         if (result == null)
-            return NotFound(new
+            return BadRequest(new
             {
-                status = "Not Found",
-                message = "Flat type not found",
+                status = "Bad Request",
+                message = "Tạo loại can hộ không thành công",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "Flat type created",
+            message = "Tạo thành công",
             data = ""
         });
     }
@@ -372,11 +397,23 @@ public class FlatsController : ControllerBase
 
         return result.IsSuccess switch
         {
-            true => Ok(new { status = "Success", message = result.Message, data = "" }),
-            false => BadRequest(new { status = "Bad Request", message = result.Message, data = "" })
+            true => Ok(new 
+            { 
+                status = "Success", 
+                message = result.Message,
+                data = "" 
+            }),
+            false => 
+                BadRequest(new
+                {
+                    status = "Bad Request", 
+                    message = result.Message, 
+                    data = ""
+                })
         };
     }
 
+    // TODO : Check validation 
     [SwaggerOperation(Summary = "[Authorize] Move a renter in inside available slot in a room (Not yet finished)")]
     [Authorize(Roles = " Admin, Supervisor")]
     [HttpPost("{flatId:int}/room/{roomId:int}/slots")]
@@ -388,14 +425,14 @@ public class FlatsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Flat not found",
+                message = "Căn hộ không tồn tại",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "Renter moved in",
+            message = "",
             data = ""
         });
     }

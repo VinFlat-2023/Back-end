@@ -29,7 +29,7 @@ public class InvoiceRepository : IInvoiceRepository
             .Include(x => x.Renter)
             .Include(x => x.InvoiceDetails)
             .Include(x => x.InvoiceType)
-            // Filter starts here
+            // filter starts here
             .Where(x =>
                 (filter.Name == null || x.Name.ToLower().Contains(filter.Name.ToLower()))
                 && (filter.Status == null || x.Status == filter.Status)

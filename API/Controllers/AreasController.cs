@@ -43,14 +43,14 @@ public class AreasController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Area list is empty",
+                message = "Danh sách khu vực trống",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "List found",
+            message = "Hiển thị danh sách khu vực",
             data = resultList,
             totalPage = list.TotalPages,
             totalCount = list.TotalCount
@@ -69,14 +69,14 @@ public class AreasController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Area not found",
+                message = "Khu vực không tìm thấy",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "Area found",
+            message = "Đã tìm thấy khu vực",
             data = _mapper.Map<AreaDetailEntity>(entity)
         });
     }

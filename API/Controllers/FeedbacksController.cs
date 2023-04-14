@@ -89,6 +89,15 @@ public class FeedbacksController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutFeedback(int id, [FromBody] FeedbackUpdateRequest feedback)
     {
+        var validation = await _validator.ValidateParams(feedback, id);
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+        
         var updateFeedback = new Feedback
         {
             FeedbackId = id,
@@ -99,10 +108,6 @@ public class FeedbacksController : ControllerBase
             FlatId = feedback.FlatId,
             RenterId = feedback.RenterId
         };
-
-        var validation = await _validator.ValidateParams(updateFeedback, id);
-        if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
 
         var result = await _serviceWrapper.Feedbacks.UpdateFeedback(updateFeedback);
         return result.IsSuccess switch
@@ -131,6 +136,15 @@ public class FeedbacksController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> PostFeedback([FromBody] FeedbackCreateRequest feedback)
     {
+        var validation = await _validator.ValidateParams(feedback);
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+        
         var addNewFeedback = new Feedback
         {
             FeedbackTypeId = feedback.FeedbackTypeId,
@@ -141,16 +155,7 @@ public class FeedbacksController : ControllerBase
             FlatId = feedback.FlatId,
             RenterId = feedback.RenterId
         };
-
-        var validation = await _validator.ValidateParams(addNewFeedback, null);
-        if (!validation.IsValid)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = validation.Failures.FirstOrDefault(),
-                data = ""
-            });
-
+       
         var result = await _serviceWrapper.Feedbacks.AddFeedback(addNewFeedback);
         if (result == null)
             return NotFound(new

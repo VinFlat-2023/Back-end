@@ -15,8 +15,11 @@ public class GetIdRepository : IGetIdRepository
 
     public async Task<int> GetBuildingIdBasedOnRenter(int renterId, CancellationToken token)
     {
+        // TODO : Get building Id based on contract !!!
+        
         var contract = await _context.Contracts
-            .FirstOrDefaultAsync(x => x.RenterId == renterId);
+            .Where(x => x.RenterId == renterId && x.ContractStatus == "Active")
+            .FirstOrDefaultAsync(token);
 
         if (contract == null)
             return 0;
@@ -69,6 +72,25 @@ public class GetIdRepository : IGetIdRepository
         };
     }
 
+    public async Task<int> GetBuildingIdBasedOnTechnicianId(int employeeId, CancellationToken token)
+    {
+        var buildingList = _context.Buildings
+            .Include(x => x.Employee)
+            .Where(x => x.Employee.TechnicianBuildingId == employeeId && x.Status == true)
+            .Select(x => x.BuildingId);
+
+        var count = buildingList.Count();
+
+        return count switch
+        {
+            // -2 = More than one building with status "Active" found for this user
+            > 1 => -2,
+            // -1 = No building found with status "Active" or no building found at all for this user
+            < 1 => -1,
+            _ => await buildingList.FirstOrDefaultAsync(token)
+        };
+    }
+
     public async Task<int> GetSupervisorIdByBuildingId(int entityBuildingId, CancellationToken token)
     {
         var employeeList = await _context.Employees
@@ -77,21 +99,21 @@ public class GetIdRepository : IGetIdRepository
             .Select(x => x.EmployeeId)
             .ToListAsync(token);
 
+        // no employee found with role "Supervisor"
         if (employeeList.Count == 0)
             return 0;
-        
+
         var employee = _context.Buildings
             .Include(x => x.Employee)
             .ThenInclude(x => x.Role)
-            //.Where(x => x.BuildingId == entityBuildingId)
-            .Where(x => x.BuildingId == entityBuildingId 
-                        && employeeList.Contains(x.EmployeeId)
-                        && x.Status == true)
+            .Where(x => x.BuildingId == entityBuildingId &&
+                        employeeList.Contains(x.EmployeeId) && x.Status == true)
             .Select(x => x.EmployeeId);
 
+        // more than 1 employee found with role "Supervisor" for this building
         if (employee.Count() > 1 || !employee.Any())
             return -1;
-        
+
         return await employee.FirstOrDefaultAsync(token);
     }
 }

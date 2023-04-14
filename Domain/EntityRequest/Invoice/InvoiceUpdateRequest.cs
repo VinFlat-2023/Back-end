@@ -1,13 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Domain.CustomAttribute;
-using Microsoft.AspNetCore.Http;
-
-namespace Domain.EntityRequest.Invoice;
+﻿namespace Domain.EntityRequest.Invoice;
 
 public class InvoiceUpdateRequest
 {
-    public string Name { get; set; } 
+    public string Name { get; set; }
     public bool Status { get; set; }
     public DateTime? DueDate { get; set; }
     public string Detail { get; set; }
