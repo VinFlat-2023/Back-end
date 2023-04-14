@@ -13,7 +13,7 @@ public interface IEmployeeRepository
     public Task<RepositoryResponse> UpdateEmployeePassword(Employee employee);
     public Task<RepositoryResponse> ToggleEmployee(int employeeId);
     public Task<RepositoryResponse> DeleteEmployee(int employeeId);
-    public IQueryable<Employee> GetEmployee(string usernameOrPhoneNumber, string password);
+    public Task<Employee?> GetEmployee(string usernameOrPhoneNumber, string password);
     public IQueryable<Employee> IsEmployeeEmailExist(string? email);
     public Task<Employee?> GetEmployeeByUserName(string userName);
     public IQueryable<Employee> IsEmployeeUsernameExist(string? username);

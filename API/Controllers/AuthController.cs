@@ -64,7 +64,8 @@ public class AuthController : ControllerBase
             data = new
             {
                 id = employee.EmployeeId,
-                token = jwtToken
+                token = jwtToken,
+                roleName = employee.Role.RoleName
             }
         });
     }
@@ -116,7 +117,8 @@ public class AuthController : ControllerBase
             data = new
             {
                 id = renter.RenterId,
-                token = jwtToken
+                token = jwtToken,
+                roleName = "Renter"
             }
         });
     }

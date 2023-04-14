@@ -101,7 +101,6 @@ public class RenterService : IRenterService
 
     public async Task<Renter?> RenterLogin(string usernameOrPhoneNumber, string password)
     {
-        return await _repositoryWrapper.Renters.GetRenter(usernameOrPhoneNumber, password)
-            .FirstOrDefaultAsync();
+        return await _repositoryWrapper.Renters.GetRenter(usernameOrPhoneNumber, password);
     }
 }

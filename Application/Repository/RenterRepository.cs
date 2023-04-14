@@ -244,10 +244,10 @@ public class RenterRepository : IRenterRepository
     /// <param name="usernameOrPhoneNumber"></param>
     /// <param name="password"></param>
     /// <returns></returns>
-    public IQueryable<Renter> GetRenter(string usernameOrPhoneNumber, string password)
+    public async Task<Renter?> GetRenter(string usernameOrPhoneNumber, string password)
     {
-        return _context.Renters
-            .Where(a => (a.Username == usernameOrPhoneNumber || a.Phone == usernameOrPhoneNumber)
+        return await _context.Renters
+            .FirstOrDefaultAsync(a => (a.Username == usernameOrPhoneNumber || a.Phone == usernameOrPhoneNumber)
                         && a.Password == password);
     }
 

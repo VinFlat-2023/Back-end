@@ -186,11 +186,11 @@ public class EmployeeRepository : IEmployeeRepository
     /// <param name="usernameOrPhoneNumber"></param>
     /// <param name="password"></param>
     /// <returns></returns>
-    public IQueryable<Employee> GetEmployee(string usernameOrPhoneNumber, string password)
+    public async Task<Employee?> GetEmployee(string usernameOrPhoneNumber, string password)
     {
-        return _context.Employees
+        return await _context.Employees
             .Include(b => b.Role)
-            .Where(a => (a.Username == usernameOrPhoneNumber || a.Phone == usernameOrPhoneNumber)
+            .FirstOrDefaultAsync(a => (a.Username == usernameOrPhoneNumber || a.Phone == usernameOrPhoneNumber)
                         && a.Password == password);
     }
 

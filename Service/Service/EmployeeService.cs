@@ -104,7 +104,6 @@ public class EmployeeService : IEmployeeService
 
     public async Task<Employee?> EmployeeLogin(string usernameOrPhoneNumber, string password)
     {
-        return await _repositoryWrapper.Employees.GetEmployee(usernameOrPhoneNumber, password)
-            .FirstOrDefaultAsync();
+        return await _repositoryWrapper.Employees.GetEmployee(usernameOrPhoneNumber, password);
     }
 }
