@@ -144,14 +144,14 @@ public class BuildingsController : ControllerBase
         {
             BuildingId = id,
             BuildingName = building.BuildingName,
+            AreaId = building.AreaId,
+            BuildingPhoneNumber = building.BuildingPhoneNumber,
             BuildingAddress = building.BuildingAddress,
             Description = building.Description,
             CoordinateX = building.CoordinateX ?? 0,
             CoordinateY = building.CoordinateY ?? 0,
-            BuildingPhoneNumber = building.BuildingPhoneNumber,
             AveragePrice = building.AveragePrice ?? 0,
             Status = building.Status,
-            AreaId = building.AreaId
         };
 
         var result = await _serviceWrapper.Buildings.UpdateBuilding(updateBuilding);
@@ -178,7 +178,7 @@ public class BuildingsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create building (For management)")]
     [Authorize(Roles = "Supervisor")]
     [HttpPost]
-    public async Task<IActionResult> PostBuilding([FromBody] BuildingCreateRequest building)
+    public async Task<IActionResult> PostBuilding([FromForm] BuildingCreateRequest building)
     {
         var employeeId = int.Parse(User.Identity.Name);
 
@@ -197,6 +197,8 @@ public class BuildingsController : ControllerBase
         var newBuilding = new Building
         {
             BuildingName = building.BuildingName ?? "Building created by " + supervisor.FullName,
+            AreaId = building.AreaId,
+            BuildingPhoneNumber = building.BuildingPhoneNumber ?? "0",
             BuildingAddress = building.BuildingAddress ?? "To be filled",
             Description = building.Description ?? "Building description",
             CoordinateX = building.CoordinateX ?? 0,
@@ -205,8 +207,6 @@ public class BuildingsController : ControllerBase
             AveragePrice = building.AveragePrice ?? 0,
             EmployeeId = employeeId,
             Status = building.Status ?? true,
-            AreaId = building.AreaId,
-            BuildingPhoneNumber = building.BuildingPhoneNumber ?? "0"
         };
 
         if (!validation.IsValid)

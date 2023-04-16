@@ -106,13 +106,13 @@ public class EmployeesController : ControllerBase
                         data = ""
                     });
 
-                var resultList = _mapper.Map<IEnumerable<EmployeeDetailEntity>>(supervisorList);
+                var supervisorResultList = _mapper.Map<IEnumerable<EmployeeDetailEntity>>(supervisorList);
 
                 return Ok(new
                 {
                     status = "Success",
                     message = "List found",
-                    data = resultList,
+                    data = supervisorResultList,
                     totalPage = supervisorList.TotalPages,
                     totalCount = supervisorList.TotalCount
                 });

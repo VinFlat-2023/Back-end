@@ -128,7 +128,7 @@ public class AreasController : ControllerBase
     // POST: api/Areas
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Create area (For management)")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> PostArea([FromBody] AreaCreateRequest area)
     {
@@ -192,10 +192,9 @@ public class AreasController : ControllerBase
         };
     }
 
-
     // DELETE: api/Areas/5
     [SwaggerOperation(Summary = "[Authorize] Delete area using id (For management)")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteArea(int id)
     {

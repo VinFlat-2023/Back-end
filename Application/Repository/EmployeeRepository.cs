@@ -37,14 +37,14 @@ public class EmployeeRepository : IEmployeeRepository
 
     public IQueryable<Employee> GetEmployeeList(EmployeeFilter filters, int buildingId)
     {
+        // TODO : Check logic again, error here when on filtering by buildingId
         return _context.Employees
             .Include(x => x.Role)
-            .Include(x => x.Building
-                .Where(y => y.BuildingId == buildingId))
+            .Where(x => x.SupervisorBuildingId == buildingId || x.TechnicianBuildingId == buildingId)
+            //.Include(x => x.Building.Where(y => y.BuildingId == buildingId))
             // filter starts here
             .Where(x =>
-                (filters.Username == null ||
-                 x.Username.Contains(filters.Username))
+                (filters.Username == null || x.Username.Contains(filters.Username))
                 && (filters.Status == null || x.Status == filters.Status)
                 && (filters.RoleName == null || x.Role.RoleName.ToLower().Contains(filters.RoleName.ToLower()))
                 && (filters.FullName == null || x.FullName.ToLower().Contains(filters.FullName.ToLower()))

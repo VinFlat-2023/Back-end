@@ -12,13 +12,10 @@ namespace API.Controllers;
 [Route("api/upload")]
 public class TestUploadImageController : ControllerBase
 {
-    private const string Container = "images";
-    private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
 
-    public TestUploadImageController(IMapper mapper, IServiceWrapper serviceWrapper)
+    public TestUploadImageController(IServiceWrapper serviceWrapper)
     {
-        _mapper = mapper;
         _serviceWrapper = serviceWrapper;
     }
 
@@ -234,7 +231,7 @@ public class TestUploadImageController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Renters not found",
+                message = "Người thuê không tồn tại",
                 data = ""
             });
 
@@ -244,7 +241,7 @@ public class TestUploadImageController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "No ticket with this id found with this user",
+                message = "Không có phiếu hỗ trợ nào thuộc về người thuê này",
                 data = ""
             });
 
@@ -256,7 +253,7 @@ public class TestUploadImageController : ControllerBase
             return Ok(new
             {
                 status = "Success",
-                message = "No image uploaded",
+                message = "Không có hình ảnh nào được tải lên",
                 data = ""
             });
 
@@ -376,7 +373,7 @@ public class TestUploadImageController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Building not found",
+                message = "Toà nhà không tồn tại",
                 data = ""
             });
 
@@ -385,7 +382,7 @@ public class TestUploadImageController : ControllerBase
             return Ok(new
             {
                 status = "Success",
-                message = "No image uploaded",
+                message = "Không có hình ảnh nào được tải lên",
                 data = ""
             });
 
@@ -474,9 +471,9 @@ public class TestUploadImageController : ControllerBase
 
     [SwaggerOperation]
     [Authorize(Roles = "Admin")]
-    [HttpPut("building/{buildingId:int}/image")]
-    public async Task<IActionResult> PutBuildingAdmin([FromForm] MultipleImageUploadRequest multipleImageUploadRequest,
-        int buildingId)
+    [HttpPut("building/{buildingId:int}/image/{imageId:int}")]
+    public async Task<IActionResult> PutBuildingAdmin([FromForm] ImageUploadRequest multipleImageUploadRequest,
+        int buildingId, int imageId)
     {
         var buildingCheck = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
 
@@ -484,16 +481,7 @@ public class TestUploadImageController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Building not found",
-                data = ""
-            });
-
-        if (multipleImageUploadRequest.ImageUploadRequest.Count == 0 ||
-            !multipleImageUploadRequest.ImageUploadRequest.Any())
-            return Ok(new
-            {
-                status = "Success",
-                message = "No image uploaded",
+                message = "Toà nhà không tồn tại",
                 data = ""
             });
 

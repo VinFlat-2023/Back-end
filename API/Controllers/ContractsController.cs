@@ -557,7 +557,7 @@ public class ContractsController : ControllerBase
             StartDate = contract.StartDate,
             EndDate = contract.EndDate,
             LastUpdated = DateTime.UtcNow,
-            ContractStatus = contract.ContractStatus,
+            ContractStatus = "Active",
             PriceForRent = decimal.Parse(contract.PriceForRent, CultureInfo.InvariantCulture),
             PriceForElectricity = decimal.Parse(contract.PriceForElectricity, CultureInfo.InvariantCulture),
             PriceForWater = decimal.Parse(contract.PriceForWater, CultureInfo.InvariantCulture),
@@ -595,7 +595,7 @@ public class ContractsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create Contract (For management)", Description = "date format d/M/YYYY")]
     [Authorize(Roles = "Supervisor")]
     [HttpPost("sign")]
-    public async Task<IActionResult> PostContract([FromBody] ContractCreateRequest contract, CancellationToken token)
+    public async Task<IActionResult> PostContract([FromForm] ContractCreateRequest contract, CancellationToken token)
     {
         var contractValidation = await _validator.ValidateParams(contract);
 
