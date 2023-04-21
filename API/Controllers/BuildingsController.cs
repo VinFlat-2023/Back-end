@@ -43,13 +43,13 @@ public class BuildingsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Building list is empty",
+                message = "Danh sách toà nhà trống",
                 data = ""
             });
         return Ok(new
         {
             status = "Success",
-            message = "List found",
+            message = "Hiển thị danh sách toà nhà",
             data = resultList,
             totalPage = list.TotalPages,
             totalCount = list.TotalCount
@@ -71,19 +71,19 @@ public class BuildingsController : ControllerBase
                 return BadRequest(new
                 {
                     status = "Bad Request",
-                    message = "Supervisor has no building",
+                    message = "Quản lí này hiện đang không quản lí toà nhà nào",
                     data = ""
                 });
             case -2:
                 return BadRequest(new
                 {
                     status = "Bad Request",
-                    message = "Supervisor has more than 1 building",
+                    message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
                     data = ""
                 });
         }
 
-        var entity = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
+        var entity = await _serviceWrapper.Buildings.GetBuildingById(buildingId, token);
 
         if (entity == null)
             return NotFound(new
@@ -105,9 +105,9 @@ public class BuildingsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get building info (For management and renter)")]
     [Authorize(Roles = "Admin")]
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetBuilding(int id)
+    public async Task<IActionResult> GetBuilding(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.Buildings.GetBuildingById(id);
+        var entity = await _serviceWrapper.Buildings.GetBuildingById(id, token);
         if (entity == null)
             return NotFound(new
             {
@@ -128,9 +128,10 @@ public class BuildingsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update Building info (For management)")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> PutBuilding(int id, [FromBody] BuildingUpdateRequest building)
+    public async Task<IActionResult> PutBuilding(int id, [FromBody] BuildingUpdateRequest building,
+        CancellationToken token)
     {
-        var validation = await _validator.ValidateParams(building, id);
+        var validation = await _validator.ValidateParams(building, id, token);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -178,11 +179,11 @@ public class BuildingsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create building (For management)")]
     [Authorize(Roles = "Supervisor")]
     [HttpPost]
-    public async Task<IActionResult> PostBuilding([FromBody] BuildingCreateRequest building)
+    public async Task<IActionResult> PostBuilding([FromBody] BuildingCreateRequest building, CancellationToken token)
     {
         var employeeId = int.Parse(User.Identity.Name);
 
-        var supervisor = await _serviceWrapper.Employees.GetEmployeeById(employeeId);
+        var supervisor = await _serviceWrapper.Employees.GetEmployeeById(employeeId, token);
 
         if (supervisor == null)
             return NotFound(new
@@ -192,7 +193,7 @@ public class BuildingsController : ControllerBase
                 data = ""
             });
 
-        var validation = await _validator.ValidateParams(building);
+        var validation = await _validator.ValidateParams(building, token);
 
         var newBuilding = new Building
         {

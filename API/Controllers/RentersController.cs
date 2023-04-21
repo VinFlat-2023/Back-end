@@ -70,9 +70,9 @@ public class RentersController : ControllerBase
     [HttpGet("{id:int}")]
     [Authorize(Roles = "Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Get renter by id (For management)")]
-    public async Task<IActionResult> GetRenter(int id)
+    public async Task<IActionResult> GetRenter(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.Renters.GetRenterById(id);
+        var entity = await _serviceWrapper.Renters.GetRenterById(id, token);
 
         return entity == null
             ? NotFound(new
@@ -92,10 +92,10 @@ public class RentersController : ControllerBase
     [HttpGet("profile")]
     [Authorize(Roles = "Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get renter profile by logged in user (For Renter)")]
-    public async Task<IActionResult> GetRenter()
+    public async Task<IActionResult> GetRenter(CancellationToken token)
     {
         var renterId = int.Parse(User.Identity?.Name);
-        var entity = await _serviceWrapper.Renters.GetRenterById(renterId);
+        var entity = await _serviceWrapper.Renters.GetRenterById(renterId, token);
 
         return entity == null
             ? NotFound(new
@@ -119,7 +119,7 @@ public class RentersController : ControllerBase
     {
         var userId = int.Parse(User.Identity?.Name);
 
-        var userEntity = await _serviceWrapper.Renters.GetRenterById(userId);
+        var userEntity = await _serviceWrapper.Renters.GetRenterById(userId, token);
 
         if (userEntity == null)
             return NotFound(new
@@ -129,7 +129,7 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
-        var rentalCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+        var rentalCheck = await _serviceWrapper.Renters.GetRenterById(userId, token);
 
         if (rentalCheck == null)
             return NotFound(new
@@ -139,7 +139,7 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
-        var contract = await _serviceWrapper.Contracts.GetContractByIdWithActiveStatus(rentalCheck.RenterId);
+        var contract = await _serviceWrapper.Contracts.GetContractByIdWithActiveStatus(rentalCheck.RenterId, token);
         if (contract == null)
             return NotFound(new
             {
@@ -148,7 +148,7 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
-        var building = await _serviceWrapper.Buildings.GetBuildingById(contract.BuildingId);
+        var building = await _serviceWrapper.Buildings.GetBuildingById(contract.BuildingId, token);
         if (building == null)
             return NotFound(new
             {
@@ -157,7 +157,7 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
-        var flatCheck = await _serviceWrapper.Flats.GetFlatById(contract.FlatId);
+        var flatCheck = await _serviceWrapper.Flats.GetFlatById(contract.FlatId, token);
         if (flatCheck == null)
             return NotFound(new
             {
@@ -224,25 +224,90 @@ public class RentersController : ControllerBase
         });
     }
 
+    [HttpGet("basic-rental")]
+    [Authorize(Roles = "Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Get current renter rental (For renter)")]
+    public async Task<IActionResult> GetBasicRental(CancellationToken token)
+    {
+        var userId = int.Parse(User.Identity?.Name);
+
+        var userEntity = await _serviceWrapper.Renters.GetRenterById(userId, token);
+
+        if (userEntity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "This user does not exist in our system",
+                data = ""
+            });
+
+        var rentalCheck = await _serviceWrapper.Renters.GetRenterById(userId, token);
+
+        if (rentalCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "This renter does not exist in our system",
+                data = ""
+            });
+
+        var contract = await _serviceWrapper.Contracts.GetContractByIdWithActiveStatus(rentalCheck.RenterId, token);
+        if (contract == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "This renter does not have any active contract",
+                data = ""
+            });
+
+        var building = await _serviceWrapper.Buildings.GetBuildingById(contract.BuildingId, token);
+        if (building == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "This building does not exist in our system",
+                data = ""
+            });
+
+        var flatCheck = await _serviceWrapper.Flats.GetFlatById(contract.FlatId, token);
+        if (flatCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "This flat does not exist in our system",
+                data = ""
+            });
+
+        // GET BUILDING / FLAT / RENTER / ROOM
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Rental found",
+            data = ""
+        });
+    }
+
 
     // PUT: api/Renters/5
     // To protect from over posting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("profile/update")]
     [Authorize(Roles = "Renter")]
     [SwaggerOperation(Summary = "[Authorize] Update renter (For renter)")]
-    public async Task<IActionResult> PutRenter([FromBody] RenterUpdateRequest renter)
+    public async Task<IActionResult> PutRenter([FromBody] RenterUpdateRequest renter, CancellationToken token)
     {
         var userId = int.Parse(User.Identity?.Name);
 
-        var renterCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+        var validation = await _renterValidator.ValidateParams(renter, userId, token);
 
-        if (renterCheck == null)
-            return NotFound(new
+        if (!validation.IsValid)
+            return BadRequest(new
             {
-                status = "Not Found",
-                message = "Renters not found",
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+
 
         //var imageExtension = ImageExtension.ImageExtensionChecker(renter.Image?.FileName);
 
@@ -268,15 +333,6 @@ public class RentersController : ControllerBase
             Gender = renter.Gender
         };
 
-        var validation = await _renterValidator.ValidateParams(finalizeUpdate, userId);
-        if (!validation.IsValid)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = validation.Failures.FirstOrDefault(),
-                data = ""
-            });
-
         var result = await _serviceWrapper.Renters.UpdateRenter(finalizeUpdate);
 
         return result.IsSuccess switch
@@ -300,11 +356,12 @@ public class RentersController : ControllerBase
     [HttpPut("change-password")]
     [Authorize(Roles = "Renter")]
     [SwaggerOperation(Summary = "[Authorize] Update renter password (For renter)")]
-    public async Task<IActionResult> ChangePassword([FromBody] RenterUpdatePasswordRequest renter)
+    public async Task<IActionResult> ChangePassword([FromBody] RenterUpdatePasswordRequest renter,
+        CancellationToken token)
     {
         var renterId = int.Parse(User.Identity?.Name);
 
-        var renterEntity = await _serviceWrapper.Renters.GetRenterById(renterId);
+        var renterEntity = await _serviceWrapper.Renters.GetRenterById(renterId, token);
 
         if (renterEntity == null)
             return NotFound(new
@@ -314,29 +371,7 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
-        if (renter.OldPassword != renterEntity.Password)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Mật khẩu cũ không đúng, vui lòng kiểm tra lại",
-                data = ""
-            });
-
-        if (renter.Password != renter.ConfirmPassword)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Password and confirm password do not match",
-                data = ""
-            });
-
-        var validation = await _passwordValidator.ValidateParams(renter.Password, renterId, true);
-
-        var finalizePasswordUpdate = new Renter
-        {
-            RenterId = renterId,
-            Password = renter.Password
-        };
+        var validation = await _passwordValidator.ValidateParams(renter, renterId, token);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -345,6 +380,12 @@ public class RentersController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+
+        var finalizePasswordUpdate = new Renter
+        {
+            RenterId = renterId,
+            Password = renter.Password
+        };
 
         var result = await _serviceWrapper.Renters.UpdatePasswordRenter(finalizePasswordUpdate);
 
@@ -356,13 +397,13 @@ public class RentersController : ControllerBase
                 new
                 {
                     status = "Success",
-                    message = "Renter updated",
+                    message = "Cập nhập mật khẩu thành công",
                     data = jwtToken
                 }),
             false => BadRequest(new
             {
                 status = "Bad Request",
-                message = "Renter failed to update",
+                message = "Cập nhập mật khẩu thất bại",
                 data = ""
             })
         };
@@ -452,9 +493,9 @@ public class RentersController : ControllerBase
     [HttpDelete("{id:int}")]
     [Authorize(Roles = "Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Disable renter by id (For management)")]
-    public async Task<IActionResult> DeleteRenter(int id)
+    public async Task<IActionResult> DeleteRenter(int id, CancellationToken token)
     {
-        var renter = await _serviceWrapper.Renters.GetRenterById(id);
+        var renter = await _serviceWrapper.Renters.GetRenterById(id, token);
 
         if (renter == null)
             return BadRequest(new

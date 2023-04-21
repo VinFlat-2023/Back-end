@@ -65,14 +65,14 @@ public class EmployeesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get employee by ID")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetEmployee(int id)
+    public async Task<IActionResult> GetEmployee(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.Employees.GetEmployeeById(id);
+        var entity = await _serviceWrapper.Employees.GetEmployeeById(id, token);
         if (entity == null)
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Employee not found",
+                message = "Nhân viên không tồn tại",
                 data = ""
             });
         return Ok(
@@ -87,15 +87,15 @@ public class EmployeesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get current logged in employee")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpGet("profile")]
-    public async Task<IActionResult> GetCurrentLoginEmployee()
+    public async Task<IActionResult> GetCurrentLoginEmployee(CancellationToken token)
     {
         var employeeId = int.Parse(User.Identity?.Name);
-        var entity = await _serviceWrapper.Employees.GetEmployeeById(employeeId);
+        var entity = await _serviceWrapper.Employees.GetEmployeeById(employeeId, token);
         if (entity == null)
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Employee not found",
+                message = "Nhân viên không tồn tại",
                 data = ""
             });
         return Ok(
@@ -111,9 +111,9 @@ public class EmployeesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create Employee")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpPost("register")]
-    public async Task<IActionResult> CreateEmployee([FromBody] EmployeeCreateRequest employee)
+    public async Task<IActionResult> CreateEmployee([FromBody] EmployeeCreateRequest employee, CancellationToken token)
     {
-        var validation = await _employeeValidator.ValidateParams(employee);
+        var validation = await _employeeValidator.ValidateParams(employee, token);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -122,7 +122,7 @@ public class EmployeesController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
-        
+
         var newEmployee = new Employee
         {
             Username = employee.Username,
@@ -176,9 +176,10 @@ public class EmployeesController : ControllerBase
     [SwaggerOperation(Summary = "Update employee info")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateEmployee(int id, [FromBody] EmployeeUpdateRequest employee)
+    public async Task<IActionResult> UpdateEmployee(int id, [FromBody] EmployeeUpdateRequest employee,
+        CancellationToken token)
     {
-        var validation = await _employeeValidator.ValidateParams(employee, id);
+        var validation = await _employeeValidator.ValidateParams(employee, id, token);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -187,7 +188,7 @@ public class EmployeesController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
-        
+
         var updateEmployee = new Employee
         {
             EmployeeId = id,
@@ -219,11 +220,11 @@ public class EmployeesController : ControllerBase
     [SwaggerOperation(Summary = "Update employee info")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpPut("profile/update")]
-    public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeUpdateRequest employee)
+    public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeUpdateRequest employee, CancellationToken token)
     {
         var employeeId = int.Parse(User.Identity?.Name);
-        
-        var validation = await _employeeValidator.ValidateParams(employee, employeeId);
+
+        var validation = await _employeeValidator.ValidateParams(employee, employeeId, token);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -241,7 +242,7 @@ public class EmployeesController : ControllerBase
             Phone = employee.Phone,
             FullName = employee.Fullname
         };
-       
+
         var result = await _serviceWrapper.Employees.UpdateEmployee(updateEmployee);
 
         return result.IsSuccess switch
@@ -264,10 +265,22 @@ public class EmployeesController : ControllerBase
     [SwaggerOperation(Summary = "Update employee password")]
     [Authorize(Roles = "Admin, Supervisor, Technician")]
     [HttpPut("change-password")]
-    public async Task<IActionResult> UpdateEmployeePassword([FromBody] EmployeeUpdatePasswordRequest employee)
+    public async Task<IActionResult> UpdateEmployeePassword([FromBody] EmployeeUpdatePasswordRequest employee,
+        CancellationToken token)
     {
         var employeeId = int.Parse(User.Identity?.Name);
-        var employeeEntity = await _serviceWrapper.Employees.GetEmployeeById(employeeId);
+
+        var validation = await _passwordValidator.ValidateParams(employee, employeeId, token);
+
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
+        var employeeEntity = await _serviceWrapper.Employees.GetEmployeeById(employeeId, token);
 
         if (employeeEntity == null)
             return NotFound(new
@@ -277,39 +290,12 @@ public class EmployeesController : ControllerBase
                 data = ""
             });
 
-        if (employee.OldPassword != employeeEntity.Password)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Mật khẩu cũ không đúng, vui lòng kiểm tra lại",
-                data = ""
-            });
-
-        if (employee.Password != employee.ConfirmPassword)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Mật khẩu mới và mật khẩu xác nhận không khớp, vui lòng kiểm tra lại",
-                data = ""
-            });
-        
-        var validation = await _passwordValidator
-            .ValidateParams(employee.Password, employeeId, false);
-
         var updatePasswordEmployee = new Employee
         {
             EmployeeId = employeeId,
             Password = employee.Password
         };
 
-        
-        if (!validation.IsValid)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = validation.Failures.FirstOrDefault(),
-                data = ""
-            });
 
         var result = await _serviceWrapper.Employees.UpdatePasswordEmployee(updatePasswordEmployee);
 
@@ -363,15 +349,15 @@ public class EmployeesController : ControllerBase
     [SwaggerOperation(Summary = "Remove Employee")]
     [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteEmployee(int id)
+    public async Task<IActionResult> DeleteEmployee(int id, CancellationToken token)
     {
-        var employee = await _serviceWrapper.Employees.GetEmployeeById(id);
+        var employee = await _serviceWrapper.Employees.GetEmployeeById(id, token);
 
         if (employee == null)
             return BadRequest(new
             {
                 status = "Bad Request",
-                message = "Employee not found",
+                message = "Nhân viên không tồn tại",
                 data = ""
             });
 

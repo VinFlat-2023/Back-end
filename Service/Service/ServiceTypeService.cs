@@ -36,7 +36,7 @@ public class ServiceTypeService : IServiceTypeService
         return pagedList;
     }
 
-    public async Task<ServiceType?> GetServiceTypeById(int? serviceTypeId)
+    public async Task<ServiceType?> GetServiceTypeById(int? serviceTypeId, CancellationToken cancellationToken)
     {
         return await _repositoryWrapper.ServiceTypes.GetServiceTypeDetail(serviceTypeId)
             .FirstOrDefaultAsync();

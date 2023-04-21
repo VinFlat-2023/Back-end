@@ -13,7 +13,7 @@ public class RoomValidator : BaseValidator, IRoomValidator
         _conditionCheckHelper = conditionCheckHelper;
     }
 
-    public async Task<ValidatorResult> ValidateParams(Room? obj, int? roomId)
+    public async Task<ValidatorResult> ValidateParams(Room? obj, int? roomId, CancellationToken token)
     {
         try
         {
@@ -27,7 +27,7 @@ public class RoomValidator : BaseValidator, IRoomValidator
                         ValidatorResult.Failures.Add("Room is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.RoomCheck(obj.RoomId) == null)
+                        if (await _conditionCheckHelper.RoomCheck(obj.RoomId, token) == null)
                             ValidatorResult.Failures.Add("Room provided does not exist");
                         break;
                 }

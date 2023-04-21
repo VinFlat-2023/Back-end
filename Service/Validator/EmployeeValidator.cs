@@ -1,5 +1,4 @@
 using System.Text.RegularExpressions;
-using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Employee;
 using Service.IHelper;
 using Service.IValidator;
@@ -15,167 +14,58 @@ public class EmployeeValidator : BaseValidator, IEmployeeValidator
         _conditionCheckHelper = conditionCheckHelper;
     }
 
-    public async Task<ValidatorResult> ValidateParams(Employee? obj, int? employeeId)
+    public async Task<ValidatorResult> ValidateParams(EmployeeUpdateRequest? obj, int? employeeId,
+        CancellationToken token)
     {
         try
         {
-            if (employeeId != null)
-                switch (obj?.EmployeeId)
-                {
-                    case not null when obj.EmployeeId != employeeId:
-                        ValidatorResult.Failures.Add("Employee id mismatch");
-                        break;
-                    case null:
-                        ValidatorResult.Failures.Add("Employee is required");
-                        break;
-                    case not null:
-                        if (await _conditionCheckHelper.EmployeeCheck(obj.EmployeeId) == null)
-                            ValidatorResult.Failures.Add("Employee provided does not exist");
-                        break;
-                }
-
-            if (employeeId == null)
-                switch (obj?.Username)
-                {
-                    case not null when obj.Username.Length > 100:
-                        ValidatorResult.Failures.Add("Username cannot exceed 100 characters");
-                        break;
-                    case not null when obj.Username.Length < 4:
-                        ValidatorResult.Failures.Add("Username must be at least 4 characters");
-                        break;
-                    case not null when string.IsNullOrWhiteSpace(obj.Username):
-                        ValidatorResult.Failures.Add("Username is required");
-                        break;
-                    case not null when await _conditionCheckHelper.EmployeeUsernameExist(obj.Username) != null:
-                        ValidatorResult.Failures.Add("Username is duplicated");
-                        break;
-                    case not null when await _conditionCheckHelper.RenterUsernameCheck(obj.Username) != null:
-                        ValidatorResult.Failures.Add("Username is duplicated");
-                        break;
-                }
-
-            switch (obj?.FullName)
-            {
-                case not null when obj.FullName.Length > 100:
-                    ValidatorResult.Failures.Add("Name cannot exceed 100 characters");
-                    break;
-                case not null when string.IsNullOrWhiteSpace(obj.FullName):
-                    ValidatorResult.Failures.Add("Name is required");
-                    break;
-            }
-
-            if (employeeId == null)
-                switch (obj?.Password)
-                {
-                    case not null when obj.Password.Length > 100:
-                        ValidatorResult.Failures.Add("Password cannot exceed 100 characters");
-                        break;
-                    case not null when string.IsNullOrWhiteSpace(obj.Password):
-                        ValidatorResult.Failures.Add("Password is required");
-                        break;
-                }
-
-            switch (obj?.Email)
-            {
-                case not null when obj.Email.Length > 100:
-                    ValidatorResult.Failures.Add("Email cannot exceed 100 characters");
-                    break;
-                case not null when string.IsNullOrWhiteSpace(obj.Email):
-                    ValidatorResult.Failures.Add("Email is required");
-                    break;
-                case not null when !Regex.IsMatch(obj.Email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"):
-                    ValidatorResult.Failures.Add("Email is invalid");
-                    break;
-                case not null when await _conditionCheckHelper.EmployeeEmailCheck(obj.Email) != null:
-                    ValidatorResult.Failures.Add("Email is duplicated");
-                    break;
-                case not null when await _conditionCheckHelper.RenterEmailCheck(obj.Email) != null:
-                    ValidatorResult.Failures.Add("Email is duplicated");
-                    break;
-            }
-
-            var validatePhoneNumberRegex =
-                new Regex("^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$");
-
-            switch (obj?.Phone)
-            {
-                case not null when string.IsNullOrWhiteSpace(obj.Phone):
-                    ValidatorResult.Failures.Add("Phone is required");
-                    break;
-                case not null when !validatePhoneNumberRegex.IsMatch(obj.Phone):
-                    ValidatorResult.Failures.Add("Phone number is invalid");
-                    break;
-                case not null when obj.Phone.Length > 13:
-                    ValidatorResult.Failures.Add("Phone number cannot exceed 13 characters");
-                    break;
-                case not null when obj.Phone.Length < 7:
-                    ValidatorResult.Failures.Add("Phone number cannot be less than 7 characters");
-                    break;
-            }
-
-            if (obj?.Status == null)
-                ValidatorResult.Failures.Add("Status is required");
-
-            if (employeeId == null)
-                switch (obj?.RoleId)
-                {
-                    case null:
-                        ValidatorResult.Failures.Add("Role is required");
-                        break;
-                    case not null:
-                        var roleValidation = await _conditionCheckHelper.RoleCheck(obj.RoleId);
-                        switch (roleValidation)
-                        {
-                            case null:
-                                ValidatorResult.Failures.Add("Role provided does not exist");
-                                break;
-                        }
-
-                        break;
-                }
-        }
-        catch (Exception e)
-        {
-            ValidatorResult.Failures.Add("An error occurred while validating the employee");
-            Console.WriteLine(e.Message, e.Data);
-        }
-
-        return ValidatorResult;
-    }
-
-    public async Task<ValidatorResult> ValidateParams(EmployeeUpdateRequest? obj, int? employeeId)
-    {
-        try
-        {
-            if (await _conditionCheckHelper.EmployeeCheck(employeeId) == null)
-                ValidatorResult.Failures.Add("Employee provided does not exist");
+            if (obj == null)
+                ValidatorResult.Failures.Add("Dữ liệu không được để trống");
+            if (await _conditionCheckHelper.EmployeeCheck(employeeId, token) == null)
+                ValidatorResult.Failures.Add("Nhân viên không tồn tại");
 
             switch (obj?.Fullname)
             {
                 case not null when obj.Fullname.Length > 100:
-                    ValidatorResult.Failures.Add("Name cannot exceed 100 characters");
+                    ValidatorResult.Failures.Add("Tên không được vượt quá 100 ký tự");
                     break;
                 case not null when string.IsNullOrWhiteSpace(obj.Fullname):
-                    ValidatorResult.Failures.Add("Name is required");
+                    ValidatorResult.Failures.Add("Tên không được để trống");
                     break;
             }
 
             switch (obj?.Email)
             {
                 case not null when obj.Email.Length > 100:
-                    ValidatorResult.Failures.Add("Email cannot exceed 100 characters");
+                    ValidatorResult.Failures.Add("Địa chỉ email không được vượt quá 100 ký tự");
                     break;
                 case not null when string.IsNullOrWhiteSpace(obj.Email):
-                    ValidatorResult.Failures.Add("Email is required");
+                    ValidatorResult.Failures.Add("Địa chỉ email không được để trống");
                     break;
                 case not null when !Regex.IsMatch(obj.Email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"):
-                    ValidatorResult.Failures.Add("Email is invalid");
+                    ValidatorResult.Failures.Add("Địa chỉ email không hợp lệ");
                     break;
-                case not null when await _conditionCheckHelper.EmployeeEmailCheck(obj.Email) != null:
-                    ValidatorResult.Failures.Add("Email is duplicated");
-                    break;
-                case not null when await _conditionCheckHelper.RenterEmailCheck(obj.Email) != null:
-                    ValidatorResult.Failures.Add("Email is duplicated");
+                case not null:
+                    var employee = await _conditionCheckHelper.EmployeeEmailCheck(obj.Email, employeeId, token);
+                    switch (employee.IsSuccess)
+                    {
+                        case true:
+                            break;
+                        case false:
+                            ValidatorResult.Failures.Add(employee.Message);
+                            break;
+                    }
+
+                    var renter = await _conditionCheckHelper.RenterEmailCheck(obj.Email, token);
+                    switch (renter.IsSuccess)
+                    {
+                        case true:
+                            break;
+                        case false:
+                            ValidatorResult.Failures.Add(renter.Message);
+                            break;
+                    }
+
                     break;
             }
 
@@ -185,16 +75,16 @@ public class EmployeeValidator : BaseValidator, IEmployeeValidator
             switch (obj?.Phone)
             {
                 case not null when string.IsNullOrWhiteSpace(obj.Phone):
-                    ValidatorResult.Failures.Add("Phone is required");
+                    ValidatorResult.Failures.Add("Số điện thoại không được để trống");
                     break;
                 case not null when !validatePhoneNumberRegex.IsMatch(obj.Phone):
-                    ValidatorResult.Failures.Add("Phone number is invalid");
+                    ValidatorResult.Failures.Add("Số điện thoại không hợp lệ");
                     break;
                 case not null when obj.Phone.Length > 13:
-                    ValidatorResult.Failures.Add("Phone number cannot exceed 13 characters");
+                    ValidatorResult.Failures.Add("Số điện thoại không được vượt quá 13 ký tự");
                     break;
                 case not null when obj.Phone.Length < 7:
-                    ValidatorResult.Failures.Add("Phone number cannot be less than 7 characters");
+                    ValidatorResult.Failures.Add("Số điện thoại không được ít hơn 7 ký tự");
                     break;
             }
         }
@@ -207,55 +97,89 @@ public class EmployeeValidator : BaseValidator, IEmployeeValidator
         return ValidatorResult;
     }
 
-    public async Task<ValidatorResult> ValidateParams(EmployeeCreateRequest? obj)
+    public async Task<ValidatorResult> ValidateParams(EmployeeCreateRequest? obj, CancellationToken token)
     {
         try
         {
+            if (obj == null)
+                ValidatorResult.Failures.Add("Dữ liệu không được để trống");
             switch (obj?.Username)
             {
                 case not null when obj.Username.Length > 100:
-                    ValidatorResult.Failures.Add("Username cannot exceed 100 characters");
+                    ValidatorResult.Failures.Add("Tên đăng nhập không được vượt quá 100 ký tự");
                     break;
                 case not null when obj.Username.Length < 4:
-                    ValidatorResult.Failures.Add("Username must be at least 4 characters");
+                    ValidatorResult.Failures.Add("Tên đăng nhập không được ít hơn 4 ký tự");
                     break;
                 case not null when string.IsNullOrWhiteSpace(obj.Username):
-                    ValidatorResult.Failures.Add("Username is required");
+                    ValidatorResult.Failures.Add("Tên đăng nhập không được để trống");
                     break;
-                case not null when await _conditionCheckHelper.EmployeeUsernameExist(obj.Username) != null:
-                    ValidatorResult.Failures.Add("Username is duplicated");
-                    break;
-                case not null when await _conditionCheckHelper.RenterUsernameCheck(obj.Username) != null:
-                    ValidatorResult.Failures.Add("Username is duplicated");
+                case not null:
+                    var employee = await _conditionCheckHelper.EmployeeUsernameExist(obj.Username, token);
+                    switch (employee.IsSuccess)
+                    {
+                        case true:
+                            break;
+                        case false:
+                            ValidatorResult.Failures.Add(employee.Message);
+                            break;
+                    }
+
+                    var renter = await _conditionCheckHelper.RenterUsernameCheck(obj.Username, token);
+                    switch (renter.IsSuccess)
+                    {
+                        case true:
+                            break;
+                        case false:
+                            ValidatorResult.Failures.Add(renter.Message);
+                            break;
+                    }
+
                     break;
             }
 
             switch (obj?.Fullname)
             {
                 case not null when obj.Fullname.Length > 100:
-                    ValidatorResult.Failures.Add("Name cannot exceed 100 characters");
+                    ValidatorResult.Failures.Add("Tên nhân viên không được vượt quá 100 ký tự");
                     break;
                 case not null when string.IsNullOrWhiteSpace(obj.Fullname):
-                    ValidatorResult.Failures.Add("Name is required");
+                    ValidatorResult.Failures.Add("Tên không được để trống");
                     break;
             }
 
             switch (obj?.Email)
             {
                 case not null when obj.Email.Length > 100:
-                    ValidatorResult.Failures.Add("Email cannot exceed 100 characters");
+                    ValidatorResult.Failures.Add("Địa chỉ email không được vượt quá 100 ký tự");
                     break;
                 case not null when string.IsNullOrWhiteSpace(obj.Email):
-                    ValidatorResult.Failures.Add("Email is required");
+                    ValidatorResult.Failures.Add("Địa chỉ email không được để trống");
                     break;
                 case not null when !Regex.IsMatch(obj.Email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"):
-                    ValidatorResult.Failures.Add("Email is invalid");
+                    ValidatorResult.Failures.Add("Địa chỉ email không hợp lệ");
                     break;
-                case not null when await _conditionCheckHelper.EmployeeEmailCheck(obj.Email) != null:
-                    ValidatorResult.Failures.Add("Email is duplicated");
-                    break;
-                case not null when await _conditionCheckHelper.RenterEmailCheck(obj.Email) != null:
-                    ValidatorResult.Failures.Add("Email is duplicated");
+                case not null:
+                    var employee = await _conditionCheckHelper.EmployeeEmailCheck(obj.Email, token);
+                    switch (employee.IsSuccess)
+                    {
+                        case true:
+                            break;
+                        case false:
+                            ValidatorResult.Failures.Add(employee.Message);
+                            break;
+                    }
+
+                    var renter = await _conditionCheckHelper.RenterEmailCheck(obj.Email, token);
+                    switch (renter.IsSuccess)
+                    {
+                        case true:
+                            break;
+                        case false:
+                            ValidatorResult.Failures.Add(renter.Message);
+                            break;
+                    }
+
                     break;
             }
 
@@ -265,30 +189,52 @@ public class EmployeeValidator : BaseValidator, IEmployeeValidator
             switch (obj?.Phone)
             {
                 case not null when string.IsNullOrWhiteSpace(obj.Phone):
-                    ValidatorResult.Failures.Add("Phone is required");
+                    ValidatorResult.Failures.Add("Số điện thoại không được để trống");
                     break;
                 case not null when !validatePhoneNumberRegex.IsMatch(obj.Phone):
-                    ValidatorResult.Failures.Add("Phone number is invalid");
+                    ValidatorResult.Failures.Add("Số điện thoại không hợp lệ");
                     break;
                 case not null when obj.Phone.Length > 13:
-                    ValidatorResult.Failures.Add("Phone number cannot exceed 13 characters");
+                    ValidatorResult.Failures.Add("Số điện thoại không được vượt quá 13 ký tự");
                     break;
                 case not null when obj.Phone.Length < 7:
-                    ValidatorResult.Failures.Add("Phone number cannot be less than 7 characters");
+                    ValidatorResult.Failures.Add("Số điện thoại không được ít hơn 7 ký tự");
+                    break;
+                case not null:
+                    var employee = await _conditionCheckHelper.EmployeeEmailCheck(obj.Email, token);
+                    switch (employee.IsSuccess)
+                    {
+                        case true:
+                            break;
+                        case false:
+                            ValidatorResult.Failures.Add(employee.Message);
+                            break;
+                    }
+
+                    var renter = await _conditionCheckHelper.RenterEmailCheck(obj.Email, token);
+                    switch (renter.IsSuccess)
+                    {
+                        case true:
+                            break;
+                        case false:
+                            ValidatorResult.Failures.Add(renter.Message);
+                            break;
+                    }
+
                     break;
             }
 
             switch (obj?.RoleId)
             {
                 case null:
-                    ValidatorResult.Failures.Add("Role is required");
+                    ValidatorResult.Failures.Add("Vai trò không được để trống");
                     break;
                 case not null:
-                    var roleValidation = await _conditionCheckHelper.RoleCheck(obj.RoleId);
+                    var roleValidation = await _conditionCheckHelper.RoleCheck(obj.RoleId, token);
                     switch (roleValidation)
                     {
                         case null:
-                            ValidatorResult.Failures.Add("Role provided does not exist");
+                            ValidatorResult.Failures.Add("Vai trò không tồn tại");
                             break;
                     }
 

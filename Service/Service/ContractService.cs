@@ -71,16 +71,16 @@ public class ContractService : IContractService
         return pagedList;
     }
 
-    public async Task<Contract?> GetContractById(int? contractId)
+    public async Task<Contract?> GetContractById(int? contractId, CancellationToken cancellationToken)
     {
         return await _repositoryWrapper.Contracts.GetContractDetail(contractId)
             .FirstOrDefaultAsync();
     }
 
-    public async Task<Contract?> GetContractByIdWithActiveStatus(int contractId)
+    public async Task<Contract?> GetContractByIdWithActiveStatus(int contractId, CancellationToken token)
     {
         return await _repositoryWrapper.Contracts.GetContractDetail(contractId)
-            .FirstOrDefaultAsync(x => x != null && x.ContractStatus == "Active");
+            .FirstOrDefaultAsync(x => x != null && x.ContractStatus == "Active", token);
     }
 
     public async Task<Contract?> GetLatestContractByUserId(int renterId, CancellationToken token)
@@ -90,10 +90,10 @@ public class ContractService : IContractService
             .LastOrDefaultAsync(token);
     }
 
-    public async Task<Contract?> GetContractHistoryById(int contractId)
+    public async Task<Contract?> GetContractHistoryById(int contractId, CancellationToken token)
     {
         return await _repositoryWrapper.Contracts.GetContractHistoryDetail(contractId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(token);
     }
 
     public async Task<Contract?> AddContract(Contract contract)

@@ -10,7 +10,7 @@ public interface IInvoiceDetailService
     Task<InvoiceDetail?> AddInvoiceDetail(InvoiceDetail invoiceDetail);
     Task<List<InvoiceDetail>> GetInvoiceDetailListByUserId(int id, CancellationToken token);
     Task<InvoiceDetail?> GetActiveInvoiceDetailByUserId(int id, CancellationToken token);
-    Task<InvoiceDetail?> GetInvoiceDetailById(int? id);
+    Task<InvoiceDetail?> GetInvoiceDetailById(int? id, CancellationToken cancellationToken);
     Task<PagedList<InvoiceDetail>?> GetInvoiceDetails(InvoiceDetailFilter filters, CancellationToken token);
     Task<RepositoryResponse> DeleteInvoiceDetail(int id);
 }

@@ -53,16 +53,16 @@ public class TicketService : ITicketService
         return pagedList;
     }
 
-    public async Task<Ticket?> GetTicketById(int? ticketId)
+    public async Task<Ticket?> GetTicketById(int? ticketId, CancellationToken cancellationToken)
     {
         return await _repositoryWrapper.Tickets.GetTicketDetail(ticketId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<Ticket?> GetTicketById(int? ticketId, int? renterId)
+    public async Task<Ticket?> GetTicketById(int? ticketId, int? renterId, CancellationToken cancellationToken)
     {
         return await _repositoryWrapper.Tickets.GetTicketDetail(ticketId, renterId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<Ticket?> AddTicket(Ticket ticket)

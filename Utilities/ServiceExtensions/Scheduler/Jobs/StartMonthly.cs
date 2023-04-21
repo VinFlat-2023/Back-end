@@ -35,7 +35,7 @@ public class StartMonthlyJob : IJob
             Console.WriteLine(ex.ToString());
         }
 
-        await mailService.SendPaymentReminderAsync();
+        await mailService.SendPaymentReminderAsync(CancellationToken.None);
         Console.WriteLine($"Monthly Task completed at {DateTime.Now.ToString("dd/MM/yy hh.mm.ss")}");
         //return Task.CompletedTask;
     }

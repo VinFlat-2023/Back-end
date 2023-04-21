@@ -88,16 +88,81 @@ public class RenterRepository : IRenterRepository
         return user;
     }
 
-    public async Task<Renter?> RenterUsernameCheck(string? username)
+    public async Task<RepositoryResponse> RenterUsernameCheck(string? username, CancellationToken token)
     {
-        return await _context.Renters
-            .FirstOrDefaultAsync(x => x.Username.ToLower().Equals(username.ToLower()));
+        var renter = await _context.Renters
+            .FirstOrDefaultAsync(x => x.Username.ToLower().Equals(username.ToLower()), token);
+        if (renter == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Tên đăng nhập này chưa tồn tại"
+            };
+        return new RepositoryResponse
+        {
+            IsSuccess = false,
+            Message = "Tên đăng nhập này đã tồn tại"
+        };
     }
 
-    public async Task<Renter?> RenterEmailCheck(string? email)
+    public async Task<RepositoryResponse> IsRenterEmailExist(string? email, CancellationToken token)
     {
-        return await _context.Renters
-            .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+        var renter = await _context.Renters
+            .Where(x => x.Email.ToLower().Equals(email.ToLower()))
+            .FirstOrDefaultAsync(token);
+        if (renter == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Địa chỉ email chưa tồn tại"
+            };
+        return new RepositoryResponse
+        {
+            IsSuccess = false,
+            Message = "Địa chỉ email đã tồn tại"
+        };
+    }
+
+    public async Task<RepositoryResponse> IsRenterEmailExist(string? email, int? renterId, CancellationToken token)
+    {
+        var renter = await _context.Renters
+            .FirstOrDefaultAsync(x => x.RenterId == renterId, token);
+
+        if (renter == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Không tìm thấy tài khoản này"
+            };
+
+        if (email == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Địa chỉ email không được để trống"
+            };
+
+        if (renter.Email?.Length == 0 || email.ToLower().Equals(renter.Email?.ToLower()))
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Địa chỉ email này thuộc tài khoản này"
+            };
+
+        if (await _context.Employees
+                .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()), token) == null)
+
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Địa chỉ email này chưa được sử dụng"
+            };
+
+        return new RepositoryResponse
+        {
+            IsSuccess = false,
+            Message = "Địa chỉ email này đã tồn tại"
+        };
     }
 
     /// <summary>
@@ -243,12 +308,13 @@ public class RenterRepository : IRenterRepository
     /// </summary>
     /// <param name="usernameOrPhoneNumber"></param>
     /// <param name="password"></param>
+    /// <param name="token"></param>
     /// <returns></returns>
-    public async Task<Renter?> GetRenter(string usernameOrPhoneNumber, string password)
+    public async Task<Renter?> GetRenter(string usernameOrPhoneNumber, string password, CancellationToken token)
     {
         return await _context.Renters
             .FirstOrDefaultAsync(a => (a.Username == usernameOrPhoneNumber || a.Phone == usernameOrPhoneNumber)
-                        && a.Password == password);
+                                      && a.Password == password, token);
     }
 
     public async Task<Renter?> GetARenterByUserName(string userName)

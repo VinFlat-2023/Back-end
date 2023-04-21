@@ -35,16 +35,90 @@ public class EmployeeRepository : IEmployeeRepository
             .AsNoTracking();
     }
 
-    public IQueryable<Employee> IsEmployeeEmailExist(string? email)
+    public async Task<RepositoryResponse> IsEmployeeEmailExist(string? email, CancellationToken token)
     {
-        return _context.Employees
-            .Where(x => x.Email.ToLower().Equals(email.ToLower()));
+        if (email == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Địa chỉ email không được để trống"
+            };
+
+        if (await _context.Employees
+                .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()), token) == null)
+
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Địa chỉ email này chưa được sử dụng"
+            };
+
+        return new RepositoryResponse
+        {
+            IsSuccess = false,
+            Message = "Địa chỉ email này đã tồn tại"
+        };
     }
 
-    public IQueryable<Employee> IsEmployeeUsernameExist(string? username)
+    public async Task<RepositoryResponse> IsEmployeeEmailExist(string? email, int? employeeId, CancellationToken token)
     {
-        return _context.Employees
-            .Where(x => x.Username.ToLower().Equals(username.ToLower()));
+        var employee = await _context.Employees
+            .FirstOrDefaultAsync(x => x.EmployeeId == employeeId, token);
+
+        if (employee == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Không tìm thấy tài khoản này"
+            };
+
+        if (email == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Địa chỉ email không được để trống"
+            };
+
+        if (email.ToLower().Equals(employee.Email.ToLower()))
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Địa chỉ email này thuộc tài khoản này"
+            };
+
+        if (await _context.Employees
+                .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()), token) == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Địa chỉ email này chưa được sử dụng"
+            };
+
+        return new RepositoryResponse
+        {
+            IsSuccess = false,
+            Message = "Địa chỉ email này đã tồn tại"
+        };
+    }
+
+    public async Task<RepositoryResponse> IsEmployeeUsernameExist(string? username, CancellationToken token)
+    {
+        var employee = await _context.Employees
+            .Where(x => x.Username.ToLower().Equals(username.ToLower()))
+            .FirstOrDefaultAsync(token);
+
+        if (employee == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Tên đăng nhập này chưa được sử dụng"
+            };
+
+        return new RepositoryResponse
+        {
+            IsSuccess = false,
+            Message = "Tên đăng nhập này đã tồn tại"
+        };
     }
 
     /// <summary>
@@ -85,9 +159,9 @@ public class EmployeeRepository : IEmployeeRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Employee not found"
+                Message = "Nhân viên không tồn tại"
             };
-        
+
         employeeData.Email = employee.Email;
         employeeData.Phone = employee.Phone;
         employeeData.Address = employee.Address;
@@ -98,7 +172,7 @@ public class EmployeeRepository : IEmployeeRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Employee updated successfully"
+            Message = "Thông tin của nhân viên đã được cập nhật thành công"
         };
     }
 
@@ -111,7 +185,7 @@ public class EmployeeRepository : IEmployeeRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Employee not found"
+                Message = "Nhân viên không tồn tại"
             };
 
         employeeData.Password = employee.Password;
@@ -121,7 +195,7 @@ public class EmployeeRepository : IEmployeeRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Employee password updated successfully"
+            Message = "Mật khẩu đã được cập nhật"
         };
     }
 
@@ -139,7 +213,7 @@ public class EmployeeRepository : IEmployeeRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Employee not found"
+                Message = "Nhân viên không tồn tại"
             };
 
         employeeFound.Status = !employeeFound.Status;
@@ -148,7 +222,7 @@ public class EmployeeRepository : IEmployeeRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Employee status updated successfully"
+            Message = "Trạng thái của nhân viên đã được cập nhật"
         };
     }
 
@@ -166,7 +240,7 @@ public class EmployeeRepository : IEmployeeRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Employee not found"
+                Message = "Nhân viên không tồn tại"
             };
 
         _context.Employees.Remove(employeeFound);
@@ -176,7 +250,7 @@ public class EmployeeRepository : IEmployeeRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Employee deleted successfully"
+            Message = "Nhân viên đã được xoá"
         };
     }
 
@@ -185,20 +259,22 @@ public class EmployeeRepository : IEmployeeRepository
     /// </summary>
     /// <param name="usernameOrPhoneNumber"></param>
     /// <param name="password"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<Employee?> GetEmployee(string usernameOrPhoneNumber, string password)
+    public async Task<Employee?> GetEmployee(string usernameOrPhoneNumber, string password,
+        CancellationToken cancellationToken)
     {
         return await _context.Employees
             .Include(b => b.Role)
             .FirstOrDefaultAsync(a => (a.Username == usernameOrPhoneNumber || a.Phone == usernameOrPhoneNumber)
-                        && a.Password == password);
+                                      && a.Password == password, cancellationToken);
     }
 
-    public async Task<Employee?> GetEmployeeByUserName(string userName)
+    public async Task<Employee?> GetEmployeeByUserName(string userName, CancellationToken token)
     {
         return await _context.Employees
             .Where(a => a.Username == userName)
-            .Include(b => b.Role).FirstOrDefaultAsync();
+            .Include(b => b.Role).FirstOrDefaultAsync(token);
     }
 
     public async Task<RepositoryResponse> UpdateEmployeeProfilePicture(Employee employee)
@@ -210,7 +286,7 @@ public class EmployeeRepository : IEmployeeRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Employee not found"
+                Message = "Nhân viên không tồn tại"
             };
 
         employeeData.ImageUrl = employee.ImageUrl;
@@ -220,7 +296,7 @@ public class EmployeeRepository : IEmployeeRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Employee profile picture updated successfully"
+            Message = "Thông tin nhân viên đã được cập nhật"
         };
     }
 

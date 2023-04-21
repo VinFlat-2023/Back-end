@@ -36,14 +36,13 @@ public class CustomeMailService : ICustomeMailService
         this.repositories = repositories;
     }
 
-    public async Task<bool> SendPaymentReminderAsync()
+    public async Task<bool> SendPaymentReminderAsync(CancellationToken token)
     {
-        var unpaidInvoices = repositories.Invoices.GetUnpaidInvoice();
+        var unpaidInvoices = await repositories.Invoices.GetUnpaidInvoice(token);
         var mimeMessages = CreatePaymentReminderMimeMessage(unpaidInvoices);
         foreach (var mimeMessage in mimeMessages) await SendAsync(mimeMessage);
         return true;
     }
-
 
     public async Task<bool> SendEmailWithDefaultTemplateAsync(IEnumerable<string> receivers, string subject,
         string content, IFormFileCollection attachments)
@@ -55,10 +54,10 @@ public class CustomeMailService : ICustomeMailService
         return true;
     }
 
-    public async Task<bool> SendPaymentConfirmAsync(MomoResponseEntity momo)
+    public async Task<bool> SendPaymentConfirmAsync(MomoResponseEntity momo, CancellationToken token)
     {
         var paidInvoiceId = int.Parse(momo.OrderId);
-        var paid = await repositories.Invoices.GetInvoiceIncludeRenter(paidInvoiceId);
+        var paid = await repositories.Invoices.GetInvoiceIncludeRenter(paidInvoiceId, token);
         return true;
     }
 

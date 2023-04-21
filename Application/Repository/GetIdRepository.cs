@@ -16,7 +16,7 @@ public class GetIdRepository : IGetIdRepository
     public async Task<int> GetBuildingIdBasedOnRenter(int renterId, CancellationToken token)
     {
         var contract = await _context.Contracts
-            .FirstOrDefaultAsync(x => x.RenterId == renterId);
+            .FirstOrDefaultAsync(x => x.RenterId == renterId, token);
 
         if (contract == null)
             return 0;
@@ -79,19 +79,19 @@ public class GetIdRepository : IGetIdRepository
 
         if (employeeList.Count == 0)
             return 0;
-        
+
         var employee = _context.Buildings
             .Include(x => x.Employee)
             .ThenInclude(x => x.Role)
             //.Where(x => x.BuildingId == entityBuildingId)
-            .Where(x => x.BuildingId == entityBuildingId 
+            .Where(x => x.BuildingId == entityBuildingId
                         && employeeList.Contains(x.EmployeeId)
                         && x.Status == true)
             .Select(x => x.EmployeeId);
 
         if (employee.Count() > 1 || !employee.Any())
             return -1;
-        
+
         return await employee.FirstOrDefaultAsync(token);
     }
 }

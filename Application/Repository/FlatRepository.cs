@@ -60,18 +60,18 @@ public class FlatRepository : IFlatRepository
             .Where(x => x.FlatId == flatId);
     }
 
-    public async Task<RepositoryResponse> GetRoomInAFlat(int flatId)
+    public async Task<RepositoryResponse> GetRoomInAFlat(int flatId, CancellationToken cancellationToken)
     {
         var roomInFlat = await _context.Flats
             .Where(x => x.FlatId == flatId)
             .Include(x => x.Rooms)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (roomInFlat == null)
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "This flat is not available"
+                Message = "Phòng này không tồn tại"
             };
 
         switch (roomInFlat)
@@ -125,7 +125,7 @@ public class FlatRepository : IFlatRepository
     /// </summary>
     /// <param name="flat"></param>
     /// <returns></returns>
-    public async Task<RepositoryResponse> UpdateFlat(Flat? flat)
+    public async Task<RepositoryResponse> UpdateFlat(Flat flat)
     {
         var flatData = await _context.Flats
             .FirstOrDefaultAsync(x => x.FlatId == flat!.FlatId);
@@ -157,6 +157,7 @@ public class FlatRepository : IFlatRepository
     ///     Delete Flat
     /// </summary>
     /// <param name="flatId"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public async Task<RepositoryResponse> DeleteFlat(int flatId)
     {

@@ -36,10 +36,10 @@ public class FlatService : IFlatService
         return pagedList;
     }
 
-    public async Task<Flat?> GetFlatById(int? flatId)
+    public async Task<Flat?> GetFlatById(int? flatId, CancellationToken token)
     {
         return await _repositoryWrapper.Flats.GetFlatDetail(flatId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(token);
     }
 
     public async Task<Flat?> AddFlat(Flat flat)
@@ -57,8 +57,8 @@ public class FlatService : IFlatService
         return await _repositoryWrapper.Flats.DeleteFlat(flatId);
     }
 
-    public async Task<RepositoryResponse> GetRoomInAFlat(int flatId)
+    public async Task<RepositoryResponse> GetRoomInAFlat(int flatId, CancellationToken token)
     {
-        return await _repositoryWrapper.Flats.GetRoomInAFlat(flatId);
+        return await _repositoryWrapper.Flats.GetRoomInAFlat(flatId, token);
     }
 }

@@ -64,9 +64,9 @@ public class FlatsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get flat (For management and renter)")]
     [HttpGet("{id:int}")]
     [Authorize(Roles = "Admin, Supervisor, Renter")]
-    public async Task<IActionResult> GetFlat(int id)
+    public async Task<IActionResult> GetFlat(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.Flats.GetFlatById(id);
+        var entity = await _serviceWrapper.Flats.GetFlatById(id, token);
         if (entity == null)
             return NotFound(new
             {
@@ -88,8 +88,18 @@ public class FlatsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update flat info (For management)")]
     [HttpPut("{id:int}")]
     [Authorize(Roles = "Admin, Supervisor")]
-    public async Task<IActionResult> PutFlat(int id, [FromBody] FlatUpdateRequest flat)
+    public async Task<IActionResult> PutFlat(int id, [FromBody] FlatUpdateRequest flat, CancellationToken token)
     {
+        var validation = await _validator.ValidateParams(flat, id, token);
+
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
         var updateFlat = new Flat
         {
             FlatId = id,
@@ -100,15 +110,6 @@ public class FlatsController : ControllerBase
             BuildingId = flat.BuildingId
         };
 
-        var validation = await _validator.ValidateParams(updateFlat, id);
-
-        if (!validation.IsValid)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = validation.Failures.FirstOrDefault(),
-                data = ""
-            });
 
         var result = await _serviceWrapper.Flats.UpdateFlat(updateFlat);
 
@@ -135,8 +136,18 @@ public class FlatsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create flat (For management)")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpPost]
-    public async Task<IActionResult> PostFlat([FromBody] FlatCreateRequest flat)
+    public async Task<IActionResult> PostFlat([FromBody] FlatCreateRequest flat, CancellationToken token)
     {
+        var validation = await _validator.ValidateParams(flat, token);
+
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
         var newFlat = new Flat
         {
             Name = flat.Name,
@@ -151,16 +162,6 @@ public class FlatsController : ControllerBase
             FlatTypeId = flat.FlatTypeId,
             BuildingId = flat.BuildingId
         };
-
-        var validation = await _validator.ValidateParams(newFlat, null);
-
-        if (!validation.IsValid)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = validation.Failures.FirstOrDefault(),
-                data = ""
-            });
 
         var result = await _serviceWrapper.Flats.AddFlat(newFlat);
 
@@ -238,9 +239,9 @@ public class FlatsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get flat type by id (For management and renter)")]
     [Authorize(Roles = "Admin, Supervisor, Renter")]
     [HttpGet("type/{id:int}")]
-    public async Task<IActionResult> GetFlatType(int id)
+    public async Task<IActionResult> GetFlatType(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.FlatTypes.GetFlatTypeById(id);
+        var entity = await _serviceWrapper.FlatTypes.GetFlatTypeById(id, token);
         return entity == null
             ? NotFound(new
             {
@@ -261,16 +262,11 @@ public class FlatsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update flat type info (For management)")]
     [Authorize(Roles = " Admin, Supervisor")]
     [HttpPut("type/{id:int}")]
-    public async Task<IActionResult> PutFlatType(int id, [FromBody] FlatTypeUpdateRequest flatType)
+    public async Task<IActionResult> PutFlatType(int id, [FromBody] FlatTypeUpdateRequest flatType,
+        CancellationToken token)
     {
-        var updateFlatType = new FlatType
-        {
-            FlatTypeId = id,
-            RoomCapacity = flatType.RoomCapacity,
-            Status = flatType.Status
-        };
+        var validation = await _validator.ValidateParams(flatType, id, token);
 
-        var validation = await _validator.ValidateParams(updateFlatType, id);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -278,6 +274,13 @@ public class FlatsController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+
+        var updateFlatType = new FlatType
+        {
+            FlatTypeId = id,
+            RoomCapacity = flatType.RoomCapacity,
+            Status = flatType.Status
+        };
 
         var result = await _serviceWrapper.FlatTypes.UpdateFlatType(updateFlatType);
 
@@ -303,15 +306,9 @@ public class FlatsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create flat type (For management)")]
     [Authorize(Roles = " Admin, Supervisor")]
     [HttpPost("type")]
-    public async Task<IActionResult> PostFlatType([FromBody] FlatTypeCreateRequest flatType)
+    public async Task<IActionResult> PostFlatType([FromBody] FlatTypeCreateRequest flatType, CancellationToken token)
     {
-        var newFlatType = new FlatType
-        {
-            RoomCapacity = flatType.RoomCapacity,
-            Status = flatType.Status
-        };
-
-        var validation = await _validator.ValidateParams(newFlatType, null);
+        var validation = await _validator.ValidateParams(flatType, token);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -320,6 +317,12 @@ public class FlatsController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+
+        var newFlatType = new FlatType
+        {
+            RoomCapacity = flatType.RoomCapacity,
+            Status = flatType.Status
+        };
 
         var result = await _serviceWrapper.FlatTypes.AddFlatType(newFlatType);
 
@@ -366,9 +369,9 @@ public class FlatsController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Check total available slots in a flat (For management)")]
     [Authorize(Roles = " Admin, Supervisor")]
     [HttpDelete("room/{id:int}/slot-available")]
-    public async Task<IActionResult> GetTotalAvailableRoom(int id)
+    public async Task<IActionResult> GetTotalAvailableRoom(int id, CancellationToken token)
     {
-        var result = await _serviceWrapper.Flats.GetRoomInAFlat(id);
+        var result = await _serviceWrapper.Flats.GetRoomInAFlat(id, token);
 
         return result.IsSuccess switch
         {
@@ -382,7 +385,7 @@ public class FlatsController : ControllerBase
     [HttpPost("{flatId:int}/room/{roomId:int}/slots")]
     public async Task<IActionResult> MoveNewRenterIn(int flatId, int roomId, int renterId, CancellationToken token)
     {
-        var entity = await _serviceWrapper.Flats.GetFlatById(flatId);
+        var entity = await _serviceWrapper.Flats.GetFlatById(flatId, token);
 
         if (entity == null)
             return NotFound(new

@@ -1,4 +1,6 @@
 using Domain.EntitiesForManagement;
+using Domain.EntityRequest.Service;
+using Domain.EntityRequest.ServiceType;
 using Service.IHelper;
 using Service.IValidator;
 
@@ -13,7 +15,7 @@ public class ServiceValidator : BaseValidator, IServiceValidator
         _conditionCheckHelper = conditionCheckHelper;
     }
 
-    public async Task<ValidatorResult> ValidateParams(ServiceEntity? obj, int? serviceId)
+    public async Task<ValidatorResult> ValidateParams(ServiceEntity? obj, int? serviceId, CancellationToken token)
     {
         try
         {
@@ -27,7 +29,7 @@ public class ServiceValidator : BaseValidator, IServiceValidator
                         ValidatorResult.Failures.Add("Building is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.ServiceCheck(obj.ServiceId) == null)
+                        if (await _conditionCheckHelper.ServiceCheck(obj.ServiceId, token) == null)
                             ValidatorResult.Failures.Add("Service provided does not exist");
                         break;
                 }
@@ -62,7 +64,7 @@ public class ServiceValidator : BaseValidator, IServiceValidator
                         ValidatorResult.Failures.Add("Service type is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.ServiceTypeCheck(obj.ServiceTypeId) == null)
+                        if (await _conditionCheckHelper.ServiceTypeCheck(obj.ServiceTypeId, token) == null)
                             ValidatorResult.Failures.Add("Service type provided does not exist");
                         break;
                 }
@@ -74,7 +76,7 @@ public class ServiceValidator : BaseValidator, IServiceValidator
                         ValidatorResult.Failures.Add("Building is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.BuildingCheck(obj.BuildingId) == null)
+                        if (await _conditionCheckHelper.BuildingCheck(obj.BuildingId, token) == null)
                             ValidatorResult.Failures.Add("Building provided does not exist");
                         break;
                 }
@@ -88,7 +90,17 @@ public class ServiceValidator : BaseValidator, IServiceValidator
         return ValidatorResult;
     }
 
-    public async Task<ValidatorResult> ValidateParams(ServiceType? obj, int? serviceTypeId)
+    public Task<ValidatorResult> ValidateParams(ServiceCreateRequest? service, CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<ValidatorResult> ValidateParams(ServiceUpdateRequest? service, int? serviceId, CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<ValidatorResult> ValidateParams(ServiceType? obj, int? serviceTypeId, CancellationToken token)
     {
         try
         {
@@ -102,7 +114,7 @@ public class ServiceValidator : BaseValidator, IServiceValidator
                         ValidatorResult.Failures.Add("Renter is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.ServiceTypeCheck(obj.ServiceTypeId) == null)
+                        if (await _conditionCheckHelper.ServiceTypeCheck(obj.ServiceTypeId, token) == null)
                             ValidatorResult.Failures.Add("Service type provided does not exist");
                         break;
                 }
@@ -127,5 +139,16 @@ public class ServiceValidator : BaseValidator, IServiceValidator
         }
 
         return ValidatorResult;
+    }
+
+    public Task<ValidatorResult> ValidateParams(ServiceTypeCreateRequest? serviceType, int? serviceTypeId,
+        CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<ValidatorResult> ValidateParams(ServiceTypeCreateRequest? serviceType, CancellationToken serviceTypeId)
+    {
+        throw new NotImplementedException();
     }
 }

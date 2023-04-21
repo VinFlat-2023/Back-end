@@ -3,7 +3,6 @@ using API.Extension;
 using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Ticket;
-using Domain.EntityRequest.TicketType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.Utils;
@@ -142,14 +141,14 @@ public class TicketsController : ControllerBase
     [HttpGet("{id:int}")]
     [Authorize(Roles = "Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get ticket by id (For management and renter)")]
-    public async Task<IActionResult> GetTicket(int id)
+    public async Task<IActionResult> GetTicket(int id, CancellationToken token)
     {
         var userRole = User.Identities
             .FirstOrDefault()?.Claims
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        var entity = await _serviceWrapper.Tickets.GetTicketById(id);
+        var entity = await _serviceWrapper.Tickets.GetTicketById(id, token);
 
         if (entity == null)
             return NotFound(new
@@ -171,7 +170,8 @@ public class TicketsController : ControllerBase
 
             case "Renter" when User.Identity?.Name == entity.Contract.RenterId.ToString():
 
-                var renterTicketCheck = await _serviceWrapper.Tickets.GetTicketById(id, entity.Contract.RenterId);
+                var renterTicketCheck =
+                    await _serviceWrapper.Tickets.GetTicketById(id, entity.Contract.RenterId, token);
 
                 if (renterTicketCheck == null)
                     return NotFound(new
@@ -211,9 +211,19 @@ public class TicketsController : ControllerBase
     [Authorize(Roles = "Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Update ticket by id (For management)",
         Description = "date format d/M/YYYY")]
-    public async Task<IActionResult> PutTicket(int id, [FromBody] TicketUpdateRequest ticketUpdateRequest)
+    public async Task<IActionResult> PutTicket(int id, [FromBody] TicketUpdateRequest ticketUpdateRequest,
+        CancellationToken token)
     {
-        var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id);
+        var validation = await _validator.ValidateParams(ticketUpdateRequest, id, token);
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
+        var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id, token);
 
         if (ticketEntity == null)
             return NotFound(new
@@ -234,15 +244,6 @@ public class TicketsController : ControllerBase
             SolveDate = ticketUpdateRequest.SolveDate.ConvertToDateTime() ?? ticketEntity.SolveDate,
             EmployeeId = ticketUpdateRequest.EmployeeId ?? int.Parse(User.Identity?.Name)
         };
-
-        var validation = await _validator.ValidateParams(updateTicket, id);
-        if (!validation.IsValid)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = validation.Failures.FirstOrDefault(),
-                data = ""
-            });
 
         var result = await _serviceWrapper.Tickets.UpdateTicket(updateTicket);
         return result.IsSuccess switch
@@ -273,7 +274,7 @@ public class TicketsController : ControllerBase
     {
         var userId = int.Parse(User.Identity?.Name);
 
-        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId, token);
 
         if (userCheck == null)
             return NotFound(new
@@ -323,6 +324,17 @@ public class TicketsController : ControllerBase
                 data = ""
             });
 
+        var validation = await _validator.ValidateParams(ticketCreateRequest, token);
+
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
+
         var newTicket = new Ticket
         {
             Description = ticketCreateRequest.Description,
@@ -334,6 +346,15 @@ public class TicketsController : ControllerBase
             ContractId = contractId,
             EmployeeId = supervisorId
         };
+
+        var result = await _serviceWrapper.Tickets.AddTicket(newTicket);
+        if (result == null)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Ticket failed to create",
+                data = ""
+            });
 
         var counter = 0;
 
@@ -378,23 +399,6 @@ public class TicketsController : ControllerBase
                 }
             }
 
-        var validation = await _validator.ValidateParams(newTicket, null);
-        if (!validation.IsValid)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = validation.Failures.FirstOrDefault(),
-                data = ""
-            });
-
-        var result = await _serviceWrapper.Tickets.AddTicket(newTicket);
-        if (result == null)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Ticket failed to create",
-                data = ""
-            });
 
         return Ok(new
         {
@@ -408,7 +412,7 @@ public class TicketsController : ControllerBase
     [HttpDelete("{id:int}/user/{userId:int}")]
     [Authorize(Roles = "Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Delete ticket by id (For management and renter)")]
-    public async Task<IActionResult> DeleteTicket(int id, int userId)
+    public async Task<IActionResult> DeleteTicket(int id, int userId, CancellationToken token)
     {
         var userRole = User.Identities
             .FirstOrDefault()?.Claims
@@ -423,7 +427,7 @@ public class TicketsController : ControllerBase
                 data = ""
             });
 
-        var renterCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+        var renterCheck = await _serviceWrapper.Renters.GetRenterById(userId, token);
 
         if (renterCheck == null)
             return NotFound(new
@@ -434,7 +438,7 @@ public class TicketsController : ControllerBase
             });
 
         // pass renter Id and ticket Id to get, management can bypass restriction bound by token id
-        var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id, userId);
+        var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id, userId, token);
 
         if (ticketEntity == null)
             return NotFound(new
@@ -497,20 +501,20 @@ public class TicketsController : ControllerBase
     [HttpGet("type/{id:int}")]
     [Authorize(Roles = "Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get ticket type by id (For management and renter)")]
-    public async Task<IActionResult> GetTicketType(int id)
+    public async Task<IActionResult> GetTicketType(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.TicketTypes.GetTicketTypeById(id);
+        var entity = await _serviceWrapper.TicketTypes.GetTicketTypeById(id, token);
         return entity == null
             ? NotFound(new
             {
                 status = "Not Found",
-                message = "Ticket type not found",
+                message = "Loại phiếu không tìm thấy",
                 data = ""
             })
             : Ok(new
             {
                 status = "Success",
-                message = "Ticket type found",
+                message = "Đã tìm thấy loại phiếu",
                 data = _mapper.Map<TicketTypeDetailEntity>(entity)
             });
     }
@@ -562,21 +566,16 @@ public class TicketsController : ControllerBase
     
     */
 
+    /*
     // POST: api/RequestTypes
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost("type/")]
+    [HttpPost("type")]
     [Authorize(Roles = "Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Create ticket type (For management)")]
-    public async Task<IActionResult> PostTicketType([FromBody] TicketTypeCreateRequest ticketTypeCreateRequestType)
+    public async Task<IActionResult> PostTicketType([FromBody] TicketTypeCreateRequest ticketTypeCreateRequestType,
+        CancellationToken token)
     {
-        var newRequestType = new TicketType
-        {
-            Description = ticketTypeCreateRequestType.Description,
-            TicketTypeName = ticketTypeCreateRequestType.Name,
-            Status = true
-        };
-
-        var validation = await _validator.ValidateParams(newRequestType, null);
+        var validation = await _validator.ValidateParams(ticketTypeCreateRequestType, token);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -585,18 +584,27 @@ public class TicketsController : ControllerBase
                 data = ""
             });
 
+        var newRequestType = new TicketType
+        {
+            Description = ticketTypeCreateRequestType.Description,
+            TicketTypeName = ticketTypeCreateRequestType.Name,
+            Status = true
+        };
+
+
         var result = await _serviceWrapper.TicketTypes.AddTicketType(newRequestType);
         if (result == null)
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Request type not found",
+                message = "Loại phiếu không tồn tại",
                 data = ""
             });
+
         return Ok(new
         {
             status = "Success",
-            message = "Request type created",
+            message = "Loại phiếu đã được tạo",
             data = ""
         });
     }
@@ -624,4 +632,5 @@ public class TicketsController : ControllerBase
             })
         };
     }
+    */
 }

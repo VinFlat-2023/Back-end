@@ -4,7 +4,6 @@ using Domain.EntityRequest.Invoice;
 using Domain.EntityRequest.InvoiceType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
-using Domain.Utils;
 using Domain.ViewModel.InvoiceEntity;
 using Domain.ViewModel.InvoiceTypeEntity;
 using Microsoft.AspNetCore.Authorization;
@@ -65,9 +64,9 @@ public class InvoicesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get invoice by Id (For management)")]
     [HttpGet("{id:int}")]
     [Authorize(Roles = "Admin, Supervisor")]
-    public async Task<IActionResult> GetInvoiceByManagement(int id)
+    public async Task<IActionResult> GetInvoiceByManagement(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.Invoices.GetInvoiceById(id);
+        var entity = await _serviceWrapper.Invoices.GetInvoiceById(id, token);
         if (entity == null)
             return NotFound(new
             {
@@ -90,7 +89,7 @@ public class InvoicesController : ControllerBase
     {
         var renterId = int.Parse(User.Identity.Name);
 
-        var userCheck = await _serviceWrapper.Renters.GetRenterById(renterId);
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(renterId, token);
 
         if (userCheck == null)
             return NotFound(new
@@ -100,7 +99,7 @@ public class InvoicesController : ControllerBase
                 data = ""
             });
 
-        var invoiceId = await _serviceWrapper.Invoices.GetLatestUnpaidInvoiceByRenter(renterId);
+        var invoiceId = await _serviceWrapper.Invoices.GetLatestUnpaidInvoiceByRenter(renterId, token);
 
         if (invoiceId == 0)
             return NotFound(new
@@ -110,7 +109,7 @@ public class InvoicesController : ControllerBase
                 data = ""
             });
 
-        var invoice = await _serviceWrapper.Invoices.GetInvoiceById(invoiceId);
+        var invoice = await _serviceWrapper.Invoices.GetInvoiceById(invoiceId, token);
 
         if (invoice == null)
             return NotFound(new
@@ -132,7 +131,7 @@ public class InvoicesController : ControllerBase
     [Authorize(Roles = "Supervisor")]
     public async Task<IActionResult> GetInvoiceRenter(int userId, CancellationToken token)
     {
-        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId, token);
 
         if (userCheck == null)
             return NotFound(new
@@ -172,7 +171,7 @@ public class InvoicesController : ControllerBase
     {
         var userId = int.Parse(User.Identity?.Name);
 
-        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId, token);
 
         if (userCheck == null)
             return NotFound(new
@@ -212,7 +211,7 @@ public class InvoicesController : ControllerBase
     {
         var userId = int.Parse(User.Identity?.Name);
 
-        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId, token);
         if (userCheck == null)
             return NotFound(new
             {
@@ -250,11 +249,11 @@ public class InvoicesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get invoice using invoice Id (For renter)")]
     [HttpGet("{invoiceId:int}/user")]
     [Authorize(Roles = "Renter")]
-    public async Task<IActionResult> GetInvoiceRenterUsingId(int invoiceId)
+    public async Task<IActionResult> GetInvoiceRenterUsingId(int invoiceId, CancellationToken token)
     {
         var userId = int.Parse(User.Identity?.Name);
 
-        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId, token);
 
         if (userCheck == null)
             return NotFound(new
@@ -264,7 +263,7 @@ public class InvoicesController : ControllerBase
                 data = ""
             });
 
-        var entity = await _serviceWrapper.Invoices.GetInvoiceByRenterAndInvoiceId(userId, invoiceId);
+        var entity = await _serviceWrapper.Invoices.GetInvoiceByRenterAndInvoiceId(userId, invoiceId, token);
 
         if (entity == null)
             return NotFound(new
@@ -288,9 +287,10 @@ public class InvoicesController : ControllerBase
         Description = "date format d/M/YYYY")]
     [HttpPut("{id:int}")]
     [Authorize(Roles = "Admin, Supervisor")]
-    public async Task<IActionResult> PutInvoice(int id, [FromBody] InvoiceUpdateRequest invoice)
+    public async Task<IActionResult> PutInvoice(int id, [FromBody] InvoiceUpdateRequest invoice,
+        CancellationToken token)
     {
-        var validation = await _validator.ValidateParams(invoice, id);
+        var validation = await _validator.ValidateParams(invoice, id, token);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -308,7 +308,7 @@ public class InvoicesController : ControllerBase
             Detail = invoice.Detail,
             PaymentTime = invoice.PaymentTime ?? null
         };
-        
+
         var result = await _serviceWrapper.Invoices.UpdateInvoice(updateInvoice);
 
         if (result == null)
@@ -332,11 +332,19 @@ public class InvoicesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create Invoice (For management)", Description = "date format d/M/YYYY")]
     [HttpPost]
     [Authorize(Roles = "Supervisor")]
-    public async Task<IActionResult> PostInvoice([FromBody] InvoiceCreateRequest invoice)
+    public async Task<IActionResult> PostInvoice([FromBody] InvoiceCreateRequest invoice, CancellationToken token)
     {
         var employeeId = int.Parse(User.Identity?.Name);
-        
-        var validation = await _validator.ValidateParams(invoice, employeeId);
+
+        if (employeeId == 0)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Nhân viên không tồn tại",
+                data = ""
+            });
+
+        var validation = await _validator.ValidateParams(invoice, token);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -373,7 +381,7 @@ public class InvoicesController : ControllerBase
                 break;
         }
 
-     
+
         var result = await _serviceWrapper.Invoices.AddInvoice(addNewInvoice);
         if (result == null)
             return BadRequest(new
@@ -454,9 +462,9 @@ public class InvoicesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get invoice type by id (For management)")]
     [HttpGet("types/{id:int}")]
     [Authorize(Roles = "Admin, Supervisor")]
-    public async Task<IActionResult> GetInvoiceTypeById(int id)
+    public async Task<IActionResult> GetInvoiceTypeById(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.InvoiceTypes.GetInvoiceTypeById(id);
+        var entity = await _serviceWrapper.InvoiceTypes.GetInvoiceTypeById(id, token);
         return entity == null
             ? NotFound(new
             {
@@ -475,15 +483,10 @@ public class InvoicesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create invoice type (For management)")]
     [HttpPost("types")]
     [Authorize(Roles = "Admin, Supervisor")]
-    public async Task<IActionResult> CreateNewInvoiceType([FromBody] InvoiceTypeCreateRequest invoiceType)
+    public async Task<IActionResult> CreateNewInvoiceType([FromBody] InvoiceTypeCreateRequest invoiceType,
+        CancellationToken token)
     {
-        var newInvoiceType = new InvoiceType
-        {
-            Status = invoiceType.Status,
-            InvoiceTypeName = invoiceType.InvoiceTypeName
-        };
-
-        var validation = await _validator.ValidateParams(newInvoiceType, null);
+        var validation = await _validator.ValidateParams(invoiceType, token);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -491,6 +494,12 @@ public class InvoicesController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+
+        var newInvoiceType = new InvoiceType
+        {
+            Status = invoiceType.Status,
+            InvoiceTypeName = invoiceType.InvoiceTypeName
+        };
 
         var result = await _serviceWrapper.InvoiceTypes.AddInvoiceType(newInvoiceType);
         return result == null
@@ -511,16 +520,10 @@ public class InvoicesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update invoice type (For management)")]
     [HttpPut("types/{id:int}")]
     [Authorize(Roles = "Admin, Supervisor")]
-    public async Task<IActionResult> UpdateInvoiceType(int id, [FromBody] InvoiceTypeUpdateRequest invoiceType)
+    public async Task<IActionResult> UpdateInvoiceType(int id, [FromBody] InvoiceTypeUpdateRequest invoiceType,
+        CancellationToken token)
     {
-        var updateInvoiceType = new InvoiceType
-        {
-            InvoiceTypeId = id,
-            Status = invoiceType.Status,
-            InvoiceTypeName = invoiceType.InvoiceTypeName
-        };
-
-        var validation = await _validator.ValidateParams(updateInvoiceType, id);
+        var validation = await _validator.ValidateParams(invoiceType, id, token);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -528,6 +531,14 @@ public class InvoicesController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+
+        var updateInvoiceType = new InvoiceType
+        {
+            InvoiceTypeId = id,
+            Status = invoiceType.Status,
+            InvoiceTypeName = invoiceType.InvoiceTypeName
+        };
+
 
         var result = await _serviceWrapper.InvoiceTypes.UpdateInvoiceType(updateInvoiceType);
         return result == null
@@ -624,9 +635,9 @@ public class InvoicesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get invoice detail by id (For management)")]
     [HttpGet("details/{id:int}")]
     [Authorize(Roles = "Admin, Supervisor")]
-    public async Task<IActionResult> GetInvoiceDetailById(int id)
+    public async Task<IActionResult> GetInvoiceDetailById(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.InvoiceDetails.GetInvoiceDetailById(id);
+        var entity = await _serviceWrapper.InvoiceDetails.GetInvoiceDetailById(id, token);
         return entity == null
             ? NotFound(new
             {

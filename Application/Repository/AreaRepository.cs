@@ -41,32 +41,89 @@ internal class AreaRepository : IAreaRepository
             .FirstOrDefaultAsync(x => x.AreaId == areaId);
     }
 
+
+    public async Task<RepositoryResponse> GetAreaByName(string? areaName, CancellationToken cancellationToken)
+    {
+        if (areaName == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Tên khu vực không được để trống"
+            };
+
+        var area = await _context.Areas
+            .FirstOrDefaultAsync(x => x.Name.ToLower() == areaName.ToLower(),
+                cancellationToken);
+
+        switch (area)
+        {
+            case null:
+                return new RepositoryResponse
+                {
+                    IsSuccess = true,
+                    Message = "Tên khu vực này đang khả dụng"
+                };
+            case not null:
+                return new RepositoryResponse
+                {
+                    IsSuccess = false,
+                    Message = "Tên khu vực này đã tồn tại"
+                };
+        }
+    }
+
+    public async Task<RepositoryResponse> GetAreaByName(string? areaName, int? areaId, CancellationToken token)
+    {
+        var area = await _context.Areas
+            .FirstOrDefaultAsync(x => x.AreaId == areaId, token);
+
+        if (area == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Không tìm thấy khu vực này"
+            };
+
+        if (areaName == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Tên khu vực không được để trống"
+            };
+
+        if (areaName.ToLower().Equals(area.Name.ToLower()))
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Tên khu vực thuộc về khu vực này"
+            };
+
+        if (await _context.Areas
+                .FirstOrDefaultAsync(x => x.Name.ToLower() == areaName.ToLower(),
+                    token) == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Tên khu vực này đang khả dụng"
+            };
+
+        return new RepositoryResponse
+        {
+            IsSuccess = false,
+            Message = "Tên khu vực này đã tồn tại"
+        };
+    }
+
     /// <summary>
     ///     AddExpenseHistory new area
     /// </summary>
     /// <param name="area"></param>
     /// <returns></returns>
-    public async Task<RepositoryResponse> AddArea(Area area)
+    public async Task<Area> AddArea(Area area)
     {
-        try
-        {
-            await _context.Areas.AddAsync(area);
-            await _context.SaveChangesAsync();
-        }
-        catch
-        {
-            return new RepositoryResponse
-            {
-                IsSuccess = false,
-                Message = "Area failed to create"
-            };
-        }
-
-        return new RepositoryResponse
-        {
-            IsSuccess = true,
-            Message = "Area added successfully"
-        };
+        await _context.Areas.AddAsync(area);
+        await _context.SaveChangesAsync();
+        return area;
     }
 
     /// <summary>
@@ -94,7 +151,7 @@ internal class AreaRepository : IAreaRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Area updated successfully"
+            Message = "Khu vực đã cập nhật thành công"
         };
     }
 
@@ -111,7 +168,7 @@ internal class AreaRepository : IAreaRepository
         if (areaFound == null)
             return new RepositoryResponse
             {
-                Message = "Area not found",
+                Message = "Khu vực không tìm thấy",
                 IsSuccess = false
             };
 
@@ -120,7 +177,7 @@ internal class AreaRepository : IAreaRepository
 
         return new RepositoryResponse
         {
-            Message = "Area status toggled successfully",
+            Message = "Trạng thái của khu vực đã được thay đổi",
             IsSuccess = true
         };
     }
@@ -138,32 +195,23 @@ internal class AreaRepository : IAreaRepository
         if (areaFound == null)
             return new RepositoryResponse
             {
-                Message = "Area not found",
+                Message = "Khu vực không tìm thấy",
                 IsSuccess = false
             };
 
-        try
-        {
-            _context.Areas.Remove(areaFound);
-            await _context.SaveChangesAsync();
-        }
-        catch
-        {
-            return new RepositoryResponse
-            {
-                IsSuccess = false,
-                Message = "Area failed to delete"
-            };
-        }
+
+        _context.Areas.Remove(areaFound);
+        await _context.SaveChangesAsync();
+
 
         return new RepositoryResponse
         {
-            Message = "Area deleted successfully",
+            Message = "Khu vực đã được xoá khỏi hệ thống",
             IsSuccess = true
         };
     }
 
-    public async Task<RepositoryResponse> UpdateAreaImage(Area updateArea)
+    public async Task<RepositoryResponse> UpdateAreaImage(Area updateArea, int number)
     {
         var areaData = await _context.Areas
             .FirstOrDefaultAsync(x => x.AreaId == updateArea.AreaId);
@@ -172,17 +220,38 @@ internal class AreaRepository : IAreaRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Area not found"
+                Message = "Khu vực không tìm thấy"
             };
 
-        areaData.ImageUrl = updateArea.ImageUrl;
+        switch (number)
+        {
+            case 1:
+                areaData.ImageUrl = updateArea.ImageUrl;
+                break;
+            case 2:
+                areaData.ImageUrl2 = updateArea.ImageUrl;
+                break;
+            case 3:
+                areaData.ImageUrl3 = updateArea.ImageUrl;
+                break;
+            case 4:
+                areaData.ImageUrl4 = updateArea.ImageUrl;
+                break;
+        }
 
         await _context.SaveChangesAsync();
 
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Area image updated successfully"
+            Message = "Hình ảnh của khu vực đã được cập nhật"
         };
+    }
+
+
+    public async Task<Area?> GetAreaByName(string areaName)
+    {
+        return await _context.Areas
+            .FirstOrDefaultAsync(x => x.Name.ToLower() == areaName.ToLower());
     }
 }

@@ -8,8 +8,8 @@ public interface ICustomeMailService
     public Task<bool> SendEmailWithDefaultTemplateAsync(IEnumerable<string> receivers, string subject, string content,
         IFormFileCollection attachments);
 
-    public Task<bool> SendPaymentReminderAsync();
-    public Task<bool> SendPaymentConfirmAsync(MomoResponseEntity momo);
+    public Task<bool> SendPaymentReminderAsync(CancellationToken token);
+    public Task<bool> SendPaymentConfirmAsync(MomoResponseEntity momo, CancellationToken token);
 
     #region unsued code
 

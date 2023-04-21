@@ -39,7 +39,7 @@ public class InvoiceDetailService : IInvoiceDetailService
         return await _repositoryWrapper.InvoiceDetails.GetActiveInvoiceDetailByUserId(id, token);
     }
 
-    public async Task<InvoiceDetail?> GetInvoiceDetailById(int? id)
+    public async Task<InvoiceDetail?> GetInvoiceDetailById(int? id, CancellationToken cancellationToken)
     {
         return await _repositoryWrapper.InvoiceDetails.GetInvoiceDetailById(id);
     }

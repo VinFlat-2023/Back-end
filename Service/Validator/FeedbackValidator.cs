@@ -1,4 +1,6 @@
 using Domain.EntitiesForManagement;
+using Domain.EntityRequest.FeedBack;
+using Domain.EntityRequest.FeedbackType;
 using Service.IHelper;
 using Service.IValidator;
 
@@ -13,7 +15,29 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
         _conditionCheckHelper = conditionCheckHelper;
     }
 
-    public async Task<ValidatorResult> ValidateParams(Feedback? obj, int? feedbackId)
+    public Task<ValidatorResult> ValidateParams(FeedbackCreateRequest? feedback, CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<ValidatorResult> ValidateParams(FeedbackUpdateRequest? feedback, int? feedbackTypeId,
+        CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<ValidatorResult> ValidateParams(FeedbackTypeCreateRequest? feedback, CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<ValidatorResult> ValidateParams(FeedbackTypeUpdateRequest? feedback, int? feedbackTypeId,
+        CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<ValidatorResult> ValidateParams(Feedback? obj, int? feedbackId, CancellationToken token)
     {
         try
         {
@@ -27,7 +51,7 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
                         ValidatorResult.Failures.Add("Feedback is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.FeedbackCheck(obj.FeedbackId) == null)
+                        if (await _conditionCheckHelper.FeedbackCheck(obj.FeedbackId, token) == null)
                             ValidatorResult.Failures.Add("Feedback provided does not exist");
                         break;
                 }
@@ -39,7 +63,7 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
                         ValidatorResult.Failures.Add("Renter is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.RenterCheck(obj.RenterId) == null)
+                        if (await _conditionCheckHelper.RenterCheck(obj.RenterId, token) == null)
                             ValidatorResult.Failures.Add("Renter provided does not exist");
                         break;
                 }
@@ -51,7 +75,7 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
                         ValidatorResult.Failures.Add("Flat is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.FlatCheck(obj.FlatId) == null)
+                        if (await _conditionCheckHelper.FlatCheck(obj.FlatId, token) == null)
                             ValidatorResult.Failures.Add("Flat provided does not exist");
                         break;
                 }
@@ -63,7 +87,7 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
                         ValidatorResult.Failures.Add("Feedback type is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.FeedbackTypeCheck(obj.FeedbackTypeId) == null)
+                        if (await _conditionCheckHelper.FeedbackTypeCheck(obj.FeedbackTypeId, token) == null)
                             ValidatorResult.Failures.Add("Feedback type provided does not exist");
                         break;
                 }
@@ -103,7 +127,7 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
         return ValidatorResult;
     }
 
-    public async Task<ValidatorResult> ValidateParams(FeedbackType? obj, int? feedbackTypeId)
+    public async Task<ValidatorResult> ValidateParams(FeedbackType? obj, int? feedbackTypeId, CancellationToken token)
     {
         try
         {
@@ -117,7 +141,7 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
                         ValidatorResult.Failures.Add("Feedback type is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.FeedbackTypeCheck(obj.FeedbackTypeId) == null)
+                        if (await _conditionCheckHelper.FeedbackTypeCheck(obj.FeedbackTypeId, token) == null)
                             ValidatorResult.Failures.Add("Feedback type provided does not exist");
                         break;
                 }

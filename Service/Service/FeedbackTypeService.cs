@@ -36,10 +36,10 @@ public class FeedbackTypeService : IFeedbackTypeService
         return pagedList;
     }
 
-    public async Task<FeedbackType?> GetFeedbackTypeById(int? feedbackTypeId)
+    public async Task<FeedbackType?> GetFeedbackTypeById(int? feedbackTypeId, CancellationToken cancellationToken)
     {
         return await _repositoryWrapper.FeedbackTypes.GetFeedbackTypeDetail(feedbackTypeId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<FeedbackType?> AddFeedbackType(FeedbackType feedbackType)

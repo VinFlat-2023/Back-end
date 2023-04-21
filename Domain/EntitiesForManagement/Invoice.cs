@@ -15,6 +15,7 @@ public class Invoice
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int InvoiceId { get; set; }
+
     public string Name { get; set; } = null!;
     public int Amount { get; set; }
     public bool Status { get; set; }
@@ -27,13 +28,19 @@ public class Invoice
     [DataType(DataType.Upload)]
     [NotMapped]
     public IFormFile? Image { get; set; }
+
     public DateTime? PaymentTime { get; set; }
+
     public DateTime? CreatedTime { get; set; }
+
     // Contract 
     public int? ContractId { get; set; }
+
     // Receiver employee
     public int? RenterId { get; set; }
+
     public virtual Renter? Renter { get; set; }
+
     // Management employee
     public int EmployeeId { get; set; }
     public virtual Employee Employee { get; set; }

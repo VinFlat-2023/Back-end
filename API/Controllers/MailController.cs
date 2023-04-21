@@ -31,7 +31,7 @@ public class MailController : ControllerBase
     public async Task<IActionResult> SendPaymentReminder()
     {
         //string rootPath = env.WebRootPath;
-        var result = await _serviceWrapper.Mails.SendPaymentReminderAsync();
+        var result = await _serviceWrapper.Mails.SendPaymentReminderAsync(CancellationToken.None);
 
         return result ? Ok("Send mail successfully") : BadRequest("Somthing went wrong");
     }

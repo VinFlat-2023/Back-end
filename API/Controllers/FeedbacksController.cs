@@ -64,9 +64,9 @@ public class FeedbacksController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get Feedback")]
     [Authorize(Roles = "Admin, Supervisor, Renter")]
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetFeedback(int id)
+    public async Task<IActionResult> GetFeedback(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.Feedbacks.GetFeedbackById(id);
+        var entity = await _serviceWrapper.Feedbacks.GetFeedbackById(id, token);
         if (entity == null)
             return NotFound(new
             {
@@ -87,8 +87,18 @@ public class FeedbacksController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update Feedback info")]
     [Authorize(Roles = "Admin, Supervisor, Renter")]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> PutFeedback(int id, [FromBody] FeedbackUpdateRequest feedback)
+    public async Task<IActionResult> PutFeedback(int id, [FromBody] FeedbackUpdateRequest feedback,
+        CancellationToken token)
     {
+        var validation = await _validator.ValidateParams(feedback, id, token);
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
         var updateFeedback = new Feedback
         {
             FeedbackId = id,
@@ -99,10 +109,6 @@ public class FeedbacksController : ControllerBase
             FlatId = feedback.FlatId,
             RenterId = feedback.RenterId
         };
-
-        var validation = await _validator.ValidateParams(updateFeedback, id);
-        if (!validation.IsValid)
-            return BadRequest(validation.Failures.FirstOrDefault());
 
         var result = await _serviceWrapper.Feedbacks.UpdateFeedback(updateFeedback);
         return result.IsSuccess switch
@@ -129,8 +135,17 @@ public class FeedbacksController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create Feedback")]
     [Authorize(Roles = "Admin, Supervisor, Renter")]
     [HttpPost]
-    public async Task<IActionResult> PostFeedback([FromBody] FeedbackCreateRequest feedback)
+    public async Task<IActionResult> PostFeedback([FromBody] FeedbackCreateRequest feedback, CancellationToken token)
     {
+        var validation = await _validator.ValidateParams(feedback, token);
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
         var addNewFeedback = new Feedback
         {
             FeedbackTypeId = feedback.FeedbackTypeId,
@@ -142,14 +157,6 @@ public class FeedbacksController : ControllerBase
             RenterId = feedback.RenterId
         };
 
-        var validation = await _validator.ValidateParams(addNewFeedback, null);
-        if (!validation.IsValid)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = validation.Failures.FirstOrDefault(),
-                data = ""
-            });
 
         var result = await _serviceWrapper.Feedbacks.AddFeedback(addNewFeedback);
         if (result == null)
@@ -225,10 +232,10 @@ public class FeedbacksController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] GetFeedback Type")]
     [HttpGet("type/{id:int}")]
     [Authorize(Roles = " Admin, Supervisor, Renter")]
-    public async Task<IActionResult> GetFeedbackType(int id)
+    public async Task<IActionResult> GetFeedbackType(int id, CancellationToken token)
     {
         var entity = await _serviceWrapper.FeedbackTypes
-            .GetFeedbackTypeById(id);
+            .GetFeedbackTypeById(id, token);
         if (entity == null)
             return NotFound(new
             {
@@ -250,15 +257,10 @@ public class FeedbacksController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update Feedback Type info")]
     [HttpPut("type/{id:int}")]
     [Authorize(Roles = " Admin, Supervisor")]
-    public async Task<IActionResult> PutFeedbackType(int id, [FromBody] FeedbackTypeUpdateRequest feedbackType)
+    public async Task<IActionResult> PutFeedbackType(int id, [FromBody] FeedbackTypeUpdateRequest feedbackType,
+        CancellationToken token)
     {
-        var updateFeedBackType = new FeedbackType
-        {
-            FeedbackTypeId = id,
-            Name = feedbackType.Name
-        };
-
-        var validation = await _validator.ValidateParams(updateFeedBackType, null);
+        var validation = await _validator.ValidateParams(feedbackType, id, token);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -266,6 +268,12 @@ public class FeedbacksController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+
+        var updateFeedBackType = new FeedbackType
+        {
+            FeedbackTypeId = id,
+            Name = feedbackType.Name
+        };
 
         var result = await _serviceWrapper.FeedbackTypes.UpdateFeedbackType(updateFeedBackType);
         return result.IsSuccess switch
@@ -290,13 +298,26 @@ public class FeedbacksController : ControllerBase
     [SwaggerOperation(Summary = "Create Feedback Type")]
     [HttpPost("type")]
     [Authorize(Roles = " Admin, Supervisor")]
-    public async Task<IActionResult> PostFeedbackType([FromBody] FeedbackTypeCreateRequest feedbackType)
+    public async Task<IActionResult> PostFeedbackType([FromBody] FeedbackTypeCreateRequest feedbackType,
+        CancellationToken token)
     {
+        var validation = await _validator.ValidateParams(feedbackType, token);
+
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
         var newFeedbackType = new FeedbackType
         {
             Name = feedbackType.Name
         };
+
         var result = await _serviceWrapper.FeedbackTypes.AddFeedbackType(newFeedbackType);
+
         if (result == null)
             return BadRequest(new
             {
@@ -304,6 +325,7 @@ public class FeedbacksController : ControllerBase
                 message = "Feedback type failed to add",
                 data = ""
             });
+
         return Ok(new
         {
             status = "Success",

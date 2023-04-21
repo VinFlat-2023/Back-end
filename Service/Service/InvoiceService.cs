@@ -36,9 +36,9 @@ public class InvoiceService : IInvoiceService
         return pagedList;
     }
 
-    public async Task<Invoice?> GetInvoiceById(int? invoiceId)
+    public async Task<Invoice?> GetInvoiceById(int? invoiceId, CancellationToken token)
     {
-        return await _repositoryWrapper.Invoices.GetInvoiceDetail(invoiceId);
+        return await _repositoryWrapper.Invoices.GetInvoiceDetail(invoiceId, token);
     }
 
     public async Task<Invoice?> AddInvoice(Invoice invoice)
@@ -56,13 +56,13 @@ public class InvoiceService : IInvoiceService
         return await _repositoryWrapper.Invoices.DeleteInvoice(invoiceId);
     }
 
-    public async Task<Invoice?> GetInvoiceByRenterAndInvoiceId(int renterId, int invoiceId)
+    public async Task<Invoice?> GetInvoiceByRenterAndInvoiceId(int renterId, int invoiceId, CancellationToken token)
     {
-        return await _repositoryWrapper.Invoices.GetInvoiceByRenterAndInvoiceId(renterId, invoiceId);
+        return await _repositoryWrapper.Invoices.GetInvoiceByRenterAndInvoiceId(renterId, invoiceId, token);
     }
 
     //Run on 1st day of months , generate this month empty invoice
-    public async Task<bool> AutoGenerateEmptyInvoice()
+    public async Task<bool> AutoGenerateEmptyInvoice(CancellationToken token)
     {
         Console.WriteLine("\n\nAutoGenerateInvoice========================");
         //Get all user with active invoice
@@ -73,9 +73,11 @@ public class InvoiceService : IInvoiceService
             Console.WriteLine($"User: {renter.Username}");
             //Check if user has paid last 2 months, true: gen new invoice, false: log, todo
             var previous1MonthUnpaidInvoice =
-                await _repositoryWrapper.Invoices.GetUnpaidInvoiceByRenterAndMonth(renter.RenterId, currentMonth - 1);
+                await _repositoryWrapper.Invoices.GetUnpaidInvoiceByRenterAndMonth(renter.RenterId, currentMonth - 1,
+                    token);
             var previous2MonthUnpaidInvoice =
-                await _repositoryWrapper.Invoices.GetUnpaidInvoiceByRenterAndMonth(renter.RenterId, currentMonth - 2);
+                await _repositoryWrapper.Invoices.GetUnpaidInvoiceByRenterAndMonth(renter.RenterId, currentMonth - 2,
+                    token);
             if (previous1MonthUnpaidInvoice != null && previous2MonthUnpaidInvoice != null)
             {
                 Console.WriteLine($"Unpaid invoices of month {currentMonth - 1}: ");
@@ -105,9 +107,9 @@ public class InvoiceService : IInvoiceService
         return true;
     }
 
-    public async Task<int> GetLatestUnpaidInvoiceByRenter(int renterId)
+    public async Task<int> GetLatestUnpaidInvoiceByRenter(int renterId, CancellationToken token)
     {
-        return await _repositoryWrapper.Invoices.GetLatestUnpaidInvoiceByRenter(renterId);
+        return await _repositoryWrapper.Invoices.GetLatestUnpaidInvoiceByRenter(renterId, token);
     }
 
     public async Task<RepositoryResponse> AddServiceToLastInvoice(int invoiceId,

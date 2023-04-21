@@ -36,17 +36,17 @@ public class EmployeeService : IEmployeeService
         return pagedList;
     }
 
-    public async Task<Employee?> GetEmployeeById(int? employeeId)
+    public async Task<Employee?> GetEmployeeById(int? employeeId, CancellationToken cancellationToken)
     {
         return await _repositoryWrapper.Employees.GetEmployeeDetail(employeeId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<Employee?> GetSupervisorEmployee(int employeeId)
+    public async Task<Employee?> GetSupervisorEmployee(int employeeId, CancellationToken token)
     {
         return await _repositoryWrapper.Employees.GetEmployeeDetail(employeeId)
             .Where(x => x.Role.RoleName == "Supervisor")
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(token);
     }
 
     public async Task<RepositoryResponse> UpdateEmployeeProfilePicture(Employee employee)
@@ -90,20 +90,24 @@ public class EmployeeService : IEmployeeService
         return await _repositoryWrapper.Employees.DeleteEmployee(employeeId);
     }
 
-    public async Task<Employee?> IsEmployeeUsernameExist(string? username)
+    public async Task<RepositoryResponse> IsEmployeeEmailExist(string? email, int? employeeId, CancellationToken token)
     {
-        return await _repositoryWrapper.Employees.IsEmployeeUsernameExist(username)
-            .FirstOrDefaultAsync();
+        return await _repositoryWrapper.Employees.IsEmployeeEmailExist(email, employeeId, token);
     }
 
-    public async Task<Employee?> IsEmployeeEmailExist(string? email)
+
+    public async Task<RepositoryResponse> IsEmployeeEmailExist(string? email, CancellationToken token)
     {
-        return await _repositoryWrapper.Employees.IsEmployeeEmailExist(email)
-            .FirstOrDefaultAsync();
+        return await _repositoryWrapper.Employees.IsEmployeeEmailExist(email, token);
     }
 
-    public async Task<Employee?> EmployeeLogin(string usernameOrPhoneNumber, string password)
+    public async Task<RepositoryResponse> IsEmployeeUsernameExist(string? username, CancellationToken token)
     {
-        return await _repositoryWrapper.Employees.GetEmployee(usernameOrPhoneNumber, password);
+        return await _repositoryWrapper.Employees.IsEmployeeUsernameExist(username, token);
+    }
+
+    public async Task<Employee?> EmployeeLogin(string usernameOrPhoneNumber, string password, CancellationToken token)
+    {
+        return await _repositoryWrapper.Employees.GetEmployee(usernameOrPhoneNumber, password, token);
     }
 }

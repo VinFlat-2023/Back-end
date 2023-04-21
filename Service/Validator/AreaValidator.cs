@@ -1,4 +1,3 @@
-using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Area;
 using Service.IHelper;
 using Service.IValidator;
@@ -14,6 +13,7 @@ public class AreaValidator : BaseValidator, IAreaValidator
         _conditionCheckHelper = conditionCheckHelper;
     }
 
+    /*
     public async Task<ValidatorResult> ValidateParams(Area? obj, int? areaId)
     {
         try
@@ -38,8 +38,14 @@ public class AreaValidator : BaseValidator, IAreaValidator
                 case not null when obj.Name.Length > 100:
                     ValidatorResult.Failures.Add("Tên khu vực không được vượt quá 100 ký tự");
                     break;
+                case not null when obj.Name.Length < 2:
+                    ValidatorResult.Failures.Add("Tên khu vực phải có ít nhất 2 kí tự");
+                    break;
                 case not null when string.IsNullOrWhiteSpace(obj.Name):
                     ValidatorResult.Failures.Add("Tên khu vực không được để trống");
+                    break;
+                case not null when await _conditionCheckHelper.AreaNameCheck(obj.Name) != null:
+                    ValidatorResult.Failures.Add("Khu vực này đã tồn tại");
                     break;
             }
 
@@ -64,8 +70,10 @@ public class AreaValidator : BaseValidator, IAreaValidator
 
         return ValidatorResult;
     }
+    */
 
-    public async Task<ValidatorResult> ValidateParams(AreaUpdateRequest? obj, int? areaId)
+
+    public async Task<ValidatorResult> ValidateParams(AreaUpdateRequest? obj, int? areaId, CancellationToken token)
     {
         try
         {
@@ -73,7 +81,7 @@ public class AreaValidator : BaseValidator, IAreaValidator
                 switch (areaId)
                 {
                     case not null:
-                        if (await _conditionCheckHelper.AreaCheck(areaId) == null)
+                        if (await _conditionCheckHelper.AreaCheck(areaId, token) == null)
                             ValidatorResult.Failures.Add("Khu vực không tồn tại");
                         break;
                     case null:
@@ -88,6 +96,29 @@ public class AreaValidator : BaseValidator, IAreaValidator
                     break;
                 case not null when string.IsNullOrWhiteSpace(obj.Name):
                     ValidatorResult.Failures.Add("Tên khu vực không được để trống");
+                    break;
+                case { Length: < 3 }:
+                case not null:
+                    var areaExistCheck = await _conditionCheckHelper.AreaNameCheck(obj.Name, areaId, token);
+                    switch (areaExistCheck.IsSuccess)
+                    {
+                        case true:
+                            break;
+                        case false:
+                            ValidatorResult.Failures.Add(areaExistCheck.Message);
+                            break;
+                    }
+
+                    var areaNewCheck = await _conditionCheckHelper.AreaNameCheck(obj.Name, token);
+                    switch (areaNewCheck.IsSuccess)
+                    {
+                        case true:
+                            break;
+                        case false:
+                            ValidatorResult.Failures.Add(areaNewCheck.Message);
+                            break;
+                    }
+
                     break;
             }
 
@@ -117,7 +148,7 @@ public class AreaValidator : BaseValidator, IAreaValidator
         return ValidatorResult;
     }
 
-    public async Task<ValidatorResult> ValidateParams(AreaCreateRequest? obj)
+    public async Task<ValidatorResult> ValidateParams(AreaCreateRequest? obj, CancellationToken token)
     {
         try
         {
@@ -128,6 +159,18 @@ public class AreaValidator : BaseValidator, IAreaValidator
                     break;
                 case not null when string.IsNullOrWhiteSpace(obj.Name):
                     ValidatorResult.Failures.Add("Tên khu vực không được để trống");
+                    break;
+                case not null:
+                    var areaNewCheck = await _conditionCheckHelper.AreaNameCheck(obj.Name, token);
+                    switch (areaNewCheck.IsSuccess)
+                    {
+                        case true:
+                            break;
+                        case false:
+                            ValidatorResult.Failures.Add(areaNewCheck.Message);
+                            break;
+                    }
+
                     break;
             }
 

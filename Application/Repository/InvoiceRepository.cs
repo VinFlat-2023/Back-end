@@ -55,17 +55,17 @@ public class InvoiceRepository : IInvoiceRepository
     /// </summary>
     /// <param name="invoiceId"></param>
     /// <returns></returns>
-    public async Task<Invoice?> GetInvoiceDetail(int? invoiceId)
+    public async Task<Invoice?> GetInvoiceDetail(int? invoiceId, CancellationToken token)
     {
         return await _context.Invoices
             .Include(x => x.Employee)
             .Include(x => x.Renter)
             .Include(x => x.InvoiceDetails)
             .Include(x => x.InvoiceType)
-            .FirstOrDefaultAsync(x => x.InvoiceId == invoiceId);
+            .FirstOrDefaultAsync(x => x.InvoiceId == invoiceId, token);
     }
 
-    public async Task<int> GetLatestUnpaidInvoiceByRenter(int renterId)
+    public async Task<int> GetLatestUnpaidInvoiceByRenter(int renterId, CancellationToken token)
     {
         return await _context.Invoices
             .Include(x => x.Renter)
@@ -75,32 +75,34 @@ public class InvoiceRepository : IInvoiceRepository
             .Where(x => x.RenterId == renterId && x.Status == false)
             .OrderByDescending(x => x.CreatedTime)
             .Select(x => x.InvoiceId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(token);
     }
 
     /// <summary>
     ///     Get invoice by id (Include renter id)
     /// </summary>
     /// <param name="invoiceId"></param>
+    /// <param name="token"></param>
     /// <returns></returns>
-    public async Task<Invoice?> GetInvoiceIncludeRenter(int invoiceId)
+    public async Task<Invoice?> GetInvoiceIncludeRenter(int invoiceId, CancellationToken token)
     {
         return await _context.Invoices.Include(e => e.Renter)
-            .FirstOrDefaultAsync(e => e.InvoiceId == invoiceId);
+            .FirstOrDefaultAsync(e => e.InvoiceId == invoiceId, token);
     }
 
-    public async Task<Invoice?> GetInvoiceByRenterAndInvoiceId(int renterId, int invoiceId)
+    public async Task<Invoice?> GetInvoiceByRenterAndInvoiceId(int renterId, int invoiceId,
+        CancellationToken cancellationToken)
     {
         return await _context.Invoices
             .Include(x => x.Renter)
-            .FirstOrDefaultAsync(x => x.InvoiceId == invoiceId && x.RenterId == renterId);
+            .FirstOrDefaultAsync(x => x.InvoiceId == invoiceId && x.RenterId == renterId, cancellationToken);
     }
 
-    public async Task<Invoice?> GetUnpaidInvoiceByRenterAndMonth(int renterId, int month)
+    public async Task<Invoice?> GetUnpaidInvoiceByRenterAndMonth(int renterId, int month, CancellationToken token)
     {
         return await _context.Invoices
             .Where(x => x.Status == false)
-            .FirstOrDefaultAsync(x => x.RenterId == renterId && x.CreatedTime.Value.Month == month);
+            .FirstOrDefaultAsync(x => x.RenterId == renterId && x.CreatedTime.Value.Month == month, token);
     }
 
     /// <summary>
@@ -162,14 +164,13 @@ public class InvoiceRepository : IInvoiceRepository
     /// </summary>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public List<Invoice> GetUnpaidInvoice()
+    public async Task<List<Invoice>> GetUnpaidInvoice(CancellationToken token)
     {
-        var unpaidInvoices = _context.Invoices
+        return await _context.Invoices
             .Include(e => e.Renter)
             .Include(e => e.InvoiceDetails)
             .ThenInclude(e => e.Service)
-            .Where(e => !e.Status).ToList();
-        return unpaidInvoices;
+            .Where(e => !e.Status).ToListAsync(token);
     }
 
     public IEnumerable<Invoice> GetInvoiceListByMonth(int month)

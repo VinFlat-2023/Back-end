@@ -12,9 +12,8 @@ public interface ITicketService
         CancellationToken token);
 
     public Task<RepositoryResponse> UpdateTicketImage(Ticket ticket, int number);
-
-    public Task<Ticket?> GetTicketById(int? ticketId);
-    public Task<Ticket?> GetTicketById(int? ticketId, int? renterId);
+    public Task<Ticket?> GetTicketById(int? ticketId, CancellationToken token);
+    public Task<Ticket?> GetTicketById(int? ticketId, int? renterId, CancellationToken cancellationToken);
     public Task<Ticket?> AddTicket(Ticket ticket);
     public Task<RepositoryResponse> UpdateTicket(Ticket ticket);
     public Task<RepositoryResponse> DeleteTicket(int ticketId);

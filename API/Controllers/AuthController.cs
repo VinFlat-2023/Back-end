@@ -21,20 +21,21 @@ public class AuthController : ControllerBase
     ///     login for management
     /// </summary>
     /// <param name="loginModel"></param>
+    /// <param name="token"></param>
     /// <returns></returns>
     [SwaggerOperation(Summary =
         "Login for management team with username and password. Return JWT Token if login successfully")]
     [HttpPost("management/v1/login")]
-    public async Task<IActionResult> LoginManagement([FromBody] LoginModel loginModel)
+    public async Task<IActionResult> LoginManagement([FromBody] LoginModel loginModel, CancellationToken token)
     {
         var employee = await _serviceWrapper.Employees
-            .EmployeeLogin(loginModel.UsernameOrPhoneNumber, loginModel.Password);
+            .EmployeeLogin(loginModel.UsernameOrPhoneNumber, loginModel.Password, token);
 
         if (employee == null)
             return Unauthorized(new
             {
                 status = "Success",
-                message = "Username or password is wrong",
+                message = "Tên đăng nhập, số điện thoại hoặc mật khẩu không đúng",
                 data = ""
             });
         if (StringUtils.IsNotEmpty(loginModel.DeviceToken))
@@ -60,7 +61,7 @@ public class AuthController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "User logged in successfully",
+            message = "Người dùng đăng nhập thành công",
             data = new
             {
                 id = employee.EmployeeId,
@@ -77,16 +78,16 @@ public class AuthController : ControllerBase
     /// <returns></returns>
     [SwaggerOperation(Summary = "Login for renters with username and password. Return JWT Token if login successfully")]
     [HttpPost("user/v1/login")]
-    public async Task<IActionResult> LoginRenter([FromBody] LoginModel loginModel)
+    public async Task<IActionResult> LoginRenter([FromBody] LoginModel loginModel, CancellationToken token)
     {
         var renter = await _serviceWrapper.Renters
-            .RenterLogin(loginModel.UsernameOrPhoneNumber, loginModel.Password);
+            .RenterLogin(loginModel.UsernameOrPhoneNumber, loginModel.Password, token);
 
         if (renter == null)
             return Unauthorized(new
             {
                 status = "Unauthorized",
-                message = "Username or password is wrong",
+                message = "Tên đăng nhập, số điện thoại hoặc mật khẩu không đúng",
                 data = ""
             });
 
@@ -113,7 +114,7 @@ public class AuthController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "User logged in successfully",
+            message = "Người dùng đăng nhập thành công",
             data = new
             {
                 id = renter.RenterId,

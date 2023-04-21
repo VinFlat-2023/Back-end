@@ -53,7 +53,7 @@ public class NotificationService : INotificationService
         return false;
     }
 
-    public async Task PushAndSaveNotification(string userName, Notification notification)
+    public async Task PushAndSaveNotification(string userName, Notification notification, CancellationToken token)
     {
         var user = await _repositoryWrapper.Renters.GetARenterByUserName(userName);
         var account = new Employee();
@@ -61,7 +61,7 @@ public class NotificationService : INotificationService
 
         await _repositoryWrapper.Notifications.SaveNotification(notification);
 
-        if (user == null) account = await _repositoryWrapper.Employees.GetEmployeeByUserName(userName);
+        if (user == null) account = await _repositoryWrapper.Employees.GetEmployeeByUserName(userName, token);
 
 
         if (user != null)
@@ -112,7 +112,7 @@ public class NotificationService : INotificationService
         await _repositoryWrapper.Notifications.SaveNotifications(listNotification);
     }
 
-    public async Task<bool> PushMultiNotifications(string userName, Notification noti)
+    public async Task<bool> PushMultiNotifications(string userName, Notification noti, CancellationToken token)
     {
         try
         {
@@ -120,7 +120,7 @@ public class NotificationService : INotificationService
             var account = new Employee();
             if (user == null)
             {
-                account = await _repositoryWrapper.Employees.GetEmployeeByUserName(userName);
+                account = await _repositoryWrapper.Employees.GetEmployeeByUserName(userName, token);
                 if (user == null) return false;
             }
 

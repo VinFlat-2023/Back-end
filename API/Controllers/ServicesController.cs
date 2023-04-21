@@ -72,7 +72,7 @@ public class ServicesController : ControllerBase
 
         var userId = int.Parse(User.Identity?.Name);
 
-        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId, token);
 
         if (userCheck == null)
             return NotFound(new
@@ -114,7 +114,7 @@ public class ServicesController : ControllerBase
     {
         var filter = _mapper.Map<ServiceEntityFilter>(request);
 
-        var buildingCheck = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
+        var buildingCheck = await _serviceWrapper.Buildings.GetBuildingById(buildingId, token);
 
         if (buildingCheck == null)
             return NotFound(new
@@ -149,11 +149,11 @@ public class ServicesController : ControllerBase
     [HttpPut("select")]
     [Authorize(Roles = "Renter")]
     [SwaggerOperation(Summary = "[Authorize] Select services to consume (For renter)")]
-    public async Task<IActionResult> SelectServices(List<int> serviceId)
+    public async Task<IActionResult> SelectServices(List<int> serviceId, CancellationToken token)
     {
         var userId = int.Parse(User.Identity?.Name);
 
-        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId);
+        var userCheck = await _serviceWrapper.Renters.GetRenterById(userId, token);
 
         if (userCheck == null)
             return NotFound(new
@@ -163,7 +163,7 @@ public class ServicesController : ControllerBase
                 data = ""
             });
 
-        var invoiceId = await _serviceWrapper.Invoices.GetLatestUnpaidInvoiceByRenter(userId);
+        var invoiceId = await _serviceWrapper.Invoices.GetLatestUnpaidInvoiceByRenter(userId, token);
 
         if (invoiceId == 0)
             return NotFound(new
@@ -196,9 +196,9 @@ public class ServicesController : ControllerBase
     [HttpGet("{id:int}")]
     [Authorize(Roles = "Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get service by id (For management and renter)")]
-    public async Task<IActionResult> GetServiceEntity(int id)
+    public async Task<IActionResult> GetServiceEntity(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.ServicesEntity.GetServiceEntityById(id);
+        var entity = await _serviceWrapper.ServicesEntity.GetServiceEntityById(id, token);
         return entity == null
             ? NotFound(new
             {
@@ -226,6 +226,33 @@ public class ServicesController : ControllerBase
 
         var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(managementId, token);
 
+        switch (buildingId)
+        {
+            case -1:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang không quản lí toà nhà nào",
+                    data = ""
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
+                    data = ""
+                });
+        }
+
+        var validation = await _validator.ValidateParams(service, id, token);
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
         var updateService = new ServiceEntity
         {
             ServiceId = id,
@@ -236,15 +263,6 @@ public class ServicesController : ControllerBase
             Amount = service.Amount ?? 0,
             BuildingId = buildingId
         };
-
-        var validation = await _validator.ValidateParams(updateService, id);
-        if (!validation.IsValid)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = validation.Failures.FirstOrDefault(),
-                data = ""
-            });
 
         var result = await _serviceWrapper.ServicesEntity.UpdateServiceEntity(updateService);
 
@@ -276,6 +294,33 @@ public class ServicesController : ControllerBase
 
         var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(managementId, token);
 
+        switch (buildingId)
+        {
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "No building found for this supervisor",
+                    data = ""
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "More than one building found for this supervisor",
+                    data = ""
+                });
+        }
+
+        var validation = await _validator.ValidateParams(service, token);
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
         var newService = new ServiceEntity
         {
             Name = service.Name,
@@ -287,15 +332,6 @@ public class ServicesController : ControllerBase
             // TODO : Auto get latest invoice detail ID with corresponding Invoice with active status
             // TODO : In invoice controller, auto generate invoice detail id
         };
-
-        var validation = await _validator.ValidateParams(newService, null);
-        if (!validation.IsValid)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = validation.Failures.FirstOrDefault(),
-                data = ""
-            });
 
         var result = await _serviceWrapper.ServicesEntity.AddServiceEntity(newService);
         if (result == null)
@@ -379,9 +415,9 @@ public class ServicesController : ControllerBase
     [HttpGet("type/{id:int}")]
     [Authorize(Roles = "Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get service type by id (For management and renter)")]
-    public async Task<IActionResult> GetServiceType(int id)
+    public async Task<IActionResult> GetServiceType(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.ServiceTypes.GetServiceTypeById(id);
+        var entity = await _serviceWrapper.ServiceTypes.GetServiceTypeById(id, token);
         return entity == null
             ? NotFound(new
             {
@@ -402,16 +438,10 @@ public class ServicesController : ControllerBase
     [HttpPut("type/{id:int}")]
     [Authorize(Roles = "Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Update service type by id (For management)")]
-    public async Task<IActionResult> PutServiceType(int id, ServiceTypeCreateRequest serviceType)
+    public async Task<IActionResult> PutServiceType(int id, ServiceTypeCreateRequest serviceType,
+        CancellationToken token)
     {
-        var updateServiceType = new ServiceType
-        {
-            ServiceTypeId = id,
-            Name = serviceType.Name,
-            Status = serviceType.Status
-        };
-
-        var validation = await _validator.ValidateParams(updateServiceType, id);
+        var validation = await _validator.ValidateParams(serviceType, id, token);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -419,6 +449,14 @@ public class ServicesController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+
+        var updateServiceType = new ServiceType
+        {
+            ServiceTypeId = id,
+            Name = serviceType.Name,
+            Status = serviceType.Status
+        };
+
 
         var result = await _serviceWrapper.ServiceTypes.UpdateServiceType(updateServiceType);
         return result.IsSuccess switch
@@ -443,15 +481,9 @@ public class ServicesController : ControllerBase
     [HttpPost("type")]
     [Authorize(Roles = "Admin, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Add new service type (For management)")]
-    public async Task<IActionResult> PostServiceType(ServiceTypeCreateRequest serviceType)
+    public async Task<IActionResult> PostServiceType(ServiceTypeCreateRequest serviceType, CancellationToken token)
     {
-        var addNewServiceType = new ServiceType
-        {
-            Name = serviceType.Name,
-            Status = serviceType.Status
-        };
-
-        var validation = await _validator.ValidateParams(addNewServiceType, null);
+        var validation = await _validator.ValidateParams(serviceType, token);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -459,6 +491,13 @@ public class ServicesController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+
+
+        var addNewServiceType = new ServiceType
+        {
+            Name = serviceType.Name,
+            Status = serviceType.Status
+        };
 
         var result = await _serviceWrapper.ServiceTypes.AddServiceType(addNewServiceType);
         if (result == null)

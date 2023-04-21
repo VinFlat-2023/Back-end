@@ -203,7 +203,7 @@ public class ContractsController : ControllerBase
         });
     }
 
-
+/*
     [SwaggerOperation(Summary = "Get active contract list of logged in renter (For renter)")]
     [Authorize(Roles = "Renter")]
     [HttpGet("renter/active")]
@@ -237,7 +237,8 @@ public class ContractsController : ControllerBase
             totalCount = list.TotalCount
         });
     }
-
+*/
+/*
     [SwaggerOperation(Summary = "Get inactive contract list of logged in renter (For renter)")]
     [Authorize(Roles = "Renter")]
     [HttpGet("renter/inactive")]
@@ -270,14 +271,14 @@ public class ContractsController : ControllerBase
             totalCount = list.TotalCount
         });
     }
-
+*/
     // GET: api/Contract/5
     [SwaggerOperation(Summary = "[Authorize] Get Contract using id (For management)")]
     [Authorize(Roles = "Supervisor")]
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetContractManagement(int id)
+    public async Task<IActionResult> GetContractManagement(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.Contracts.GetContractById(id);
+        var entity = await _serviceWrapper.Contracts.GetContractById(id, token);
 
         if (entity == null)
             return NotFound(new
@@ -321,7 +322,7 @@ public class ContractsController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        var entity = await _serviceWrapper.Contracts.GetContractById(id);
+        var entity = await _serviceWrapper.Contracts.GetContractById(id, token);
 
         switch (entity)
         {
@@ -357,7 +358,7 @@ public class ContractsController : ControllerBase
                     data = ""
                 });
             default:
-                var renter = await _serviceWrapper.Renters.GetRenterById(entity.RenterId);
+                var renter = await _serviceWrapper.Renters.GetRenterById(entity.RenterId, token);
                 if (renter == null)
                     return NotFound(new
                     {
@@ -365,8 +366,8 @@ public class ContractsController : ControllerBase
                         message = "Renter not found",
                         data = ""
                     });
-                
-                var building = await _serviceWrapper.Buildings.GetBuildingById(entity.BuildingId);
+
+                var building = await _serviceWrapper.Buildings.GetBuildingById(entity.BuildingId, token);
                 if (building == null)
                     return NotFound(new
                     {
@@ -379,14 +380,14 @@ public class ContractsController : ControllerBase
 
                 switch (employeeId)
                 {
-                    case 0 : 
+                    case 0:
                         return NotFound(new
                         {
                             status = "Not Found",
                             message = "Employee not found for this building",
                             data = ""
                         });
-                    case -1 :
+                    case -1:
                         return BadRequest(new
                         {
                             status = "Bad Request",
@@ -525,11 +526,12 @@ public class ContractsController : ControllerBase
         Description = "date format d/M/YYYY")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> PutContract(int id, [FromBody] ContractUpdateRequest contract)
+    public async Task<IActionResult> PutContract(int id, [FromBody] ContractUpdateRequest contract,
+        CancellationToken token)
     {
         //var imageExtension = ImageExtension.ImageExtensionChecker(contract.Image?.FileName);
 
-        var contractEntity = await _serviceWrapper.Contracts.GetContractById(id);
+        var contractEntity = await _serviceWrapper.Contracts.GetContractById(id, token);
 
         if (contractEntity == null)
             return NotFound(new
@@ -539,7 +541,7 @@ public class ContractsController : ControllerBase
                 data = ""
             });
 
-        var validation = await _validator.ValidateParams(contract, id);
+        var validation = await _validator.ValidateParams(contract, id, token);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -597,7 +599,7 @@ public class ContractsController : ControllerBase
     [HttpPost("sign")]
     public async Task<IActionResult> PostContract([FromBody] ContractCreateRequest contract, CancellationToken token)
     {
-        var contractValidation = await _validator.ValidateParams(contract);
+        var contractValidation = await _validator.ValidateParams(contract, token);
 
         if (!contractValidation.IsValid)
             return BadRequest(new
@@ -633,13 +635,23 @@ public class ContractsController : ControllerBase
 
         var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
 
-        if (buildingId <= 0)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Supervisor has more than one building",
-                data = ""
-            });
+        switch (buildingId)
+        {
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "No building found for this supervisor",
+                    data = ""
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "More than one building found for this supervisor",
+                    data = ""
+                });
+        }
 
         var newContract = new Contract
         {

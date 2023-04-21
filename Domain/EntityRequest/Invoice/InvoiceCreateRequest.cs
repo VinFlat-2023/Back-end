@@ -1,9 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Domain.CustomAttribute;
-using Microsoft.AspNetCore.Http;
-
-namespace Domain.EntityRequest.Invoice;
+﻿namespace Domain.EntityRequest.Invoice;
 
 public class InvoiceCreateRequest
 {

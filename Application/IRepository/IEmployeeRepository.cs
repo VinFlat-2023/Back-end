@@ -13,9 +13,13 @@ public interface IEmployeeRepository
     public Task<RepositoryResponse> UpdateEmployeePassword(Employee employee);
     public Task<RepositoryResponse> ToggleEmployee(int employeeId);
     public Task<RepositoryResponse> DeleteEmployee(int employeeId);
-    public Task<Employee?> GetEmployee(string usernameOrPhoneNumber, string password);
-    public IQueryable<Employee> IsEmployeeEmailExist(string? email);
-    public Task<Employee?> GetEmployeeByUserName(string userName);
-    public IQueryable<Employee> IsEmployeeUsernameExist(string? username);
+
+    public Task<Employee?> GetEmployee(string usernameOrPhoneNumber, string password,
+        CancellationToken cancellationToken);
+
+    public Task<RepositoryResponse> IsEmployeeEmailExist(string? email, CancellationToken token);
+    public Task<RepositoryResponse> IsEmployeeEmailExist(string? email, int? employeeId, CancellationToken token);
+    public Task<Employee?> GetEmployeeByUserName(string userName, CancellationToken token);
+    public Task<RepositoryResponse> IsEmployeeUsernameExist(string? username, CancellationToken token);
     public Task<RepositoryResponse> UpdateEmployeeProfilePicture(Employee employee);
 }

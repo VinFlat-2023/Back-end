@@ -42,7 +42,7 @@ public class RenterService : IRenterService
             .ToListAsync(token);
     }
 
-    public async Task<Renter?> GetRenterById(int? renterId)
+    public async Task<Renter?> GetRenterById(int? renterId, CancellationToken cancellationToken)
     {
         return await _repositoryWrapper.Renters.GetRenterDetail(renterId)
             .FirstOrDefaultAsync();
@@ -53,14 +53,19 @@ public class RenterService : IRenterService
         return await _repositoryWrapper.Renters.GetRenterByUsername(username).FirstOrDefaultAsync();
     }
 
-    public async Task<Renter?> RenterUsernameCheck(string? username)
+    public async Task<RepositoryResponse> RenterUsernameCheck(string? username, CancellationToken token)
     {
-        return await _repositoryWrapper.Renters.RenterUsernameCheck(username);
+        return await _repositoryWrapper.Renters.RenterUsernameCheck(username, token);
     }
 
-    public async Task<Renter?> RenterEmailCheck(string? email)
+    public async Task<RepositoryResponse> IsRenterEmailExist(string? email, CancellationToken token)
     {
-        return await _repositoryWrapper.Renters.RenterEmailCheck(email);
+        return await _repositoryWrapper.Renters.IsRenterEmailExist(email, token);
+    }
+
+    public async Task<RepositoryResponse> IsRenterEmailExist(string? email, int? renterId, CancellationToken token)
+    {
+        return await _repositoryWrapper.Renters.IsRenterEmailExist(email, renterId, token);
     }
 
     public async Task<Renter?> RenterDetailWithEmployeeId(int userId)
@@ -99,8 +104,9 @@ public class RenterService : IRenterService
         return await _repositoryWrapper.Renters.DeleteRenter(renterId);
     }
 
-    public async Task<Renter?> RenterLogin(string usernameOrPhoneNumber, string password)
+    public async Task<Renter?> RenterLogin(string usernameOrPhoneNumber, string password,
+        CancellationToken cancellationToken)
     {
-        return await _repositoryWrapper.Renters.GetRenter(usernameOrPhoneNumber, password);
+        return await _repositoryWrapper.Renters.GetRenter(usernameOrPhoneNumber, password, cancellationToken);
     }
 }

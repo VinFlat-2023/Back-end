@@ -22,7 +22,7 @@ internal class ThirtySecondJob : IJob
     {
         try
         {
-            await invoiceService.AutoGenerateEmptyInvoice();
+            await invoiceService.AutoGenerateEmptyInvoice(CancellationToken.None);
         }
         catch (Exception ex)
         {

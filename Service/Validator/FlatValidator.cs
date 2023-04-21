@@ -1,4 +1,6 @@
 using Domain.EntitiesForManagement;
+using Domain.EntityRequest.Flat;
+using Domain.EntityRequest.FlatType;
 using Service.IHelper;
 using Service.IValidator;
 
@@ -13,7 +15,29 @@ public class FlatValidator : BaseValidator, IFlatValidator
         _conditionCheckHelper = conditionCheckHelper;
     }
 
-    public async Task<ValidatorResult> ValidateParams(Flat? obj, int? flatId)
+    public async Task<ValidatorResult> ValidateParams(FlatTypeUpdateRequest? flatType, int? flatId,
+        CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<ValidatorResult> ValidateParams(FlatTypeCreateRequest? flatType, CancellationToken flatId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<ValidatorResult> ValidateParams(FlatUpdateRequest? flat, int? flatId,
+        CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<ValidatorResult> ValidateParams(FlatCreateRequest? flat, CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<ValidatorResult> ValidateParams(Flat? obj, int? flatId, CancellationToken token)
     {
         try
         {
@@ -27,7 +51,7 @@ public class FlatValidator : BaseValidator, IFlatValidator
                         ValidatorResult.Failures.Add("Flat is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.FlatCheck(obj.FlatId) == null)
+                        if (await _conditionCheckHelper.FlatCheck(obj.FlatId, token) == null)
                             ValidatorResult.Failures.Add("Flat provided does not exist");
                         break;
                 }
@@ -74,7 +98,7 @@ public class FlatValidator : BaseValidator, IFlatValidator
                         ValidatorResult.Failures.Add("Flat type is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.FlatTypeCheck(obj.FlatTypeId) == null)
+                        if (await _conditionCheckHelper.FlatTypeCheck(obj.FlatTypeId, token) == null)
                             ValidatorResult.Failures.Add("Flat type provided does not exist");
                         break;
                 }
@@ -86,7 +110,7 @@ public class FlatValidator : BaseValidator, IFlatValidator
                         ValidatorResult.Failures.Add("Building is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.BuildingCheck(obj.BuildingId) == null)
+                        if (await _conditionCheckHelper.BuildingCheck(obj.BuildingId, token) == null)
                             ValidatorResult.Failures.Add("Building provided does not exist");
                         break;
                 }
@@ -100,7 +124,7 @@ public class FlatValidator : BaseValidator, IFlatValidator
         return ValidatorResult;
     }
 
-    public async Task<ValidatorResult> ValidateParams(FlatType? obj, int? flatTypeId)
+    public async Task<ValidatorResult> ValidateParams(FlatType? obj, int? flatTypeId, CancellationToken token)
     {
         try
         {
@@ -114,7 +138,7 @@ public class FlatValidator : BaseValidator, IFlatValidator
                         ValidatorResult.Failures.Add("Flat type is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.FlatTypeCheck(obj.FlatTypeId) == null)
+                        if (await _conditionCheckHelper.FlatTypeCheck(obj.FlatTypeId, token) == null)
                             ValidatorResult.Failures.Add("Flat type provided does not exist");
                         break;
                 }
@@ -140,7 +164,7 @@ public class FlatValidator : BaseValidator, IFlatValidator
                         ValidatorResult.Failures.Add("Building is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.BuildingCheck(obj.BuildingId) == null)
+                        if (await _conditionCheckHelper.BuildingCheck(obj.BuildingId, token) == null)
                             ValidatorResult.Failures.Add("Building provided does not exist");
                         break;
                 }

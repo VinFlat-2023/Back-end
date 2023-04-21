@@ -259,17 +259,14 @@ public class AutoMapper : Profile
 
     private void MapTicket()
     {
-        CreateMap<Ticket, TicketCreateRequest>();
+        CreateMap<Ticket, TicketCreateRequest>()
+            .ReverseMap();
         CreateMap<TicketUpdateRequest, Ticket>()
-            .ForMember(e => e.CreateDate,
-                option => option.MapFrom(r => r.CreateDate.ConvertToDateTime()))
-            .ForMember(e => e.SolveDate,
-                option => option.MapFrom(r => r.SolveDate.ConvertToDateTime()));
+            .ReverseMap();
         CreateMap<Ticket, TicketUpdateRequest>()
             .ReverseMap();
         CreateMap<TicketFilterRequest, TicketFilter>()
             .ReverseMap();
-
         CreateMap<Ticket, TicketDetailEntity>()
             .ReverseMap();
         CreateMap<TicketDetailEntity, TicketFilter>()
@@ -281,7 +278,8 @@ public class AutoMapper : Profile
         CreateMap<InvoiceCreateRequest, Invoice>()
             .ForMember(e => e.DueDate,
                 option => option.MapFrom(r => r.DueDate));
-        CreateMap<Invoice, InvoiceCreateRequest>();
+        CreateMap<Invoice, InvoiceCreateRequest>()
+            .ReverseMap();
         CreateMap<InvoiceUpdateRequest, Invoice>()
             .ForMember(e => e.DueDate,
                 option => option.MapFrom(r => r.DueDate))

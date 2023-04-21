@@ -58,7 +58,7 @@ public class ContractRepository : IContractRepository
             // true = supervisor
             true => _context.Contracts
                 .Include(x => x.Renter)
-                .Where(x => x.RenterId == userId && x.BuildingId == buildingId)
+                .Where(x => x.Flat.Building.EmployeeId == userId)
                 .Where(x =>
                     (filters.ContractName == null ||
                      x.ContractName.ToLower().Contains(filters.ContractName.ToLower()))
@@ -88,7 +88,7 @@ public class ContractRepository : IContractRepository
                 .Include(x => x.Renter)
                 .Include(x => x.Flat)
                 .ThenInclude(x => x.Building)
-                .Where(x => x.Flat.Building.EmployeeId == userId)
+                .Where(x => x.RenterId == userId && x.BuildingId == buildingId)
                 .Where(x =>
                     (filters.ContractName == null ||
                      x.ContractName.ToLower().Contains(filters.ContractName.ToLower()))

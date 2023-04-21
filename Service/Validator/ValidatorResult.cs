@@ -4,10 +4,10 @@ public class ValidatorResult
 {
     public ValidatorResult()
     {
-        Failures = new List<string>();
+        Failures = new List<string?>();
     }
 
     public bool IsValid => !Failures.Any();
 
-    public List<string> Failures { get; set; }
+    public List<string?> Failures { get; set; }
 }

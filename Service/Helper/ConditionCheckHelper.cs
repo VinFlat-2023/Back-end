@@ -1,3 +1,4 @@
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Service.IHelper;
 using Service.IService;
@@ -13,107 +14,137 @@ public class ConditionCheckHelper : IConditionCheckHelper
         _serviceWrapper = serviceWrapper;
     }
 
-    public async Task<Employee?> EmployeeCheck(int? id)
+    public async Task<Employee?> EmployeeCheck(int? id, CancellationToken token)
     {
-        return await _serviceWrapper.Employees.GetEmployeeById(id);
+        return await _serviceWrapper.Employees.GetEmployeeById(id, token);
     }
 
-    public async Task<Renter?> RenterCheck(int? id)
+    public async Task<Renter?> RenterCheck(int? id, CancellationToken token)
     {
-        return await _serviceWrapper.Renters.GetRenterById(id);
+        return await _serviceWrapper.Renters.GetRenterById(id, token);
     }
 
-    public async Task<Role?> RoleCheck(int? id)
+    public async Task<Role?> RoleCheck(int? id, CancellationToken token)
     {
-        return await _serviceWrapper.Roles.GetRoleById(id);
+        return await _serviceWrapper.Roles.GetRoleById(id, token);
     }
 
-    public async Task<Renter?> RenterEmailCheck(string? email)
+    public async Task<RepositoryResponse> RenterEmailCheck(string? email, CancellationToken token)
     {
-        return await _serviceWrapper.Renters.RenterEmailCheck(email);
+        return await _serviceWrapper.Renters.IsRenterEmailExist(email, token);
     }
 
-    public async Task<Renter?> RenterUsernameCheck(string? username)
+    public async Task<RepositoryResponse> RenterEmailCheck(string? email, int? renterId, CancellationToken token)
     {
-        return await _serviceWrapper.Renters.RenterUsernameCheck(username);
+        return await _serviceWrapper.Renters.IsRenterEmailExist(email, renterId, token);
     }
 
-    public async Task<Flat?> FlatCheck(int? id)
+    public async Task<RepositoryResponse> EmployeeEmailCheck(string? objEmail, int? employeeId, CancellationToken token)
     {
-        return await _serviceWrapper.Flats.GetFlatById(id);
+        return await _serviceWrapper.Employees.IsEmployeeEmailExist(objEmail, employeeId, token);
     }
 
-    public async Task<FlatType?> FlatTypeCheck(int? id)
+    public async Task<RepositoryResponse> EmployeeEmailCheck(string? email, CancellationToken token)
     {
-        return await _serviceWrapper.FlatTypes.GetFlatTypeById(id);
+        return await _serviceWrapper.Employees.IsEmployeeEmailExist(email, token);
     }
 
-    public async Task<Feedback?> FeedbackCheck(int? id)
+    public async Task<RepositoryResponse> EmployeeUsernameExist(string? username, CancellationToken token)
     {
-        return await _serviceWrapper.Feedbacks.GetFeedbackById(id);
+        return await _serviceWrapper.Employees.IsEmployeeUsernameExist(username, token);
     }
 
-    public async Task<FeedbackType?> FeedbackTypeCheck(int? id)
+    public async Task<RepositoryResponse> RenterUsernameCheck(string? username, CancellationToken token)
     {
-        return await _serviceWrapper.FeedbackTypes.GetFeedbackTypeById(id);
+        return await _serviceWrapper.Renters.RenterUsernameCheck(username, token);
     }
 
-    public async Task<Building?> BuildingCheck(int? id)
+    public async Task<Flat?> FlatCheck(int? id, CancellationToken token)
     {
-        return await _serviceWrapper.Buildings.GetBuildingById(id);
+        return await _serviceWrapper.Flats.GetFlatById(id, token);
     }
 
-    public async Task<ServiceEntity?> ServiceCheck(int? id)
+    public async Task<FlatType?> FlatTypeCheck(int? id, CancellationToken token)
     {
-        return await _serviceWrapper.ServicesEntity.GetServiceEntityById(id);
+        return await _serviceWrapper.FlatTypes.GetFlatTypeById(id, token);
     }
 
-    public async Task<ServiceType?> ServiceTypeCheck(int? id)
+    public async Task<Feedback?> FeedbackCheck(int? id, CancellationToken token)
     {
-        return await _serviceWrapper.ServiceTypes.GetServiceTypeById(id);
+        return await _serviceWrapper.Feedbacks.GetFeedbackById(id, token);
     }
 
-    public async Task<Invoice?> InvoiceCheck(int? id)
+    public async Task<FeedbackType?> FeedbackTypeCheck(int? id, CancellationToken token)
     {
-        return await _serviceWrapper.Invoices.GetInvoiceById(id);
+        return await _serviceWrapper.FeedbackTypes.GetFeedbackTypeById(id, token);
     }
 
-    public async Task<Contract?> ContractCheck(int? id)
+    public async Task<Building?> BuildingCheck(int? id, CancellationToken token)
     {
-        return await _serviceWrapper.Contracts.GetContractById(id);
+        return await _serviceWrapper.Buildings.GetBuildingById(id, token);
     }
 
-    public async Task<TicketType?> TicketTypeCheck(int? id)
+    public async Task<ServiceEntity?> ServiceCheck(int? id, CancellationToken token)
     {
-        return await _serviceWrapper.TicketTypes.GetTicketTypeById(id);
+        return await _serviceWrapper.ServicesEntity.GetServiceEntityById(id, token);
     }
 
-    public async Task<Ticket?> TicketCheck(int? id)
+    public async Task<ServiceType?> ServiceTypeCheck(int? id, CancellationToken token)
     {
-        return await _serviceWrapper.Tickets.GetTicketById(id);
+        return await _serviceWrapper.ServiceTypes.GetServiceTypeById(id, token);
     }
 
-    public async Task<InvoiceDetail?> InvoiceDetailCheck(int? id)
+    public async Task<Invoice?> InvoiceCheck(int? id, CancellationToken token)
     {
-        return await _serviceWrapper.InvoiceDetails.GetInvoiceDetailById(id);
+        return await _serviceWrapper.Invoices.GetInvoiceById(id, token);
     }
 
-    public async Task<InvoiceType?> InvoiceTypeCheck(int? id)
+    public async Task<Contract?> ContractCheck(int? id, CancellationToken token)
     {
-        return await _serviceWrapper.InvoiceTypes.GetInvoiceTypeById(id);
+        return await _serviceWrapper.Contracts.GetContractById(id, token);
     }
 
-    public async Task<Area?> AreaCheck(int? id)
+    public async Task<TicketType?> TicketTypeCheck(int? id, CancellationToken token)
     {
-        return await _serviceWrapper.Areas.GetAreaById(id);
+        return await _serviceWrapper.TicketTypes.GetTicketTypeById(id, token);
     }
 
-    public async Task<Employee?> EmployeeUsernameExist(string? username)
+    public async Task<Ticket?> TicketCheck(int? ticketId, int? renterId, CancellationToken token)
     {
-        return await _serviceWrapper.Employees.IsEmployeeUsernameExist(username);
+        return await _serviceWrapper.Tickets.GetTicketById(ticketId, renterId, token);
     }
 
-    public async Task<Room?> RoomCheck(int? roomId)
+    public async Task<Ticket?> TicketCheck(int? ticketId, CancellationToken token)
+    {
+        return await _serviceWrapper.Tickets.GetTicketById(ticketId, token);
+    }
+
+    public async Task<InvoiceDetail?> InvoiceDetailCheck(int? id, CancellationToken token)
+    {
+        return await _serviceWrapper.InvoiceDetails.GetInvoiceDetailById(id, token);
+    }
+
+    public async Task<InvoiceType?> InvoiceTypeCheck(int? id, CancellationToken token)
+    {
+        return await _serviceWrapper.InvoiceTypes.GetInvoiceTypeById(id, token);
+    }
+
+    public async Task<Area?> AreaCheck(int? id, CancellationToken token)
+    {
+        return await _serviceWrapper.Areas.GetAreaById(id, token);
+    }
+
+    public async Task<RepositoryResponse> AreaNameCheck(string? areaName, CancellationToken token)
+    {
+        return await _serviceWrapper.Areas.GetAreaByName(areaName, token);
+    }
+
+    public async Task<RepositoryResponse> AreaNameCheck(string? areaName, int? areaId, CancellationToken token)
+    {
+        return await _serviceWrapper.Areas.GetAreaByName(areaName, areaId, token);
+    }
+
+    public async Task<Room?> RoomCheck(int? roomId, CancellationToken token)
     {
         return await _serviceWrapper.Rooms.GetRoomById(roomId);
     }
@@ -124,9 +155,4 @@ public class ConditionCheckHelper : IConditionCheckHelper
         return await _serviceWrapper.Rooms.get
     }
     */
-
-    public async Task<Employee?> EmployeeEmailCheck(string? email)
-    {
-        return await _serviceWrapper.Employees.IsEmployeeEmailExist(email);
-    }
 }

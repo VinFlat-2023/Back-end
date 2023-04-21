@@ -60,9 +60,9 @@ public class RolesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Get role by id (For management)")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetRole(int id)
+    public async Task<IActionResult> GetRole(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.Roles.GetRoleById(id);
+        var entity = await _serviceWrapper.Roles.GetRoleById(id, token);
         return entity == null
             ? NotFound(new
             {
@@ -79,17 +79,11 @@ public class RolesController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "[Authorize] Create role (For management)")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
-    public async Task<IActionResult> CreateRole([FromBody] RoleCreateRequest request)
+    public async Task<IActionResult> CreateRole([FromBody] RoleCreateRequest role, CancellationToken token)
     {
-        var newRole = new Role
-        {
-            RoleName = request.RoleName,
-            Status = request.Status
-        };
-
-        var validation = await _validator.ValidateParams(newRole, null);
+        var validation = await _validator.ValidateParams(role, token);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -97,6 +91,12 @@ public class RolesController : ControllerBase
                 message = "Role failed to create",
                 data = ""
             });
+
+        var newRole = new Role
+        {
+            RoleName = role.RoleName,
+            Status = role.Status
+        };
 
         var result = await _serviceWrapper.Roles.AddRole(newRole);
         if (result == null)
@@ -118,16 +118,9 @@ public class RolesController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update role info (For management)")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpPut]
-    public async Task<IActionResult> UpdateRole(int id, [FromBody] RoleUpdateRequest role)
+    public async Task<IActionResult> UpdateRole(int id, [FromBody] RoleUpdateRequest role, CancellationToken token)
     {
-        var updateRole = new Role
-        {
-            RoleId = id,
-            RoleName = role.RoleName,
-            Status = role.Status
-        };
-
-        var validation = await _validator.ValidateParams(updateRole, id);
+        var validation = await _validator.ValidateParams(role, id, token);
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -135,6 +128,13 @@ public class RolesController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+
+        var updateRole = new Role
+        {
+            RoleId = id,
+            RoleName = role.RoleName,
+            Status = role.Status
+        };
 
         var result = await _serviceWrapper.Roles.UpdateRole(updateRole);
         if (result == null)

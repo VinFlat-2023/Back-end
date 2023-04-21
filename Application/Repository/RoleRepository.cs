@@ -38,7 +38,7 @@ public class RoleRepository : IRoleRepository
     public async Task<Role?> GetRoleDetail(int? roleId)
     {
         return await _context.Roles
-            .SingleOrDefaultAsync(x => x.RoleId == roleId);
+            .FirstOrDefaultAsync(x => x.RoleId == roleId);
     }
 
     /// <summary>

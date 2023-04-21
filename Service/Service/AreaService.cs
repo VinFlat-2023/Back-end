@@ -36,25 +36,25 @@ public class AreaService : IAreaService
         return pagedList;
     }
 
-    public async Task<Area?> GetAreaById(int? areaId)
+    public async Task<Area?> GetAreaById(int? areaId, CancellationToken cancellationToken)
     {
         return await _repositoryWrapper.Areas.GetAreaDetail(areaId);
     }
 
-    public async Task<RepositoryResponse> AddArea(Area area)
+    public async Task<RepositoryResponse> GetAreaByName(string? areaName, CancellationToken cancellationToken)
     {
-        try
-        {
-            return await _repositoryWrapper.Areas.AddArea(area);
-        }
-        catch
-        {
-            return new RepositoryResponse
-            {
-                IsSuccess = false,
-                Message = "Area failed to create"
-            };
-        }
+        return await _repositoryWrapper.Areas.GetAreaByName(areaName, cancellationToken);
+    }
+
+    public async Task<RepositoryResponse> GetAreaByName(string? areaName, int? areaId,
+        CancellationToken cancellationToken)
+    {
+        return await _repositoryWrapper.Areas.GetAreaByName(areaName, areaId, cancellationToken);
+    }
+
+    public async Task<Area> AddArea(Area area)
+    {
+        return await _repositoryWrapper.Areas.AddArea(area);
     }
 
     public async Task<RepositoryResponse> UpdateArea(Area area)
@@ -89,11 +89,11 @@ public class AreaService : IAreaService
         }
     }
 
-    public async Task<RepositoryResponse> UpdateAreaImage(Area updateArea)
+    public async Task<RepositoryResponse> UpdateAreaImage(Area updateArea, int number)
     {
         try
         {
-            return await _repositoryWrapper.Areas.UpdateAreaImage(updateArea);
+            return await _repositoryWrapper.Areas.UpdateAreaImage(updateArea, number);
         }
         catch
         {

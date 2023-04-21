@@ -43,14 +43,14 @@ public class AreasController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Area list is empty",
+                message = "Danh sách khu vực trống",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "List found",
+            message = "Hiển thị danh sách khu vực",
             data = resultList,
             totalPage = list.TotalPages,
             totalCount = list.TotalCount
@@ -60,23 +60,23 @@ public class AreasController : ControllerBase
     // GET: api/Areas/5
     [SwaggerOperation(Summary = "[Authorize] Get area using id")]
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetArea(int id)
+    public async Task<IActionResult> GetArea(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.Areas.GetAreaById(id);
+        var entity = await _serviceWrapper.Areas.GetAreaById(id, token);
 
         if (entity == null)
 
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Area not found",
+                message = "Khu vực không tìm thấy",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "Area found",
+            message = "Đã tìm thấy khu vực",
             data = _mapper.Map<AreaDetailEntity>(entity)
         });
     }
@@ -86,9 +86,9 @@ public class AreasController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update area info using id (For management)")]
     [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> PutArea(int id, [FromBody] AreaUpdateRequest area)
+    public async Task<IActionResult> PutArea(int id, [FromBody] AreaUpdateRequest area, CancellationToken token)
     {
-        var validation = await _validator.ValidateParams(area, id);
+        var validation = await _validator.ValidateParams(area, id, token);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -130,9 +130,9 @@ public class AreasController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Create area (For management)")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpPost]
-    public async Task<IActionResult> PostArea([FromBody] AreaCreateRequest area)
+    public async Task<IActionResult> PostArea([FromBody] AreaCreateRequest area, CancellationToken token)
     {
-        var validation = await _validator.ValidateParams(area);
+        var validation = await _validator.ValidateParams(area, token);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -151,21 +151,12 @@ public class AreasController : ControllerBase
 
         var result = await _serviceWrapper.Areas.AddArea(newArea);
 
-        return result.IsSuccess switch
+        return Ok(new
         {
-            true => Ok(new
-            {
-                status = "Success",
-                message = result.Message,
-                data = ""
-            }),
-            false => NotFound(new
-            {
-                status = "Not Found",
-                message = result.Message,
-                data = ""
-            })
-        };
+            status = "Success",
+            message = "Khu vực được tạo thành công",
+            data = _mapper.Map<AreaDetailEntity>(result)
+        });
     }
 
     [SwaggerOperation(Summary = "Activate and Deactivate area status")]
