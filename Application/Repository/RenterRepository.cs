@@ -31,6 +31,11 @@ public class RenterRepository : IRenterRepository
             .AsNoTracking();
     }
 
+    public IQueryable<Renter> GetRenterList(RenterFilter filter, int buildingId)
+    {
+        throw new NotImplementedException();
+    }
+
     /// <summary>
     ///     Get a list of all renters
     /// </summary>

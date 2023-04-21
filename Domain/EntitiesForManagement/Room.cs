@@ -10,10 +10,10 @@ public class Room
     public int RoomId { get; set; }
     public string RoomName { get; set; } = null!;
     public int AvailableSlots { get; set; }
-    public string Description { get; set; } 
+    public string? Description { get; set; } 
     public decimal ElectricityAttribute { get; set; }
     public decimal WaterAttribute { get; set; }
-    public string Status { get; set; }
+    public string? Status { get; set; }
 
     [MaxUploadedFileSize(4 * 1024 * 1024)]
     [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]

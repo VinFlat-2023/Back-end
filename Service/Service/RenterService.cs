@@ -42,6 +42,11 @@ public class RenterService : IRenterService
             .ToListAsync(token);
     }
 
+    public Task<PagedList<Renter>?> GetRenterList(RenterFilter filters, CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<Renter?> GetRenterById(int? renterId, CancellationToken cancellationToken)
     {
         return await _repositoryWrapper.Renters.GetRenterDetail(renterId)

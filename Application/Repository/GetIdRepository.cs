@@ -69,6 +69,11 @@ public class GetIdRepository : IGetIdRepository
         };
     }
 
+    public Task<int> GetBuildingIdBasedOnTechnicianId(int employeeId, CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<int> GetSupervisorIdByBuildingId(int entityBuildingId, CancellationToken token)
     {
         var employeeList = await _context.Employees

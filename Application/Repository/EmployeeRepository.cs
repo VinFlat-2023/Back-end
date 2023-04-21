@@ -35,6 +35,11 @@ public class EmployeeRepository : IEmployeeRepository
             .AsNoTracking();
     }
 
+    public IQueryable<Employee> GetEmployeeList(EmployeeFilter filters, int buildingId)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<RepositoryResponse> IsEmployeeEmailExist(string? email, CancellationToken token)
     {
         if (email == null)

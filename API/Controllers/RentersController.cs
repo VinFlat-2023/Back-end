@@ -67,7 +67,7 @@ public class RentersController : ControllerBase
                 });
         }
         
-        var entity = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
+        var entity = await _serviceWrapper.Buildings.GetBuildingById(buildingId, token);
 
         if (entity == null)
             return NotFound(new

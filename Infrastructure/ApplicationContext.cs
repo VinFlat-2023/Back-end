@@ -1982,7 +1982,9 @@ public class ApplicationContext : DbContext
                 RoomName = "Room 1 for flat 1",
                 AvailableSlots = 2,
                 RoomTypeId = 1,
-                FlatId = 1
+                FlatId = 1,
+                Status = "Ok",
+                Description = "sadasdasd",
             },
             new Room
             {
@@ -1990,7 +1992,9 @@ public class ApplicationContext : DbContext
                 RoomName = "Room 1 for flat 3",
                 AvailableSlots = 1,
                 RoomTypeId = 1,
-                FlatId = 3
+                FlatId = 3,
+                Status = "Ok",         
+                Description = "sadasdasd",
             },
             new Room
             {
@@ -1998,7 +2002,9 @@ public class ApplicationContext : DbContext
                 RoomName = "Room 2 for flat 3",
                 AvailableSlots = 2,
                 RoomTypeId = 2,
-                FlatId = 3
+                FlatId = 3,
+                Status = "Ok",
+                Description = "sadasdasd",
             },
             new Room
             {
@@ -2006,7 +2012,9 @@ public class ApplicationContext : DbContext
                 RoomName = "Room 3 for flat 3",
                 AvailableSlots = 2,
                 RoomTypeId = 3,
-                FlatId = 3
+                FlatId = 3,
+                Status = "Ok",
+                Description = "sadasdasd",
             }
         );
 

@@ -7,6 +7,7 @@ namespace Service.IService;
 public interface IRenterService
 {
     public Task<PagedList<Renter>?> GetRenterList(RenterFilter filters, CancellationToken token);
+    public Task<PagedList<Renter>?> GetRenterList(RenterFilter filters, int buildingId, CancellationToken token);
     public Task<Renter?> GetRenterById(int? renterId, CancellationToken cancellationToken);
     public Task<List<Renter>?> GetRenterListBasedOnFlat(int flatId, CancellationToken token);
     public Task<Renter?> AddRenter(Renter renter);
