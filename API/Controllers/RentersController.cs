@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Renter;
@@ -38,28 +39,61 @@ public class RentersController : ControllerBase
 
     // GET: api/Renters
     [HttpGet]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Get renter list with pagination and filter (For management)")]
     public async Task<IActionResult> GetRenters([FromQuery] RenterFilterRequest request, CancellationToken token)
     {
+        var employeeId = int.Parse(User.Identity?.Name);
+
         var filter = _mapper.Map<RenterFilter>(request);
+        
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
 
-        var list = await _serviceWrapper.Renters.GetRenterList(filter, token);
+        switch (buildingId)
+        {
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                    data = ""
+                });
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Người quản lý không quản lý tòa nhà nào",
+                    data = ""
+                });
+        }
+        
+        var entity = await _serviceWrapper.Buildings.GetBuildingById(buildingId);
 
+        if (entity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Toà nhà không tồn tại",
+                data = ""
+            });
+
+        
+        var list = await _serviceWrapper.Renters.GetRenterList(filter, buildingId, token);
+        
         var resultList = _mapper.Map<IEnumerable<RenterProfileEntity>>(list);
 
         if (list == null || !list.Any())
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Renter list is empty",
+                message = "Danh sách khách thuê trống",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "List found",
+            message = "Tìm thấy danh sách khách thuê",
             data = resultList,
             totalPage = list.TotalPages,
             totalCount = list.TotalCount

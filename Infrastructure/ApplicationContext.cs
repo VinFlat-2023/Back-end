@@ -97,8 +97,6 @@ public class ApplicationContext : DbContext
         {
             entity.HasIndex(e => e.Username)
                 .IsUnique();
-            entity.HasIndex(e => e.Email)
-                .IsUnique();
         });
 
 
@@ -113,7 +111,8 @@ public class ApplicationContext : DbContext
                 Phone = "0912345678",
                 Status = true,
                 RoleId = 2,
-                Address = "Sup1 address"
+                Address = "Sup1 address",
+                SupervisorBuildingId = 1
             },
             new Employee
             {
@@ -125,19 +124,21 @@ public class ApplicationContext : DbContext
                 Phone = "0923456789",
                 Status = true,
                 RoleId = 2,
-                Address = "Sup2 address"
+                Address = "Sup2 address",
+                SupervisorBuildingId = 2
             },
             new Employee
             {
                 EmployeeId = 3,
-                Username = "Khôi Huy",
-                FullName = "sup3",
+                FullName = "Khôi Huy",
+                Username = "sup3",
                 Password = "123456",
                 Email = "khoihuy@mail",
                 Phone = "0812345678",
                 Status = true,
                 RoleId = 2,
-                Address = "Sup3 address"
+                Address = "Sup3 address",
+                SupervisorBuildingId = 3
             },
             new Employee
             {
@@ -149,7 +150,8 @@ public class ApplicationContext : DbContext
                 Phone = "0823456789",
                 Status = true,
                 RoleId = 2,
-                Address = "Sup4 address"
+                Address = "Sup4 address",
+                SupervisorBuildingId = 4
             },
             new Employee
             {
@@ -161,7 +163,8 @@ public class ApplicationContext : DbContext
                 Phone = "0834567890",
                 Status = true,
                 RoleId = 2,
-                Address = "Sup5 address"
+                Address = "Sup5 address",
+                SupervisorBuildingId = 5
             },
             new Employee
             {
@@ -173,7 +176,8 @@ public class ApplicationContext : DbContext
                 Phone = "0712345678",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 6
             },
             new Employee
             {
@@ -185,7 +189,7 @@ public class ApplicationContext : DbContext
                 Phone = "0723456789",
                 Status = true,
                 RoleId = 1,
-                Address = "Admin address"
+                Address = "Admin address",
             },
             new Employee
             {
@@ -197,7 +201,8 @@ public class ApplicationContext : DbContext
                 Phone = "0723567890",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 7
             },
             new Employee
             {
@@ -209,7 +214,8 @@ public class ApplicationContext : DbContext
                 Phone = "0913456324",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 8
             },
             new Employee
             {
@@ -221,7 +227,8 @@ public class ApplicationContext : DbContext
                 Phone = "0942184853",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 9
             },
             new Employee
             {
@@ -233,7 +240,8 @@ public class ApplicationContext : DbContext
                 Phone = "0234328589",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 10
             },
             new Employee
             {
@@ -245,7 +253,8 @@ public class ApplicationContext : DbContext
                 Phone = "0482138128",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 11
             },
             new Employee
             {
@@ -257,7 +266,8 @@ public class ApplicationContext : DbContext
                 Phone = "0763125422",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 12
             },
             new Employee
             {
@@ -269,7 +279,8 @@ public class ApplicationContext : DbContext
                 Phone = "0358438539",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 13
             },
             new Employee
             {
@@ -281,7 +292,8 @@ public class ApplicationContext : DbContext
                 Phone = "0429215737",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 14
             },
             new Employee
             {
@@ -293,7 +305,8 @@ public class ApplicationContext : DbContext
                 Phone = "0582021245",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 15
             },
             new Employee
             {
@@ -305,7 +318,8 @@ public class ApplicationContext : DbContext
                 Phone = "0984271626",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 16
             },
             new Employee
             {
@@ -317,7 +331,8 @@ public class ApplicationContext : DbContext
                 Phone = "012312323235",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 17
             },
             new Employee
             {
@@ -329,7 +344,8 @@ public class ApplicationContext : DbContext
                 Phone = "0932441829",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 18
             },
             new Employee
             {
@@ -341,7 +357,8 @@ public class ApplicationContext : DbContext
                 Phone = "0490238588",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 19
             },
             new Employee
             {
@@ -353,7 +370,8 @@ public class ApplicationContext : DbContext
                 Phone = "0943573182",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 20
             },
             new Employee
             {
@@ -365,7 +383,8 @@ public class ApplicationContext : DbContext
                 Phone = "0984372814",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 21
             },
             new Employee
             {
@@ -377,7 +396,8 @@ public class ApplicationContext : DbContext
                 Phone = "0958214539",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 22
             },
             new Employee
             {
@@ -389,7 +409,8 @@ public class ApplicationContext : DbContext
                 Phone = "012312323235",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 23
             },
             new Employee
             {
@@ -401,7 +422,8 @@ public class ApplicationContext : DbContext
                 Phone = "0943783365",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 24
             },
             new Employee
             {
@@ -413,7 +435,8 @@ public class ApplicationContext : DbContext
                 Phone = "0913683923",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 25
             },
             new Employee
             {
@@ -425,7 +448,8 @@ public class ApplicationContext : DbContext
                 Phone = "0942812643",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 26
             },
             new Employee
             {
@@ -437,7 +461,8 @@ public class ApplicationContext : DbContext
                 Phone = "012312323235",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 27
             },
             new Employee
             {
@@ -449,7 +474,8 @@ public class ApplicationContext : DbContext
                 Phone = "0918238483",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 28
             },
             new Employee
             {
@@ -461,7 +487,8 @@ public class ApplicationContext : DbContext
                 Phone = "0984271544",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 29
             },
             new Employee
             {
@@ -473,7 +500,8 @@ public class ApplicationContext : DbContext
                 Phone = "0384943481",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 30
             },
             new Employee
             {
@@ -485,7 +513,8 @@ public class ApplicationContext : DbContext
                 Phone = "0938772581",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                SupervisorBuildingId = 31
             },
             new Employee
             {
@@ -497,7 +526,8 @@ public class ApplicationContext : DbContext
                 Phone = "0485245513",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address"
+                Address = "Employee address",
+                
             },
             new Employee
             {
@@ -728,8 +758,6 @@ public class ApplicationContext : DbContext
         modelBuilder.Entity<Renter>(entity =>
         {
             entity.HasIndex(e => e.Username)
-                .IsUnique();
-            entity.HasIndex(e => e.Email)
                 .IsUnique();
         });
 

@@ -26,7 +26,7 @@ internal class ServiceEntityRepository : IServiceEntityRepository
             .Include(x => x.ServiceType)
             .Include(x => x.Building)
             .ThenInclude(x => x.Employee)
-            // Filter starts here
+            // filter starts here
             .Where(x =>
                 (filters.Name == null || x.Name.ToLower().Contains(filters.Name.ToLower()))
                 && (filters.Status == null || x.Status == filters.Status)
@@ -47,7 +47,7 @@ internal class ServiceEntityRepository : IServiceEntityRepository
             .Include(x => x.Building)
             .Include(x => x.ServiceType)
             .Where(x => x.BuildingId == buildingId)
-            // Filter starts here
+            // filter starts here
             .Where(x =>
                 (filters.Name == null || x.Name.ToLower().Contains(filters.Name.ToLower()))
                 && (filters.Status == null || x.Status == filters.Status)

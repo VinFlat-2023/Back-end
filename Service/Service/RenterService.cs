@@ -20,9 +20,9 @@ public class RenterService : IRenterService
         _paginationOptions = paginationOptions.Value;
     }
 
-    public async Task<PagedList<Renter>?> GetRenterList(RenterFilter filters, CancellationToken token)
+    public async Task<PagedList<Renter>?> GetRenterList(RenterFilter filters, int buildingId, CancellationToken token)
     {
-        var queryable = _repositoryWrapper.Renters.GetRenterList(filters);
+        var queryable = _repositoryWrapper.Renters.GetRenterList(filters, buildingId);
 
         if (!queryable.Any())
             return null;

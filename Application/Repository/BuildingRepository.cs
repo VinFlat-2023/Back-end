@@ -27,7 +27,7 @@ public class BuildingRepository : IBuildingRepository
             .Include(x => x.Employee)
             .Include(x => x.Flats)
             .ThenInclude(x => x.Rooms)
-            // Filter starts here
+            // filter starts here
             .Where(x =>
                 (filter.BuildingName == null || x.BuildingName.ToLower().Contains(filter.BuildingName.ToLower()))
                 && (filter.Description == null || x.Description.ToLower().Contains(filter.Description.ToLower()))

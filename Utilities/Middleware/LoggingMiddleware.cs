@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace Utilities.Middleware;
 
-public class LoggingMiddleware
+public class ExceptionHandlerMiddleware
 {
     private const int ReadChunkBufferLength = 4096;
     private static readonly ActionDescriptor EmptyActionDescriptor = new();
@@ -22,12 +22,12 @@ public class LoggingMiddleware
     private readonly RequestDelegate _next;
     private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
 
-    public LoggingMiddleware(RequestDelegate next, ILoggerFactory loggerFactory,
+    public ExceptionHandlerMiddleware(RequestDelegate next, ILoggerFactory loggerFactory,
         IActionResultExecutor<ObjectResult> executor)
     {
         _next = next;
         _executor = executor;
-        _logger = loggerFactory.CreateLogger<LoggingMiddleware>();
+        _logger = loggerFactory.CreateLogger<ExceptionHandlerMiddleware>();
         _recyclableMemoryStreamManager = new RecyclableMemoryStreamManager();
     }
 
@@ -42,12 +42,16 @@ public class LoggingMiddleware
         }
         catch (Exception ex)
         {
-            var routeData = context.GetRouteData();
-
             _logger.LogError(ex,
                 "An unhandled exception has occurred while executing the request. " +
                 "\nUrl: {RequestDisplayUrl}. " +
                 "\nRequest Data: {RequestData}", requestDisplayUrl, requestData);
+
+            if (context.Response.HasStarted) throw;
+
+            var routeData = context.GetRouteData();
+
+            ClearCacheHeaders(context.Response);
 
             var actionContext = new ActionContext(context, routeData, EmptyActionDescriptor);
 
@@ -84,8 +88,6 @@ public class LoggingMiddleware
             {
                 StatusCode = statusCode
             };
-
-            ClearCacheHeaders(context.Response);
 
             if (!string.IsNullOrWhiteSpace(msg))
                 await HandleExceptionAsync(statusCode, msg);

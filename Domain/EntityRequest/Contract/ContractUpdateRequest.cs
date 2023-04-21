@@ -7,7 +7,7 @@ public class ContractUpdateRequest
     public DateTime StartDate { get; set; }
     public string Description { get; set; }
     public DateTime EndDate { get; set; }
-    public string ContractStatus { get; set; }
+    public string? ContractStatus { get; set; }
     public string PriceForWater { get; set; }
     public string PriceForElectricity { get; set; }
     public string PriceForService { get; set; }

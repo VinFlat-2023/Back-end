@@ -30,7 +30,7 @@ public class FlatRepository : IFlatRepository
             .Include(x => x.UtilitiesFlats)
             .ThenInclude(x => x.Utility)
             //.Where(x => x.FlatTypeId == x.FlatType.FlatTypeId)
-            // Filter starts here
+            // filter starts here
             .Where(f =>
                 (filters.Name == null || f.Name.Contains(filters.Name.ToLower()))
                 && (filters.Description == null || f.Description.Contains(filters.Description.ToLower()))

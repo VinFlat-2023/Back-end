@@ -26,7 +26,7 @@ internal class TicketRepository : ITicketRepository
             .Include(x => x.Employee)
             .Include(x => x.Contract)
             .Include(x => x.TicketType)
-            // Filter starts here
+            // filter starts here
             .Where(x =>
                 (filters.Status == null || x.Status == filters.Status)
                 && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
@@ -61,7 +61,7 @@ internal class TicketRepository : ITicketRepository
                 .Include(x => x.Contract)
                 .Include(x => x.TicketType)
                 .Where(x => x.EmployeeId == id)
-                // Filter starts here
+                // filter starts here
                 .Where(x =>
                     (filters.Status == null || x.Status == filters.Status)
                     && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
@@ -86,7 +86,7 @@ internal class TicketRepository : ITicketRepository
                 .Include(x => x.Contract)
                 .ThenInclude(x => x.Renter)
                 .Where(x => x.Contract.RenterId == id)
-                // Filter starts here
+                // filter starts here
                 .Where(x =>
                     (filters.Status == null || x.Status == filters.Status)
                     && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)

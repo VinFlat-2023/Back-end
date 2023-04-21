@@ -32,6 +32,8 @@ builder.Services.AddApplicationService(config);
 
 builder.Services.AddRegisteredService(config);
 
+builder.Services.ConfigureModelBindingExceptionHandling();
+
 builder.Services.AddCors(o =>
 {
     o.AddPolicy("AllowAnyOrigin", corsPolicyBuilder =>

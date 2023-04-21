@@ -22,6 +22,11 @@ public class GetIdService : IGetIdService
         return await _repositoryWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
     }
 
+    public async Task<int> GetBuildingIdBasedOnTechnicianId(int employeeId, CancellationToken token)
+    {
+        return await _repositoryWrapper.GetId.GetBuildingIdBasedOnTechnicianId(employeeId, token);
+    }
+
     public async Task<int> GetContractIdBasedOnRenterId(int renterId, CancellationToken token)
     {
         return await _repositoryWrapper.GetId.GetContractIdBasedOnRenterId(renterId, token);
