@@ -69,9 +69,15 @@ public class GetIdRepository : IGetIdRepository
         };
     }
 
-    public Task<int> GetBuildingIdBasedOnTechnicianId(int employeeId, CancellationToken token)
+    public async Task<int> GetBuildingIdBasedOnTechnicianId(int technicianId, CancellationToken token)
     {
-        throw new NotImplementedException();
+        var building = await _context.Employees
+            .Where(x => x.EmployeeId == technicianId && x.Status == true)
+            .Select(x => x.TechnicianBuildingId)
+            .FirstOrDefaultAsync(cancellationToken: token);
+        if (building == 0 || building == null)
+            return 0;
+        return building.Value;
     }
 
     public async Task<int> GetSupervisorIdByBuildingId(int entityBuildingId, CancellationToken token)

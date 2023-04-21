@@ -77,7 +77,6 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
-        
         var list = await _serviceWrapper.Renters.GetRenterList(filter, buildingId, token);
         
         var resultList = _mapper.Map<IEnumerable<RenterProfileEntity>>(list);
