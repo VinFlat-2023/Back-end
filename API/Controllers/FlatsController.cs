@@ -115,8 +115,7 @@ public class FlatsController : ControllerBase
             ImageUrl5 = flat.ImageUrl5 ?? "",
             ImageUrl6 = flat.ImageUrl6 ?? ""
         };
-
-
+        
         var result = await _serviceWrapper.Flats.UpdateFlat(updateFlat);
 
         return result.IsSuccess switch
@@ -189,7 +188,7 @@ public class FlatsController : ControllerBase
         {
             status = "Success",
             message = "Flat created",
-            data = ""
+            data = _mapper.Map<FlatDetailEntity>(result)
         });
     }
 

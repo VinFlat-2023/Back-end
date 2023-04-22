@@ -171,7 +171,7 @@ public class AreasController : ControllerBase
         {
             status = "Success",
             message = "Khu vực được tạo thành công",
-            data = ""
+            data = _mapper.Map<AreaDetailEntity>(result)
         });
     }
 

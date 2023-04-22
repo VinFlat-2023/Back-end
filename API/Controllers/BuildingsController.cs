@@ -213,7 +213,13 @@ public class BuildingsController : ControllerBase
             EmployeeId = employeeId,
             Status = building.Status ?? true,
             AreaId = building.AreaId,
-            BuildingPhoneNumber = building.BuildingPhoneNumber ?? "0"
+            BuildingPhoneNumber = building.BuildingPhoneNumber ?? "0",
+            ImageUrl = building.ImageUrl ?? "",
+            ImageUrl2 = building.ImageUrl2 ?? "",
+            ImageUrl3 = building.ImageUrl3 ?? "",
+            ImageUrl4 = building.ImageUrl4 ?? "",
+            ImageUrl5 = building.ImageUrl5 ?? "",
+            ImageUrl6 = building.ImageUrl6 ?? ""
         };
 
         if (!validation.IsValid)
@@ -225,6 +231,28 @@ public class BuildingsController : ControllerBase
             });
 
         var result = await _serviceWrapper.Buildings.AddBuilding(newBuilding);
+        
+        var buildingForCurrentSupervisor = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
+
+        switch (buildingForCurrentSupervisor)
+        {
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                    data = ""
+                });
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Người quản lý không quản lý tòa nhà nào",
+                    data = ""
+                });
+        }
+        
+        var buildingDetail = await _serviceWrapper.Buildings.GetBuildingById(buildingForCurrentSupervisor, token);
 
         return result.IsSuccess switch
         {
@@ -232,7 +260,7 @@ public class BuildingsController : ControllerBase
             {
                 status = "Success",
                 message = result.Message,
-                data = ""
+                data = _mapper.Map<BuildingDetailEntity>(buildingDetail)
             }),
             false => NotFound(new
             {

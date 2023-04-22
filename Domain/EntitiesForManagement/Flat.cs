@@ -33,7 +33,6 @@ public class Flat
     [DataType(DataType.Upload)]
     [NotMapped]
     public IFormFile? Image { get; set; }
-
     public string? ImageUrl { get; set; }
     public string? ImageUrl2 { get; set; }
     public string? ImageUrl3 { get; set; }

@@ -296,18 +296,18 @@ public class ServicesController : ControllerBase
 
         switch (buildingId)
         {
-            case -1:
-                return NotFound(new
-                {
-                    status = "Not Found",
-                    message = "No building found for this supervisor",
-                    data = ""
-                });
             case -2:
                 return BadRequest(new
                 {
                     status = "Bad Request",
-                    message = "More than one building found for this supervisor",
+                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                    data = ""
+                });
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Người quản lý không quản lý tòa nhà nào",
                     data = ""
                 });
         }
