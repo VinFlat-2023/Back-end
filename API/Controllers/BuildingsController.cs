@@ -152,7 +152,13 @@ public class BuildingsController : ControllerBase
             BuildingPhoneNumber = building.BuildingPhoneNumber,
             AveragePrice = building.AveragePrice ?? 0,
             Status = building.Status,
-            AreaId = building.AreaId
+            AreaId = building.AreaId,
+            ImageUrl = building.ImageUrl ?? "",
+            ImageUrl2 = building.ImageUrl2 ?? "",
+            ImageUrl3 = building.ImageUrl3 ?? "",
+            ImageUrl4 = building.ImageUrl4 ?? "",
+            ImageUrl5 = building.ImageUrl5 ?? "",
+            ImageUrl6 = building.ImageUrl6 ?? ""
         };
 
         var result = await _serviceWrapper.Buildings.UpdateBuilding(updateBuilding);

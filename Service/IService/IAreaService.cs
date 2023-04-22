@@ -10,7 +10,7 @@ public interface IAreaService
     public Task<Area?> GetAreaById(int? areaId, CancellationToken cancellationToken);
     public Task<RepositoryResponse> GetAreaByName(string? areaName, CancellationToken cancellationToken);
     public Task<RepositoryResponse> GetAreaByName(string? areaName, int? areaId, CancellationToken cancellationToken);
-    public Task<Area> AddArea(Area area);
+    public Task<Area?> AddArea(Area area);
     public Task<RepositoryResponse> UpdateArea(Area area);
     public Task<RepositoryResponse> DeleteArea(int areaId);
     public Task<RepositoryResponse> UpdateAreaImage(Area updateArea, int number);

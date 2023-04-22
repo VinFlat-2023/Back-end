@@ -119,7 +119,7 @@ internal class AreaRepository : IAreaRepository
     /// </summary>
     /// <param name="area"></param>
     /// <returns></returns>
-    public async Task<Area> AddArea(Area area)
+    public async Task<Area?> AddArea(Area area)
     {
         await _context.Areas.AddAsync(area);
         await _context.SaveChangesAsync();

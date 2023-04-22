@@ -103,7 +103,11 @@ public class AreasController : ControllerBase
             AreaId = id,
             Name = area.Name,
             Location = area.Location,
-            Status = area.Status
+            Status = area.Status,
+            ImageUrl = area.ImageUrl,
+            ImageUrl2 = area.ImageUrl2,
+            ImageUrl3 = area.ImageUrl3,
+            ImageUrl4 = area.ImageUrl4
         };
 
         var result = await _serviceWrapper.Areas.UpdateArea(updateArea);
@@ -146,23 +150,35 @@ public class AreasController : ControllerBase
         {
             Name = area.Name,
             Location = area.Location,
-            Status = area.Status
+            Status = area.Status,
+            ImageUrl = area.ImageUrl,
+            ImageUrl2 = area.ImageUrl2,
+            ImageUrl3 = area.ImageUrl3,
+            ImageUrl4 = area.ImageUrl4
         };
 
         var result = await _serviceWrapper.Areas.AddArea(newArea);
 
+        if (result == null)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Tạo khu vực không thành công",
+                data = ""
+            });
+        
         return Ok(new
         {
             status = "Success",
             message = "Khu vực được tạo thành công",
-            data = _mapper.Map<AreaDetailEntity>(result)
+            data = ""
         });
     }
 
     [SwaggerOperation(Summary = "Activate and Deactivate area status")]
     [Authorize(Roles = "Admin")]
     [HttpPut("{areaId:int}/toggle-area/status")]
-    public async Task<IActionResult> ToggleEmployeeStatus(int areaId)
+    public async Task<IActionResult> ToggleAreaStatus(int areaId)
     {
         var result = await _serviceWrapper.Areas.ToggleAreaStatus(areaId);
 

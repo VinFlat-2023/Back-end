@@ -52,7 +52,7 @@ public class AreaService : IAreaService
         return await _repositoryWrapper.Areas.GetAreaByName(areaName, areaId, cancellationToken);
     }
 
-    public async Task<Area> AddArea(Area area)
+    public async Task<Area?> AddArea(Area area)
     {
         return await _repositoryWrapper.Areas.AddArea(area);
     }

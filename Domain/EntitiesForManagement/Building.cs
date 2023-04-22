@@ -29,12 +29,12 @@ public class Building
     [DataType(DataType.Upload)]
     [NotMapped]
     public IFormFile? Image { get; set; }
-
     public string? ImageUrl { get; set; }
     public string? ImageUrl2 { get; set; }
     public string? ImageUrl3 { get; set; }
     public string? ImageUrl4 { get; set; }
-
+    public string? ImageUrl5 { get; set; }
+    public string? ImageUrl6 { get; set; }
     public decimal AveragePrice { get; set; }
     public bool Status { get; set; }
 

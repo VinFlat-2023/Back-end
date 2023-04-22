@@ -107,7 +107,13 @@ public class FlatsController : ControllerBase
             Description = flat.Description ?? "No description",
             Status = flat.Status,
             FlatTypeId = flat.FlatTypeId,
-            BuildingId = flat.BuildingId
+            BuildingId = flat.BuildingId,
+            ImageUrl = flat.ImageUrl ?? "",
+            ImageUrl2 = flat.ImageUrl2 ?? "",
+            ImageUrl3 = flat.ImageUrl3 ?? "",
+            ImageUrl4 = flat.ImageUrl4 ?? "",
+            ImageUrl5 = flat.ImageUrl5 ?? "",
+            ImageUrl6 = flat.ImageUrl6 ?? ""
         };
 
 
@@ -160,7 +166,13 @@ public class FlatsController : ControllerBase
             MaxRoom = flat.MaxRoom ?? 1,
             AvailableRoom = flat.MaxRoom ?? 1,
             FlatTypeId = flat.FlatTypeId,
-            BuildingId = flat.BuildingId
+            BuildingId = flat.BuildingId,
+            ImageUrl = flat.ImageUrl ?? "",
+            ImageUrl2 = flat.ImageUrl2 ?? "",
+            ImageUrl3 = flat.ImageUrl3 ?? "",
+            ImageUrl4 = flat.ImageUrl4 ?? "",
+            ImageUrl5 = flat.ImageUrl5 ?? "",
+            ImageUrl6 = flat.ImageUrl6 ?? ""
         };
 
         var result = await _serviceWrapper.Flats.AddFlat(newFlat);

@@ -312,12 +312,20 @@ public class RentersController : ControllerBase
             });
 
         // GET BUILDING / FLAT / RENTER / ROOM
+        var basicRental = new BasicRentalEntity
+        {
+            BuildingId = building.BuildingId,
+            BuildingName = building.BuildingName,
+            FlatId = flatCheck.FlatId,
+            FlatName = flatCheck.Name,
+            RoomId = contract.RoomId
+        };
 
         return Ok(new
         {
             status = "Success",
             message = "Rental found",
-            data = ""
+            data = basicRental
         });
     }
 
