@@ -1,3 +1,4 @@
+/*
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
@@ -12,3 +13,5 @@ public interface IRoomTypeRepository
     public Task<RepositoryResponse> UpdateRoomType(RoomType roomType, int buildingId);
     public Task<RepositoryResponse> DeleteRoomType(int roomTypeId, int buildingId);
 }
+*/
+

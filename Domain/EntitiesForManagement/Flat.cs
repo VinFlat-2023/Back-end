@@ -11,7 +11,7 @@ public class Flat
     {
         FeedBacks = new HashSet<Feedback>();
         Contracts = new HashSet<Contract>();
-        Rooms = new HashSet<Room>();
+        RoomFlats = new HashSet<RoomFlat>();
     }
 
     [Key]
@@ -33,18 +33,20 @@ public class Flat
     [DataType(DataType.Upload)]
     [NotMapped]
     public IFormFile? Image { get; set; }
-    public string? ImageUrl { get; set; }
-    public string? ImageUrl2 { get; set; }
-    public string? ImageUrl3 { get; set; }
-    public string? ImageUrl4 { get; set; }
-    public string? ImageUrl5 { get; set; }
-    public string? ImageUrl6 { get; set; }
+
+    public string? FlatImageUrl1 { get; set; }
+    public string? FlatImageUrl2 { get; set; }
+    public string? FlatImageUrl3 { get; set; }
+    public string? FlatImageUrl4 { get; set; }
+    public string? FlatImageUrl5 { get; set; }
+    public string? FlatImageUrl6 { get; set; }
     public int FlatTypeId { get; set; }
     public virtual FlatType FlatType { get; set; }
     public int BuildingId { get; set; }
     public virtual Building Building { get; set; }
-    public virtual ICollection<Room> Rooms { get; set; }
+    public virtual ICollection<RoomFlat> RoomFlats { get; set; }
     public virtual ICollection<Feedback> FeedBacks { get; set; }
+
     public virtual ICollection<Contract> Contracts { get; set; }
-    public virtual ICollection<UtilitiesFlat>? UtilitiesFlats { get; set; }
+    //public virtual ICollection<UtilitiesRoomFlat> UtilitiesRooms { get; set; }
 }

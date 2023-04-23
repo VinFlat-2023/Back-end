@@ -1,7 +1,6 @@
 using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
-using Domain.QueryFilter;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,29 +15,17 @@ public class RoomRepository : IRoomRepository
         _context = context;
     }
 
-
+/*
     public IQueryable<Room> GetRoomList(RoomFilter filters, int buildingId)
     {
         return _context.Rooms
-            .Include(x => x.Flat)
-            .ThenInclude(x => x.Building)
-            .Where(x => x.Flat.Building.BuildingId == buildingId)
-            .Include(x => x.RoomType)
+            .Where(x => x.BuildingId == buildingId)
             .Where(x =>
-                (filters.FlatName == null || x.Flat.Name.ToLower().Contains(filters.FlatName.ToLower()))
-                && (filters.AvailableSlots == null || x.AvailableSlots == filters.AvailableSlots)
-                && (filters.RoomName == null || x.RoomName.ToLower().Contains(filters.RoomName.ToLower()))
-                && (filters.RoomTypeName == null || x.RoomType.RoomTypeName.Contains(filters.RoomTypeName.ToLower())))
+                (filters.AvailableSlots == null || x.AvailableSlots == filters.AvailableSlots)
+                && (filters.RoomName == null || x.RoomName.ToLower().Contains(filters.RoomName.ToLower())))
             .AsNoTracking();
     }
-
-    public IQueryable<Room> GetRoomListInAFlat(int flatId)
-    {
-        return _context.Rooms
-            .Include(x => x.Flat)
-            .Where(x => x.FlatId == flatId)
-            .AsNoTracking();
-    }
+*/
 
     public async Task<RepositoryResponse> AddRoomToFlat(Room room, int flatId)
     {
@@ -91,15 +78,13 @@ public class RoomRepository : IRoomRepository
     public async Task<Room?> GetRoomDetail(int? roomId)
     {
         return await _context.Rooms
-            .Include(x => x.RoomType)
-            .Include(x => x.Flat)
             .FirstOrDefaultAsync(x => x.RoomId == roomId);
     }
 
+    /*
     public async Task<RepositoryResponse> UpdateRoom(Room room)
     {
         var roomData = await _context.Rooms
-            .Include(x => x.RoomType)
             .FirstOrDefaultAsync(x => x.RoomId == room.RoomId);
 
         if (roomData == null)
@@ -119,20 +104,21 @@ public class RoomRepository : IRoomRepository
             Message = "Room updated successfully"
         };
     }
-
+    */
     public async Task<RepositoryResponse> DeleteRoom(int roomId)
     {
         var roomFound = await _context.Rooms
-            .Include(x => x.RoomType)
             .FirstOrDefaultAsync(x => x.RoomId == roomId);
         switch (roomFound)
         {
+            /*
             case { AvailableSlots: > 0 }:
                 return new RepositoryResponse
                 {
                     IsSuccess = false,
                     Message = "There is / are room still in rental"
                 };
+                */
             case null:
                 return new RepositoryResponse
                 {

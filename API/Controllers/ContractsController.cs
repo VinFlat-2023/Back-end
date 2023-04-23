@@ -8,6 +8,7 @@ using Domain.QueryFilter;
 using Domain.Utils;
 using Domain.ViewModel.BuildingEntity;
 using Domain.ViewModel.ContractEntity;
+using Domain.ViewModel.ImageUrls;
 using Domain.ViewModel.RenterEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -61,7 +62,7 @@ public class ContractsController : ControllerBase
                         data = ""
                     });
 
-                var adminContractListReturn = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(adminContractList);
+                var adminContractListReturn = _mapper.Map<IEnumerable<ContactDetailRenterEntity>>(adminContractList);
 
                 return Ok(new
                 {
@@ -99,7 +100,7 @@ public class ContractsController : ControllerBase
                     await _serviceWrapper.Contracts.GetContractList(filter, supervisorId, buildingId, true, token);
 
                 var supervisorContractListReturn =
-                    _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(supervisorContractList);
+                    _mapper.Map<IEnumerable<ContactDetailRenterEntity>>(supervisorContractList);
 
                 if (supervisorContractList == null)
                     return NotFound(new
@@ -199,7 +200,7 @@ public class ContractsController : ControllerBase
         {
             status = "Success",
             message = "Contract list found",
-            data = _mapper.Map<ContractBasicDetailEntity>(latestContract)
+            data = _mapper.Map<ContactDetailRenterEntity>(latestContract)
         });
     }
 
@@ -295,6 +296,7 @@ public class ContractsController : ControllerBase
             data = new ContractMeterDetailEntity
             {
                 ContractId = entity.ContractId,
+                ContractSerialNumber = entity.ContractSerialNumber,
                 ContractName = entity.ContractName,
                 DateSigned = entity.DateSigned,
                 StartDate = entity.StartDate,
@@ -303,7 +305,24 @@ public class ContractsController : ControllerBase
                 EndDate = entity.EndDate,
                 LastUpdated = entity.LastUpdated,
                 ContractStatus = entity.ContractStatus,
-                ImageUrl = entity.ImageUrl,
+
+                // TODO : Fix mobile to List
+                ContractImageUrl1 = entity.ContractImageUrl1,
+                ContractImageUrl2 = entity.ContractImageUrl2,
+                ContractImageUrl3 = entity.ContractImageUrl3,
+                ContractImageUrl4 = entity.ContractImageUrl4,
+
+                ImageUrls = new List<ContractImageUrlViewModel>
+                {
+                    new()
+                    {
+                        ContractImageUrl1 = entity.ContractImageUrl1,
+                        ContractImageUrl2 = entity.ContractImageUrl2,
+                        ContractImageUrl3 = entity.ContractImageUrl3,
+                        ContractImageUrl4 = entity.ContractImageUrl4
+                    }
+                },
+
                 PriceForRent = entity.PriceForRent.DecimalToString(),
                 PriceForService = entity.PriceForService.DecimalToString(),
                 PriceForWater = entity.PriceForWater.DecimalToString(),
@@ -407,6 +426,7 @@ public class ContractsController : ControllerBase
                 var contractDetailView = new ContractMeterDetailEntity
                 {
                     ContractId = entity.ContractId,
+                    ContractSerialNumber = entity.ContractSerialNumber,
                     ContractName = entity.ContractName,
                     DateSigned = entity.DateSigned,
                     StartDate = entity.StartDate,
@@ -415,7 +435,8 @@ public class ContractsController : ControllerBase
                     EndDate = entity.EndDate,
                     LastUpdated = entity.LastUpdated,
                     ContractStatus = entity.ContractStatus,
-                    ImageUrl = entity.ImageUrl,
+                    // TODO : Fix mobile to List
+                    // ImageUrl = entity.ContractImageUrl1,
                     PriceForRent = entity.PriceForRent.DecimalToString(),
                     PriceForService = entity.PriceForService.DecimalToString(),
                     PriceForWater = entity.PriceForWater.DecimalToString(),

@@ -22,7 +22,7 @@ public class Feedback
     [NotMapped]
     public IFormFile? Image { get; set; }
 
-    public string? ImageUrl { get; set; }
+    public string? FeedbackImageUrl { get; set; }
     public int FlatId { get; set; }
     public virtual Flat Flat { get; set; } = null!;
     public int RenterId { get; set; }

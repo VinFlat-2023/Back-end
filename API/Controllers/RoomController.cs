@@ -1,15 +1,5 @@
-using AutoMapper;
-using Domain.FilterRequests;
-using Domain.QueryFilter;
-using Domain.ViewModel.RoomEntity;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Service.IService;
-using Service.IValidator;
-using Swashbuckle.AspNetCore.Annotations;
-
 namespace API.Controllers;
-
+/*
 [Route("api/room")]
 [ApiController]
 public class RoomController : ControllerBase
@@ -63,6 +53,7 @@ public class RoomController : ControllerBase
         return Ok("On");
     }
 
+    /*
     [HttpGet("types")]
     [Authorize(Roles = "Supervisor")]
     [SwaggerOperation("[Authorize] Get all room types")]
@@ -74,4 +65,6 @@ public class RoomController : ControllerBase
 
         return Ok("test");
     }
+    
 }
+*/

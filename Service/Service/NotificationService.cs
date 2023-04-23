@@ -24,7 +24,7 @@ public class NotificationService : INotificationService
         _paginationOptions = options.Value;
     }
 
-
+/*
     public async Task<Notification> GetNotificationById(int notiId)
     {
         var noti = await _repositoryWrapper.Notifications.GetNotificationById(notiId);
@@ -204,4 +204,5 @@ public class NotificationService : INotificationService
         Console.WriteLine("Successfully: " + response);
         return response != null;
     }
+    */
 }

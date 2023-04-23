@@ -32,7 +32,7 @@ public class RoomValidator : BaseValidator, IRoomValidator
                         break;
                 }
 
-            if (obj is { AvailableSlots: <= 0 }) ValidatorResult.Failures.Add("This room is full");
+            //if (obj is { AvailableSlots: <= 0 }) ValidatorResult.Failures.Add("This room is full");
         }
         catch (Exception e)
         {
@@ -43,8 +43,10 @@ public class RoomValidator : BaseValidator, IRoomValidator
         return ValidatorResult;
     }
 
+    /*
     public Task<ValidatorResult> ValidateParams(RoomType? obj, int? roomTypeId)
     {
         throw new NotImplementedException();
     }
+    */
 }

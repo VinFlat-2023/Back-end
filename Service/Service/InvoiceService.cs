@@ -92,7 +92,7 @@ public class InvoiceService : IInvoiceService
                 var createdInvoice = new Invoice
                 {
                     Name = $"Hoá đơn tháng {currentMonth} cho {renter.Username}",
-                    Amount = 0,
+                    TotalAmount = 0,
                     Status = false,
                     Detail = $"Hoá đơn tháng {currentMonth} cho {renter.Username}",
                     CreatedTime = DateTime.UtcNow, //Start of this month

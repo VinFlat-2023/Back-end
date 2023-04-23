@@ -122,6 +122,7 @@ public class AreaValidator : BaseValidator, IAreaValidator
                     break;
             }
 
+            /*
             switch (obj?.Location)
             {
                 case not null when string.IsNullOrWhiteSpace(obj.Location):
@@ -131,6 +132,7 @@ public class AreaValidator : BaseValidator, IAreaValidator
                     ValidatorResult.Failures.Add("Địa chỉ không được vượt quá 100 ký tự");
                     break;
             }
+            */
 
             switch (obj?.Status)
             {
@@ -174,6 +176,7 @@ public class AreaValidator : BaseValidator, IAreaValidator
                     break;
             }
 
+            /*
             switch (obj?.Location)
             {
                 case not null when string.IsNullOrWhiteSpace(obj.Location):
@@ -183,6 +186,7 @@ public class AreaValidator : BaseValidator, IAreaValidator
                     ValidatorResult.Failures.Add("Địa chỉ không được vượt quá 100 ký tự");
                     break;
             }
+            */
 
             switch (obj?.Status)
             {

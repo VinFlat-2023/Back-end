@@ -27,8 +27,8 @@ public class FlatRepository : IFlatRepository
             .ThenInclude(x => x.Area)
             //.Where(x => x.BuildingId == x.Building.BuildingId)
             .Include(x => x.FlatType)
-            .Include(x => x.UtilitiesFlats)
-            .ThenInclude(x => x.Utility)
+            //.Include(x => x.UtilitiesFlats)
+            //.ThenInclude(x => x.Utility)
             //.Where(x => x.FlatTypeId == x.FlatType.FlatTypeId)
             // filter starts here
             .Where(f =>
@@ -55,8 +55,8 @@ public class FlatRepository : IFlatRepository
             .Include(x => x.Building)
             .ThenInclude(x => x.Area)
             .Include(x => x.FlatType)
-            .Include(x => x.UtilitiesFlats)
-            .ThenInclude(x => x.Utility)
+            //.Include(x => x.UtilitiesFlats)
+            //.ThenInclude(x => x.Utility)
             .Where(x => x.FlatId == flatId);
     }
 
@@ -64,7 +64,7 @@ public class FlatRepository : IFlatRepository
     {
         var roomInFlat = await _context.Flats
             .Where(x => x.FlatId == flatId)
-            .Include(x => x.Rooms)
+            .Include(x => x.RoomFlats)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (roomInFlat == null)
@@ -76,14 +76,14 @@ public class FlatRepository : IFlatRepository
 
         switch (roomInFlat)
         {
-            case not null when roomInFlat.Rooms.Any(x => x.AvailableSlots == 0):
+            case not null when roomInFlat.RoomFlats.Any(x => x.AvailableSlots == 0):
                 return new RepositoryResponse
                 {
                     IsSuccess = false,
                     Message = "This flat's room is not available"
                 };
 
-            case not null when roomInFlat.Rooms.Any(x => x.AvailableSlots >= 1):
+            case not null when roomInFlat.RoomFlats.Any(x => x.AvailableSlots >= 1):
             {
                 return new RepositoryResponse
                 {
@@ -93,7 +93,7 @@ public class FlatRepository : IFlatRepository
             }
 
             case null:
-            case not null when roomInFlat.Rooms.Any(_ => false):
+            case not null when roomInFlat.RoomFlats.Any(_ => false):
                 return new RepositoryResponse
                 {
                     IsSuccess = false,
@@ -134,22 +134,28 @@ public class FlatRepository : IFlatRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Flat not found"
+                Message = "Căn hộ này không tồn tại"
             };
 
-        flatData.Name = flat?.Name ?? flatData.Name;
-        flatData.Description = flat?.Description ?? flatData.Description;
-        flatData.Status = flat?.Status ?? flatData.Status;
-        flatData.WaterMeterBefore = flat?.WaterMeterBefore ?? flatData.WaterMeterBefore;
-        flatData.ElectricityMeterBefore = flat?.ElectricityMeterBefore ?? flatData.ElectricityMeterBefore;
-        flatData.WaterMeterAfter = flat?.WaterMeterAfter ?? flatData.WaterMeterAfter;
-        flatData.ElectricityMeterAfter = flat?.ElectricityMeterAfter ?? flatData.ElectricityMeterAfter;
+        flatData.Name = flat.Name;
+        flatData.Description = flat.Description;
+        flatData.Status = flat.Status;
+        flatData.WaterMeterBefore = flat.WaterMeterBefore ?? flatData.WaterMeterBefore;
+        flatData.ElectricityMeterBefore = flat.ElectricityMeterBefore ?? flatData.ElectricityMeterBefore;
+        flatData.WaterMeterAfter = flat.WaterMeterAfter ?? flatData.WaterMeterAfter;
+        flatData.ElectricityMeterAfter = flat.ElectricityMeterAfter ?? flatData.ElectricityMeterAfter;
+        flatData.FlatImageUrl1 = flat.FlatImageUrl1 ?? flatData.FlatImageUrl1;
+        flatData.FlatImageUrl2 = flat.FlatImageUrl2 ?? flatData.FlatImageUrl2;
+        flatData.FlatImageUrl3 = flat.FlatImageUrl3 ?? flatData.FlatImageUrl3;
+        flatData.FlatImageUrl4 = flat.FlatImageUrl4 ?? flatData.FlatImageUrl4;
+        flatData.FlatImageUrl5 = flat.FlatImageUrl5 ?? flatData.FlatImageUrl5;
+        flatData.FlatImageUrl6 = flat.FlatImageUrl6 ?? flatData.FlatImageUrl6;
 
         await _context.SaveChangesAsync();
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Flat updated successfully"
+            Message = "Thông tin căn hộ đã được cập nhật"
         };
     }
 
@@ -157,7 +163,6 @@ public class FlatRepository : IFlatRepository
     ///     Delete Flat
     /// </summary>
     /// <param name="flatId"></param>
-    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public async Task<RepositoryResponse> DeleteFlat(int flatId)
     {
@@ -167,14 +172,14 @@ public class FlatRepository : IFlatRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Flat not found"
+                Message = ""
             };
         _context.Flats.Remove(flatFound);
         await _context.SaveChangesAsync();
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Flat deleted successfully"
+            Message = "Căn hộ đã xoá thành công"
         };
     }
 }

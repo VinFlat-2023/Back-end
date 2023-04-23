@@ -1,3 +1,4 @@
+/*
 namespace Domain.EntitiesForManagement;
 
 public class RoomType
@@ -8,3 +9,5 @@ public class RoomType
     public int NumberOfSlots { get; set; }
     public int BuildingId { get; set; }
 }
+*/
+

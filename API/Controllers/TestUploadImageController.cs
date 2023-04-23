@@ -109,12 +109,12 @@ public class TestUploadImageController : ControllerBase
             switch (counter)
             {
                 case 1:
-                    var fileNameCheck1 = areaCheck.ImageUrl?.Split('/').Last();
+                    var fileNameCheck1 = areaCheck.AreaImageUrl1?.Split('/').Last();
 
                     var finalizeUpdate1 = new Area
                     {
                         AreaId = areaId,
-                        ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
+                        AreaImageUrl1 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
                             "Area", imageExtension, false))?.Blob.Uri
                     };
                     var result1 = await _serviceWrapper.Areas.UpdateAreaImage(finalizeUpdate1, counter);
@@ -129,12 +129,12 @@ public class TestUploadImageController : ControllerBase
 
                     break;
                 case 2:
-                    var fileNameCheck2 = areaCheck.ImageUrl2?.Split('/').Last();
+                    var fileNameCheck2 = areaCheck.AreaImageUrl2?.Split('/').Last();
 
                     var finalizeUpdate2 = new Area
                     {
                         AreaId = areaId,
-                        ImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck2,
+                        AreaImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck2,
                             "Area", imageExtension, false))?.Blob.Uri
                     };
                     var result2 = await _serviceWrapper.Areas.UpdateAreaImage(finalizeUpdate2, counter);
@@ -150,12 +150,12 @@ public class TestUploadImageController : ControllerBase
                     break;
 
                 case 3:
-                    var fileNameCheck3 = areaCheck.ImageUrl3?.Split('/').Last();
+                    var fileNameCheck3 = areaCheck.AreaImageUrl3?.Split('/').Last();
 
                     var finalizeUpdate3 = new Area
                     {
                         AreaId = areaId,
-                        ImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck3,
+                        AreaImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck3,
                             "Area", imageExtension, false))?.Blob.Uri
                     };
                     var result3 = await _serviceWrapper.Areas.UpdateAreaImage(finalizeUpdate3, counter);
@@ -170,12 +170,12 @@ public class TestUploadImageController : ControllerBase
 
                     break;
                 case 4:
-                    var fileNameCheck4 = areaCheck.ImageUrl4?.Split('/').Last();
+                    var fileNameCheck4 = areaCheck.AreaImageUrl4?.Split('/').Last();
 
                     var finalizeUpdate4 = new Area
                     {
                         AreaId = areaId,
-                        ImageUrl4 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck4,
+                        AreaImageUrl4 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck4,
                             "Area", imageExtension, false))?.Blob.Uri
                     };
                     var result4 = await _serviceWrapper.Areas.UpdateAreaImage(finalizeUpdate4, counter);
@@ -284,14 +284,15 @@ public class TestUploadImageController : ControllerBase
                 data = ""
             });
 
-        var fileNameContract = contract.ImageUrl?.Split('/').Last();
+        var fileNameContract = contract.ContractImageUrl1?.Split('/').Last();
 
         var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image.FileName);
 
+        // TODO : Change Image to URL
         var finalizeUpdate = new Contract
         {
             ContractId = contractId,
-            ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(contract.Image, fileNameContract,
+            ContractImageUrl1 = (await _serviceWrapper.AzureStorage.UpdateAsync(contract.Image, fileNameContract,
                 "Contract", imageExtension, false))?.Blob.Uri
         };
 
@@ -362,12 +363,12 @@ public class TestUploadImageController : ControllerBase
             switch (counter)
             {
                 case 1:
-                    var fileNameCheck1 = renterTicketCheck.ImageUrl?.Split('/').Last();
+                    var fileNameCheck1 = renterTicketCheck.ImageUrl1?.Split('/').Last();
 
                     var finalizeUpdate1 = new Ticket
                     {
                         TicketId = ticketId,
-                        ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
+                        ImageUrl1 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
                             "Ticket", imageExtension, false))?.Blob.Uri
                     };
                     var result1 = await _serviceWrapper.Tickets.UpdateTicketImage(finalizeUpdate1, counter);
@@ -494,12 +495,12 @@ public class TestUploadImageController : ControllerBase
             switch (counter)
             {
                 case 1:
-                    var fileNameCheck1 = buildingCheck.ImageUrl?.Split('/').Last();
+                    var fileNameCheck1 = buildingCheck.BuildingImageUrl1?.Split('/').Last();
 
                     var finalizeUpdate1 = new Building
                     {
                         BuildingId = buildingId,
-                        ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
+                        BuildingImageUrl1 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
                             "Building", imageExtension, false))?.Blob.Uri
                     };
                     var result1 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate1, counter);
@@ -513,12 +514,12 @@ public class TestUploadImageController : ControllerBase
                     break;
 
                 case 2:
-                    var fileNameCheck2 = buildingCheck.ImageUrl2?.Split('/').Last();
+                    var fileNameCheck2 = buildingCheck.BuildingImageUrl2?.Split('/').Last();
 
                     var finalizeUpdate2 = new Building
                     {
                         BuildingId = buildingId,
-                        ImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck2,
+                        BuildingImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck2,
                             "Building", imageExtension, false))?.Blob.Uri
                     };
                     var result2 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate2, counter);
@@ -532,12 +533,12 @@ public class TestUploadImageController : ControllerBase
                     break;
 
                 case 3:
-                    var fileNameCheck3 = buildingCheck.ImageUrl3?.Split('/').Last();
+                    var fileNameCheck3 = buildingCheck.BuildingImageUrl3?.Split('/').Last();
 
                     var finalizeUpdate3 = new Building
                     {
                         BuildingId = buildingId,
-                        ImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck3,
+                        BuildingImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck3,
                             "Building", imageExtension, false))?.Blob.Uri
                     };
                     var result3 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate3, counter);
@@ -549,11 +550,68 @@ public class TestUploadImageController : ControllerBase
                             data = ""
                         });
                     break;
-                case >= 4:
+
+                case 4:
+                    var fileNameCheck4 = buildingCheck.BuildingImageUrl4?.Split('/').Last();
+
+                    var finalizeUpdate4 = new Building
+                    {
+                        BuildingId = buildingId,
+                        BuildingImageUrl4 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck4,
+                            "Building", imageExtension, false))?.Blob.Uri
+                    };
+                    var result4 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate4, counter);
+                    if (!result4.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result4.Message,
+                            data = ""
+                        });
+                    break;
+
+                case 5:
+                    var fileNameCheck5 = buildingCheck.BuildingImageUrl5?.Split('/').Last();
+
+                    var finalizeUpdate5 = new Building
+                    {
+                        BuildingId = buildingId,
+                        BuildingImageUrl5 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck5,
+                            "Building", imageExtension, false))?.Blob.Uri
+                    };
+                    var result5 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate5, counter);
+                    if (!result5.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result5.Message,
+                            data = ""
+                        });
+                    break;
+
+                case 6:
+                    var fileNameCheck6 = buildingCheck.BuildingImageUrl6?.Split('/').Last();
+
+                    var finalizeUpdate6 = new Building
+                    {
+                        BuildingId = buildingId,
+                        BuildingImageUrl6 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck6,
+                            "Building", imageExtension, false))?.Blob.Uri
+                    };
+                    var result6 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate6, counter);
+                    if (!result6.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result6.Message,
+                            data = ""
+                        });
+                    break;
+                case > 6:
                     return BadRequest(new
                     {
                         status = "Bad Request",
-                        message = "You can only upload 3 images",
+                        message = "Chỉ được upload tối đa 6 ảnh",
                         data = ""
                     });
             }
@@ -602,12 +660,12 @@ public class TestUploadImageController : ControllerBase
             switch (counter)
             {
                 case 1:
-                    var fileNameCheck1 = buildingCheck.ImageUrl?.Split('/').Last();
+                    var fileNameCheck1 = buildingCheck.BuildingImageUrl1?.Split('/').Last();
 
                     var finalizeUpdate1 = new Building
                     {
                         BuildingId = buildingId,
-                        ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
+                        BuildingImageUrl1 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
                             "Building", imageExtension, false))?.Blob.Uri
                     };
                     var result1 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate1, counter);
@@ -621,12 +679,12 @@ public class TestUploadImageController : ControllerBase
                     break;
 
                 case 2:
-                    var fileNameCheck2 = buildingCheck.ImageUrl2?.Split('/').Last();
+                    var fileNameCheck2 = buildingCheck.BuildingImageUrl2?.Split('/').Last();
 
                     var finalizeUpdate2 = new Building
                     {
                         BuildingId = buildingId,
-                        ImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck2,
+                        BuildingImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck2,
                             "Building", imageExtension, false))?.Blob.Uri
                     };
                     var result2 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate2, counter);
@@ -640,12 +698,12 @@ public class TestUploadImageController : ControllerBase
                     break;
 
                 case 3:
-                    var fileNameCheck3 = buildingCheck.ImageUrl3?.Split('/').Last();
+                    var fileNameCheck3 = buildingCheck.BuildingImageUrl3?.Split('/').Last();
 
                     var finalizeUpdate3 = new Building
                     {
                         BuildingId = buildingId,
-                        ImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck3,
+                        BuildingImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck3,
                             "Building", imageExtension, false))?.Blob.Uri
                     };
                     var result3 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate3, counter);
@@ -657,11 +715,68 @@ public class TestUploadImageController : ControllerBase
                             data = ""
                         });
                     break;
-                case >= 4:
+
+                case 4:
+                    var fileNameCheck4 = buildingCheck.BuildingImageUrl4?.Split('/').Last();
+
+                    var finalizeUpdate4 = new Building
+                    {
+                        BuildingId = buildingId,
+                        BuildingImageUrl4 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck4,
+                            "Building", imageExtension, false))?.Blob.Uri
+                    };
+                    var result4 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate4, counter);
+                    if (!result4.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result4.Message,
+                            data = ""
+                        });
+                    break;
+
+                case 5:
+                    var fileNameCheck5 = buildingCheck.BuildingImageUrl5?.Split('/').Last();
+
+                    var finalizeUpdate5 = new Building
+                    {
+                        BuildingId = buildingId,
+                        BuildingImageUrl5 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck5,
+                            "Building", imageExtension, false))?.Blob.Uri
+                    };
+                    var result5 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate5, counter);
+                    if (!result5.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result5.Message,
+                            data = ""
+                        });
+                    break;
+
+                case 6:
+                    var fileNameCheck6 = buildingCheck.BuildingImageUrl6?.Split('/').Last();
+
+                    var finalizeUpdate6 = new Building
+                    {
+                        BuildingId = buildingId,
+                        BuildingImageUrl6 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck6,
+                            "Building", imageExtension, false))?.Blob.Uri
+                    };
+                    var result6 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate6, counter);
+                    if (!result6.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result6.Message,
+                            data = ""
+                        });
+                    break;
+                case > 6:
                     return BadRequest(new
                     {
                         status = "Bad Request",
-                        message = "You can only upload 3 images",
+                        message = "Chỉ được upload tối đa 6 ảnh",
                         data = ""
                     });
             }
@@ -711,12 +826,12 @@ public class TestUploadImageController : ControllerBase
             switch (counter)
             {
                 case 1:
-                    var fileNameCheck1 = buildingCheck.ImageUrl?.Split('/').Last();
+                    var fileNameCheck1 = buildingCheck.BuildingImageUrl1?.Split('/').Last();
 
                     var finalizeUpdate1 = new Building
                     {
                         BuildingId = buildingId,
-                        ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
+                        BuildingImageUrl1 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
                             "Building", imageExtension, false))?.Blob.Uri
                     };
                     var result1 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate1, counter);
@@ -730,12 +845,12 @@ public class TestUploadImageController : ControllerBase
                     break;
 
                 case 2:
-                    var fileNameCheck2 = buildingCheck.ImageUrl2?.Split('/').Last();
+                    var fileNameCheck2 = buildingCheck.BuildingImageUrl2?.Split('/').Last();
 
                     var finalizeUpdate2 = new Building
                     {
                         BuildingId = buildingId,
-                        ImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck2,
+                        BuildingImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck2,
                             "Building", imageExtension, false))?.Blob.Uri
                     };
                     var result2 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate2, counter);
@@ -749,12 +864,12 @@ public class TestUploadImageController : ControllerBase
                     break;
 
                 case 3:
-                    var fileNameCheck3 = buildingCheck.ImageUrl3?.Split('/').Last();
+                    var fileNameCheck3 = buildingCheck.BuildingImageUrl3?.Split('/').Last();
 
                     var finalizeUpdate3 = new Building
                     {
                         BuildingId = buildingId,
-                        ImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck3,
+                        BuildingImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck3,
                             "Building", imageExtension, false))?.Blob.Uri
                     };
                     var result3 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate3, counter);
@@ -766,11 +881,68 @@ public class TestUploadImageController : ControllerBase
                             data = ""
                         });
                     break;
-                case >= 4:
+
+                case 4:
+                    var fileNameCheck4 = buildingCheck.BuildingImageUrl4?.Split('/').Last();
+
+                    var finalizeUpdate4 = new Building
+                    {
+                        BuildingId = buildingId,
+                        BuildingImageUrl4 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck4,
+                            "Building", imageExtension, false))?.Blob.Uri
+                    };
+                    var result4 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate4, counter);
+                    if (!result4.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result4.Message,
+                            data = ""
+                        });
+                    break;
+
+                case 5:
+                    var fileNameCheck5 = buildingCheck.BuildingImageUrl5?.Split('/').Last();
+
+                    var finalizeUpdate5 = new Building
+                    {
+                        BuildingId = buildingId,
+                        BuildingImageUrl5 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck5,
+                            "Building", imageExtension, false))?.Blob.Uri
+                    };
+                    var result5 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate5, counter);
+                    if (!result5.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result5.Message,
+                            data = ""
+                        });
+                    break;
+
+                case 6:
+                    var fileNameCheck6 = buildingCheck.BuildingImageUrl6?.Split('/').Last();
+
+                    var finalizeUpdate6 = new Building
+                    {
+                        BuildingId = buildingId,
+                        BuildingImageUrl6 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck6,
+                            "Building", imageExtension, false))?.Blob.Uri
+                    };
+                    var result6 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate6, counter);
+                    if (!result6.IsSuccess)
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = result6.Message,
+                            data = ""
+                        });
+                    break;
+                case > 6:
                     return BadRequest(new
                     {
                         status = "Bad Request",
-                        message = "You can only upload 3 images",
+                        message = "Chỉ được upload tối đa 6 ảnh",
                         data = ""
                     });
             }
@@ -788,9 +960,48 @@ public class TestUploadImageController : ControllerBase
     [Authorize(Roles = "Supervisor")]
     [HttpPut("building/image/{imageId:int}")]
     public async Task<IActionResult> PutSingleImageBuildingSupervisor(
-        [FromForm] MultipleImageUploadRequest multipleImageUploadRequest,
-        int buildingId, CancellationToken token)
+        [FromForm] ImageUploadRequest? imageUploadRequest, int imageId, CancellationToken token)
     {
+        var employeeId = int.Parse(User.Identity?.Name);
+
+        var employeeCheck = await _serviceWrapper.Employees.GetEmployeeById(employeeId, token);
+
+        if (employeeCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Nhân viên không tồn tại",
+                data = ""
+            });
+
+        if (imageUploadRequest == null)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Không có ảnh nào được tải lên",
+                data = ""
+            });
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
+
+        switch (buildingId)
+        {
+            case -1:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang không quản lí toà nhà nào",
+                    data = ""
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
+                    data = ""
+                });
+        }
+
         var buildingCheck = await _serviceWrapper.Buildings.GetBuildingById(buildingId, token);
 
         if (buildingCheck == null)
@@ -801,94 +1012,143 @@ public class TestUploadImageController : ControllerBase
                 data = ""
             });
 
-        if (multipleImageUploadRequest.ImageUploadRequest.Count == 0 ||
-            !multipleImageUploadRequest.ImageUploadRequest.Any())
-            return Ok(new
-            {
-                status = "Success",
-                message = "No image uploaded",
-                data = ""
-            });
+        var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image.FileName);
 
-        var counter = 0;
 
-        foreach (var image in multipleImageUploadRequest.ImageUploadRequest)
+        switch (imageId)
         {
-            counter++;
-            var imageExtension = ImageExtension.ImageExtensionChecker(image.FileName);
+            case 1:
+                var fileNameCheck1 = buildingCheck.BuildingImageUrl1?.Split('/').Last();
 
-            switch (counter)
-            {
-                case 1:
-                    var fileNameCheck1 = buildingCheck.ImageUrl?.Split('/').Last();
-
-                    var finalizeUpdate1 = new Building
-                    {
-                        BuildingId = buildingId,
-                        ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
-                            "Building", imageExtension, false))?.Blob.Uri
-                    };
-                    var result1 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate1, counter);
-                    if (!result1.IsSuccess)
-                        return BadRequest(new
-                        {
-                            status = "Bad Request",
-                            message = result1.Message,
-                            data = ""
-                        });
-                    break;
-
-                case 2:
-                    var fileNameCheck2 = buildingCheck.ImageUrl2?.Split('/').Last();
-
-                    var finalizeUpdate2 = new Building
-                    {
-                        BuildingId = buildingId,
-                        ImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck2,
-                            "Building", imageExtension, false))?.Blob.Uri
-                    };
-                    var result2 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate2, counter);
-                    if (!result2.IsSuccess)
-                        return BadRequest(new
-                        {
-                            status = "Bad Request",
-                            message = result2.Message,
-                            data = ""
-                        });
-                    break;
-
-                case 3:
-                    var fileNameCheck3 = buildingCheck.ImageUrl3?.Split('/').Last();
-
-                    var finalizeUpdate3 = new Building
-                    {
-                        BuildingId = buildingId,
-                        ImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck3,
-                            "Building", imageExtension, false))?.Blob.Uri
-                    };
-                    var result3 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate3, counter);
-                    if (!result3.IsSuccess)
-                        return BadRequest(new
-                        {
-                            status = "Bad Request",
-                            message = result3.Message,
-                            data = ""
-                        });
-                    break;
-                case >= 4:
+                var finalizeUpdate1 = new Building
+                {
+                    BuildingId = buildingId,
+                    BuildingImageUrl1 = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image,
+                        fileNameCheck1,
+                        "Building", imageExtension, false))?.Blob.Uri
+                };
+                var result1 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate1, imageId);
+                if (!result1.IsSuccess)
                     return BadRequest(new
                     {
                         status = "Bad Request",
-                        message = "You can only upload 3 images",
+                        message = result1.Message,
                         data = ""
                     });
-            }
+                break;
+
+            case 2:
+                var fileNameCheck2 = buildingCheck.BuildingImageUrl2?.Split('/').Last();
+
+                var finalizeUpdate2 = new Building
+                {
+                    BuildingId = buildingId,
+                    BuildingImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image,
+                        fileNameCheck2,
+                        "Building", imageExtension, false))?.Blob.Uri
+                };
+                var result2 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate2, imageId);
+                if (!result2.IsSuccess)
+                    return BadRequest(new
+                    {
+                        status = "Bad Request",
+                        message = result2.Message,
+                        data = ""
+                    });
+                break;
+
+            case 3:
+                var fileNameCheck3 = buildingCheck.BuildingImageUrl3?.Split('/').Last();
+
+                var finalizeUpdate3 = new Building
+                {
+                    BuildingId = buildingId,
+                    BuildingImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image,
+                        fileNameCheck3,
+                        "Building", imageExtension, false))?.Blob.Uri
+                };
+                var result3 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate3, imageId);
+                if (!result3.IsSuccess)
+                    return BadRequest(new
+                    {
+                        status = "Bad Request",
+                        message = result3.Message,
+                        data = ""
+                    });
+                break;
+
+            case 4:
+                var fileNameCheck4 = buildingCheck.BuildingImageUrl4?.Split('/').Last();
+
+                var finalizeUpdate4 = new Building
+                {
+                    BuildingId = buildingId,
+                    BuildingImageUrl4 = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image,
+                        fileNameCheck4,
+                        "Building", imageExtension, false))?.Blob.Uri
+                };
+                var result4 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate4, imageId);
+                if (!result4.IsSuccess)
+                    return BadRequest(new
+                    {
+                        status = "Bad Request",
+                        message = result4.Message,
+                        data = ""
+                    });
+                break;
+
+            case 5:
+                var fileNameCheck5 = buildingCheck.BuildingImageUrl5?.Split('/').Last();
+
+                var finalizeUpdate5 = new Building
+                {
+                    BuildingId = buildingId,
+                    BuildingImageUrl5 = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image,
+                        fileNameCheck5,
+                        "Building", imageExtension, false))?.Blob.Uri
+                };
+                var result5 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate5, imageId);
+                if (!result5.IsSuccess)
+                    return BadRequest(new
+                    {
+                        status = "Bad Request",
+                        message = result5.Message,
+                        data = ""
+                    });
+                break;
+
+            case 6:
+                var fileNameCheck6 = buildingCheck.BuildingImageUrl6?.Split('/').Last();
+
+                var finalizeUpdate6 = new Building
+                {
+                    BuildingId = buildingId,
+                    BuildingImageUrl6 = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image,
+                        fileNameCheck6,
+                        "Building", imageExtension, false))?.Blob.Uri
+                };
+                var result6 = await _serviceWrapper.Buildings.UpdateBuildingImages(finalizeUpdate6, imageId);
+                if (!result6.IsSuccess)
+                    return BadRequest(new
+                    {
+                        status = "Bad Request",
+                        message = result6.Message,
+                        data = ""
+                    });
+                break;
+            case > 6:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Chỉ được upload tối đa 6 ảnh",
+                    data = ""
+                });
         }
 
         return Ok(new
         {
             status = "Success",
-            message = counter + " image(s) uploaded successfully",
+            message = "Hình ảnh đã được cập nhật thành công",
             data = ""
         });
     }

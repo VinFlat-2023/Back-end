@@ -25,8 +25,8 @@ internal class AreaRepository : IAreaRepository
         return _context.Areas
             .Where(x =>
                 (filters.Name == null || x.Name.ToLower().Contains(filters.Name.ToLower()))
-                && (filters.Status == null || x.Status == filters.Status)
-                && (filters.Location == null || x.Location.ToLower().Contains(filters.Location.ToLower())))
+                && (filters.Status == null || x.Status == filters.Status))
+            //&& (filters.Location == null || x.Location.ToLower().Contains(filters.Location.ToLower())))
             .AsNoTracking();
     }
 
@@ -134,7 +134,7 @@ internal class AreaRepository : IAreaRepository
     public async Task<RepositoryResponse> UpdateArea(Area? area)
     {
         var areaData = await _context.Areas
-            .FirstOrDefaultAsync(x => x.AreaId == area!.AreaId);
+            .FirstOrDefaultAsync(x => x.AreaId == area.AreaId);
 
         if (areaData == null)
             return new RepositoryResponse
@@ -143,9 +143,14 @@ internal class AreaRepository : IAreaRepository
                 Message = "Area not found"
             };
 
-        areaData.Location = area?.Location ?? areaData.Location;
+        //areaData.Location = area?.Location ?? areaData.Location;
         areaData.Name = area?.Name ?? areaData.Name;
         areaData.Status = area?.Status ?? areaData.Status;
+        areaData.AreaImageUrl1 = area?.AreaImageUrl1 ?? areaData.AreaImageUrl1;
+        areaData.AreaImageUrl2 = area?.AreaImageUrl2 ?? areaData.AreaImageUrl2;
+        areaData.AreaImageUrl3 = area?.AreaImageUrl3 ?? areaData.AreaImageUrl3;
+        areaData.AreaImageUrl4 = area?.AreaImageUrl4 ?? areaData.AreaImageUrl4;
+
         await _context.SaveChangesAsync();
 
         return new RepositoryResponse
@@ -226,16 +231,16 @@ internal class AreaRepository : IAreaRepository
         switch (number)
         {
             case 1:
-                areaData.ImageUrl = updateArea.ImageUrl;
+                areaData.AreaImageUrl1 = updateArea.AreaImageUrl1;
                 break;
             case 2:
-                areaData.ImageUrl2 = updateArea.ImageUrl;
+                areaData.AreaImageUrl2 = updateArea.AreaImageUrl2;
                 break;
             case 3:
-                areaData.ImageUrl3 = updateArea.ImageUrl;
+                areaData.AreaImageUrl3 = updateArea.AreaImageUrl3;
                 break;
             case 4:
-                areaData.ImageUrl4 = updateArea.ImageUrl;
+                areaData.AreaImageUrl4 = updateArea.AreaImageUrl4;
                 break;
         }
 

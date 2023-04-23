@@ -71,7 +71,7 @@ public class FlatsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Flat not found",
+                message = "Căn hộ này không tồn tại",
                 data = ""
             });
         return Ok(
@@ -108,14 +108,14 @@ public class FlatsController : ControllerBase
             Status = flat.Status,
             FlatTypeId = flat.FlatTypeId,
             BuildingId = flat.BuildingId,
-            ImageUrl = flat.ImageUrl ?? "",
-            ImageUrl2 = flat.ImageUrl2 ?? "",
-            ImageUrl3 = flat.ImageUrl3 ?? "",
-            ImageUrl4 = flat.ImageUrl4 ?? "",
-            ImageUrl5 = flat.ImageUrl5 ?? "",
-            ImageUrl6 = flat.ImageUrl6 ?? ""
+            FlatImageUrl1 = flat.ImageUrl ?? "",
+            FlatImageUrl2 = flat.ImageUrl2 ?? "",
+            FlatImageUrl3 = flat.ImageUrl3 ?? "",
+            FlatImageUrl4 = flat.ImageUrl4 ?? "",
+            FlatImageUrl5 = flat.ImageUrl5 ?? "",
+            FlatImageUrl6 = flat.ImageUrl6 ?? ""
         };
-        
+
         var result = await _serviceWrapper.Flats.UpdateFlat(updateFlat);
 
         return result.IsSuccess switch
@@ -166,12 +166,12 @@ public class FlatsController : ControllerBase
             AvailableRoom = flat.MaxRoom ?? 1,
             FlatTypeId = flat.FlatTypeId,
             BuildingId = flat.BuildingId,
-            ImageUrl = flat.ImageUrl ?? "",
-            ImageUrl2 = flat.ImageUrl2 ?? "",
-            ImageUrl3 = flat.ImageUrl3 ?? "",
-            ImageUrl4 = flat.ImageUrl4 ?? "",
-            ImageUrl5 = flat.ImageUrl5 ?? "",
-            ImageUrl6 = flat.ImageUrl6 ?? ""
+            FlatImageUrl1 = flat.ImageUrl ?? "",
+            FlatImageUrl2 = flat.ImageUrl2 ?? "",
+            FlatImageUrl3 = flat.ImageUrl3 ?? "",
+            FlatImageUrl4 = flat.ImageUrl4 ?? "",
+            FlatImageUrl5 = flat.ImageUrl5 ?? "",
+            FlatImageUrl6 = flat.ImageUrl6 ?? ""
         };
 
         var result = await _serviceWrapper.Flats.AddFlat(newFlat);
@@ -402,7 +402,7 @@ public class FlatsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Flat not found",
+                message = "Căn hộ này không tồn tại",
                 data = ""
             });
 

@@ -9,7 +9,7 @@ public class Utility
 {
     public Utility()
     {
-        UtilitiesFlats = new HashSet<UtilitiesFlat>();
+        UtilitiesRooms = new HashSet<UtilitiesRoomFlat>();
     }
 
     public int UtilityId { get; set; }
@@ -22,9 +22,9 @@ public class Utility
     [NotMapped]
     public IFormFile? Image { get; set; }
 
-    public string? ImageUrl { get; set; }
-    public string? ImageUrl2 { get; set; }
-    public string? ImageUrl3 { get; set; }
-    public string? ImageUrl4 { get; set; }
-    public virtual ICollection<UtilitiesFlat> UtilitiesFlats { get; set; }
+    public string? UtilityImageUrl { get; set; }
+    public string? UtilityImageUrl2 { get; set; }
+    public string? UtilityImageUrl3 { get; set; }
+    public string? UtilityImageUrl4 { get; set; }
+    public virtual ICollection<UtilitiesRoomFlat> UtilitiesRooms { get; set; }
 }

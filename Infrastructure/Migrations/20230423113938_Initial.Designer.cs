@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230414220410_UpdateSeeding")]
-    partial class UpdateSeeding
+    [Migration("20230423113938_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,20 +32,16 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AreaId"), 1L, 1);
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("AreaImageUrl1")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl2")
+                    b.Property<string>("AreaImageUrl2")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl3")
+                    b.Property<string>("AreaImageUrl3")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl4")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
+                    b.Property<string>("AreaImageUrl4")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -63,192 +59,168 @@ namespace Infrastructure.Migrations
                         new
                         {
                             AreaId = 1,
-                            ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/PANO0002-Pano.jpg/1200px-PANO0002-Pano.jpg",
-                            Location = "HCM",
+                            AreaImageUrl1 = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/PANO0002-Pano.jpg/1200px-PANO0002-Pano.jpg",
                             Name = "Quận 1",
                             Status = true
                         },
                         new
                         {
                             AreaId = 2,
-                            ImageUrl = "https://i1-vnexpress.vnecdn.net/2022/11/17/Ve-may-bay-di-sai-gon-600x399-4356-2813-1668672299.jpg?w=0&h=0&q=100&dpr=2&fit=crop&s=8All1Mq-so56XkVbZXvdFA",
-                            Location = "HCM",
+                            AreaImageUrl1 = "https://i1-vnexpress.vnecdn.net/2022/11/17/Ve-may-bay-di-sai-gon-600x399-4356-2813-1668672299.jpg?w=0&h=0&q=100&dpr=2&fit=crop&s=8All1Mq-so56XkVbZXvdFA",
                             Name = "Quận 2",
                             Status = true
                         },
                         new
                         {
                             AreaId = 3,
-                            ImageUrl = "https://images.pexels.com/photos/11742806/pexels-photo-11742806.jpeg?cs=srgb&dl=pexels-th%E1%BB%8Bnh-la-11742806.jpg&fm=jpg",
-                            Location = "HCM",
+                            AreaImageUrl1 = "https://images.pexels.com/photos/11742806/pexels-photo-11742806.jpeg?cs=srgb&dl=pexels-th%E1%BB%8Bnh-la-11742806.jpg&fm=jpg",
                             Name = "Quận 3",
                             Status = true
                         },
                         new
                         {
                             AreaId = 4,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận 4",
                             Status = true
                         },
                         new
                         {
                             AreaId = 5,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận 5",
                             Status = true
                         },
                         new
                         {
                             AreaId = 6,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận 6",
                             Status = true
                         },
                         new
                         {
                             AreaId = 7,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận 7",
                             Status = true
                         },
                         new
                         {
                             AreaId = 8,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận 8",
                             Status = true
                         },
                         new
                         {
                             AreaId = 9,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận 9",
                             Status = true
                         },
                         new
                         {
                             AreaId = 10,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận 10",
                             Status = true
                         },
                         new
                         {
                             AreaId = 11,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận 11",
                             Status = true
                         },
                         new
                         {
                             AreaId = 12,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận 12",
                             Status = true
                         },
                         new
                         {
                             AreaId = 13,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận Bình Thạnh",
                             Status = true
                         },
                         new
                         {
                             AreaId = 14,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận Gò Vấp",
                             Status = true
                         },
                         new
                         {
                             AreaId = 15,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận Phú Nhuận",
                             Status = true
                         },
                         new
                         {
                             AreaId = 16,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận Tân Bình",
                             Status = true
                         },
                         new
                         {
                             AreaId = 17,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận Tân Phú",
                             Status = true
                         },
                         new
                         {
                             AreaId = 18,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận Bình Tân",
                             Status = true
                         },
                         new
                         {
                             AreaId = 19,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận Nhà Bè",
                             Status = true
                         },
                         new
                         {
                             AreaId = 20,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận Hóc Môn",
                             Status = true
                         },
                         new
                         {
                             AreaId = 21,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận Củ Chi",
                             Status = true
                         },
                         new
                         {
                             AreaId = 22,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận Cần Giờ",
                             Status = true
                         },
                         new
                         {
                             AreaId = 23,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận Bình Chánh",
                             Status = true
                         },
                         new
                         {
                             AreaId = 24,
-                            ImageUrl = "",
-                            Location = "HCM",
+                            AreaImageUrl1 = "",
                             Name = "Quận Thủ Đức",
                             Status = true
                         });
@@ -272,6 +244,24 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("BuildingImageUrl1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BuildingImageUrl2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BuildingImageUrl3")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BuildingImageUrl4")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BuildingImageUrl5")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BuildingImageUrl6")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("BuildingName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -280,30 +270,12 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("CoordinateX")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("CoordinateY")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl3")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl4")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -326,13 +298,11 @@ namespace Infrastructure.Migrations
                             AreaId = 1,
                             AveragePrice = 2500000m,
                             BuildingAddress = "Quận 1",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/6716250e-8169-446d-a54e-37094c30ae70thumbnail-202303031027054744.jpg",
                             BuildingName = "Building 1 quận 1",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 231m,
-                            CoordinateY = 324m,
                             Description = "Building 1 quận 1",
                             EmployeeId = 1,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/6716250e-8169-446d-a54e-37094c30ae70thumbnail-202303031027054744.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -342,13 +312,11 @@ namespace Infrastructure.Migrations
                             AreaId = 1,
                             AveragePrice = 2600000m,
                             BuildingAddress = "Quận 1",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/be39f244-45d1-48cc-94dc-7e1b138caa3athumbnail-202302251636284394.jpg",
                             BuildingName = "Building 2 quận 1",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 21233m,
-                            CoordinateY = 334m,
                             Description = "Building 2 quận 1",
                             EmployeeId = 2,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/be39f244-45d1-48cc-94dc-7e1b138caa3athumbnail-202302251636284394.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -358,13 +326,11 @@ namespace Infrastructure.Migrations
                             AreaId = 2,
                             AveragePrice = 3500000m,
                             BuildingAddress = "Quận 2",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/8a8ea225-ea25-422c-a20d-299c7ed42456thumbnail-202302041627581789.jpg",
                             BuildingName = "Building 1 quận 2",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 423m,
-                            CoordinateY = 3214m,
                             Description = "Building 1 quận 2",
                             EmployeeId = 3,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/8a8ea225-ea25-422c-a20d-299c7ed42456thumbnail-202302041627581789.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -374,13 +340,11 @@ namespace Infrastructure.Migrations
                             AreaId = 2,
                             AveragePrice = 4500000m,
                             BuildingAddress = "Quận 2",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/69d0767f-ff29-49dc-88fc-c3bc87cba986thumbnail-202212291740189478.jpg",
                             BuildingName = "Building 2 quận 2",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 2323m,
-                            CoordinateY = 314m,
                             Description = "Building 2 quận 2",
                             EmployeeId = 4,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/69d0767f-ff29-49dc-88fc-c3bc87cba986thumbnail-202212291740189478.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -390,13 +354,11 @@ namespace Infrastructure.Migrations
                             AreaId = 3,
                             AveragePrice = 4600000m,
                             BuildingAddress = "Quận 3",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a3f9897c-800e-4d5e-92b7-e388eefdf64bthumbnail-202212151636139810.jpg",
                             BuildingName = "Building 1 quận 3",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 23431m,
-                            CoordinateY = 3245m,
                             Description = "Building 1 quận 3",
                             EmployeeId = 5,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a3f9897c-800e-4d5e-92b7-e388eefdf64bthumbnail-202212151636139810.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -406,13 +368,11 @@ namespace Infrastructure.Migrations
                             AreaId = 3,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 3",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận 3",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 21233m,
-                            CoordinateY = 334m,
                             Description = "Building 2 quận 3",
                             EmployeeId = 6,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -422,13 +382,11 @@ namespace Infrastructure.Migrations
                             AreaId = 4,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 4",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận 4",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận 4",
                             EmployeeId = 8,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -438,13 +396,11 @@ namespace Infrastructure.Migrations
                             AreaId = 4,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 4",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận 4",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận 4",
                             EmployeeId = 9,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -454,13 +410,11 @@ namespace Infrastructure.Migrations
                             AreaId = 5,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 5",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận 5",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận 5",
                             EmployeeId = 10,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -470,13 +424,11 @@ namespace Infrastructure.Migrations
                             AreaId = 5,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 5",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận 5",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận 5",
                             EmployeeId = 11,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -486,13 +438,11 @@ namespace Infrastructure.Migrations
                             AreaId = 6,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 6",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận 6",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận 6",
                             EmployeeId = 12,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -502,13 +452,11 @@ namespace Infrastructure.Migrations
                             AreaId = 6,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 6",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận 6",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận 6",
                             EmployeeId = 13,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -518,13 +466,11 @@ namespace Infrastructure.Migrations
                             AreaId = 7,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 7",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận 7",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận 7",
                             EmployeeId = 14,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -534,13 +480,11 @@ namespace Infrastructure.Migrations
                             AreaId = 7,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 7",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận 7",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận 7",
                             EmployeeId = 15,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -550,13 +494,11 @@ namespace Infrastructure.Migrations
                             AreaId = 8,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 8",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận 8",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận 8",
                             EmployeeId = 16,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -566,13 +508,11 @@ namespace Infrastructure.Migrations
                             AreaId = 8,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 8",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận 8",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận 8",
                             EmployeeId = 17,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -582,13 +522,11 @@ namespace Infrastructure.Migrations
                             AreaId = 9,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 9",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận 9",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận 9",
                             EmployeeId = 18,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -598,13 +536,11 @@ namespace Infrastructure.Migrations
                             AreaId = 9,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 9",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận 9",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận 9",
                             EmployeeId = 19,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -614,13 +550,11 @@ namespace Infrastructure.Migrations
                             AreaId = 10,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 9",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận 10",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận 10",
                             EmployeeId = 20,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -630,13 +564,11 @@ namespace Infrastructure.Migrations
                             AreaId = 10,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 10",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận 10",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận 10",
                             EmployeeId = 21,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -646,13 +578,11 @@ namespace Infrastructure.Migrations
                             AreaId = 11,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 10",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận 11",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận 11",
                             EmployeeId = 22,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -662,13 +592,11 @@ namespace Infrastructure.Migrations
                             AreaId = 11,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 11",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận 11",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận 11",
                             EmployeeId = 23,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -678,13 +606,11 @@ namespace Infrastructure.Migrations
                             AreaId = 12,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 12",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận 12",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận 12",
                             EmployeeId = 24,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -694,13 +620,11 @@ namespace Infrastructure.Migrations
                             AreaId = 12,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 12",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận 12",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận 12",
                             EmployeeId = 25,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -710,13 +634,11 @@ namespace Infrastructure.Migrations
                             AreaId = 13,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Bình Thạnh",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận Bình Thạnh",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận Bình Thạnh",
                             EmployeeId = 26,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -726,13 +648,11 @@ namespace Infrastructure.Migrations
                             AreaId = 13,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Bình Thanh",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận Bình Thanh",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận Bình Thanh",
                             EmployeeId = 27,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -742,13 +662,11 @@ namespace Infrastructure.Migrations
                             AreaId = 14,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 3",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận Gò Vấp",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận Gò Vấp",
                             EmployeeId = 28,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -758,13 +676,11 @@ namespace Infrastructure.Migrations
                             AreaId = 14,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 3",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận Gò Vấp",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận Gò Vấp",
                             EmployeeId = 29,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -774,13 +690,11 @@ namespace Infrastructure.Migrations
                             AreaId = 15,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Phú Nhuận",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận Phú Nhuận",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận Phú Nhuận",
                             EmployeeId = 30,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -790,13 +704,11 @@ namespace Infrastructure.Migrations
                             AreaId = 15,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Phú Nhuận",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận Phú Nhuận",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận Phú Nhuận",
                             EmployeeId = 31,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -806,13 +718,11 @@ namespace Infrastructure.Migrations
                             AreaId = 16,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Tân Bình",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận Tân Bình",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận Tân Bình",
                             EmployeeId = 32,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -822,13 +732,11 @@ namespace Infrastructure.Migrations
                             AreaId = 16,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Tân Bình",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận Tân Bình",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận Tân Bình",
                             EmployeeId = 33,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -838,13 +746,11 @@ namespace Infrastructure.Migrations
                             AreaId = 17,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Tân Phú",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận Tân Phú",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận Tân Phú",
                             EmployeeId = 34,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -854,13 +760,11 @@ namespace Infrastructure.Migrations
                             AreaId = 17,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Tân Phú",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận Tân Phú",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận Tân Phú",
                             EmployeeId = 35,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -870,13 +774,11 @@ namespace Infrastructure.Migrations
                             AreaId = 18,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Bình Tân",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận Bình Tân",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận Bình Tân",
                             EmployeeId = 36,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -886,13 +788,11 @@ namespace Infrastructure.Migrations
                             AreaId = 18,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Bình Tân",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận Bình Tân",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận Bình Tân",
                             EmployeeId = 37,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -902,13 +802,11 @@ namespace Infrastructure.Migrations
                             AreaId = 19,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận 3",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận Nhà Bè",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận Nhà Bè",
                             EmployeeId = 38,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -918,13 +816,11 @@ namespace Infrastructure.Migrations
                             AreaId = 19,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Nhà Bè",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận Nhà Bè",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận Nhà Bè",
                             EmployeeId = 39,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -934,13 +830,11 @@ namespace Infrastructure.Migrations
                             AreaId = 20,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Hóc Môn",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận Hóc Môn",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận Hóc Môn",
                             EmployeeId = 40,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -950,13 +844,11 @@ namespace Infrastructure.Migrations
                             AreaId = 20,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Hóc Môn",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận Hóc Môn",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận Hóc Môn",
                             EmployeeId = 41,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -966,13 +858,11 @@ namespace Infrastructure.Migrations
                             AreaId = 21,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Củ Chi",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận Củ Chi",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận Củ Chi",
                             EmployeeId = 42,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -982,13 +872,11 @@ namespace Infrastructure.Migrations
                             AreaId = 21,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Củ Chi",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận Củ Chi",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận Củ Chi",
                             EmployeeId = 43,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -998,13 +886,11 @@ namespace Infrastructure.Migrations
                             AreaId = 22,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Cần Giờ",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận Cần Giờ",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận Cần Giờ",
                             EmployeeId = 44,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -1014,13 +900,11 @@ namespace Infrastructure.Migrations
                             AreaId = 22,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Cần Giờ",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận Cần Giờ",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận Cần Giờ",
                             EmployeeId = 45,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -1030,13 +914,11 @@ namespace Infrastructure.Migrations
                             AreaId = 23,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Bình Chánh",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận Bình Chánh",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận Bình Chánh",
                             EmployeeId = 46,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -1046,13 +928,11 @@ namespace Infrastructure.Migrations
                             AreaId = 23,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Bình Chánh",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận Bình Chánh",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận Bình Chánh",
                             EmployeeId = 47,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -1062,13 +942,11 @@ namespace Infrastructure.Migrations
                             AreaId = 24,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Thủ Đức",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 1 quận Thủ Đức",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 1 quận Thủ Đức",
                             EmployeeId = 46,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         },
@@ -1078,13 +956,11 @@ namespace Infrastructure.Migrations
                             AreaId = 24,
                             AveragePrice = 5300000m,
                             BuildingAddress = "Quận Thủ Đức",
+                            BuildingImageUrl1 = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             BuildingName = "Building 2 quận Thủ Đức",
                             BuildingPhoneNumber = "012323123",
-                            CoordinateX = 212333m,
-                            CoordinateY = 3344m,
                             Description = "Building 2 quận Thủ Đức",
                             EmployeeId = 47,
-                            ImageUrl = "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                             Status = true,
                             TotalFlats = 0
                         });
@@ -1101,7 +977,26 @@ namespace Infrastructure.Migrations
                     b.Property<int>("BuildingId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("CancelledDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ContractImageUrl1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContractImageUrl2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContractImageUrl3")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContractImageUrl4")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ContractName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContractSerialNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -1124,18 +1019,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("FlatId")
                         .HasColumnType("int");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl3")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl4")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");
@@ -1194,122 +1077,144 @@ namespace Infrastructure.Migrations
                         new
                         {
                             ContractId = 1,
-                            BuildingId = 1,
+                            BuildingId = 3,
+                            ContractImageUrl1 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                            ContractImageUrl2 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                            ContractImageUrl3 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                            ContractImageUrl4 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                             ContractName = "Contract for renter 1",
+                            ContractSerialNumber = "VF-0001",
                             ContractStatus = "Active",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 3, 15, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2176),
+                            DateSigned = new DateTime(2023, 3, 24, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8923),
                             Description = "Contract description for renter 1",
-                            FlatId = 2,
-                            ImageUrl = "No image",
-                            LastUpdated = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2187),
+                            FlatId = 3,
+                            LastUpdated = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8931),
                             PriceForElectricity = 0m,
                             PriceForRent = 1800000m,
                             PriceForService = 0m,
                             PriceForWater = 0m,
                             RenterId = 1,
-                            RoomId = 1,
-                            StartDate = new DateTime(2023, 3, 20, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2186)
+                            RoomId = 3,
+                            StartDate = new DateTime(2023, 3, 29, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8930)
                         },
                         new
                         {
                             ContractId = 2,
-                            BuildingId = 2,
+                            BuildingId = 3,
+                            ContractImageUrl1 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                            ContractImageUrl2 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                            ContractImageUrl3 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                            ContractImageUrl4 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                             ContractName = "Contract for renter 2",
+                            ContractSerialNumber = "VF-0002",
                             ContractStatus = "Active",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 3, 16, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2190),
+                            DateSigned = new DateTime(2023, 3, 25, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8935),
                             Description = "Contract description for renter 2",
                             FlatId = 3,
-                            ImageUrl = "No image",
-                            LastUpdated = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2191),
+                            LastUpdated = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8936),
                             PriceForElectricity = 0m,
                             PriceForRent = 2800000m,
                             PriceForService = 0m,
                             PriceForWater = 0m,
                             RenterId = 2,
-                            RoomId = 1,
-                            StartDate = new DateTime(2023, 3, 18, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2190)
+                            RoomId = 3,
+                            StartDate = new DateTime(2023, 3, 27, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8936)
                         },
                         new
                         {
                             ContractId = 3,
                             BuildingId = 3,
+                            ContractImageUrl1 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                            ContractImageUrl2 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                            ContractImageUrl3 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                            ContractImageUrl4 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                             ContractName = "Contract for renter 3",
+                            ContractSerialNumber = "VF-0003",
                             ContractStatus = "Active",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 3, 16, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2192),
+                            DateSigned = new DateTime(2023, 3, 25, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8939),
                             Description = "Contract description for renter 3",
                             FlatId = 3,
-                            ImageUrl = "No image",
-                            LastUpdated = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2193),
+                            LastUpdated = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8940),
                             PriceForElectricity = 120m,
                             PriceForRent = 2800000m,
                             PriceForService = 10000m,
                             PriceForWater = 1000m,
                             RenterId = 3,
-                            RoomId = 2,
-                            StartDate = new DateTime(2023, 3, 18, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2193)
+                            RoomId = 3,
+                            StartDate = new DateTime(2023, 3, 27, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8939)
                         },
                         new
                         {
                             ContractId = 4,
                             BuildingId = 3,
+                            ContractImageUrl1 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                            ContractImageUrl2 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                            ContractImageUrl3 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                            ContractImageUrl4 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                             ContractName = "Contract for renter 3 (2)",
+                            ContractSerialNumber = "VF-0004",
                             ContractStatus = "Active",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 3, 16, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2249),
+                            DateSigned = new DateTime(2023, 3, 25, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8942),
                             Description = "Contract description for renter 3",
-                            FlatId = 4,
-                            ImageUrl = "No image",
-                            LastUpdated = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2250),
+                            FlatId = 3,
+                            LastUpdated = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8942),
                             PriceForElectricity = 120m,
                             PriceForRent = 2800000m,
                             PriceForService = 10000m,
                             PriceForWater = 1000m,
                             RenterId = 3,
-                            RoomId = 1,
-                            StartDate = new DateTime(2023, 3, 18, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2249)
+                            RoomId = 2,
+                            StartDate = new DateTime(2023, 3, 27, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8942)
                         },
                         new
                         {
                             ContractId = 5,
                             BuildingId = 3,
+                            ContractImageUrl1 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                            ContractImageUrl2 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                            ContractImageUrl3 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                            ContractImageUrl4 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                             ContractName = "Contract for renter 3 (3)",
+                            ContractSerialNumber = "VF-0005",
                             ContractStatus = "Inactive",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 3, 16, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2252),
+                            DateSigned = new DateTime(2023, 3, 25, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8944),
                             Description = "Contract description for renter 3",
                             FlatId = 3,
-                            ImageUrl = "No image",
-                            LastUpdated = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2253),
+                            LastUpdated = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8945),
                             PriceForElectricity = 120m,
                             PriceForRent = 2800000m,
                             PriceForService = 10000m,
                             PriceForWater = 1000m,
                             RenterId = 3,
                             RoomId = 2,
-                            StartDate = new DateTime(2023, 3, 18, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2253)
+                            StartDate = new DateTime(2023, 3, 27, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8945)
                         },
                         new
                         {
                             ContractId = 6,
                             BuildingId = 3,
+                            ContractImageUrl1 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                            ContractImageUrl2 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                             ContractName = "Contract for renter 3 (4)",
+                            ContractSerialNumber = "VF-0006",
                             ContractStatus = "Inactive",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 3, 16, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2254),
+                            DateSigned = new DateTime(2023, 3, 25, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8947),
                             Description = "Contract description for renter 3",
                             FlatId = 3,
-                            ImageUrl = "No image",
-                            LastUpdated = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2255),
+                            LastUpdated = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8948),
                             PriceForElectricity = 120m,
                             PriceForRent = 2800000m,
                             PriceForService = 10000m,
                             PriceForWater = 1000m,
                             RenterId = 3,
                             RoomId = 2,
-                            StartDate = new DateTime(2023, 3, 18, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2255)
+                            StartDate = new DateTime(2023, 3, 27, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8948)
                         });
                 });
 
@@ -2018,6 +1923,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FeedbackImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FeedbackTitle")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -2027,9 +1935,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("FlatId")
                         .HasColumnType("int");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RenterId")
                         .HasColumnType("int");
@@ -2107,20 +2012,26 @@ namespace Infrastructure.Migrations
                     b.Property<int?>("ElectricityMeterBefore")
                         .HasColumnType("int");
 
+                    b.Property<string>("FlatImageUrl1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FlatImageUrl2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FlatImageUrl3")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FlatImageUrl4")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FlatImageUrl5")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FlatImageUrl6")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("FlatTypeId")
                         .HasColumnType("int");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl3")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl4")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MaxRoom")
                         .HasColumnType("int");
@@ -2286,9 +2197,6 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InvoiceId"), 1L, 1);
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
-
                     b.Property<int?>("ContractId")
                         .HasColumnType("int");
 
@@ -2333,6 +2241,9 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("InvoiceId");
 
                     b.HasIndex("EmployeeId");
@@ -2358,86 +2269,95 @@ namespace Infrastructure.Migrations
                         new
                         {
                             InvoiceId = 1,
-                            Amount = 0,
-                            CreatedTime = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2132),
+                            CreatedTime = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8820),
                             Detail = "Detail for invoice 1",
                             EmployeeId = 2,
                             InvoiceTypeId = 1,
                             Name = "Hoá đơn điện tử cho renter 1",
                             RenterId = 1,
-                            Status = true
+                            Status = true,
+                            TotalAmount = 0m
                         },
                         new
                         {
                             InvoiceId = 2,
-                            Amount = 0,
-                            CreatedTime = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2135),
+                            CreatedTime = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8823),
                             Detail = "Detail for invoice 2",
                             EmployeeId = 3,
                             InvoiceTypeId = 1,
                             Name = "Hoá đơn điện tử cho renter 2",
                             RenterId = 2,
-                            Status = true
+                            Status = true,
+                            TotalAmount = 0m
                         },
                         new
                         {
                             InvoiceId = 3,
-                            Amount = 0,
-                            CreatedTime = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2137),
+                            CreatedTime = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8824),
                             Detail = "Detail for invoice 3",
+                            DueDate = new DateTime(2023, 5, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8825),
                             EmployeeId = 4,
                             InvoiceTypeId = 1,
                             Name = "Hoá đơn điện tử cho renter 3",
                             RenterId = 3,
-                            Status = false
+                            Status = false,
+                            TotalAmount = 0m
                         },
                         new
                         {
                             InvoiceId = 4,
-                            Amount = 0,
-                            CreatedTime = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2138),
+                            CreatedTime = new DateTime(2022, 12, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8833),
                             Detail = "Detail for invoice 3 (2)",
+                            DueDate = new DateTime(2023, 1, 21, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8837),
                             EmployeeId = 2,
                             InvoiceTypeId = 1,
                             Name = "Hoá đơn điện tử cho renter 3 (2)",
+                            PaymentTime = new DateTime(2023, 1, 19, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8838),
                             RenterId = 3,
-                            Status = false
+                            Status = true,
+                            TotalAmount = 0m
                         },
                         new
                         {
                             InvoiceId = 5,
-                            Amount = 0,
-                            CreatedTime = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2139),
+                            CreatedTime = new DateTime(2023, 1, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8839),
                             Detail = "Detail for invoice 3 (3)",
+                            DueDate = new DateTime(2023, 2, 10, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8840),
                             EmployeeId = 2,
                             InvoiceTypeId = 1,
                             Name = "Hoá đơn điện tử cho renter 3 (3)",
+                            PaymentTime = new DateTime(2023, 2, 8, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8841),
                             RenterId = 3,
-                            Status = false
+                            Status = true,
+                            TotalAmount = 0m
                         },
                         new
                         {
                             InvoiceId = 6,
-                            Amount = 0,
-                            CreatedTime = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2140),
+                            CreatedTime = new DateTime(2023, 3, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8870),
                             Detail = "Detail for invoice 3 (4)",
+                            DueDate = new DateTime(2023, 4, 11, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8871),
                             EmployeeId = 2,
                             InvoiceTypeId = 1,
                             Name = "Hoá đơn điện tử cho renter 3 (4)",
+                            PaymentTime = new DateTime(2023, 4, 9, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8872),
                             RenterId = 3,
-                            Status = true
+                            Status = true,
+                            TotalAmount = 0m
                         },
                         new
                         {
                             InvoiceId = 7,
-                            Amount = 0,
-                            CreatedTime = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2141),
+                            CreatedTime = new DateTime(2023, 2, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8874),
                             Detail = "Detail for invoice 3 (5)",
+                            DueDate = new DateTime(2023, 3, 12, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8875),
                             EmployeeId = 2,
                             InvoiceTypeId = 1,
                             Name = "Hoá đơn điện tử cho renter 3 (5)",
+                            PaymentTime = new DateTime(2023, 3, 10, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8875),
                             RenterId = 3,
-                            Status = true
+                            Status = true,
+                            TotalAmount = 0m
                         });
                 });
 
@@ -2459,9 +2379,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("ServiceId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("WildcardIdForFee")
                         .HasColumnType("int");
 
                     b.HasKey("InvoiceDetailId");
@@ -2705,6 +2622,9 @@ namespace Infrastructure.Migrations
                     b.Property<decimal?>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int?>("ContractServiceId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -2712,7 +2632,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ServiceId")
+                    b.Property<int?>("TicketId")
                         .HasColumnType("int");
 
                     b.HasKey("PlaceholderForFeeId");
@@ -2745,6 +2665,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
@@ -2785,7 +2706,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 1,
                             Address = "HCM",
-                            BirthDate = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(1644),
+                            BirthDate = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8313),
                             CitizenNumber = "3214324523",
                             DeviceToken = "12321fdsg45adsa",
                             Email = "renter1@mail.com",
@@ -2800,7 +2721,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 2,
                             Address = "Hue",
-                            BirthDate = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(1650),
+                            BirthDate = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8318),
                             CitizenNumber = "3214324523",
                             DeviceToken = "dsavvf",
                             Email = "renter2@mail.com",
@@ -2815,7 +2736,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 3,
                             Address = "DN",
-                            BirthDate = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(1651),
+                            BirthDate = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8320),
                             CitizenNumber = "3214324523",
                             DeviceToken = "123221ad145ad423sa",
                             Email = "renter3@mail.com",
@@ -2830,7 +2751,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 4,
                             Address = "HN",
-                            BirthDate = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(1653),
+                            BirthDate = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8322),
                             CitizenNumber = "3214324523",
                             DeviceToken = "ewasdv12344",
                             Email = "renter4@mail.com",
@@ -2845,7 +2766,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 5,
                             Address = "HCM",
-                            BirthDate = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(1654),
+                            BirthDate = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8323),
                             CitizenNumber = "3214324523",
                             DeviceToken = "ewasdv12344",
                             Email = "trankhaimnhkhoi10a3@mail.com",
@@ -2860,7 +2781,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 6,
                             Address = "HCM",
-                            BirthDate = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(1655),
+                            BirthDate = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8325),
                             CitizenNumber = "3214324523",
                             DeviceToken = "ewasdv12344",
                             Email = "trankhaimnhkhoi@mail.com",
@@ -2875,7 +2796,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 7,
                             Address = "HCM",
-                            BirthDate = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(1657),
+                            BirthDate = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8327),
                             CitizenNumber = "3214324523",
                             DeviceToken = "ewasdv12344",
                             Email = "khoitkmse150850@fpt",
@@ -2936,6 +2857,91 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoomId"), 1L, 1);
 
+                    b.Property<int>("BuildingId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoomImageUrl1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoomImageUrl2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoomImageUrl3")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoomImageUrl4")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoomImageUrl5")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoomImageUrl6")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoomName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TotalSlot")
+                        .HasColumnType("int");
+
+                    b.HasKey("RoomId");
+
+                    b.ToTable("Rooms");
+
+                    b.HasData(
+                        new
+                        {
+                            RoomId = 1,
+                            BuildingId = 3,
+                            Description = "ABCDEF",
+                            RoomName = "Room 1 with 4 slots",
+                            Status = "Ok",
+                            TotalSlot = 4
+                        },
+                        new
+                        {
+                            RoomId = 2,
+                            BuildingId = 3,
+                            Description = "ABCDEF",
+                            RoomName = "Room 1 for 5 slots",
+                            Status = "Ok",
+                            TotalSlot = 5
+                        },
+                        new
+                        {
+                            RoomId = 3,
+                            BuildingId = 3,
+                            Description = "ABCDEF",
+                            RoomName = "Room 2 for 6 slots",
+                            Status = "Ok",
+                            TotalSlot = 5
+                        },
+                        new
+                        {
+                            RoomId = 4,
+                            BuildingId = 3,
+                            Description = "ABCDEF",
+                            RoomName = "Room 3 for flat 3",
+                            Status = "Ok",
+                            TotalSlot = 0
+                        });
+                });
+
+            modelBuilder.Entity("Domain.EntitiesForManagement.RoomFlat", b =>
+                {
+                    b.Property<int>("RoomFlatId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoomFlatId"), 1L, 1);
+
                     b.Property<int>("AvailableSlots")
                         .HasColumnType("int");
 
@@ -2945,129 +2951,43 @@ namespace Infrastructure.Migrations
                     b.Property<int>("FlatId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("ImageUrl2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl3")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl4")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RoomName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RoomTypeId")
+                    b.Property<int>("TotalSlot")
                         .HasColumnType("int");
 
                     b.Property<decimal>("WaterAttribute")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("RoomId");
+                    b.HasKey("RoomFlatId");
 
                     b.HasIndex("FlatId");
 
-                    b.HasIndex("RoomTypeId");
+                    b.HasIndex("RoomId");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("RoomFlat");
 
                     b.HasData(
                         new
                         {
-                            RoomId = 1,
-                            AvailableSlots = 2,
-                            ElectricityAttribute = 0m,
+                            RoomFlatId = 1,
+                            AvailableSlots = 5,
+                            ElectricityAttribute = 1m,
                             FlatId = 1,
-                            RoomName = "Room 1 for flat 1",
-                            RoomTypeId = 1,
-                            WaterAttribute = 0m
+                            RoomId = 1,
+                            TotalSlot = 0,
+                            WaterAttribute = 1m
                         },
                         new
                         {
+                            RoomFlatId = 2,
+                            AvailableSlots = 5,
+                            ElectricityAttribute = 1m,
+                            FlatId = 2,
                             RoomId = 2,
-                            AvailableSlots = 1,
-                            ElectricityAttribute = 0m,
-                            FlatId = 3,
-                            RoomName = "Room 1 for flat 3",
-                            RoomTypeId = 1,
-                            WaterAttribute = 0m
-                        },
-                        new
-                        {
-                            RoomId = 3,
-                            AvailableSlots = 2,
-                            ElectricityAttribute = 0m,
-                            FlatId = 3,
-                            RoomName = "Room 2 for flat 3",
-                            RoomTypeId = 2,
-                            WaterAttribute = 0m
-                        },
-                        new
-                        {
-                            RoomId = 4,
-                            AvailableSlots = 2,
-                            ElectricityAttribute = 0m,
-                            FlatId = 3,
-                            RoomName = "Room 3 for flat 3",
-                            RoomTypeId = 3,
-                            WaterAttribute = 0m
-                        });
-                });
-
-            modelBuilder.Entity("Domain.EntitiesForManagement.RoomType", b =>
-                {
-                    b.Property<int>("RoomTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoomTypeId"), 1L, 1);
-
-                    b.Property<int>("BuildingId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumberOfSlots")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RoomTypeName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("RoomTypeId");
-
-                    b.ToTable("RoomTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            RoomTypeId = 1,
-                            BuildingId = 5,
-                            Description = "Room type id 1 : 2 slots",
-                            NumberOfSlots = 2,
-                            RoomTypeName = "Room type id 1 : 2 slots"
-                        },
-                        new
-                        {
-                            RoomTypeId = 2,
-                            BuildingId = 5,
-                            Description = "Room type id 2 : 2 slots",
-                            NumberOfSlots = 2,
-                            RoomTypeName = "Room type id 2 : 2 slots"
-                        },
-                        new
-                        {
-                            RoomTypeId = 3,
-                            BuildingId = 5,
-                            Description = "Room type id 3 : 2 slots",
-                            NumberOfSlots = 2,
-                            RoomTypeName = "Room type id 3 : 2 slots"
+                            TotalSlot = 0,
+                            WaterAttribute = 1m
                         });
                 });
 
@@ -3126,7 +3046,7 @@ namespace Infrastructure.Migrations
                             Amount = 0m,
                             BuildingId = 2,
                             Description = "Cung cấp nước 1",
-                            Name = "Cung cấp nước 1",
+                            Name = "Lau dọn phòng",
                             ServiceTypeId = 1,
                             Status = true
                         },
@@ -3136,7 +3056,7 @@ namespace Infrastructure.Migrations
                             Amount = 0m,
                             BuildingId = 1,
                             Description = "Cung cấp nước 2 ",
-                            Name = "Cung cấp nước 2",
+                            Name = "Thay cầu nước",
                             ServiceTypeId = 1,
                             Status = true
                         },
@@ -3146,7 +3066,7 @@ namespace Infrastructure.Migrations
                             Amount = 0m,
                             BuildingId = 3,
                             Description = "Cung cấp nước 3",
-                            Name = "Cung cấp nước 3",
+                            Name = "Khai thanh toán",
                             ServiceTypeId = 3,
                             Status = true
                         },
@@ -3156,7 +3076,7 @@ namespace Infrastructure.Migrations
                             Amount = 0m,
                             BuildingId = 3,
                             Description = "Cung cấp 4 cho toa nha 3",
-                            Name = "Cung cấp 4 cho toa nha 3",
+                            Name = "Xe đưa đón",
                             ServiceTypeId = 2,
                             Status = true
                         },
@@ -3166,7 +3086,7 @@ namespace Infrastructure.Migrations
                             Amount = 0m,
                             BuildingId = 3,
                             Description = "Cung cấp 5 cho toa nha 3",
-                            Name = "Cung cấp 5 cho toa nha 3",
+                            Name = "Dọn dẹp",
                             ServiceTypeId = 2,
                             Status = true
                         },
@@ -3176,7 +3096,7 @@ namespace Infrastructure.Migrations
                             Amount = 0m,
                             BuildingId = 3,
                             Description = "Cung cấp 6 cho toa nha 3",
-                            Name = "Cung cấp 6 cho toa nha 3",
+                            Name = "Chuyển vat tu",
                             ServiceTypeId = 2,
                             Status = true
                         });
@@ -3244,9 +3164,6 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TicketId"), 1L, 1);
 
-                    b.Property<decimal?>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("ContractId")
                         .HasColumnType("int");
 
@@ -3257,10 +3174,10 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EmployeeId")
+                    b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("ImageUrl1")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl2")
@@ -3279,6 +3196,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("TicketTypeId")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("TicketId");
 
                     b.HasIndex("ContractId");
@@ -3294,7 +3214,7 @@ namespace Infrastructure.Migrations
                         {
                             TicketId = 1,
                             ContractId = 3,
-                            CreateDate = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2021),
+                            CreateDate = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8731),
                             Description = "Sự cố 1",
                             EmployeeId = 2,
                             Status = "Active",
@@ -3304,7 +3224,7 @@ namespace Infrastructure.Migrations
                         {
                             TicketId = 2,
                             ContractId = 3,
-                            CreateDate = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2024),
+                            CreateDate = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8733),
                             Description = "Sự cố 2",
                             EmployeeId = 2,
                             Status = "Processing",
@@ -3314,7 +3234,7 @@ namespace Infrastructure.Migrations
                         {
                             TicketId = 3,
                             ContractId = 3,
-                            CreateDate = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2025),
+                            CreateDate = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8734),
                             Description = "Sự cố 3",
                             EmployeeId = 2,
                             Status = "Completed",
@@ -3324,7 +3244,7 @@ namespace Infrastructure.Migrations
                         {
                             TicketId = 4,
                             ContractId = 3,
-                            CreateDate = new DateTime(2023, 4, 14, 22, 4, 8, 754, DateTimeKind.Utc).AddTicks(2025),
+                            CreateDate = new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8735),
                             Description = "Sự cố 4",
                             EmployeeId = 2,
                             Status = "Active",
@@ -3386,33 +3306,6 @@ namespace Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Domain.EntitiesForManagement.Transaction", b =>
-                {
-                    b.Property<int>("TransactionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransactionId"), 1L, 1);
-
-                    b.Property<int>("InvoiceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TpTransId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("TransactionTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("TransactionId");
-
-                    b.HasIndex("InvoiceId");
-
-                    b.ToTable("Transactions");
-                });
-
             modelBuilder.Entity("Domain.EntitiesForManagement.UserDevice", b =>
                 {
                     b.Property<int>("UserDeviceId")
@@ -3443,39 +3336,39 @@ namespace Infrastructure.Migrations
                     b.ToTable("UserDevice", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.EntitiesForManagement.UtilitiesFlat", b =>
+            modelBuilder.Entity("Domain.EntitiesForManagement.UtilitiesRoomFlat", b =>
                 {
-                    b.Property<int>("UtilitiesFlatId")
+                    b.Property<int>("UtilitiesRoomFlatId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UtilitiesFlatId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UtilitiesRoomFlatId"), 1L, 1);
 
-                    b.Property<int>("FlatId")
+                    b.Property<int>("RoomFlatId")
                         .HasColumnType("int");
 
                     b.Property<int>("UtilityId")
                         .HasColumnType("int");
 
-                    b.HasKey("UtilitiesFlatId");
+                    b.HasKey("UtilitiesRoomFlatId");
 
-                    b.HasIndex("FlatId");
+                    b.HasIndex("RoomFlatId");
 
                     b.HasIndex("UtilityId");
 
-                    b.ToTable("UtilitiesFlat");
+                    b.ToTable("UtilitiesRooms");
 
                     b.HasData(
                         new
                         {
-                            UtilitiesFlatId = 1,
-                            FlatId = 1,
+                            UtilitiesRoomFlatId = 1,
+                            RoomFlatId = 1,
                             UtilityId = 1
                         },
                         new
                         {
-                            UtilitiesFlatId = 2,
-                            FlatId = 1,
+                            UtilitiesRoomFlatId = 2,
+                            RoomFlatId = 2,
                             UtilityId = 2
                         });
                 });
@@ -3491,25 +3384,25 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl3")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl4")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UtilitiesName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UtilityImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UtilityImageUrl2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UtilityImageUrl3")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UtilityImageUrl4")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("UtilityId");
 
-                    b.ToTable("Utility");
+                    b.ToTable("Utilities");
 
                     b.HasData(
                         new
@@ -3741,23 +3634,23 @@ namespace Infrastructure.Migrations
                     b.Navigation("NotificationType");
                 });
 
-            modelBuilder.Entity("Domain.EntitiesForManagement.Room", b =>
+            modelBuilder.Entity("Domain.EntitiesForManagement.RoomFlat", b =>
                 {
                     b.HasOne("Domain.EntitiesForManagement.Flat", "Flat")
-                        .WithMany("Rooms")
+                        .WithMany("RoomFlats")
                         .HasForeignKey("FlatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.EntitiesForManagement.RoomType", "RoomType")
-                        .WithMany()
-                        .HasForeignKey("RoomTypeId")
+                    b.HasOne("Domain.EntitiesForManagement.Room", "Room")
+                        .WithMany("RoomFlats")
+                        .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Flat");
 
-                    b.Navigation("RoomType");
+                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("Domain.EntitiesForManagement.ServiceEntity", b =>
@@ -3789,7 +3682,9 @@ namespace Infrastructure.Migrations
 
                     b.HasOne("Domain.EntitiesForManagement.Employee", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.EntitiesForManagement.TicketType", "TicketType")
                         .WithMany("Tickets")
@@ -3804,17 +3699,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("TicketType");
                 });
 
-            modelBuilder.Entity("Domain.EntitiesForManagement.Transaction", b =>
-                {
-                    b.HasOne("Domain.EntitiesForManagement.Invoice", "Invoice")
-                        .WithMany()
-                        .HasForeignKey("InvoiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Invoice");
-                });
-
             modelBuilder.Entity("Domain.EntitiesForManagement.UserDevice", b =>
                 {
                     b.HasOne("Domain.EntitiesForManagement.Employee", null)
@@ -3826,21 +3710,21 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("RenterId");
                 });
 
-            modelBuilder.Entity("Domain.EntitiesForManagement.UtilitiesFlat", b =>
+            modelBuilder.Entity("Domain.EntitiesForManagement.UtilitiesRoomFlat", b =>
                 {
-                    b.HasOne("Domain.EntitiesForManagement.Flat", "Flat")
-                        .WithMany("UtilitiesFlats")
-                        .HasForeignKey("FlatId")
+                    b.HasOne("Domain.EntitiesForManagement.RoomFlat", "RoomFlat")
+                        .WithMany("UtilitiesRoomFlats")
+                        .HasForeignKey("RoomFlatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.EntitiesForManagement.Utility", "Utility")
-                        .WithMany("UtilitiesFlats")
+                        .WithMany("UtilitiesRooms")
                         .HasForeignKey("UtilityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Flat");
+                    b.Navigation("RoomFlat");
 
                     b.Navigation("Utility");
                 });
@@ -3899,9 +3783,7 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("FeedBacks");
 
-                    b.Navigation("Rooms");
-
-                    b.Navigation("UtilitiesFlats");
+                    b.Navigation("RoomFlats");
                 });
 
             modelBuilder.Entity("Domain.EntitiesForManagement.FlatType", b =>
@@ -3930,6 +3812,16 @@ namespace Infrastructure.Migrations
                     b.Navigation("Employees");
                 });
 
+            modelBuilder.Entity("Domain.EntitiesForManagement.Room", b =>
+                {
+                    b.Navigation("RoomFlats");
+                });
+
+            modelBuilder.Entity("Domain.EntitiesForManagement.RoomFlat", b =>
+                {
+                    b.Navigation("UtilitiesRoomFlats");
+                });
+
             modelBuilder.Entity("Domain.EntitiesForManagement.ServiceEntity", b =>
                 {
                     b.Navigation("InvoiceDetails");
@@ -3947,7 +3839,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.EntitiesForManagement.Utility", b =>
                 {
-                    b.Navigation("UtilitiesFlats");
+                    b.Navigation("UtilitiesRooms");
                 });
 #pragma warning restore 612, 618
         }

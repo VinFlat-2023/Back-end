@@ -240,6 +240,7 @@ public class ServiceWrapper : IServiceWrapper
         }
     }
 
+    /*
     public IRoomTypeService RoomType
     {
         get
@@ -248,6 +249,7 @@ public class ServiceWrapper : IServiceWrapper
             return _roomType;
         }
     }
+    */
 
     public IGetIdService GetId
     {
@@ -310,8 +312,10 @@ public class ServiceWrapper : IServiceWrapper
     private IDeviceService _device;
     private ICustomeMailService _mail;
     private INotificationService _noti;
+
     private IRoomService _room;
-    private IRoomTypeService _roomType;
+
+    //private IRoomTypeService _roomType;
     private IGetIdService _getId;
 
     #endregion

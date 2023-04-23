@@ -17,7 +17,7 @@ public class Invoice
     public int InvoiceId { get; set; }
 
     public string Name { get; set; } = null!;
-    public int Amount { get; set; }
+    public decimal TotalAmount { get; set; }
     public bool Status { get; set; }
     public DateTime? DueDate { get; set; }
     public string? Detail { get; set; }

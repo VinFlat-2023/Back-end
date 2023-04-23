@@ -11,6 +11,6 @@ public class InvoiceDataDetailEntity
     public InvoiceRenterDetailEntity Invoice { get; set; }
     public int? ServiceId { get; set; }
     public ServiceDetailEntity? Service { get; set; }
-    public int? WildcardIdForFee { get; set; }
+    public int? PlaceholderForFeeId { get; set; }
     public PlaceholderForFeeDetailEntity? PlaceholderForFee { get; set; }
 }

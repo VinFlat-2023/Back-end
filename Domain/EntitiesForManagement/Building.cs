@@ -20,8 +20,6 @@ public class Building
     public string BuildingAddress { get; set; }
     public string Description { get; set; }
     public int TotalFlats { get; set; }
-    public decimal CoordinateX { get; set; }
-    public decimal CoordinateY { get; set; }
     public string BuildingPhoneNumber { get; set; }
 
     [MaxUploadedFileSize(4 * 1024 * 1024)]
@@ -29,12 +27,13 @@ public class Building
     [DataType(DataType.Upload)]
     [NotMapped]
     public IFormFile? Image { get; set; }
-    public string? ImageUrl { get; set; }
-    public string? ImageUrl2 { get; set; }
-    public string? ImageUrl3 { get; set; }
-    public string? ImageUrl4 { get; set; }
-    public string? ImageUrl5 { get; set; }
-    public string? ImageUrl6 { get; set; }
+
+    public string? BuildingImageUrl1 { get; set; }
+    public string? BuildingImageUrl2 { get; set; }
+    public string? BuildingImageUrl3 { get; set; }
+    public string? BuildingImageUrl4 { get; set; }
+    public string? BuildingImageUrl5 { get; set; }
+    public string? BuildingImageUrl6 { get; set; }
     public decimal AveragePrice { get; set; }
     public bool Status { get; set; }
 

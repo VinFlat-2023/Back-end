@@ -147,18 +147,16 @@ public class BuildingsController : ControllerBase
             BuildingName = building.BuildingName,
             BuildingAddress = building.BuildingAddress,
             Description = building.Description,
-            CoordinateX = building.CoordinateX ?? 0,
-            CoordinateY = building.CoordinateY ?? 0,
             BuildingPhoneNumber = building.BuildingPhoneNumber,
             AveragePrice = building.AveragePrice ?? 0,
             Status = building.Status,
             AreaId = building.AreaId,
-            ImageUrl = building.ImageUrl ?? "",
-            ImageUrl2 = building.ImageUrl2 ?? "",
-            ImageUrl3 = building.ImageUrl3 ?? "",
-            ImageUrl4 = building.ImageUrl4 ?? "",
-            ImageUrl5 = building.ImageUrl5 ?? "",
-            ImageUrl6 = building.ImageUrl6 ?? ""
+            BuildingImageUrl1 = building.ImageUrl ?? "",
+            BuildingImageUrl2 = building.ImageUrl2 ?? "",
+            BuildingImageUrl3 = building.ImageUrl3 ?? "",
+            BuildingImageUrl4 = building.ImageUrl4 ?? "",
+            BuildingImageUrl5 = building.ImageUrl5 ?? "",
+            BuildingImageUrl6 = building.ImageUrl6 ?? ""
         };
 
         var result = await _serviceWrapper.Buildings.UpdateBuilding(updateBuilding);
@@ -206,20 +204,18 @@ public class BuildingsController : ControllerBase
             BuildingName = building.BuildingName ?? "Building created by " + supervisor.FullName,
             BuildingAddress = building.BuildingAddress ?? "To be filled",
             Description = building.Description ?? "Building description",
-            CoordinateX = building.CoordinateX ?? 0,
-            CoordinateY = building.CoordinateY ?? 0,
             TotalFlats = 0,
             AveragePrice = building.AveragePrice ?? 0,
             EmployeeId = employeeId,
             Status = building.Status ?? true,
             AreaId = building.AreaId,
             BuildingPhoneNumber = building.BuildingPhoneNumber ?? "0",
-            ImageUrl = building.ImageUrl ?? "",
-            ImageUrl2 = building.ImageUrl2 ?? "",
-            ImageUrl3 = building.ImageUrl3 ?? "",
-            ImageUrl4 = building.ImageUrl4 ?? "",
-            ImageUrl5 = building.ImageUrl5 ?? "",
-            ImageUrl6 = building.ImageUrl6 ?? ""
+            BuildingImageUrl1 = building.ImageUrl ?? "",
+            BuildingImageUrl2 = building.ImageUrl2 ?? "",
+            BuildingImageUrl3 = building.ImageUrl3 ?? "",
+            BuildingImageUrl4 = building.ImageUrl4 ?? "",
+            BuildingImageUrl5 = building.ImageUrl5 ?? "",
+            BuildingImageUrl6 = building.ImageUrl6 ?? ""
         };
 
         if (!validation.IsValid)
@@ -231,8 +227,9 @@ public class BuildingsController : ControllerBase
             });
 
         var result = await _serviceWrapper.Buildings.AddBuilding(newBuilding);
-        
-        var buildingForCurrentSupervisor = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
+
+        var buildingForCurrentSupervisor =
+            await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
 
         switch (buildingForCurrentSupervisor)
         {
@@ -251,7 +248,7 @@ public class BuildingsController : ControllerBase
                     data = ""
                 });
         }
-        
+
         var buildingDetail = await _serviceWrapper.Buildings.GetBuildingById(buildingForCurrentSupervisor, token);
 
         return result.IsSuccess switch

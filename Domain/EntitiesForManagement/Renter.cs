@@ -19,7 +19,7 @@ public class Renter
     public int RenterId { get; set; }
 
     public string Username { get; set; }
-    public string? Email { get; set; }
+    public string Email { get; set; }
     public string Password { get; set; }
     public string Phone { get; set; }
     public string FullName { get; set; }
@@ -32,7 +32,6 @@ public class Renter
     [DataType(DataType.Upload)]
     [NotMapped]
     public IFormFile? Image { get; set; }
-
     public string? CitizenNumber { get; set; }
     public string? CitizenImageUrl { get; set; }
 
@@ -41,12 +40,9 @@ public class Renter
     [DataType(DataType.Upload)]
     [NotMapped]
     public IFormFile? CitizenImage { get; set; }
-
     public string Address { get; set; }
     public string Gender { get; set; }
-    public string? DeviceToken { get; set; }
     public virtual ICollection<Contract> Contracts { get; set; }
     public virtual ICollection<Invoice> Invoices { get; set; }
     public virtual ICollection<Feedback> Feedbacks { get; set; }
-    public virtual ICollection<UserDevice> UserDevices { get; set; }
 }

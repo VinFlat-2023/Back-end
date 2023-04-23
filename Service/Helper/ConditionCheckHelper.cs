@@ -146,7 +146,8 @@ public class ConditionCheckHelper : IConditionCheckHelper
 
     public async Task<Room?> RoomCheck(int? roomId, CancellationToken token)
     {
-        return await _serviceWrapper.Rooms.GetRoomById(roomId);
+        //return await _serviceWrapper.Rooms.GetRoomById(roomId);
+        return null;
     }
 
     /*

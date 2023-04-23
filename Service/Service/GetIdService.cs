@@ -37,10 +37,12 @@ public class GetIdService : IGetIdService
         return await _repositoryWrapper.GetId.GetActiveContractIdBasedOnRenterId(renterId, token);
     }
 
+    /*
     public async Task<int> GetRoomIdBasedOnFlatId(int flatId, CancellationToken token)
     {
         return await _repositoryWrapper.GetId.GetRoomIdBasedOnFlatId(flatId, token);
     }
+    */
 
     public async Task<int> GetSupervisorIdByBuildingId(int entityBuildingId, CancellationToken token)
     {

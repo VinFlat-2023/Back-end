@@ -5,8 +5,6 @@ public class BuildingUpdateRequest
     public string BuildingName { get; set; }
     public string Description { get; set; }
     public string BuildingAddress { get; set; }
-    public decimal? CoordinateX { get; set; }
-    public decimal? CoordinateY { get; set; }
     public bool Status { get; set; }
     public int AreaId { get; set; }
     public decimal? AveragePrice { get; set; }

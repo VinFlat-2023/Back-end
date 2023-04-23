@@ -1,3 +1,4 @@
+/*
 using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
@@ -107,3 +108,5 @@ public class RoomTypeRepository : IRoomTypeRepository
         };
     }
 }
+*/
+

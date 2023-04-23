@@ -28,12 +28,16 @@ public class InvoiceRepository : IInvoiceRepository
             .Include(x => x.Employee)
             .Include(x => x.Renter)
             .Include(x => x.InvoiceDetails)
+            .ThenInclude(x => x.Service)
+            .ThenInclude(x => x.ServiceType)
+            .Include(x => x.InvoiceDetails)
+            .ThenInclude(x => x.PlaceholderForFee)
             .Include(x => x.InvoiceType)
             // filter starts here
             .Where(x =>
                 (filter.Name == null || x.Name.ToLower().Contains(filter.Name.ToLower()))
                 && (filter.Status == null || x.Status == filter.Status)
-                && (filter.Amount == null || x.Amount == filter.Amount)
+                && (filter.Amount == null || x.TotalAmount == filter.Amount)
                 && (filter.Detail == null || x.Detail == filter.Detail)
                 && (filter.RenterId == null || x.RenterId == filter.RenterId)
                 && (filter.RenterUsername == null ||
@@ -61,6 +65,10 @@ public class InvoiceRepository : IInvoiceRepository
             .Include(x => x.Employee)
             .Include(x => x.Renter)
             .Include(x => x.InvoiceDetails)
+            .ThenInclude(x => x.Service)
+            .ThenInclude(x => x.ServiceType)
+            .Include(x => x.InvoiceDetails)
+            .ThenInclude(x => x.PlaceholderForFee)
             .Include(x => x.InvoiceType)
             .FirstOrDefaultAsync(x => x.InvoiceId == invoiceId, token);
     }
@@ -70,6 +78,10 @@ public class InvoiceRepository : IInvoiceRepository
         return await _context.Invoices
             .Include(x => x.Renter)
             .Include(x => x.InvoiceDetails)
+            .ThenInclude(x => x.Service)
+            .ThenInclude(x => x.ServiceType)
+            .Include(x => x.InvoiceDetails)
+            .ThenInclude(x => x.PlaceholderForFee)
             .Include(x => x.InvoiceType)
             // false = unpaid invoice
             .Where(x => x.RenterId == renterId && x.Status == false)
@@ -95,6 +107,12 @@ public class InvoiceRepository : IInvoiceRepository
     {
         return await _context.Invoices
             .Include(x => x.Renter)
+            .Include(x => x.InvoiceDetails)
+            .ThenInclude(x => x.Service)
+            .ThenInclude(x => x.ServiceType)
+            .Include(x => x.InvoiceDetails)
+            .ThenInclude(x => x.PlaceholderForFee)
+            .Include(x => x.InvoiceType)
             .FirstOrDefaultAsync(x => x.InvoiceId == invoiceId && x.RenterId == renterId, cancellationToken);
     }
 
@@ -125,12 +143,13 @@ public class InvoiceRepository : IInvoiceRepository
     public async Task<Invoice?> UpdateInvoice(Invoice? invoice)
     {
         var invoiceData = await _context.Invoices
-            .FirstOrDefaultAsync(x => x.InvoiceId == invoice!.InvoiceId);
+            .FirstOrDefaultAsync(x => invoice != null
+                                      && x.InvoiceId == invoice.InvoiceId);
         if (invoiceData == null)
             return null;
 
         invoiceData.Name = invoice?.Name ?? invoiceData.Name;
-        invoiceData.Amount = invoice?.Amount ?? invoiceData.Amount;
+        invoiceData.TotalAmount = invoice?.TotalAmount ?? invoiceData.TotalAmount;
         invoiceData.Status = invoice?.Status ?? invoiceData.Status;
         invoiceData.ImageUrl = invoice?.ImageUrl ?? invoiceData.ImageUrl;
         invoiceData.Detail = invoice?.Detail ?? invoiceData.Detail;

@@ -14,7 +14,7 @@ public class Ticket
     public string Description { get; set; } = null!;
     public DateTime CreateDate { get; set; }
     public DateTime? SolveDate { get; set; }
-    public decimal? Amount { get; set; }
+    public decimal? TotalAmount { get; set; }
     public string Status { get; set; } = null!;
 
     [MaxUploadedFileSize(4 * 1024 * 1024)]
@@ -23,9 +23,8 @@ public class Ticket
     [NotMapped]
     public IFormFile? Image { get; set; }
 
-    public string? ImageUrl { get; set; }
+    public string? ImageUrl1 { get; set; }
     public string? ImageUrl2 { get; set; }
-
     public string? ImageUrl3 { get; set; }
 
     // Contract
@@ -34,7 +33,7 @@ public class Ticket
     public virtual Contract Contract { get; set; }
 
     // Management
-    public int? EmployeeId { get; set; }
+    public int EmployeeId { get; set; }
     public virtual Employee Employee { get; set; }
     public int TicketTypeId { get; set; }
     public virtual TicketType TicketType { get; set; }

@@ -1,3 +1,4 @@
+/*
 using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
@@ -45,3 +46,6 @@ public class RoomTypeService : IRoomTypeService
         throw new NotImplementedException();
     }
 }
+
+*/
+

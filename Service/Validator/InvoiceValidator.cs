@@ -77,9 +77,9 @@ public class InvoiceValidator : BaseValidator, IInvoiceValidator
                     break;
             }
 
-            switch (obj?.Amount)
+            switch (obj?.TotalAmount)
             {
-                case not null when obj.Amount < 0:
+                case not null when obj.TotalAmount < 0:
                     ValidatorResult.Failures.Add("Invoice amount cannot be negative");
                     break;
                 case null:

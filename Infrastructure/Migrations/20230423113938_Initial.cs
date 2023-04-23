@@ -15,12 +15,11 @@ namespace Infrastructure.Migrations
                 {
                     AreaId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl4 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AreaImageUrl1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AreaImageUrl2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AreaImageUrl3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AreaImageUrl4 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -92,7 +91,8 @@ namespace Infrastructure.Migrations
                 {
                     PlaceholderForFeeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ServiceId = table.Column<int>(type: "int", nullable: false),
+                    TicketId = table.Column<int>(type: "int", nullable: true),
+                    ContractServiceId = table.Column<int>(type: "int", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: true)
@@ -109,7 +109,7 @@ namespace Infrastructure.Migrations
                     RenterId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -142,19 +142,26 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoomTypes",
+                name: "Rooms",
                 columns: table => new
                 {
-                    RoomTypeId = table.Column<int>(type: "int", nullable: false)
+                    RoomId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoomTypeName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NumberOfSlots = table.Column<int>(type: "int", nullable: false),
+                    RoomName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TotalSlot = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RoomImageUrl1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RoomImageUrl2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RoomImageUrl3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RoomImageUrl4 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RoomImageUrl5 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RoomImageUrl6 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BuildingId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoomTypes", x => x.RoomTypeId);
+                    table.PrimaryKey("PK_Rooms", x => x.RoomId);
                 });
 
             migrationBuilder.CreateTable(
@@ -188,21 +195,21 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Utility",
+                name: "Utilities",
                 columns: table => new
                 {
                     UtilityId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UtilitiesName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl4 = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UtilityImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UtilityImageUrl2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UtilityImageUrl3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UtilityImageUrl4 = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Utility", x => x.UtilityId);
+                    table.PrimaryKey("PK_Utilities", x => x.UtilityId);
                 });
 
             migrationBuilder.CreateTable(
@@ -251,13 +258,14 @@ namespace Infrastructure.Migrations
                     Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    TechnicianBuildingId = table.Column<int>(type: "int", nullable: true)
+                    TechnicianBuildingId = table.Column<int>(type: "int", nullable: true),
+                    SupervisorBuildingId = table.Column<int>(type: "int", nullable: true),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -308,13 +316,13 @@ namespace Infrastructure.Migrations
                     BuildingAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TotalFlats = table.Column<int>(type: "int", nullable: false),
-                    CoordinateX = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CoordinateY = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     BuildingPhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl4 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BuildingImageUrl1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BuildingImageUrl2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BuildingImageUrl3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BuildingImageUrl4 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BuildingImageUrl5 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BuildingImageUrl6 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AveragePrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
                     EmployeeId = table.Column<int>(type: "int", nullable: false),
@@ -344,13 +352,14 @@ namespace Infrastructure.Migrations
                     InvoiceId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Amount = table.Column<int>(type: "int", nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Detail = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PaymentTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ContractId = table.Column<int>(type: "int", nullable: true),
                     RenterId = table.Column<int>(type: "int", nullable: true),
                     EmployeeId = table.Column<int>(type: "int", nullable: false),
                     InvoiceTypeId = table.Column<int>(type: "int", nullable: false),
@@ -431,10 +440,12 @@ namespace Infrastructure.Migrations
                     ElectricityMeterAfter = table.Column<int>(type: "int", nullable: true),
                     MaxRoom = table.Column<int>(type: "int", nullable: false),
                     AvailableRoom = table.Column<int>(type: "int", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl4 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FlatImageUrl1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FlatImageUrl2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FlatImageUrl3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FlatImageUrl4 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FlatImageUrl5 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FlatImageUrl6 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FlatTypeId = table.Column<int>(type: "int", nullable: false),
                     BuildingId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -490,45 +501,25 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Transactions",
-                columns: table => new
-                {
-                    TransactionId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TpTransId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TransactionTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    InvoiceId = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Transactions", x => x.TransactionId);
-                    table.ForeignKey(
-                        name: "FK_Transactions_Invoices_InvoiceId",
-                        column: x => x.InvoiceId,
-                        principalTable: "Invoices",
-                        principalColumn: "InvoiceId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Contracts",
                 columns: table => new
                 {
                     ContractId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    ContractSerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ContractName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateSigned = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CancelledDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ContractStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl4 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContractImageUrl1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContractImageUrl2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContractImageUrl3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContractImageUrl4 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PriceForRent = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PriceForWater = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PriceForElectricity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -578,7 +569,7 @@ namespace Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FeedbackImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FlatId = table.Column<int>(type: "int", nullable: false),
                     RenterId = table.Column<int>(type: "int", nullable: false),
                     FeedbackTypeId = table.Column<int>(type: "int", nullable: false)
@@ -607,62 +598,32 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Rooms",
+                name: "RoomFlat",
                 columns: table => new
                 {
-                    RoomId = table.Column<int>(type: "int", nullable: false)
+                    RoomFlatId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoomName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RoomId = table.Column<int>(type: "int", nullable: false),
+                    FlatId = table.Column<int>(type: "int", nullable: false),
                     AvailableSlots = table.Column<int>(type: "int", nullable: false),
+                    TotalSlot = table.Column<int>(type: "int", nullable: false),
                     ElectricityAttribute = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    WaterAttribute = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl4 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FlatId = table.Column<int>(type: "int", nullable: false),
-                    RoomTypeId = table.Column<int>(type: "int", nullable: false)
+                    WaterAttribute = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Rooms", x => x.RoomId);
+                    table.PrimaryKey("PK_RoomFlat", x => x.RoomFlatId);
                     table.ForeignKey(
-                        name: "FK_Rooms_Flats_FlatId",
+                        name: "FK_RoomFlat_Flats_FlatId",
                         column: x => x.FlatId,
                         principalTable: "Flats",
                         principalColumn: "FlatId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Rooms_RoomTypes_RoomTypeId",
-                        column: x => x.RoomTypeId,
-                        principalTable: "RoomTypes",
-                        principalColumn: "RoomTypeId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UtilitiesFlat",
-                columns: table => new
-                {
-                    UtilitiesFlatId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FlatId = table.Column<int>(type: "int", nullable: false),
-                    UtilityId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UtilitiesFlat", x => x.UtilitiesFlatId);
-                    table.ForeignKey(
-                        name: "FK_UtilitiesFlat_Flats_FlatId",
-                        column: x => x.FlatId,
-                        principalTable: "Flats",
-                        principalColumn: "FlatId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UtilitiesFlat_Utility_UtilityId",
-                        column: x => x.UtilityId,
-                        principalTable: "Utility",
-                        principalColumn: "UtilityId",
+                        name: "FK_RoomFlat_Rooms_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "Rooms",
+                        principalColumn: "RoomId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -675,7 +636,6 @@ namespace Infrastructure.Migrations
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     InvoiceId = table.Column<int>(type: "int", nullable: false),
                     ServiceId = table.Column<int>(type: "int", nullable: true),
-                    WildcardIdForFee = table.Column<int>(type: "int", nullable: true),
                     PlaceholderForFeeId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -708,13 +668,13 @@ namespace Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SolveDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImageUrl2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImageUrl3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ContractId = table.Column<int>(type: "int", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: true),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
                     TicketTypeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -729,7 +689,8 @@ namespace Infrastructure.Migrations
                         name: "FK_Tickets_Employees_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "Employees",
-                        principalColumn: "EmployeeId");
+                        principalColumn: "EmployeeId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Tickets_TicketTypes_TicketTypeId",
                         column: x => x.TicketTypeId,
@@ -738,35 +699,61 @@ namespace Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UtilitiesRooms",
+                columns: table => new
+                {
+                    UtilitiesRoomFlatId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoomFlatId = table.Column<int>(type: "int", nullable: false),
+                    UtilityId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UtilitiesRooms", x => x.UtilitiesRoomFlatId);
+                    table.ForeignKey(
+                        name: "FK_UtilitiesRooms_RoomFlat_RoomFlatId",
+                        column: x => x.RoomFlatId,
+                        principalTable: "RoomFlat",
+                        principalColumn: "RoomFlatId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UtilitiesRooms_Utilities_UtilityId",
+                        column: x => x.UtilityId,
+                        principalTable: "Utilities",
+                        principalColumn: "UtilityId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Areas",
-                columns: new[] { "AreaId", "ImageUrl", "ImageUrl2", "ImageUrl3", "ImageUrl4", "Location", "Name", "Status" },
+                columns: new[] { "AreaId", "AreaImageUrl1", "AreaImageUrl2", "AreaImageUrl3", "AreaImageUrl4", "Name", "Status" },
                 values: new object[,]
                 {
-                    { 1, "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/PANO0002-Pano.jpg/1200px-PANO0002-Pano.jpg", null, null, null, "HCM", "Quận 1", true },
-                    { 2, "https://i1-vnexpress.vnecdn.net/2022/11/17/Ve-may-bay-di-sai-gon-600x399-4356-2813-1668672299.jpg?w=0&h=0&q=100&dpr=2&fit=crop&s=8All1Mq-so56XkVbZXvdFA", null, null, null, "HCM", "Quận 2", true },
-                    { 3, "https://images.pexels.com/photos/11742806/pexels-photo-11742806.jpeg?cs=srgb&dl=pexels-th%E1%BB%8Bnh-la-11742806.jpg&fm=jpg", null, null, null, "HCM", "Quận 3", true },
-                    { 4, "", null, null, null, "HCM", "Quận 4", true },
-                    { 5, "", null, null, null, "HCM", "Quận 5", true },
-                    { 6, "", null, null, null, "HCM", "Quận 6", true },
-                    { 7, "", null, null, null, "HCM", "Quận 7", true },
-                    { 8, "", null, null, null, "HCM", "Quận 8", true },
-                    { 9, "", null, null, null, "HCM", "Quận 9", true },
-                    { 10, "", null, null, null, "HCM", "Quận 10", true },
-                    { 11, "", null, null, null, "HCM", "Quận 11", true },
-                    { 12, "", null, null, null, "HCM", "Quận 12", true },
-                    { 13, "", null, null, null, "HCM", "Quận Bình Thạnh", true },
-                    { 14, "", null, null, null, "HCM", "Quận Gò Vấp", true },
-                    { 15, "", null, null, null, "HCM", "Quận Phú Nhuận", true },
-                    { 16, "", null, null, null, "HCM", "Quận Tân Bình", true },
-                    { 17, "", null, null, null, "HCM", "Quận Tân Phú", true },
-                    { 18, "", null, null, null, "HCM", "Quận Bình Tân", true },
-                    { 19, "", null, null, null, "HCM", "Quận Nhà Bè", true },
-                    { 20, "", null, null, null, "HCM", "Quận Hóc Môn", true },
-                    { 21, "", null, null, null, "HCM", "Quận Củ Chi", true },
-                    { 22, "", null, null, null, "HCM", "Quận Cần Giờ", true },
-                    { 23, "", null, null, null, "HCM", "Quận Bình Chánh", true },
-                    { 24, "", null, null, null, "HCM", "Quận Thủ Đức", true }
+                    { 1, "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/PANO0002-Pano.jpg/1200px-PANO0002-Pano.jpg", null, null, null, "Quận 1", true },
+                    { 2, "https://i1-vnexpress.vnecdn.net/2022/11/17/Ve-may-bay-di-sai-gon-600x399-4356-2813-1668672299.jpg?w=0&h=0&q=100&dpr=2&fit=crop&s=8All1Mq-so56XkVbZXvdFA", null, null, null, "Quận 2", true },
+                    { 3, "https://images.pexels.com/photos/11742806/pexels-photo-11742806.jpeg?cs=srgb&dl=pexels-th%E1%BB%8Bnh-la-11742806.jpg&fm=jpg", null, null, null, "Quận 3", true },
+                    { 4, "", null, null, null, "Quận 4", true },
+                    { 5, "", null, null, null, "Quận 5", true },
+                    { 6, "", null, null, null, "Quận 6", true },
+                    { 7, "", null, null, null, "Quận 7", true },
+                    { 8, "", null, null, null, "Quận 8", true },
+                    { 9, "", null, null, null, "Quận 9", true },
+                    { 10, "", null, null, null, "Quận 10", true },
+                    { 11, "", null, null, null, "Quận 11", true },
+                    { 12, "", null, null, null, "Quận 12", true },
+                    { 13, "", null, null, null, "Quận Bình Thạnh", true },
+                    { 14, "", null, null, null, "Quận Gò Vấp", true },
+                    { 15, "", null, null, null, "Quận Phú Nhuận", true },
+                    { 16, "", null, null, null, "Quận Tân Bình", true },
+                    { 17, "", null, null, null, "Quận Tân Phú", true },
+                    { 18, "", null, null, null, "Quận Bình Tân", true },
+                    { 19, "", null, null, null, "Quận Nhà Bè", true },
+                    { 20, "", null, null, null, "Quận Hóc Môn", true },
+                    { 21, "", null, null, null, "Quận Củ Chi", true },
+                    { 22, "", null, null, null, "Quận Cần Giờ", true },
+                    { 23, "", null, null, null, "Quận Bình Chánh", true },
+                    { 24, "", null, null, null, "Quận Thủ Đức", true }
                 });
 
             migrationBuilder.InsertData(
@@ -805,13 +792,13 @@ namespace Infrastructure.Migrations
                 columns: new[] { "RenterId", "Address", "BirthDate", "CitizenImageUrl", "CitizenNumber", "DeviceToken", "Email", "FullName", "Gender", "ImageUrl", "Password", "Phone", "Status", "Username" },
                 values: new object[,]
                 {
-                    { 1, "HCM", new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(321), null, "3214324523", "12321fdsg45adsa", "renter1@mail.com", "Nguyen Van A", "Male", null, "renter1", "0123543125", true, "renter1" },
-                    { 2, "Hue", new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(325), null, "3214324523", "dsavvf", "renter2@mail.com", "Nguyen Van B", "Male", null, "renter2", "0123543125", true, "renter2" },
-                    { 3, "DN", new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(327), null, "3214324523", "123221ad145ad423sa", "renter3@mail.com", "Nguyen Van C", "Female", null, "renter3", "0123543125", true, "renter3" },
-                    { 4, "HN", new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(328), null, "3214324523", "ewasdv12344", "renter4@mail.com", "Nguyen Van D", "Female", null, "renter4", "0123543125", true, "renter4" },
-                    { 5, "HCM", new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(329), null, "3214324523", "ewasdv12344", "trankhaimnhkhoi10a3@mail.com", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", true, "minhkhoi10a3" },
-                    { 6, "HCM", new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(330), null, "3214324523", "ewasdv12344", "trankhaimnhkhoi@mail.com", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", true, "minhkhoi" },
-                    { 7, "HCM", new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(332), null, "3214324523", "ewasdv12344", "khoitkmse150850@fpt", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", true, "minhkhoitkm" }
+                    { 1, "HCM", new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8313), null, "3214324523", "12321fdsg45adsa", "renter1@mail.com", "Nguyen Van A", "Male", null, "renter1", "0123543125", true, "renter1" },
+                    { 2, "Hue", new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8318), null, "3214324523", "dsavvf", "renter2@mail.com", "Nguyen Van B", "Male", null, "renter2", "0123543125", true, "renter2" },
+                    { 3, "DN", new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8320), null, "3214324523", "123221ad145ad423sa", "renter3@mail.com", "Nguyen Van C", "Female", null, "renter3", "0123543125", true, "renter3" },
+                    { 4, "HN", new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8322), null, "3214324523", "ewasdv12344", "renter4@mail.com", "Nguyen Van D", "Female", null, "renter4", "0123543125", true, "renter4" },
+                    { 5, "HCM", new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8323), null, "3214324523", "ewasdv12344", "trankhaimnhkhoi10a3@mail.com", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", true, "minhkhoi10a3" },
+                    { 6, "HCM", new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8325), null, "3214324523", "ewasdv12344", "trankhaimnhkhoi@mail.com", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", true, "minhkhoi" },
+                    { 7, "HCM", new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8327), null, "3214324523", "ewasdv12344", "khoitkmse150850@fpt", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", true, "minhkhoitkm" }
                 });
 
             migrationBuilder.InsertData(
@@ -829,13 +816,14 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "RoomTypes",
-                columns: new[] { "RoomTypeId", "BuildingId", "Description", "NumberOfSlots", "RoomTypeName" },
+                table: "Rooms",
+                columns: new[] { "RoomId", "BuildingId", "Description", "RoomImageUrl1", "RoomImageUrl2", "RoomImageUrl3", "RoomImageUrl4", "RoomImageUrl5", "RoomImageUrl6", "RoomName", "Status", "TotalSlot" },
                 values: new object[,]
                 {
-                    { 1, 5, "Room type id 1 : 2 slots", 2, "Room type id 1 : 2 slots" },
-                    { 2, 5, "Room type id 2 : 2 slots", 2, "Room type id 2 : 2 slots" },
-                    { 3, 5, "Room type id 3 : 2 slots", 2, "Room type id 3 : 2 slots" }
+                    { 1, 3, "ABCDEF", null, null, null, null, null, null, "Room 1 with 4 slots", "Ok", 4 },
+                    { 2, 3, "ABCDEF", null, null, null, null, null, null, "Room 1 for 5 slots", "Ok", 5 },
+                    { 3, 3, "ABCDEF", null, null, null, null, null, null, "Room 2 for 6 slots", "Ok", 5 },
+                    { 4, 3, "ABCDEF", null, null, null, null, null, null, "Room 3 for flat 3", "Ok", 0 }
                 });
 
             migrationBuilder.InsertData(
@@ -861,174 +849,174 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Utility",
-                columns: new[] { "UtilityId", "Description", "ImageUrl", "ImageUrl2", "ImageUrl3", "ImageUrl4", "UtilitiesName" },
+                table: "Utilities",
+                columns: new[] { "UtilityId", "Description", "UtilitiesName", "UtilityImageUrl", "UtilityImageUrl2", "UtilityImageUrl3", "UtilityImageUrl4" },
                 values: new object[,]
                 {
-                    { 1, null, null, null, null, null, "Air Conditioner" },
-                    { 2, null, null, null, null, null, "Water Heater" },
-                    { 3, null, null, null, null, null, "Wifi" },
-                    { 4, null, null, null, null, null, "Kitchen" }
+                    { 1, null, "Air Conditioner", null, null, null, null },
+                    { 2, null, "Water Heater", null, null, null, null },
+                    { 3, null, "Wifi", null, null, null, null },
+                    { 4, null, "Kitchen", null, null, null, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Employees",
-                columns: new[] { "EmployeeId", "Address", "Email", "FullName", "ImageUrl", "Password", "Phone", "RoleId", "Status", "TechnicianBuildingId", "Username" },
+                columns: new[] { "EmployeeId", "Address", "Email", "FullName", "ImageUrl", "Password", "Phone", "RoleId", "Status", "SupervisorBuildingId", "TechnicianBuildingId", "Username" },
                 values: new object[,]
                 {
-                    { 1, "Sup1 address", "binhlinh@mail", "Bình Linh", null, "123456", "0912345678", 2, true, null, "sup1" },
-                    { 2, "Sup2 address", "thoahy@mail", "Thoa Hy", null, "123456", "0923456789", 2, true, null, "sup2" },
-                    { 3, "Sup3 address", "khoihuy@mail", "sup3", null, "123456", "0812345678", 2, true, null, "Khôi Huy" },
-                    { 4, "Sup4 address", "ngachau@mail", "Nga Châu", null, "123456", "0823456789", 2, true, null, "sup4" },
-                    { 5, "Sup5 address", "ngochuy@mail", "Ngọc Huy", null, "123456", "0834567890", 2, true, null, "sup5" },
-                    { 6, "Employee address", "ngason@mail", "Ngà Sơn", null, "123", "0712345678", 2, true, null, "sup6" },
-                    { 7, "Admin address", "thuminh@mail", "Thư Minh", null, "123456", "0723456789", 1, true, null, "admin" },
-                    { 8, "Employee address", "minhanh123@mail", "Minh Anh", null, "123456", "0723567890", 2, true, null, "sup7" },
-                    { 9, "Employee address", "minhngon@mail", "Minh Ngọc", null, "123456", "0913456324", 2, true, null, "sup8" },
-                    { 10, "Employee address", "manhkhoa@mail", "Mạnh Khoa", null, "123456", "0942184853", 2, true, null, "sup9" },
-                    { 11, "Employee address", "khangngoc@mail", "Khang Ngọc", null, "123456", "0234328589", 2, true, null, "sup10" },
-                    { 12, "Employee address", "hoangminh@mail", "Hoàng Minh", null, "123456", "0482138128", 2, true, null, "sup11" },
-                    { 13, "Employee address", "ankhang@mail", "An Khang", null, "123456", "0763125422", 2, true, null, "sup12" },
-                    { 14, "Employee address", "tranghoa@mail", "Trang Hoà", null, "123456", "0358438539", 2, true, null, "sup13" },
-                    { 15, "Employee address", "minhtinh@mail", "Minh Tính", null, "123456", "0429215737", 2, true, null, "sup14" },
-                    { 16, "Employee address", "tienhoang@mail", "Tiên Hoàng", null, "123456", "0582021245", 2, true, null, "sup15" },
-                    { 17, "Employee address", "thanhhoa032@mail", "Thanh Hoa", null, "123456", "0984271626", 2, true, null, "sup16" },
-                    { 18, "Employee address", "ngason234@mail", "Ngà Sơn", null, "123", "012312323235", 2, true, null, "sup17" },
-                    { 19, "Employee address", "hoangthao@mail", "Hoàng Thoa", null, "123", "0932441829", 2, true, null, "sup18" },
-                    { 20, "Employee address", "minhnghi@mail", "Minh Nghi", null, "123456", "0490238588", 2, true, null, "sup19" },
-                    { 21, "Employee address", "manhhung@mail", "Mạnh Hùng", null, "123456", "0943573182", 2, true, null, "sup20" },
-                    { 22, "Employee address", "huongtram@mail", "Hương Tràm", null, "123456", "0984372814", 2, true, null, "sup21" },
-                    { 23, "Employee address", "minhhoang@mail", "Minh Hoàng", null, "123456", "0958214539", 2, true, null, "sup24" },
-                    { 24, "Employee address", "hoangthanh12@mail", "Hoàng Thanh", null, "123456", "012312323235", 2, true, null, "sup25" },
-                    { 25, "Employee address", "anhtu@mail", "Anh Tú", null, "123456", "0943783365", 2, true, null, "sup26" },
-                    { 26, "Employee address", "anhhung@mail", "Anh Hùng", null, "123456", "0913683923", 2, true, null, "sup27" },
-                    { 27, "Employee address", "khanhhuy32@mail", "Khánh Huy", null, "123456", "0942812643", 2, true, null, "sup28" },
-                    { 28, "Employee address", "vinhhung@mail", "Vinh Hưng", null, "123456", "012312323235", 2, true, null, "sup29" },
-                    { 29, "Employee address", "khangtrung@mail", "Khang Trung", null, "123456", "0918238483", 2, true, null, "sup30" },
-                    { 30, "Employee address", "tranghuyen123@mail", "Trang Huyền", null, "123456", "0984271544", 2, true, null, "sup31" },
-                    { 31, "Employee address", "hatrang4@mail", "Hà Trang", null, "123456", "0384943481", 2, true, null, "sup32" },
-                    { 32, "Employee address", "sonha3@mail", "Sơn Hà", null, "123456", "0938772581", 2, true, null, "sup33" },
-                    { 33, "Employee address", "nguuson32@mail", "Ngưu Sơn", null, "123456", "0485245513", 2, true, null, "sup34" },
-                    { 34, "Employee address", "thuyson32@mail", "Thúy Sơn", null, "123456", "0947327121", 2, true, null, "sup35" },
-                    { 35, "Employee address", "thanhho13@mail", "Thanh Hồ", null, "123456", "0942837429", 2, true, null, "sup36" },
-                    { 36, "Employee address", "quanghuy29@mail", "Quang Huy", null, "123456", "0947291723", 2, true, null, "sup37" },
-                    { 37, "Employee address", "khanhtram32@mail", "Khánh Trâm", null, "123456", "0938271525", 2, true, null, "sup38" },
-                    { 38, "Employee address", "sontrang12@mail", "Sơn Trang", null, "123456", "0948271626", 2, true, null, "sup39" },
-                    { 39, "Employee address", "minhlam23@mail", "Minh Lâm", null, "123456", "0942647123", 2, true, null, "sup40" },
-                    { 40, "Employee address", "hangsuong23@mail", "Hằng Sương", null, "123456", "0928367325", 2, true, null, "sup41" },
-                    { 41, "Employee address", "uyenchi47@mail", "Uyên Chi", null, "123456", "0975383282", 2, true, null, "sup42" },
-                    { 42, "Employee address", "lamtoan12@mail", "Lâm Toàn", null, "123456", "0942537435", 2, true, null, "sup43" }
+                    { 1, "Sup1 address", "binhlinh@mail", "Bình Linh", null, "123456", "0912345678", 2, true, 1, null, "sup1" },
+                    { 2, "Sup2 address", "thoahy@mail", "Thoa Hy", null, "123456", "0923456789", 2, true, 2, null, "sup2" },
+                    { 3, "Sup3 address", "khoihuy@mail", "Khôi Huy", null, "123456", "0812345678", 2, true, 3, null, "sup3" },
+                    { 4, "Sup4 address", "ngachau@mail", "Nga Châu", null, "123456", "0823456789", 2, true, 4, null, "sup4" },
+                    { 5, "Sup5 address", "ngochuy@mail", "Ngọc Huy", null, "123456", "0834567890", 2, true, 5, null, "sup5" },
+                    { 6, "Employee address", "ngason@mail", "Ngà Sơn", null, "123", "0712345678", 2, true, 6, null, "sup6" },
+                    { 7, "Admin address", "thuminh@mail", "Thư Minh", null, "123456", "0723456789", 1, true, null, null, "admin" },
+                    { 8, "Employee address", "minhanh123@mail", "Minh Anh", null, "123456", "0723567890", 2, true, 7, null, "sup7" },
+                    { 9, "Employee address", "minhngon@mail", "Minh Ngọc", null, "123456", "0913456324", 2, true, 8, null, "sup8" },
+                    { 10, "Employee address", "manhkhoa@mail", "Mạnh Khoa", null, "123456", "0942184853", 2, true, 9, null, "sup9" },
+                    { 11, "Employee address", "khangngoc@mail", "Khang Ngọc", null, "123456", "0234328589", 2, true, 10, null, "sup10" },
+                    { 12, "Employee address", "hoangminh@mail", "Hoàng Minh", null, "123456", "0482138128", 2, true, 11, null, "sup11" },
+                    { 13, "Employee address", "ankhang@mail", "An Khang", null, "123456", "0763125422", 2, true, 12, null, "sup12" },
+                    { 14, "Employee address", "tranghoa@mail", "Trang Hoà", null, "123456", "0358438539", 2, true, 13, null, "sup13" },
+                    { 15, "Employee address", "minhtinh@mail", "Minh Tính", null, "123456", "0429215737", 2, true, 14, null, "sup14" },
+                    { 16, "Employee address", "tienhoang@mail", "Tiên Hoàng", null, "123456", "0582021245", 2, true, 15, null, "sup15" },
+                    { 17, "Employee address", "thanhhoa032@mail", "Thanh Hoa", null, "123456", "0984271626", 2, true, 16, null, "sup16" },
+                    { 18, "Employee address", "ngason234@mail", "Ngà Sơn", null, "123", "012312323235", 2, true, 17, null, "sup17" },
+                    { 19, "Employee address", "hoangthao@mail", "Hoàng Thoa", null, "123", "0932441829", 2, true, 18, null, "sup18" },
+                    { 20, "Employee address", "minhnghi@mail", "Minh Nghi", null, "123456", "0490238588", 2, true, 19, null, "sup19" },
+                    { 21, "Employee address", "manhhung@mail", "Mạnh Hùng", null, "123456", "0943573182", 2, true, 20, null, "sup20" },
+                    { 22, "Employee address", "huongtram@mail", "Hương Tràm", null, "123456", "0984372814", 2, true, 21, null, "sup21" },
+                    { 23, "Employee address", "minhhoang@mail", "Minh Hoàng", null, "123456", "0958214539", 2, true, 22, null, "sup24" },
+                    { 24, "Employee address", "hoangthanh12@mail", "Hoàng Thanh", null, "123456", "012312323235", 2, true, 23, null, "sup25" },
+                    { 25, "Employee address", "anhtu@mail", "Anh Tú", null, "123456", "0943783365", 2, true, 24, null, "sup26" },
+                    { 26, "Employee address", "anhhung@mail", "Anh Hùng", null, "123456", "0913683923", 2, true, 25, null, "sup27" },
+                    { 27, "Employee address", "khanhhuy32@mail", "Khánh Huy", null, "123456", "0942812643", 2, true, 26, null, "sup28" },
+                    { 28, "Employee address", "vinhhung@mail", "Vinh Hưng", null, "123456", "012312323235", 2, true, 27, null, "sup29" },
+                    { 29, "Employee address", "khangtrung@mail", "Khang Trung", null, "123456", "0918238483", 2, true, 28, null, "sup30" },
+                    { 30, "Employee address", "tranghuyen123@mail", "Trang Huyền", null, "123456", "0984271544", 2, true, 29, null, "sup31" },
+                    { 31, "Employee address", "hatrang4@mail", "Hà Trang", null, "123456", "0384943481", 2, true, 30, null, "sup32" },
+                    { 32, "Employee address", "sonha3@mail", "Sơn Hà", null, "123456", "0938772581", 2, true, 31, null, "sup33" },
+                    { 33, "Employee address", "nguuson32@mail", "Ngưu Sơn", null, "123456", "0485245513", 2, true, null, null, "sup34" },
+                    { 34, "Employee address", "thuyson32@mail", "Thúy Sơn", null, "123456", "0947327121", 2, true, null, null, "sup35" },
+                    { 35, "Employee address", "thanhho13@mail", "Thanh Hồ", null, "123456", "0942837429", 2, true, null, null, "sup36" },
+                    { 36, "Employee address", "quanghuy29@mail", "Quang Huy", null, "123456", "0947291723", 2, true, null, null, "sup37" },
+                    { 37, "Employee address", "khanhtram32@mail", "Khánh Trâm", null, "123456", "0938271525", 2, true, null, null, "sup38" },
+                    { 38, "Employee address", "sontrang12@mail", "Sơn Trang", null, "123456", "0948271626", 2, true, null, null, "sup39" },
+                    { 39, "Employee address", "minhlam23@mail", "Minh Lâm", null, "123456", "0942647123", 2, true, null, null, "sup40" },
+                    { 40, "Employee address", "hangsuong23@mail", "Hằng Sương", null, "123456", "0928367325", 2, true, null, null, "sup41" },
+                    { 41, "Employee address", "uyenchi47@mail", "Uyên Chi", null, "123456", "0975383282", 2, true, null, null, "sup42" },
+                    { 42, "Employee address", "lamtoan12@mail", "Lâm Toàn", null, "123456", "0942537435", 2, true, null, null, "sup43" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Employees",
-                columns: new[] { "EmployeeId", "Address", "Email", "FullName", "ImageUrl", "Password", "Phone", "RoleId", "Status", "TechnicianBuildingId", "Username" },
+                columns: new[] { "EmployeeId", "Address", "Email", "FullName", "ImageUrl", "Password", "Phone", "RoleId", "Status", "SupervisorBuildingId", "TechnicianBuildingId", "Username" },
                 values: new object[,]
                 {
-                    { 43, "Employee address", "minhtoan@mail", "Minh Toàn", null, "123456", "0938243827", 2, true, null, "sup44" },
-                    { 44, "Employee address", "nhamson@mail", "Nhâm Sơn", null, "123456", "0837243827", 2, true, null, "sup45" },
-                    { 45, "Employee address", "sonkim432@mail", "Sơn Kim", null, "123456", "0947348292", 2, true, null, "sup46" },
-                    { 46, "Employee address", "kimtien32@mail", "Kim Tiền", null, "123456", "0847342789", 2, true, null, "sup47" },
-                    { 47, "Employee address", "tienkim384@mail", "Tiến Kim", null, "123456", "012312323235", 2, true, null, "sup48" },
-                    { 48, "Employee address", "manhson292@mail", "Mạnh Sơn", null, "123456", "0485838261", 2, true, null, "sup49" },
-                    { 49, "Employee address", "longhuong12@mail", "Long Hương", null, "123456", "0749274839", 2, true, null, "sup50" },
-                    { 50, "Employee address", "nhantrong25@mail", "Nhân Trọng", null, "123456", "0984028345", 2, true, null, "sup51" }
+                    { 43, "Employee address", "minhtoan@mail", "Minh Toàn", null, "123456", "0938243827", 2, true, null, null, "sup44" },
+                    { 44, "Employee address", "nhamson@mail", "Nhâm Sơn", null, "123456", "0837243827", 2, true, null, null, "sup45" },
+                    { 45, "Employee address", "sonkim432@mail", "Sơn Kim", null, "123456", "0947348292", 2, true, null, null, "sup46" },
+                    { 46, "Employee address", "kimtien32@mail", "Kim Tiền", null, "123456", "0847342789", 2, true, null, null, "sup47" },
+                    { 47, "Employee address", "tienkim384@mail", "Tiến Kim", null, "123456", "012312323235", 2, true, null, null, "sup48" },
+                    { 48, "Employee address", "manhson292@mail", "Mạnh Sơn", null, "123456", "0485838261", 2, true, null, null, "sup49" },
+                    { 49, "Employee address", "longhuong12@mail", "Long Hương", null, "123456", "0749274839", 2, true, null, null, "sup50" },
+                    { 50, "Employee address", "nhantrong25@mail", "Nhân Trọng", null, "123456", "0984028345", 2, true, null, null, "sup51" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Buildings",
-                columns: new[] { "BuildingId", "AreaId", "AveragePrice", "BuildingAddress", "BuildingName", "BuildingPhoneNumber", "CoordinateX", "CoordinateY", "Description", "EmployeeId", "ImageUrl", "ImageUrl2", "ImageUrl3", "ImageUrl4", "Status", "TotalFlats" },
+                columns: new[] { "BuildingId", "AreaId", "AveragePrice", "BuildingAddress", "BuildingImageUrl1", "BuildingImageUrl2", "BuildingImageUrl3", "BuildingImageUrl4", "BuildingImageUrl5", "BuildingImageUrl6", "BuildingName", "BuildingPhoneNumber", "Description", "EmployeeId", "Status", "TotalFlats" },
                 values: new object[,]
                 {
-                    { 1, 1, 2500000m, "Quận 1", "Building 1 quận 1", "012323123", 231m, 324m, "Building 1 quận 1", 1, "https://vinflat.blob.core.windows.net/building-image/6716250e-8169-446d-a54e-37094c30ae70thumbnail-202303031027054744.jpg", null, null, null, true, 0 },
-                    { 2, 1, 2600000m, "Quận 1", "Building 2 quận 1", "012323123", 21233m, 334m, "Building 2 quận 1", 2, "https://vinflat.blob.core.windows.net/building-image/be39f244-45d1-48cc-94dc-7e1b138caa3athumbnail-202302251636284394.jpg", null, null, null, true, 0 },
-                    { 3, 2, 3500000m, "Quận 2", "Building 1 quận 2", "012323123", 423m, 3214m, "Building 1 quận 2", 3, "https://vinflat.blob.core.windows.net/building-image/8a8ea225-ea25-422c-a20d-299c7ed42456thumbnail-202302041627581789.jpg", null, null, null, true, 0 },
-                    { 4, 2, 4500000m, "Quận 2", "Building 2 quận 2", "012323123", 2323m, 314m, "Building 2 quận 2", 4, "https://vinflat.blob.core.windows.net/building-image/69d0767f-ff29-49dc-88fc-c3bc87cba986thumbnail-202212291740189478.jpg", null, null, null, true, 0 },
-                    { 5, 3, 4600000m, "Quận 3", "Building 1 quận 3", "012323123", 23431m, 3245m, "Building 1 quận 3", 5, "https://vinflat.blob.core.windows.net/building-image/a3f9897c-800e-4d5e-92b7-e388eefdf64bthumbnail-202212151636139810.jpg", null, null, null, true, 0 },
-                    { 6, 3, 5300000m, "Quận 3", "Building 2 quận 3", "012323123", 21233m, 334m, "Building 2 quận 3", 6, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 7, 4, 5300000m, "Quận 4", "Building 1 quận 4", "012323123", 212333m, 3344m, "Building 1 quận 4", 8, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 8, 4, 5300000m, "Quận 4", "Building 2 quận 4", "012323123", 212333m, 3344m, "Building 2 quận 4", 9, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 9, 5, 5300000m, "Quận 5", "Building 1 quận 5", "012323123", 212333m, 3344m, "Building 1 quận 5", 10, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 10, 5, 5300000m, "Quận 5", "Building 2 quận 5", "012323123", 212333m, 3344m, "Building 2 quận 5", 11, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 11, 6, 5300000m, "Quận 6", "Building 1 quận 6", "012323123", 212333m, 3344m, "Building 1 quận 6", 12, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 12, 6, 5300000m, "Quận 6", "Building 2 quận 6", "012323123", 212333m, 3344m, "Building 2 quận 6", 13, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 13, 7, 5300000m, "Quận 7", "Building 1 quận 7", "012323123", 212333m, 3344m, "Building 1 quận 7", 14, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 14, 7, 5300000m, "Quận 7", "Building 2 quận 7", "012323123", 212333m, 3344m, "Building 2 quận 7", 15, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 15, 8, 5300000m, "Quận 8", "Building 1 quận 8", "012323123", 212333m, 3344m, "Building 1 quận 8", 16, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 16, 8, 5300000m, "Quận 8", "Building 2 quận 8", "012323123", 212333m, 3344m, "Building 2 quận 8", 17, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 17, 9, 5300000m, "Quận 9", "Building 1 quận 9", "012323123", 212333m, 3344m, "Building 1 quận 9", 18, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 18, 9, 5300000m, "Quận 9", "Building 2 quận 9", "012323123", 212333m, 3344m, "Building 2 quận 9", 19, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 19, 10, 5300000m, "Quận 9", "Building 1 quận 10", "012323123", 212333m, 3344m, "Building 1 quận 10", 20, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 20, 10, 5300000m, "Quận 10", "Building 2 quận 10", "012323123", 212333m, 3344m, "Building 2 quận 10", 21, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 21, 11, 5300000m, "Quận 10", "Building 1 quận 11", "012323123", 212333m, 3344m, "Building 1 quận 11", 22, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 22, 11, 5300000m, "Quận 11", "Building 2 quận 11", "012323123", 212333m, 3344m, "Building 2 quận 11", 23, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 23, 12, 5300000m, "Quận 12", "Building 1 quận 12", "012323123", 212333m, 3344m, "Building 1 quận 12", 24, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 24, 12, 5300000m, "Quận 12", "Building 2 quận 12", "012323123", 212333m, 3344m, "Building 2 quận 12", 25, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 25, 13, 5300000m, "Quận Bình Thạnh", "Building 1 quận Bình Thạnh", "012323123", 212333m, 3344m, "Building 1 quận Bình Thạnh", 26, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 26, 13, 5300000m, "Quận Bình Thanh", "Building 2 quận Bình Thanh", "012323123", 212333m, 3344m, "Building 2 quận Bình Thanh", 27, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 27, 14, 5300000m, "Quận 3", "Building 1 quận Gò Vấp", "012323123", 212333m, 3344m, "Building 1 quận Gò Vấp", 28, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 28, 14, 5300000m, "Quận 3", "Building 1 quận Gò Vấp", "012323123", 212333m, 3344m, "Building 1 quận Gò Vấp", 29, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 29, 15, 5300000m, "Quận Phú Nhuận", "Building 1 quận Phú Nhuận", "012323123", 212333m, 3344m, "Building 1 quận Phú Nhuận", 30, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 30, 15, 5300000m, "Quận Phú Nhuận", "Building 2 quận Phú Nhuận", "012323123", 212333m, 3344m, "Building 2 quận Phú Nhuận", 31, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 31, 16, 5300000m, "Quận Tân Bình", "Building 1 quận Tân Bình", "012323123", 212333m, 3344m, "Building 1 quận Tân Bình", 32, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 32, 16, 5300000m, "Quận Tân Bình", "Building 2 quận Tân Bình", "012323123", 212333m, 3344m, "Building 2 quận Tân Bình", 33, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 33, 17, 5300000m, "Quận Tân Phú", "Building 1 quận Tân Phú", "012323123", 212333m, 3344m, "Building 1 quận Tân Phú", 34, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 34, 17, 5300000m, "Quận Tân Phú", "Building 2 quận Tân Phú", "012323123", 212333m, 3344m, "Building 2 quận Tân Phú", 35, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 35, 18, 5300000m, "Quận Bình Tân", "Building 1 quận Bình Tân", "012323123", 212333m, 3344m, "Building 1 quận Bình Tân", 36, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 36, 18, 5300000m, "Quận Bình Tân", "Building 2 quận Bình Tân", "012323123", 212333m, 3344m, "Building 2 quận Bình Tân", 37, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 37, 19, 5300000m, "Quận 3", "Building 1 quận Nhà Bè", "012323123", 212333m, 3344m, "Building 1 quận Nhà Bè", 38, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 38, 19, 5300000m, "Quận Nhà Bè", "Building 2 quận Nhà Bè", "012323123", 212333m, 3344m, "Building 2 quận Nhà Bè", 39, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 39, 20, 5300000m, "Quận Hóc Môn", "Building 1 quận Hóc Môn", "012323123", 212333m, 3344m, "Building 1 quận Hóc Môn", 40, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 40, 20, 5300000m, "Quận Hóc Môn", "Building 2 quận Hóc Môn", "012323123", 212333m, 3344m, "Building 2 quận Hóc Môn", 41, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 41, 21, 5300000m, "Quận Củ Chi", "Building 1 quận Củ Chi", "012323123", 212333m, 3344m, "Building 1 quận Củ Chi", 42, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 42, 21, 5300000m, "Quận Củ Chi", "Building 2 quận Củ Chi", "012323123", 212333m, 3344m, "Building 2 quận Củ Chi", 43, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 }
+                    { 1, 1, 2500000m, "Quận 1", "https://vinflat.blob.core.windows.net/building-image/6716250e-8169-446d-a54e-37094c30ae70thumbnail-202303031027054744.jpg", null, null, null, null, null, "Building 1 quận 1", "012323123", "Building 1 quận 1", 1, true, 0 },
+                    { 2, 1, 2600000m, "Quận 1", "https://vinflat.blob.core.windows.net/building-image/be39f244-45d1-48cc-94dc-7e1b138caa3athumbnail-202302251636284394.jpg", null, null, null, null, null, "Building 2 quận 1", "012323123", "Building 2 quận 1", 2, true, 0 },
+                    { 3, 2, 3500000m, "Quận 2", "https://vinflat.blob.core.windows.net/building-image/8a8ea225-ea25-422c-a20d-299c7ed42456thumbnail-202302041627581789.jpg", null, null, null, null, null, "Building 1 quận 2", "012323123", "Building 1 quận 2", 3, true, 0 },
+                    { 4, 2, 4500000m, "Quận 2", "https://vinflat.blob.core.windows.net/building-image/69d0767f-ff29-49dc-88fc-c3bc87cba986thumbnail-202212291740189478.jpg", null, null, null, null, null, "Building 2 quận 2", "012323123", "Building 2 quận 2", 4, true, 0 },
+                    { 5, 3, 4600000m, "Quận 3", "https://vinflat.blob.core.windows.net/building-image/a3f9897c-800e-4d5e-92b7-e388eefdf64bthumbnail-202212151636139810.jpg", null, null, null, null, null, "Building 1 quận 3", "012323123", "Building 1 quận 3", 5, true, 0 },
+                    { 6, 3, 5300000m, "Quận 3", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận 3", "012323123", "Building 2 quận 3", 6, true, 0 },
+                    { 7, 4, 5300000m, "Quận 4", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận 4", "012323123", "Building 1 quận 4", 8, true, 0 },
+                    { 8, 4, 5300000m, "Quận 4", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận 4", "012323123", "Building 2 quận 4", 9, true, 0 },
+                    { 9, 5, 5300000m, "Quận 5", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận 5", "012323123", "Building 1 quận 5", 10, true, 0 },
+                    { 10, 5, 5300000m, "Quận 5", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận 5", "012323123", "Building 2 quận 5", 11, true, 0 },
+                    { 11, 6, 5300000m, "Quận 6", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận 6", "012323123", "Building 1 quận 6", 12, true, 0 },
+                    { 12, 6, 5300000m, "Quận 6", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận 6", "012323123", "Building 2 quận 6", 13, true, 0 },
+                    { 13, 7, 5300000m, "Quận 7", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận 7", "012323123", "Building 1 quận 7", 14, true, 0 },
+                    { 14, 7, 5300000m, "Quận 7", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận 7", "012323123", "Building 2 quận 7", 15, true, 0 },
+                    { 15, 8, 5300000m, "Quận 8", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận 8", "012323123", "Building 1 quận 8", 16, true, 0 },
+                    { 16, 8, 5300000m, "Quận 8", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận 8", "012323123", "Building 2 quận 8", 17, true, 0 },
+                    { 17, 9, 5300000m, "Quận 9", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận 9", "012323123", "Building 1 quận 9", 18, true, 0 },
+                    { 18, 9, 5300000m, "Quận 9", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận 9", "012323123", "Building 2 quận 9", 19, true, 0 },
+                    { 19, 10, 5300000m, "Quận 9", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận 10", "012323123", "Building 1 quận 10", 20, true, 0 },
+                    { 20, 10, 5300000m, "Quận 10", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận 10", "012323123", "Building 2 quận 10", 21, true, 0 },
+                    { 21, 11, 5300000m, "Quận 10", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận 11", "012323123", "Building 1 quận 11", 22, true, 0 },
+                    { 22, 11, 5300000m, "Quận 11", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận 11", "012323123", "Building 2 quận 11", 23, true, 0 },
+                    { 23, 12, 5300000m, "Quận 12", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận 12", "012323123", "Building 1 quận 12", 24, true, 0 },
+                    { 24, 12, 5300000m, "Quận 12", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận 12", "012323123", "Building 2 quận 12", 25, true, 0 },
+                    { 25, 13, 5300000m, "Quận Bình Thạnh", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận Bình Thạnh", "012323123", "Building 1 quận Bình Thạnh", 26, true, 0 },
+                    { 26, 13, 5300000m, "Quận Bình Thanh", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận Bình Thanh", "012323123", "Building 2 quận Bình Thanh", 27, true, 0 },
+                    { 27, 14, 5300000m, "Quận 3", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận Gò Vấp", "012323123", "Building 1 quận Gò Vấp", 28, true, 0 },
+                    { 28, 14, 5300000m, "Quận 3", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận Gò Vấp", "012323123", "Building 1 quận Gò Vấp", 29, true, 0 },
+                    { 29, 15, 5300000m, "Quận Phú Nhuận", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận Phú Nhuận", "012323123", "Building 1 quận Phú Nhuận", 30, true, 0 },
+                    { 30, 15, 5300000m, "Quận Phú Nhuận", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận Phú Nhuận", "012323123", "Building 2 quận Phú Nhuận", 31, true, 0 },
+                    { 31, 16, 5300000m, "Quận Tân Bình", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận Tân Bình", "012323123", "Building 1 quận Tân Bình", 32, true, 0 },
+                    { 32, 16, 5300000m, "Quận Tân Bình", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận Tân Bình", "012323123", "Building 2 quận Tân Bình", 33, true, 0 },
+                    { 33, 17, 5300000m, "Quận Tân Phú", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận Tân Phú", "012323123", "Building 1 quận Tân Phú", 34, true, 0 },
+                    { 34, 17, 5300000m, "Quận Tân Phú", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận Tân Phú", "012323123", "Building 2 quận Tân Phú", 35, true, 0 },
+                    { 35, 18, 5300000m, "Quận Bình Tân", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận Bình Tân", "012323123", "Building 1 quận Bình Tân", 36, true, 0 },
+                    { 36, 18, 5300000m, "Quận Bình Tân", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận Bình Tân", "012323123", "Building 2 quận Bình Tân", 37, true, 0 },
+                    { 37, 19, 5300000m, "Quận 3", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận Nhà Bè", "012323123", "Building 1 quận Nhà Bè", 38, true, 0 },
+                    { 38, 19, 5300000m, "Quận Nhà Bè", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận Nhà Bè", "012323123", "Building 2 quận Nhà Bè", 39, true, 0 },
+                    { 39, 20, 5300000m, "Quận Hóc Môn", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận Hóc Môn", "012323123", "Building 1 quận Hóc Môn", 40, true, 0 },
+                    { 40, 20, 5300000m, "Quận Hóc Môn", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận Hóc Môn", "012323123", "Building 2 quận Hóc Môn", 41, true, 0 },
+                    { 41, 21, 5300000m, "Quận Củ Chi", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận Củ Chi", "012323123", "Building 1 quận Củ Chi", 42, true, 0 },
+                    { 42, 21, 5300000m, "Quận Củ Chi", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận Củ Chi", "012323123", "Building 2 quận Củ Chi", 43, true, 0 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Buildings",
-                columns: new[] { "BuildingId", "AreaId", "AveragePrice", "BuildingAddress", "BuildingName", "BuildingPhoneNumber", "CoordinateX", "CoordinateY", "Description", "EmployeeId", "ImageUrl", "ImageUrl2", "ImageUrl3", "ImageUrl4", "Status", "TotalFlats" },
+                columns: new[] { "BuildingId", "AreaId", "AveragePrice", "BuildingAddress", "BuildingImageUrl1", "BuildingImageUrl2", "BuildingImageUrl3", "BuildingImageUrl4", "BuildingImageUrl5", "BuildingImageUrl6", "BuildingName", "BuildingPhoneNumber", "Description", "EmployeeId", "Status", "TotalFlats" },
                 values: new object[,]
                 {
-                    { 43, 22, 5300000m, "Quận Cần Giờ", "Building 1 quận Cần Giờ", "012323123", 212333m, 3344m, "Building 1 quận Cần Giờ", 44, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 44, 22, 5300000m, "Quận Cần Giờ", "Building 2 quận Cần Giờ", "012323123", 212333m, 3344m, "Building 2 quận Cần Giờ", 45, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 45, 23, 5300000m, "Quận Bình Chánh", "Building 1 quận Bình Chánh", "012323123", 212333m, 3344m, "Building 1 quận Bình Chánh", 46, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 46, 23, 5300000m, "Quận Bình Chánh", "Building 2 quận Bình Chánh", "012323123", 212333m, 3344m, "Building 2 quận Bình Chánh", 47, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 47, 24, 5300000m, "Quận Thủ Đức", "Building 1 quận Thủ Đức", "012323123", 212333m, 3344m, "Building 1 quận Thủ Đức", 46, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 },
-                    { 48, 24, 5300000m, "Quận Thủ Đức", "Building 2 quận Thủ Đức", "012323123", 212333m, 3344m, "Building 2 quận Thủ Đức", 47, "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, true, 0 }
+                    { 43, 22, 5300000m, "Quận Cần Giờ", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận Cần Giờ", "012323123", "Building 1 quận Cần Giờ", 44, true, 0 },
+                    { 44, 22, 5300000m, "Quận Cần Giờ", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận Cần Giờ", "012323123", "Building 2 quận Cần Giờ", 45, true, 0 },
+                    { 45, 23, 5300000m, "Quận Bình Chánh", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận Bình Chánh", "012323123", "Building 1 quận Bình Chánh", 46, true, 0 },
+                    { 46, 23, 5300000m, "Quận Bình Chánh", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận Bình Chánh", "012323123", "Building 2 quận Bình Chánh", 47, true, 0 },
+                    { 47, 24, 5300000m, "Quận Thủ Đức", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 1 quận Thủ Đức", "012323123", "Building 1 quận Thủ Đức", 46, true, 0 },
+                    { 48, 24, 5300000m, "Quận Thủ Đức", "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg", null, null, null, null, null, "Building 2 quận Thủ Đức", "012323123", "Building 2 quận Thủ Đức", 47, true, 0 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Invoices",
-                columns: new[] { "InvoiceId", "Amount", "CreatedTime", "Detail", "DueDate", "EmployeeId", "ImageUrl", "InvoiceTypeId", "Name", "PaymentTime", "RenterId", "Status" },
+                columns: new[] { "InvoiceId", "ContractId", "CreatedTime", "Detail", "DueDate", "EmployeeId", "ImageUrl", "InvoiceTypeId", "Name", "PaymentTime", "RenterId", "Status", "TotalAmount" },
                 values: new object[,]
                 {
-                    { 1, 0, new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(755), "Detail for invoice 1", null, 2, null, 1, "Hoá đơn điện tử cho renter 1", null, 1, true },
-                    { 2, 0, new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(757), "Detail for invoice 2", null, 3, null, 1, "Hoá đơn điện tử cho renter 2", null, 2, true },
-                    { 3, 0, new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(758), "Detail for invoice 3", null, 4, null, 1, "Hoá đơn điện tử cho renter 3", null, 3, false },
-                    { 4, 0, new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(759), "Detail for invoice 3 (2)", null, 2, null, 1, "Hoá đơn điện tử cho renter 3 (2)", null, 3, false },
-                    { 5, 0, new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(760), "Detail for invoice 3 (3)", null, 2, null, 1, "Hoá đơn điện tử cho renter 3 (3)", null, 3, false },
-                    { 6, 0, new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(760), "Detail for invoice 3 (4)", null, 2, null, 1, "Hoá đơn điện tử cho renter 3 (4)", null, 3, true },
-                    { 7, 0, new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(761), "Detail for invoice 3 (5)", null, 2, null, 1, "Hoá đơn điện tử cho renter 3 (5)", null, 3, true }
+                    { 1, null, new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8820), "Detail for invoice 1", null, 2, null, 1, "Hoá đơn điện tử cho renter 1", null, 1, true, 0m },
+                    { 2, null, new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8823), "Detail for invoice 2", null, 3, null, 1, "Hoá đơn điện tử cho renter 2", null, 2, true, 0m },
+                    { 3, null, new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8824), "Detail for invoice 3", new DateTime(2023, 5, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8825), 4, null, 1, "Hoá đơn điện tử cho renter 3", null, 3, false, 0m },
+                    { 4, null, new DateTime(2022, 12, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8833), "Detail for invoice 3 (2)", new DateTime(2023, 1, 21, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8837), 2, null, 1, "Hoá đơn điện tử cho renter 3 (2)", new DateTime(2023, 1, 19, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8838), 3, true, 0m },
+                    { 5, null, new DateTime(2023, 1, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8839), "Detail for invoice 3 (3)", new DateTime(2023, 2, 10, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8840), 2, null, 1, "Hoá đơn điện tử cho renter 3 (3)", new DateTime(2023, 2, 8, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8841), 3, true, 0m },
+                    { 6, null, new DateTime(2023, 3, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8870), "Detail for invoice 3 (4)", new DateTime(2023, 4, 11, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8871), 2, null, 1, "Hoá đơn điện tử cho renter 3 (4)", new DateTime(2023, 4, 9, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8872), 3, true, 0m },
+                    { 7, null, new DateTime(2023, 2, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8874), "Detail for invoice 3 (5)", new DateTime(2023, 3, 12, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8875), 2, null, 1, "Hoá đơn điện tử cho renter 3 (5)", new DateTime(2023, 3, 10, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8875), 3, true, 0m }
                 });
 
             migrationBuilder.InsertData(
                 table: "Flats",
-                columns: new[] { "FlatId", "AvailableRoom", "BuildingId", "Description", "ElectricityMeterAfter", "ElectricityMeterBefore", "FlatTypeId", "ImageUrl", "ImageUrl2", "ImageUrl3", "ImageUrl4", "MaxRoom", "Name", "Status", "WaterMeterAfter", "WaterMeterBefore" },
+                columns: new[] { "FlatId", "AvailableRoom", "BuildingId", "Description", "ElectricityMeterAfter", "ElectricityMeterBefore", "FlatImageUrl1", "FlatImageUrl2", "FlatImageUrl3", "FlatImageUrl4", "FlatImageUrl5", "FlatImageUrl6", "FlatTypeId", "MaxRoom", "Name", "Status", "WaterMeterAfter", "WaterMeterBefore" },
                 values: new object[,]
                 {
-                    { 1, 0, 1, "Flat 1", 0, 0, 1, null, null, null, null, 0, "Flat 1", "Active", 0, 0 },
-                    { 2, 0, 3, "Flat 2", 0, 0, 3, null, null, null, null, 0, "Flat 2", "Active", 0, 0 },
-                    { 3, 0, 2, "Flat 3", 0, 0, 2, null, null, null, null, 0, "Flat 3", "Active", 0, 0 },
-                    { 4, 0, 2, "Flat 4", 0, 0, 5, null, null, null, null, 0, "Flat 4", "NonActive", 0, 0 }
+                    { 1, 0, 1, "Flat 1", 0, 0, null, null, null, null, null, null, 1, 0, "Flat 1", "Active", 0, 0 },
+                    { 2, 0, 3, "Flat 2", 0, 0, null, null, null, null, null, null, 3, 0, "Flat 2", "Active", 0, 0 },
+                    { 3, 0, 2, "Flat 3", 0, 0, null, null, null, null, null, null, 2, 0, "Flat 3", "Active", 0, 0 },
+                    { 4, 0, 2, "Flat 4", 0, 0, null, null, null, null, null, null, 5, 0, "Flat 4", "NonActive", 0, 0 }
                 });
 
             migrationBuilder.InsertData(
                 table: "InvoiceDetails",
-                columns: new[] { "InvoiceDetailId", "Amount", "InvoiceId", "PlaceholderForFeeId", "ServiceId", "WildcardIdForFee" },
+                columns: new[] { "InvoiceDetailId", "Amount", "InvoiceId", "PlaceholderForFeeId", "ServiceId" },
                 values: new object[,]
                 {
-                    { 3, 0m, 1, null, null, null },
-                    { 4, 0m, 2, null, null, null }
+                    { 3, 0m, 1, null, null },
+                    { 4, 0m, 2, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -1036,77 +1024,75 @@ namespace Infrastructure.Migrations
                 columns: new[] { "ServiceId", "Amount", "BuildingId", "Description", "ImageUrl", "ImageUrl2", "ImageUrl3", "ImageUrl4", "Name", "ServiceTypeId", "Status" },
                 values: new object[,]
                 {
-                    { 1, 0m, 2, "Cung cấp nước 1", null, null, null, null, "Cung cấp nước 1", 1, true },
-                    { 2, 0m, 1, "Cung cấp nước 2 ", null, null, null, null, "Cung cấp nước 2", 1, true },
-                    { 3, 0m, 3, "Cung cấp nước 3", null, null, null, null, "Cung cấp nước 3", 3, true },
-                    { 4, 0m, 3, "Cung cấp 4 cho toa nha 3", null, null, null, null, "Cung cấp 4 cho toa nha 3", 2, true },
-                    { 5, 0m, 3, "Cung cấp 5 cho toa nha 3", null, null, null, null, "Cung cấp 5 cho toa nha 3", 2, true },
-                    { 6, 0m, 3, "Cung cấp 6 cho toa nha 3", null, null, null, null, "Cung cấp 6 cho toa nha 3", 2, true }
+                    { 1, 0m, 2, "Cung cấp nước 1", null, null, null, null, "Lau dọn phòng", 1, true },
+                    { 2, 0m, 1, "Cung cấp nước 2 ", null, null, null, null, "Thay cầu nước", 1, true },
+                    { 3, 0m, 3, "Cung cấp nước 3", null, null, null, null, "Khai thanh toán", 3, true },
+                    { 4, 0m, 3, "Cung cấp 4 cho toa nha 3", null, null, null, null, "Xe đưa đón", 2, true },
+                    { 5, 0m, 3, "Cung cấp 5 cho toa nha 3", null, null, null, null, "Dọn dẹp", 2, true },
+                    { 6, 0m, 3, "Cung cấp 6 cho toa nha 3", null, null, null, null, "Chuyển vat tu", 2, true }
                 });
 
             migrationBuilder.InsertData(
                 table: "Contracts",
-                columns: new[] { "ContractId", "BuildingId", "ContractName", "ContractStatus", "CreatedDate", "DateSigned", "Description", "EndDate", "FlatId", "ImageUrl", "ImageUrl2", "ImageUrl3", "ImageUrl4", "LastUpdated", "PriceForElectricity", "PriceForRent", "PriceForService", "PriceForWater", "RenterId", "RoomId", "StartDate" },
+                columns: new[] { "ContractId", "BuildingId", "CancelledDate", "ContractImageUrl1", "ContractImageUrl2", "ContractImageUrl3", "ContractImageUrl4", "ContractName", "ContractSerialNumber", "ContractStatus", "CreatedDate", "DateSigned", "Description", "EndDate", "FlatId", "LastUpdated", "PriceForElectricity", "PriceForRent", "PriceForService", "PriceForWater", "RenterId", "RoomId", "StartDate" },
                 values: new object[,]
                 {
-                    { 1, 1, "Contract for renter 1", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 14, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(814), "Contract description for renter 1", null, 2, "No image", null, null, null, new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(820), 0m, 1800000m, 0m, 0m, 1, 1, new DateTime(2023, 3, 19, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(820) },
-                    { 2, 2, "Contract for renter 2", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 15, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(823), "Contract description for renter 2", null, 3, "No image", null, null, null, new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(824), 0m, 2800000m, 0m, 0m, 2, 1, new DateTime(2023, 3, 17, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(823) },
-                    { 3, 3, "Contract for renter 3", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 15, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(825), "Contract description for renter 3", null, 3, "No image", null, null, null, new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(826), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 3, 17, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(825) },
-                    { 4, 3, "Contract for renter 3 (2)", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 15, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(831), "Contract description for renter 3", null, 4, "No image", null, null, null, new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(832), 120m, 2800000m, 10000m, 1000m, 3, 1, new DateTime(2023, 3, 17, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(831) },
-                    { 5, 3, "Contract for renter 3 (3)", "Inactive", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 15, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(833), "Contract description for renter 3", null, 3, "No image", null, null, null, new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(834), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 3, 17, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(833) },
-                    { 6, 3, "Contract for renter 3 (4)", "Inactive", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 15, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(835), "Contract description for renter 3", null, 3, "No image", null, null, null, new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(836), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 3, 17, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(835) }
+                    { 1, 3, null, "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "Contract for renter 1", "VF-0001", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 24, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8923), "Contract description for renter 1", null, 3, new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8931), 0m, 1800000m, 0m, 0m, 1, 3, new DateTime(2023, 3, 29, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8930) },
+                    { 2, 3, null, "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "Contract for renter 2", "VF-0002", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 25, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8935), "Contract description for renter 2", null, 3, new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8936), 0m, 2800000m, 0m, 0m, 2, 3, new DateTime(2023, 3, 27, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8936) },
+                    { 3, 3, null, "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "Contract for renter 3", "VF-0003", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 25, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8939), "Contract description for renter 3", null, 3, new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8940), 120m, 2800000m, 10000m, 1000m, 3, 3, new DateTime(2023, 3, 27, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8939) },
+                    { 4, 3, null, "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "Contract for renter 3 (2)", "VF-0004", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 25, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8942), "Contract description for renter 3", null, 3, new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8942), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 3, 27, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8942) },
+                    { 5, 3, null, "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "Contract for renter 3 (3)", "VF-0005", "Inactive", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 25, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8944), "Contract description for renter 3", null, 3, new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8945), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 3, 27, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8945) },
+                    { 6, 3, null, "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", null, null, "Contract for renter 3 (4)", "VF-0006", "Inactive", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 25, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8947), "Contract description for renter 3", null, 3, new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8948), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 3, 27, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8948) }
                 });
 
             migrationBuilder.InsertData(
                 table: "InvoiceDetails",
-                columns: new[] { "InvoiceDetailId", "Amount", "InvoiceId", "PlaceholderForFeeId", "ServiceId", "WildcardIdForFee" },
+                columns: new[] { "InvoiceDetailId", "Amount", "InvoiceId", "PlaceholderForFeeId", "ServiceId" },
                 values: new object[,]
                 {
-                    { 1, 0m, 1, null, 1, null },
-                    { 2, 0m, 1, null, 2, null },
-                    { 5, 0m, 4, null, 4, null },
-                    { 6, 0m, 4, null, 4, null },
-                    { 7, 0m, 5, null, 4, null },
-                    { 8, 0m, 5, null, 5, null },
-                    { 9, 0m, 5, null, 5, null },
-                    { 10, 0m, 6, null, 6, null },
-                    { 11, 0m, 6, null, 5, null },
-                    { 12, 0m, 6, null, 6, null },
-                    { 13, 0m, 7, null, 3, null },
-                    { 14, 0m, 7, null, 3, null },
-                    { 15, 0m, 7, null, 4, null },
-                    { 16, 0m, 7, null, 5, null }
+                    { 1, 0m, 1, null, 1 },
+                    { 2, 0m, 1, null, 2 },
+                    { 5, 0m, 4, null, 4 },
+                    { 6, 0m, 4, null, 4 },
+                    { 7, 0m, 5, null, 4 },
+                    { 8, 0m, 5, null, 5 },
+                    { 9, 0m, 5, null, 5 },
+                    { 10, 0m, 6, null, 6 },
+                    { 11, 0m, 6, null, 5 },
+                    { 12, 0m, 6, null, 6 },
+                    { 13, 0m, 7, null, 3 },
+                    { 14, 0m, 7, null, 3 },
+                    { 15, 0m, 7, null, 4 },
+                    { 16, 0m, 7, null, 5 }
                 });
 
             migrationBuilder.InsertData(
-                table: "Rooms",
-                columns: new[] { "RoomId", "AvailableSlots", "ElectricityAttribute", "FlatId", "ImageUrl", "ImageUrl2", "ImageUrl3", "ImageUrl4", "RoomName", "RoomTypeId", "WaterAttribute" },
+                table: "RoomFlat",
+                columns: new[] { "RoomFlatId", "AvailableSlots", "ElectricityAttribute", "FlatId", "RoomId", "TotalSlot", "WaterAttribute" },
                 values: new object[,]
                 {
-                    { 1, 2, 0m, 1, null, null, null, null, "Room 1 for flat 1", 1, 0m },
-                    { 2, 1, 0m, 3, null, null, null, null, "Room 1 for flat 3", 1, 0m },
-                    { 3, 2, 0m, 3, null, null, null, null, "Room 2 for flat 3", 2, 0m },
-                    { 4, 2, 0m, 3, null, null, null, null, "Room 3 for flat 3", 3, 0m }
-                });
-
-            migrationBuilder.InsertData(
-                table: "UtilitiesFlat",
-                columns: new[] { "UtilitiesFlatId", "FlatId", "UtilityId" },
-                values: new object[,]
-                {
-                    { 1, 1, 1 },
-                    { 2, 1, 2 }
+                    { 1, 5, 1m, 1, 1, 0, 1m },
+                    { 2, 5, 1m, 2, 2, 0, 1m }
                 });
 
             migrationBuilder.InsertData(
                 table: "Tickets",
-                columns: new[] { "TicketId", "Amount", "ContractId", "CreateDate", "Description", "EmployeeId", "ImageUrl", "ImageUrl2", "ImageUrl3", "SolveDate", "Status", "TicketTypeId" },
+                columns: new[] { "TicketId", "ContractId", "CreateDate", "Description", "EmployeeId", "ImageUrl1", "ImageUrl2", "ImageUrl3", "SolveDate", "Status", "TicketTypeId", "TotalAmount" },
                 values: new object[,]
                 {
-                    { 1, null, 3, new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(690), "Sự cố 1", 2, null, null, null, null, "Active", 1 },
-                    { 2, null, 3, new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(691), "Sự cố 2", 2, null, null, null, null, "Processing", 2 },
-                    { 3, null, 3, new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(692), "Sự cố 3", 2, null, null, null, null, "Completed", 3 },
-                    { 4, null, 3, new DateTime(2023, 4, 13, 12, 1, 38, 848, DateTimeKind.Utc).AddTicks(693), "Sự cố 4", 2, null, null, null, null, "Active", 1 }
+                    { 1, 3, new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8731), "Sự cố 1", 2, null, null, null, null, "Active", 1, null },
+                    { 2, 3, new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8733), "Sự cố 2", 2, null, null, null, null, "Processing", 2, null },
+                    { 3, 3, new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8734), "Sự cố 3", 2, null, null, null, null, "Completed", 3, null },
+                    { 4, 3, new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8735), "Sự cố 4", 2, null, null, null, null, "Active", 1, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "UtilitiesRooms",
+                columns: new[] { "UtilitiesRoomFlatId", "RoomFlatId", "UtilityId" },
+                values: new object[,]
+                {
+                    { 1, 1, 1 },
+                    { 2, 2, 2 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -1128,12 +1114,6 @@ namespace Infrastructure.Migrations
                 name: "IX_Contracts_RenterId",
                 table: "Contracts",
                 column: "RenterId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Employees_Email",
-                table: "Employees",
-                column: "Email",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_RoleId",
@@ -1207,27 +1187,20 @@ namespace Infrastructure.Migrations
                 column: "NotificationTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Renters_Email",
-                table: "Renters",
-                column: "Email",
-                unique: true,
-                filter: "[Email] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Renters_Username",
                 table: "Renters",
                 column: "Username",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rooms_FlatId",
-                table: "Rooms",
+                name: "IX_RoomFlat_FlatId",
+                table: "RoomFlat",
                 column: "FlatId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rooms_RoomTypeId",
-                table: "Rooms",
-                column: "RoomTypeId");
+                name: "IX_RoomFlat_RoomId",
+                table: "RoomFlat",
+                column: "RoomId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Services_BuildingId",
@@ -1255,11 +1228,6 @@ namespace Infrastructure.Migrations
                 column: "TicketTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_InvoiceId",
-                table: "Transactions",
-                column: "InvoiceId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UserDevice_EmployeeId",
                 table: "UserDevice",
                 column: "EmployeeId");
@@ -1270,13 +1238,13 @@ namespace Infrastructure.Migrations
                 column: "RenterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UtilitiesFlat_FlatId",
-                table: "UtilitiesFlat",
-                column: "FlatId");
+                name: "IX_UtilitiesRooms_RoomFlatId",
+                table: "UtilitiesRooms",
+                column: "RoomFlatId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UtilitiesFlat_UtilityId",
-                table: "UtilitiesFlat",
+                name: "IX_UtilitiesRooms_UtilityId",
+                table: "UtilitiesRooms",
                 column: "UtilityId");
 
             migrationBuilder.CreateIndex(
@@ -1302,25 +1270,27 @@ namespace Infrastructure.Migrations
                 name: "Notification");
 
             migrationBuilder.DropTable(
-                name: "Rooms");
-
-            migrationBuilder.DropTable(
                 name: "Tickets");
-
-            migrationBuilder.DropTable(
-                name: "Transactions");
 
             migrationBuilder.DropTable(
                 name: "UserDevice");
 
             migrationBuilder.DropTable(
-                name: "UtilitiesFlat");
+                name: "UtilitiesRooms");
 
             migrationBuilder.DropTable(
                 name: "Wallet");
 
             migrationBuilder.DropTable(
                 name: "FeedbackTypes");
+
+            migrationBuilder.DropTable(
+                name: "Invoices")
+                .Annotation("SqlServer:IsTemporal", true)
+                .Annotation("SqlServer:TemporalHistoryTableName", "InvoicesHistory")
+                .Annotation("SqlServer:TemporalHistoryTableSchema", null)
+                .Annotation("SqlServer:TemporalPeriodEndColumnName", "PeriodEnd")
+                .Annotation("SqlServer:TemporalPeriodStartColumnName", "PeriodStart");
 
             migrationBuilder.DropTable(
                 name: "PlaceholderForFee");
@@ -1330,9 +1300,6 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "NotificationType");
-
-            migrationBuilder.DropTable(
-                name: "RoomTypes");
 
             migrationBuilder.DropTable(
                 name: "Contracts")
@@ -1346,30 +1313,28 @@ namespace Infrastructure.Migrations
                 name: "TicketTypes");
 
             migrationBuilder.DropTable(
-                name: "Invoices")
-                .Annotation("SqlServer:IsTemporal", true)
-                .Annotation("SqlServer:TemporalHistoryTableName", "InvoicesHistory")
-                .Annotation("SqlServer:TemporalHistoryTableSchema", null)
-                .Annotation("SqlServer:TemporalPeriodEndColumnName", "PeriodEnd")
-                .Annotation("SqlServer:TemporalPeriodStartColumnName", "PeriodStart");
+                name: "RoomFlat");
 
             migrationBuilder.DropTable(
-                name: "Utility");
+                name: "Utilities");
 
             migrationBuilder.DropTable(
                 name: "WalletType");
 
             migrationBuilder.DropTable(
+                name: "InvoiceTypes");
+
+            migrationBuilder.DropTable(
                 name: "ServiceTypes");
+
+            migrationBuilder.DropTable(
+                name: "Renters");
 
             migrationBuilder.DropTable(
                 name: "Flats");
 
             migrationBuilder.DropTable(
-                name: "InvoiceTypes");
-
-            migrationBuilder.DropTable(
-                name: "Renters");
+                name: "Rooms");
 
             migrationBuilder.DropTable(
                 name: "Buildings");

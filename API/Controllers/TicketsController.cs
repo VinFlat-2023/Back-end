@@ -6,6 +6,7 @@ using Domain.EntityRequest.Ticket;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.Utils;
+using Domain.ViewModel.ImageUrls;
 using Domain.ViewModel.TicketEntity;
 using Domain.ViewModel.TicketTypeEntity;
 using Microsoft.AspNetCore.Authorization;
@@ -179,11 +180,33 @@ public class TicketsController : ControllerBase
                         data = ""
                     });
 
+                var ticket = new TicketDetailEntity
+                {
+                    TicketId = renterTicketCheck.TicketId,
+                    Description = renterTicketCheck.Description,
+                    CreateDate = renterTicketCheck.CreateDate,
+                    SolveDate = renterTicketCheck.SolveDate,
+                    Amount = renterTicketCheck.TotalAmount,
+                    Status = renterTicketCheck.Status,
+                    ContractId = renterTicketCheck.ContractId,
+                    EmployeeId = renterTicketCheck.EmployeeId,
+                    TicketTypeId = renterTicketCheck.TicketTypeId,
+                    ImageUrls = new List<TicketImageUrlViewModel>
+                    {
+                        new()
+                        {
+                            ImageUrl1 = renterTicketCheck.ImageUrl1 ?? "",
+                            ImageUrl2 = renterTicketCheck.ImageUrl2 ?? "",
+                            ImageUrl3 = renterTicketCheck.ImageUrl3 ?? ""
+                        }
+                    }
+                };
+
                 return Ok(new
                 {
                     status = "Success",
                     message = "Ticket found",
-                    data = entity
+                    data = ticket
                 });
 
             case null:
@@ -237,8 +260,10 @@ public class TicketsController : ControllerBase
             Description = ticketUpdateRequest.Description ?? ticketEntity.Description,
             TicketTypeId = ticketUpdateRequest.TicketTypeId ?? ticketEntity.TicketTypeId,
             Status = ticketUpdateRequest.Status ?? "Active",
-            ImageUrl = ticketUpdateRequest.ImageUrl ?? ticketEntity.ImageUrl,
-            Amount = ticketUpdateRequest.Amount ?? ticketEntity.Amount ?? 0,
+            ImageUrl1 = ticketUpdateRequest.ImageUrl1 ?? ticketEntity.ImageUrl1,
+            ImageUrl2 = ticketUpdateRequest.ImageUrl2 ?? ticketEntity.ImageUrl2,
+            ImageUrl3 = ticketUpdateRequest.ImageUrl3 ?? ticketEntity.ImageUrl3,
+            TotalAmount = ticketUpdateRequest.Amount ?? ticketEntity.TotalAmount ?? 0,
             SolveDate = ticketUpdateRequest.SolveDate.ConvertToDateTime() ?? ticketEntity.SolveDate,
             EmployeeId = ticketUpdateRequest.EmployeeId ?? int.Parse(User.Identity?.Name)
         };
@@ -340,7 +365,7 @@ public class TicketsController : ControllerBase
             TicketTypeId = ticketCreateRequest.TicketTypeId,
             // TODO : Auto assign to active invoice -> invoice detail if not assigned manually
             Status = "Active",
-            Amount = 0,
+            TotalAmount = 0,
             ContractId = contractId,
             EmployeeId = supervisorId
         };
@@ -365,9 +390,9 @@ public class TicketsController : ControllerBase
                 switch (counter)
                 {
                     case 1:
-                        var fileNameCheck1 = newTicket.ImageUrl?.Split('/').Last();
+                        var fileNameCheck1 = newTicket.ImageUrl1?.Split('/').Last();
 
-                        newTicket.ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
+                        newTicket.ImageUrl1 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
                             "Ticket", imageExtension, false))?.Blob.Uri;
 
                         break;
@@ -417,7 +442,7 @@ public class TicketsController : ControllerBase
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
-        if (userRole is not ("Admin" or "Supervisor") || User.Identity?.Name != id.ToString() && userRole != "Renter")
+        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
             return BadRequest(new
             {
                 status = "Bad Request",

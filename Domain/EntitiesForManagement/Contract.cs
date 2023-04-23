@@ -15,19 +15,21 @@ public class Contract
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ContractId { get; set; }
 
+    public string ContractSerialNumber { get; set; } = null!;
     public string ContractName { get; set; } = null!;
     public string Description { get; set; }
     public DateTime DateSigned { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime? EndDate { get; set; }
+    public DateTime? CancelledDate { get; set; }
     public DateTime LastUpdated { get; set; }
     public string ContractStatus { get; set; }
     [NotMapped] public IFormFile? Image { get; set; }
-    public string? ImageUrl { get; set; }
-    public string? ImageUrl2 { get; set; }
-    public string? ImageUrl3 { get; set; }
-    public string? ImageUrl4 { get; set; }
+    public string? ContractImageUrl1 { get; set; }
+    public string? ContractImageUrl2 { get; set; }
+    public string? ContractImageUrl3 { get; set; }
+    public string? ContractImageUrl4 { get; set; }
     public decimal PriceForRent { get; set; }
     public decimal PriceForWater { get; set; }
     public decimal PriceForElectricity { get; set; }

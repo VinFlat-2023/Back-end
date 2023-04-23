@@ -32,7 +32,7 @@ internal class TicketRepository : ITicketRepository
                 && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
                 && (filters.CreateDate == null || x.CreateDate == filters.CreateDate)
                 && (filters.SolveDate == null || x.SolveDate == filters.SolveDate)
-                && (filters.Amount == null || x.Amount == filters.Amount)
+                && (filters.Amount == null || x.TotalAmount == filters.Amount)
                 && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
                 && (filters.ContractId == null || x.ContractId == filters.ContractId)
                 && (filters.EmployeeId == null || x.EmployeeId == filters.EmployeeId)
@@ -66,7 +66,7 @@ internal class TicketRepository : ITicketRepository
                     (filters.Status == null || x.Status == filters.Status)
                     && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
                     && (filters.CreateDate == null || x.CreateDate == filters.CreateDate)
-                    && (filters.Amount == null || x.Amount == filters.Amount)
+                    && (filters.Amount == null || x.TotalAmount == filters.Amount)
                     && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
                     && (filters.ContractId == null || x.ContractId == filters.ContractId)
                     && (filters.EmployeeId == null || x.EmployeeId == filters.EmployeeId)
@@ -91,7 +91,7 @@ internal class TicketRepository : ITicketRepository
                     (filters.Status == null || x.Status == filters.Status)
                     && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
                     && (filters.CreateDate == null || x.CreateDate == filters.CreateDate)
-                    && (filters.Amount == null || x.Amount == filters.Amount)
+                    && (filters.Amount == null || x.TotalAmount == filters.Amount)
                     && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
                     && (filters.ContractId == null || x.ContractId == filters.ContractId)
                     && (filters.EmployeeId == null || x.EmployeeId == filters.EmployeeId)
@@ -187,7 +187,7 @@ internal class TicketRepository : ITicketRepository
         switch (number)
         {
             case 1:
-                ticketData.ImageUrl = ticket.ImageUrl;
+                ticketData.ImageUrl1 = ticket.ImageUrl1;
                 break;
             case 2:
                 ticketData.ImageUrl2 = ticket.ImageUrl2;

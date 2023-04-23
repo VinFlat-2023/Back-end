@@ -9,5 +9,4 @@ public class FeedbackUpdateRequest
     public string FeedbackTitle { get; set; } = null!;
     public string Status { get; set; } = null!;
     public DateTime CreateDate { get; set; }
-  
 }

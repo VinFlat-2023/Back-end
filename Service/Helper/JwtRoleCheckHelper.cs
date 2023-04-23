@@ -24,7 +24,7 @@ public class JwtRoleCheckHelper : IJwtRoleCheckerHelper
             return false;
 
         return roleCheck is not ("Admin" or "Supervisor")
-               || roleCheck is not "Renter" && user.Identity?.Name == id.ToString();
+               || (roleCheck is not "Renter" && user.Identity?.Name == id.ToString());
     }
 
     public async Task<bool> IsRenterRoleAuthorized(ClaimsPrincipal user)
@@ -45,8 +45,8 @@ public class JwtRoleCheckHelper : IJwtRoleCheckerHelper
             return false;
 
         return roleCheck is not ("Admin" or "Supervisor")
-               || roleCheck is not "Employee"
-               && user.Identity?.Name == id.ToString();
+               || (roleCheck is not "Employee"
+                   && user.Identity?.Name == id.ToString());
     }
 
 

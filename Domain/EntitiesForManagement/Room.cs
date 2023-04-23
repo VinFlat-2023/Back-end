@@ -7,13 +7,16 @@ namespace Domain.EntitiesForManagement;
 
 public class Room
 {
+    public Room()
+    {
+        RoomFlats = new HashSet<RoomFlat>();
+    }
+
     public int RoomId { get; set; }
     public string RoomName { get; set; } = null!;
-    public int AvailableSlots { get; set; }
-    public string? Description { get; set; } 
-    public decimal ElectricityAttribute { get; set; }
-    public decimal WaterAttribute { get; set; }
-    public string? Status { get; set; }
+    public int TotalSlot { get; set; } // Max slot, Min slot = 1
+    public string? Description { get; set; }
+    public string? Status { get; set; } // Active / Inactive
 
     [MaxUploadedFileSize(4 * 1024 * 1024)]
     [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]
@@ -21,12 +24,6 @@ public class Room
     [NotMapped]
     public IFormFile? Image { get; set; }
 
-    public string? ImageUrl { get; set; }
-    public string? ImageUrl2 { get; set; }
-    public string? ImageUrl3 { get; set; }
-    public string? ImageUrl4 { get; set; }
-    public int FlatId { get; set; }
-    public virtual Flat Flat { get; set; }
-    public int RoomTypeId { get; set; }
-    public virtual RoomType RoomType { get; set; }
+    public int BuildingId { get; set; }
+    public virtual ICollection<RoomFlat> RoomFlats { get; set; }
 }

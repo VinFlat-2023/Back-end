@@ -51,12 +51,6 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
                     break;
             }
 
-            if (obj?.CoordinateX == null)
-                ValidatorResult.Failures.Add("Toạ độ x không được để trống");
-
-            if (obj?.CoordinateY == null)
-                ValidatorResult.Failures.Add("Toạ độ y không được để trống");
-
             switch (obj?.BuildingAddress)
             {
                 case not null when string.IsNullOrWhiteSpace(obj.BuildingAddress):
@@ -141,12 +135,6 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
                     ValidatorResult.Failures.Add("Chi tiết không được vượt quá 500 ký tự");
                     break;
             }
-
-            if (obj?.CoordinateX == null)
-                ValidatorResult.Failures.Add("Toạ độ x không được để trống");
-
-            if (obj?.CoordinateY == null)
-                ValidatorResult.Failures.Add("Toạ độ y không được để trống");
 
             switch (obj?.BuildingAddress)
             {
@@ -246,12 +234,6 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
                     ValidatorResult.Failures.Add("Chi tiết toà nhà không được vượt quá 500 ký tự");
                     break;
             }
-
-            if (obj?.CoordinateX == null)
-                ValidatorResult.Failures.Add("Toạ độ x không được để trống");
-
-            if (obj?.CoordinateY == null)
-                ValidatorResult.Failures.Add("Toạ độ y không được để trống");
 
             switch (obj?.BuildingAddress)
             {

@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Renter;
@@ -46,7 +45,7 @@ public class RentersController : ControllerBase
         var employeeId = int.Parse(User.Identity?.Name);
 
         var filter = _mapper.Map<RenterFilter>(request);
-        
+
         var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
 
         switch (buildingId)
@@ -66,7 +65,7 @@ public class RentersController : ControllerBase
                     data = ""
                 });
         }
-        
+
         var entity = await _serviceWrapper.Buildings.GetBuildingById(buildingId, token);
 
         if (entity == null)
@@ -78,7 +77,7 @@ public class RentersController : ControllerBase
             });
 
         var list = await _serviceWrapper.Renters.GetRenterList(filter, buildingId, token);
-        
+
         var resultList = _mapper.Map<IEnumerable<RenterProfileEntity>>(list);
 
         if (list == null || !list.Any())

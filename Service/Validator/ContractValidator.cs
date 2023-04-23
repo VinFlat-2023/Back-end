@@ -377,6 +377,7 @@ public class ContractValidator : BaseValidator, IContractValidator
                     var room = await _conditionCheckHelper.RoomCheck(obj.RoomId, token);
                     switch (room)
                     {
+                        /*
                         case not null when room.FlatId != obj.FlatId:
                             ValidatorResult.Failures.Add("Phòng này không thuộc căn hộ");
                             break;
@@ -386,6 +387,7 @@ public class ContractValidator : BaseValidator, IContractValidator
                         case { AvailableSlots: < 0 }:
                             ValidatorResult.Failures.Add("Phòng lỗi số lượng slot, vui lòng liên hệ quản trị viên");
                             break;
+                                                    */
                     }
 
                     break;

@@ -29,12 +29,14 @@ public class ApplicationContext : DbContext
     public virtual DbSet<ServiceType> ServiceTypes { get; set; } = null!;
     public virtual DbSet<Wallet> Wallets { get; set; } = null!;
     public virtual DbSet<WalletType> WalletTypes { get; set; } = null!;
-    public virtual DbSet<Transaction> Transactions { get; set; } = null!;
     public virtual DbSet<UserDevice> UserDevices { get; set; } = null!;
     public virtual DbSet<Notification> Notifications { get; set; } = null!;
     public virtual DbSet<NotificationType> NotificationTypes { get; set; } = null!;
     public virtual DbSet<Room> Rooms { get; set; } = null!;
-    public virtual DbSet<RoomType> RoomTypes { get; set; } = null!;
+    public virtual DbSet<Utility> Utilities { get; set; } = null!;
+    public virtual DbSet<UtilitiesRoomFlat> UtilitiesRooms { get; set; } = null!;
+
+    // public virtual DbSet<RoomType> RoomTypes { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -189,7 +191,7 @@ public class ApplicationContext : DbContext
                 Phone = "0723456789",
                 Status = true,
                 RoleId = 1,
-                Address = "Admin address",
+                Address = "Admin address"
             },
             new Employee
             {
@@ -526,8 +528,7 @@ public class ApplicationContext : DbContext
                 Phone = "0485245513",
                 Status = true,
                 RoleId = 2,
-                Address = "Employee address",
-                
+                Address = "Employee address"
             },
             new Employee
             {
@@ -775,7 +776,6 @@ public class ApplicationContext : DbContext
                 CitizenNumber = "3214324523",
                 Address = "HCM",
                 Gender = "Male",
-                DeviceToken = "12321fdsg45adsa"
             },
             new Renter
             {
@@ -790,7 +790,6 @@ public class ApplicationContext : DbContext
                 CitizenNumber = "3214324523",
                 Address = "Hue",
                 Gender = "Male",
-                DeviceToken = "dsavvf"
             },
             new Renter
             {
@@ -805,7 +804,6 @@ public class ApplicationContext : DbContext
                 CitizenNumber = "3214324523",
                 Address = "DN",
                 Gender = "Female",
-                DeviceToken = "123221ad145ad423sa"
             }, new Renter
             {
                 RenterId = 4,
@@ -819,7 +817,6 @@ public class ApplicationContext : DbContext
                 CitizenNumber = "3214324523",
                 Address = "HN",
                 Gender = "Female",
-                DeviceToken = "ewasdv12344"
             }, new Renter
             {
                 RenterId = 5,
@@ -833,7 +830,6 @@ public class ApplicationContext : DbContext
                 CitizenNumber = "3214324523",
                 Address = "HCM",
                 Gender = "Male",
-                DeviceToken = "ewasdv12344"
             }, new Renter
             {
                 RenterId = 6,
@@ -847,7 +843,6 @@ public class ApplicationContext : DbContext
                 CitizenNumber = "3214324523",
                 Address = "HCM",
                 Gender = "Male",
-                DeviceToken = "ewasdv12344"
             }, new Renter
             {
                 RenterId = 7,
@@ -861,7 +856,6 @@ public class ApplicationContext : DbContext
                 CitizenNumber = "3214324523",
                 Address = "HCM",
                 Gender = "Male",
-                DeviceToken = "ewasdv12344"
             }
         );
 
@@ -870,182 +864,182 @@ public class ApplicationContext : DbContext
             {
                 AreaId = 1,
                 Name = "Quận 1",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl =
+                AreaImageUrl1 =
                     "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/PANO0002-Pano.jpg/1200px-PANO0002-Pano.jpg"
             },
             new Area
             {
                 AreaId = 2,
                 Name = "Quận 2",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl =
+                AreaImageUrl1 =
                     "https://i1-vnexpress.vnecdn.net/2022/11/17/Ve-may-bay-di-sai-gon-600x399-4356-2813-1668672299.jpg?w=0&h=0&q=100&dpr=2&fit=crop&s=8All1Mq-so56XkVbZXvdFA"
             },
             new Area
             {
                 AreaId = 3,
                 Name = "Quận 3",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl =
+                AreaImageUrl1 =
                     "https://images.pexels.com/photos/11742806/pexels-photo-11742806.jpeg?cs=srgb&dl=pexels-th%E1%BB%8Bnh-la-11742806.jpg&fm=jpg"
             },
             new Area
             {
                 AreaId = 4,
                 Name = "Quận 4",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             },
             new Area
             {
                 AreaId = 5,
                 Name = "Quận 5",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             },
             new Area
             {
                 AreaId = 6,
                 Name = "Quận 6",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             },
             new Area
             {
                 AreaId = 7,
                 Name = "Quận 7",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             },
             new Area
             {
                 AreaId = 8,
                 Name = "Quận 8",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             },
             new Area
             {
                 AreaId = 9,
                 Name = "Quận 9",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             },
             new Area
             {
                 AreaId = 10,
                 Name = "Quận 10",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             }, new Area
             {
                 AreaId = 11,
                 Name = "Quận 11",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             }, new Area
             {
                 AreaId = 12,
                 Name = "Quận 12",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             }, new Area
             {
                 AreaId = 13,
                 Name = "Quận Bình Thạnh",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             }, new Area
             {
                 AreaId = 14,
                 Name = "Quận Gò Vấp",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             }, new Area
             {
                 AreaId = 15,
                 Name = "Quận Phú Nhuận",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             }, new Area
             {
                 AreaId = 16,
                 Name = "Quận Tân Bình",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             }, new Area
             {
                 AreaId = 17,
                 Name = "Quận Tân Phú",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             }, new Area
             {
                 AreaId = 18,
                 Name = "Quận Bình Tân",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             }, new Area
             {
                 AreaId = 19,
                 Name = "Quận Nhà Bè",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             }, new Area
             {
                 AreaId = 20,
                 Name = "Quận Hóc Môn",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             }, new Area
             {
                 AreaId = 21,
                 Name = "Quận Củ Chi",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             }, new Area
             {
                 AreaId = 22,
                 Name = "Quận Cần Giờ",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             }, new Area
             {
                 AreaId = 23,
                 Name = "Quận Bình Chánh",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             }, new Area
             {
                 AreaId = 24,
                 Name = "Quận Thủ Đức",
-                Location = "HCM",
+                //Location = "HCM",
                 Status = true,
-                ImageUrl = ""
+                AreaImageUrl1 = ""
             }
         );
 
@@ -1056,11 +1050,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận 1",
                 Description = "Building 1 quận 1",
                 Status = true,
-                CoordinateX = 231,
-                CoordinateY = 324,
                 AreaId = 1,
                 EmployeeId = 1,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/6716250e-8169-446d-a54e-37094c30ae70thumbnail-202303031027054744.jpg",
                 BuildingAddress = "Quận 1",
                 BuildingPhoneNumber = "012323123",
@@ -1072,11 +1064,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận 1",
                 Description = "Building 2 quận 1",
                 Status = true,
-                CoordinateX = 21233,
-                CoordinateY = 334,
                 AreaId = 1,
                 EmployeeId = 2,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/be39f244-45d1-48cc-94dc-7e1b138caa3athumbnail-202302251636284394.jpg",
                 BuildingAddress = "Quận 1",
                 BuildingPhoneNumber = "012323123",
@@ -1088,11 +1078,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận 2",
                 Description = "Building 1 quận 2",
                 Status = true,
-                CoordinateX = 423,
-                CoordinateY = 3214,
                 AreaId = 2,
                 EmployeeId = 3,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/8a8ea225-ea25-422c-a20d-299c7ed42456thumbnail-202302041627581789.jpg",
                 BuildingAddress = "Quận 2",
                 BuildingPhoneNumber = "012323123",
@@ -1104,11 +1092,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận 2",
                 Description = "Building 2 quận 2",
                 Status = true,
-                CoordinateX = 2323,
-                CoordinateY = 314,
                 AreaId = 2,
                 EmployeeId = 4,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/69d0767f-ff29-49dc-88fc-c3bc87cba986thumbnail-202212291740189478.jpg",
                 BuildingAddress = "Quận 2",
                 BuildingPhoneNumber = "012323123",
@@ -1120,11 +1106,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận 3",
                 Description = "Building 1 quận 3",
                 Status = true,
-                CoordinateX = 23431,
-                CoordinateY = 3245,
                 AreaId = 3,
                 EmployeeId = 5,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a3f9897c-800e-4d5e-92b7-e388eefdf64bthumbnail-202212151636139810.jpg",
                 BuildingAddress = "Quận 3",
                 BuildingPhoneNumber = "012323123",
@@ -1136,11 +1120,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận 3",
                 Description = "Building 2 quận 3",
                 Status = true,
-                CoordinateX = 21233,
-                CoordinateY = 334,
                 AreaId = 3,
                 EmployeeId = 6,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 3",
                 BuildingPhoneNumber = "012323123",
@@ -1152,11 +1134,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận 4",
                 Description = "Building 1 quận 4",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 4,
                 EmployeeId = 8,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 4",
                 BuildingPhoneNumber = "012323123",
@@ -1168,11 +1148,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận 4",
                 Description = "Building 2 quận 4",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 4,
                 EmployeeId = 9,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 4",
                 BuildingPhoneNumber = "012323123",
@@ -1184,11 +1162,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận 5",
                 Description = "Building 1 quận 5",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 5,
                 EmployeeId = 10,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 5",
                 BuildingPhoneNumber = "012323123",
@@ -1201,11 +1177,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận 5",
                 Description = "Building 2 quận 5",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 5,
                 EmployeeId = 11,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 5",
                 BuildingPhoneNumber = "012323123",
@@ -1218,11 +1192,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận 6",
                 Description = "Building 1 quận 6",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 6,
                 EmployeeId = 12,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 6",
                 BuildingPhoneNumber = "012323123",
@@ -1235,11 +1207,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận 6",
                 Description = "Building 2 quận 6",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 6,
                 EmployeeId = 13,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 6",
                 BuildingPhoneNumber = "012323123",
@@ -1252,11 +1222,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận 7",
                 Description = "Building 1 quận 7",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 7,
                 EmployeeId = 14,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 7",
                 BuildingPhoneNumber = "012323123",
@@ -1269,11 +1237,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận 7",
                 Description = "Building 2 quận 7",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 7,
                 EmployeeId = 15,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 7",
                 BuildingPhoneNumber = "012323123",
@@ -1286,11 +1252,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận 8",
                 Description = "Building 1 quận 8",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 8,
                 EmployeeId = 16,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 8",
                 BuildingPhoneNumber = "012323123",
@@ -1303,11 +1267,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận 8",
                 Description = "Building 2 quận 8",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 8,
                 EmployeeId = 17,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 8",
                 BuildingPhoneNumber = "012323123",
@@ -1320,11 +1282,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận 9",
                 Description = "Building 1 quận 9",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 9,
                 EmployeeId = 18,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 9",
                 BuildingPhoneNumber = "012323123",
@@ -1337,11 +1297,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận 9",
                 Description = "Building 2 quận 9",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 9,
                 EmployeeId = 19,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 9",
                 BuildingPhoneNumber = "012323123",
@@ -1354,11 +1312,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận 10",
                 Description = "Building 1 quận 10",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 10,
                 EmployeeId = 20,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 9",
                 BuildingPhoneNumber = "012323123",
@@ -1371,11 +1327,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận 10",
                 Description = "Building 2 quận 10",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 10,
                 EmployeeId = 21,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 10",
                 BuildingPhoneNumber = "012323123",
@@ -1388,11 +1342,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận 11",
                 Description = "Building 1 quận 11",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 11,
                 EmployeeId = 22,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 10",
                 BuildingPhoneNumber = "012323123",
@@ -1405,11 +1357,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận 11",
                 Description = "Building 2 quận 11",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 11,
                 EmployeeId = 23,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 11",
                 BuildingPhoneNumber = "012323123",
@@ -1422,11 +1372,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận 12",
                 Description = "Building 1 quận 12",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 12,
                 EmployeeId = 24,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 12",
                 BuildingPhoneNumber = "012323123",
@@ -1439,11 +1387,9 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận 12",
                 Description = "Building 2 quận 12",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
                 AreaId = 12,
                 EmployeeId = 25,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 12",
                 BuildingPhoneNumber = "012323123",
@@ -1456,11 +1402,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận Bình Thạnh",
                 Description = "Building 1 quận Bình Thạnh",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 13,
                 EmployeeId = 26,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Bình Thạnh",
                 BuildingPhoneNumber = "012323123",
@@ -1472,11 +1417,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận Bình Thanh",
                 Description = "Building 2 quận Bình Thanh",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 13,
                 EmployeeId = 27,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Bình Thanh",
                 BuildingPhoneNumber = "012323123",
@@ -1489,11 +1433,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận Gò Vấp",
                 Description = "Building 1 quận Gò Vấp",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 14,
                 EmployeeId = 28,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 3",
                 BuildingPhoneNumber = "012323123",
@@ -1506,11 +1449,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận Gò Vấp",
                 Description = "Building 1 quận Gò Vấp",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 14,
                 EmployeeId = 29,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 3",
                 BuildingPhoneNumber = "012323123",
@@ -1523,11 +1465,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận Phú Nhuận",
                 Description = "Building 1 quận Phú Nhuận",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 15,
                 EmployeeId = 30,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Phú Nhuận",
                 BuildingPhoneNumber = "012323123",
@@ -1539,11 +1480,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận Phú Nhuận",
                 Description = "Building 2 quận Phú Nhuận",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 15,
                 EmployeeId = 31,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Phú Nhuận",
                 BuildingPhoneNumber = "012323123",
@@ -1555,11 +1495,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận Tân Bình",
                 Description = "Building 1 quận Tân Bình",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 16,
                 EmployeeId = 32,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Tân Bình",
                 BuildingPhoneNumber = "012323123",
@@ -1572,11 +1511,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận Tân Bình",
                 Description = "Building 2 quận Tân Bình",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 16,
                 EmployeeId = 33,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Tân Bình",
                 BuildingPhoneNumber = "012323123",
@@ -1588,11 +1526,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận Tân Phú",
                 Description = "Building 1 quận Tân Phú",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 17,
                 EmployeeId = 34,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Tân Phú",
                 BuildingPhoneNumber = "012323123",
@@ -1604,11 +1541,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận Tân Phú",
                 Description = "Building 2 quận Tân Phú",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 17,
                 EmployeeId = 35,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Tân Phú",
                 BuildingPhoneNumber = "012323123",
@@ -1620,11 +1556,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận Bình Tân",
                 Description = "Building 1 quận Bình Tân",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 18,
                 EmployeeId = 36,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Bình Tân",
                 BuildingPhoneNumber = "012323123",
@@ -1636,11 +1571,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận Bình Tân",
                 Description = "Building 2 quận Bình Tân",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 18,
                 EmployeeId = 37,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Bình Tân",
                 BuildingPhoneNumber = "012323123",
@@ -1652,11 +1586,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận Nhà Bè",
                 Description = "Building 1 quận Nhà Bè",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 19,
                 EmployeeId = 38,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận 3",
                 BuildingPhoneNumber = "012323123",
@@ -1668,11 +1601,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận Nhà Bè",
                 Description = "Building 2 quận Nhà Bè",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 19,
                 EmployeeId = 39,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Nhà Bè",
                 BuildingPhoneNumber = "012323123",
@@ -1684,11 +1616,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận Hóc Môn",
                 Description = "Building 1 quận Hóc Môn",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 20,
                 EmployeeId = 40,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Hóc Môn",
                 BuildingPhoneNumber = "012323123",
@@ -1700,11 +1631,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận Hóc Môn",
                 Description = "Building 2 quận Hóc Môn",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 20,
                 EmployeeId = 41,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Hóc Môn",
                 BuildingPhoneNumber = "012323123",
@@ -1716,11 +1646,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận Củ Chi",
                 Description = "Building 1 quận Củ Chi",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 21,
                 EmployeeId = 42,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Củ Chi",
                 BuildingPhoneNumber = "012323123",
@@ -1732,11 +1661,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận Củ Chi",
                 Description = "Building 2 quận Củ Chi",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 21,
                 EmployeeId = 43,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Củ Chi",
                 BuildingPhoneNumber = "012323123",
@@ -1748,11 +1676,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận Cần Giờ",
                 Description = "Building 1 quận Cần Giờ",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 22,
                 EmployeeId = 44,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Cần Giờ",
                 BuildingPhoneNumber = "012323123",
@@ -1764,11 +1691,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận Cần Giờ",
                 Description = "Building 2 quận Cần Giờ",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 22,
                 EmployeeId = 45,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Cần Giờ",
                 BuildingPhoneNumber = "012323123",
@@ -1780,11 +1706,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận Bình Chánh",
                 Description = "Building 1 quận Bình Chánh",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 23,
                 EmployeeId = 46,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Bình Chánh",
                 BuildingPhoneNumber = "012323123",
@@ -1795,11 +1720,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận Bình Chánh",
                 Description = "Building 2 quận Bình Chánh",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 23,
                 EmployeeId = 47,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Bình Chánh",
                 BuildingPhoneNumber = "012323123",
@@ -1811,11 +1735,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 1 quận Thủ Đức",
                 Description = "Building 1 quận Thủ Đức",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 24,
                 EmployeeId = 46,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Thủ Đức",
                 BuildingPhoneNumber = "012323123",
@@ -1826,11 +1749,10 @@ public class ApplicationContext : DbContext
                 BuildingName = "Building 2 quận Thủ Đức",
                 Description = "Building 2 quận Thủ Đức",
                 Status = true,
-                CoordinateX = 212333,
-                CoordinateY = 3344,
+
                 AreaId = 24,
                 EmployeeId = 47,
-                ImageUrl =
+                BuildingImageUrl1 =
                     "https://vinflat.blob.core.windows.net/building-image/a040d02d-634a-4206-88a5-10fbbc1482f7image7.jpg",
                 BuildingAddress = "Quận Thủ Đức",
                 BuildingPhoneNumber = "012323123",
@@ -1904,17 +1826,38 @@ public class ApplicationContext : DbContext
             }
         );
 
-        modelBuilder.Entity<UtilitiesFlat>().HasData(
-            new UtilitiesFlat
+        modelBuilder.Entity<RoomFlat>().HasData(
+            new RoomFlat
             {
-                UtilitiesFlatId = 1,
+                RoomFlatId = 1,
+                RoomId = 1,
                 FlatId = 1,
+                AvailableSlots = 5,
+                ElectricityAttribute = 1,
+                WaterAttribute = 1
+            },
+            new RoomFlat
+            {
+                RoomFlatId = 2,
+                RoomId = 2,
+                FlatId = 2,
+                AvailableSlots = 5,
+                ElectricityAttribute = 1,
+                WaterAttribute = 1
+            }
+        );
+
+        modelBuilder.Entity<UtilitiesRoomFlat>().HasData(
+            new UtilitiesRoomFlat
+            {
+                UtilitiesRoomFlatId = 1,
+                RoomFlatId = 1,
                 UtilityId = 1
             },
-            new UtilitiesFlat
+            new UtilitiesRoomFlat
             {
-                UtilitiesFlatId = 2,
-                FlatId = 1,
+                UtilitiesRoomFlatId = 2,
+                RoomFlatId = 2,
                 UtilityId = 2
             }
         );
@@ -1979,45 +1922,45 @@ public class ApplicationContext : DbContext
             new Room
             {
                 RoomId = 1,
-                RoomName = "Room 1 for flat 1",
-                AvailableSlots = 2,
-                RoomTypeId = 1,
-                FlatId = 1,
+                RoomName = "Room 1 with 4 slots",
+                TotalSlot = 4,
+                //FlatId = 1,
+                BuildingId = 3,
                 Status = "Ok",
-                Description = "sadasdasd",
+                Description = "ABCDEF"
             },
             new Room
             {
                 RoomId = 2,
-                RoomName = "Room 1 for flat 3",
-                AvailableSlots = 1,
-                RoomTypeId = 1,
-                FlatId = 3,
-                Status = "Ok",         
-                Description = "sadasdasd",
+                RoomName = "Room 1 for 5 slots",
+                TotalSlot = 5,
+                //FlatId = 2,
+                BuildingId = 3,
+                Status = "Ok",
+                Description = "ABCDEF"
             },
             new Room
             {
                 RoomId = 3,
-                RoomName = "Room 2 for flat 3",
-                AvailableSlots = 2,
-                RoomTypeId = 2,
-                FlatId = 3,
+                RoomName = "Room 2 for 6 slots",
+                TotalSlot = 5,
+                //FlatId = 3,
+                BuildingId = 3,
                 Status = "Ok",
-                Description = "sadasdasd",
+                Description = "ABCDEF"
             },
             new Room
             {
                 RoomId = 4,
                 RoomName = "Room 3 for flat 3",
-                AvailableSlots = 2,
-                RoomTypeId = 3,
-                FlatId = 3,
+                //FlatId = 3,
+                BuildingId = 3,
                 Status = "Ok",
-                Description = "sadasdasd",
+                Description = "ABCDEF"
             }
         );
 
+        /*
         modelBuilder.Entity<RoomType>().HasData(
             new RoomType
             {
@@ -2044,6 +1987,7 @@ public class ApplicationContext : DbContext
                 BuildingId = 5
             }
         );
+        */
 
         modelBuilder.Entity<TicketType>().HasData(
             new TicketType
@@ -2159,7 +2103,7 @@ public class ApplicationContext : DbContext
             new ServiceEntity
             {
                 ServiceId = 1,
-                Name = "Cung cấp nước 1",
+                Name = "Lau dọn phòng",
                 Description = "Cung cấp nước 1",
                 Status = true,
                 Amount = 0,
@@ -2169,7 +2113,7 @@ public class ApplicationContext : DbContext
             new ServiceEntity
             {
                 ServiceId = 2,
-                Name = "Cung cấp nước 2",
+                Name = "Thay cầu nước",
                 Description = "Cung cấp nước 2 ",
                 Status = true,
                 Amount = 0,
@@ -2179,7 +2123,7 @@ public class ApplicationContext : DbContext
             new ServiceEntity
             {
                 ServiceId = 3,
-                Name = "Cung cấp nước 3",
+                Name = "Khai thanh toán",
                 Description = "Cung cấp nước 3",
                 Status = true,
                 Amount = 0,
@@ -2189,7 +2133,7 @@ public class ApplicationContext : DbContext
             new ServiceEntity
             {
                 ServiceId = 4,
-                Name = "Cung cấp 4 cho toa nha 3",
+                Name = "Xe đưa đón",
                 Description = "Cung cấp 4 cho toa nha 3",
                 Status = true,
                 Amount = 0,
@@ -2200,7 +2144,7 @@ public class ApplicationContext : DbContext
             new ServiceEntity
             {
                 ServiceId = 5,
-                Name = "Cung cấp 5 cho toa nha 3",
+                Name = "Dọn dẹp",
                 Description = "Cung cấp 5 cho toa nha 3",
                 Status = true,
                 Amount = 0,
@@ -2211,7 +2155,7 @@ public class ApplicationContext : DbContext
             new ServiceEntity
             {
                 ServiceId = 6,
-                Name = "Cung cấp 6 cho toa nha 3",
+                Name = "Chuyển vat tu",
                 Description = "Cung cấp 6 cho toa nha 3",
                 Status = true,
                 Amount = 0,
@@ -2260,7 +2204,7 @@ public class ApplicationContext : DbContext
             {
                 InvoiceId = 1,
                 Name = "Hoá đơn điện tử cho renter 1",
-                Amount = 0,
+                TotalAmount = 0,
                 Status = true,
                 Detail = "Detail for invoice 1",
                 CreatedTime = DateTime.UtcNow,
@@ -2272,7 +2216,7 @@ public class ApplicationContext : DbContext
             {
                 InvoiceId = 2,
                 Name = "Hoá đơn điện tử cho renter 2",
-                Amount = 0,
+                TotalAmount = 0,
                 Status = true,
                 Detail = "Detail for invoice 2",
                 CreatedTime = DateTime.UtcNow,
@@ -2284,10 +2228,11 @@ public class ApplicationContext : DbContext
             {
                 InvoiceId = 3,
                 Name = "Hoá đơn điện tử cho renter 3",
-                Amount = 0,
+                TotalAmount = 0,
                 Status = false,
                 Detail = "Detail for invoice 3",
                 CreatedTime = DateTime.UtcNow,
+                DueDate = DateTime.UtcNow.AddDays(30),
                 RenterId = 3,
                 EmployeeId = 4,
                 InvoiceTypeId = 1
@@ -2296,10 +2241,12 @@ public class ApplicationContext : DbContext
             {
                 InvoiceId = 4,
                 Name = "Hoá đơn điện tử cho renter 3 (2)",
-                Amount = 0,
-                Status = false,
+                TotalAmount = 0,
+                Status = true,
                 Detail = "Detail for invoice 3 (2)",
-                CreatedTime = DateTime.UtcNow,
+                CreatedTime = DateTime.UtcNow.AddMonths(-4),
+                DueDate = DateTime.UtcNow.AddDays(-92),
+                PaymentTime = DateTime.UtcNow.AddDays(-94),
                 RenterId = 3,
                 EmployeeId = 2,
                 InvoiceTypeId = 1
@@ -2308,10 +2255,12 @@ public class ApplicationContext : DbContext
             {
                 InvoiceId = 5,
                 Name = "Hoá đơn điện tử cho renter 3 (3)",
-                Amount = 0,
-                Status = false,
+                TotalAmount = 0,
+                Status = true,
                 Detail = "Detail for invoice 3 (3)",
-                CreatedTime = DateTime.UtcNow,
+                CreatedTime = DateTime.UtcNow.AddMonths(-3),
+                DueDate = DateTime.UtcNow.AddDays(-72),
+                PaymentTime = DateTime.UtcNow.AddDays(-74),
                 RenterId = 3,
                 EmployeeId = 2,
                 InvoiceTypeId = 1
@@ -2320,10 +2269,12 @@ public class ApplicationContext : DbContext
             {
                 InvoiceId = 6,
                 Name = "Hoá đơn điện tử cho renter 3 (4)",
-                Amount = 0,
+                TotalAmount = 0,
                 Status = true,
                 Detail = "Detail for invoice 3 (4)",
-                CreatedTime = DateTime.UtcNow,
+                CreatedTime = DateTime.UtcNow.AddMonths(-1),
+                DueDate = DateTime.UtcNow.AddDays(-12),
+                PaymentTime = DateTime.UtcNow.AddDays(-14),
                 RenterId = 3,
                 EmployeeId = 2,
                 InvoiceTypeId = 1
@@ -2332,10 +2283,12 @@ public class ApplicationContext : DbContext
             {
                 InvoiceId = 7,
                 Name = "Hoá đơn điện tử cho renter 3 (5)",
-                Amount = 0,
+                TotalAmount = 0,
                 Status = true,
                 Detail = "Detail for invoice 3 (5)",
-                CreatedTime = DateTime.UtcNow,
+                CreatedTime = DateTime.UtcNow.AddMonths(-2),
+                DueDate = DateTime.UtcNow.AddDays(-42),
+                PaymentTime = DateTime.UtcNow.AddDays(-44),
                 RenterId = 3,
                 EmployeeId = 2,
                 InvoiceTypeId = 1
@@ -2460,6 +2413,7 @@ public class ApplicationContext : DbContext
                 new Contract
                 {
                     ContractId = 1,
+                    ContractSerialNumber = "VF-0001",
                     ContractName = "Contract for renter 1",
                     DateSigned = DateTime.UtcNow - TimeSpan.FromDays(30),
                     StartDate = DateTime.UtcNow - TimeSpan.FromDays(25),
@@ -2468,16 +2422,24 @@ public class ApplicationContext : DbContext
                     ContractStatus = "Active",
                     PriceForRent = 1800000,
                     RenterId = 1,
-                    BuildingId = 1,
+                    BuildingId = 3,
                     Description = "Contract description for renter 1",
-                    ImageUrl = "No image",
-                    FlatId = 2,
-                    RoomId = 1
+                    ContractImageUrl1 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    ContractImageUrl2 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    ContractImageUrl3 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    ContractImageUrl4 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    FlatId = 3,
+                    RoomId = 3
                 },
                 new Contract
                 {
                     ContractId = 2,
                     ContractName = "Contract for renter 2",
+                    ContractSerialNumber = "VF-0002",
                     DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
                     StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
                     EndDate = null,
@@ -2485,16 +2447,24 @@ public class ApplicationContext : DbContext
                     ContractStatus = "Active",
                     PriceForRent = 2800000,
                     RenterId = 2,
-                    BuildingId = 2,
+                    BuildingId = 3,
                     Description = "Contract description for renter 2",
-                    ImageUrl = "No image",
+                    ContractImageUrl1 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    ContractImageUrl2 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    ContractImageUrl3 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    ContractImageUrl4 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                     FlatId = 3,
-                    RoomId = 1
+                    RoomId = 3
                 },
                 new Contract
                 {
                     ContractId = 3,
                     ContractName = "Contract for renter 3",
+                    ContractSerialNumber = "VF-0003",
                     DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
                     StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
                     EndDate = null,
@@ -2507,14 +2477,22 @@ public class ApplicationContext : DbContext
                     RenterId = 3,
                     BuildingId = 3,
                     Description = "Contract description for renter 3",
-                    ImageUrl = "No image",
+                    ContractImageUrl1 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    ContractImageUrl2 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    ContractImageUrl3 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    ContractImageUrl4 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                     FlatId = 3,
-                    RoomId = 2
+                    RoomId = 3
                 },
                 new Contract
                 {
                     ContractId = 4,
                     ContractName = "Contract for renter 3 (2)",
+                    ContractSerialNumber = "VF-0004",
                     DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
                     StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
                     EndDate = null,
@@ -2527,14 +2505,22 @@ public class ApplicationContext : DbContext
                     RenterId = 3,
                     BuildingId = 3,
                     Description = "Contract description for renter 3",
-                    ImageUrl = "No image",
-                    FlatId = 4,
-                    RoomId = 1
+                    ContractImageUrl1 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    ContractImageUrl2 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    ContractImageUrl3 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    ContractImageUrl4 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    FlatId = 3,
+                    RoomId = 2
                 },
                 new Contract
                 {
                     ContractId = 5,
                     ContractName = "Contract for renter 3 (3)",
+                    ContractSerialNumber = "VF-0005",
                     DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
                     StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
                     EndDate = null,
@@ -2547,7 +2533,14 @@ public class ApplicationContext : DbContext
                     RenterId = 3,
                     BuildingId = 3,
                     Description = "Contract description for renter 3",
-                    ImageUrl = "No image",
+                    ContractImageUrl1 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    ContractImageUrl2 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    ContractImageUrl3 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    ContractImageUrl4 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                     FlatId = 3,
                     RoomId = 2
                 },
@@ -2555,6 +2548,7 @@ public class ApplicationContext : DbContext
                 {
                     ContractId = 6,
                     ContractName = "Contract for renter 3 (4)",
+                    ContractSerialNumber = "VF-0006",
                     DateSigned = DateTime.UtcNow - TimeSpan.FromDays(29),
                     StartDate = DateTime.UtcNow - TimeSpan.FromDays(27),
                     EndDate = null,
@@ -2567,7 +2561,10 @@ public class ApplicationContext : DbContext
                     RenterId = 3,
                     BuildingId = 3,
                     Description = "Contract description for renter 3",
-                    ImageUrl = "No image",
+                    ContractImageUrl1 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
+                    ContractImageUrl2 =
+                        "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                     FlatId = 3,
                     RoomId = 2
                 }

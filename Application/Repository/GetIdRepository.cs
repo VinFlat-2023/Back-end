@@ -43,6 +43,7 @@ public class GetIdRepository : IGetIdRepository
             .FirstOrDefaultAsync(token);
     }
 
+    /*
     public async Task<int> GetRoomIdBasedOnFlatId(int flatId, CancellationToken token)
     {
         return await _context.Rooms
@@ -50,6 +51,7 @@ public class GetIdRepository : IGetIdRepository
             .Select(x => x.RoomId)
             .FirstOrDefaultAsync(token);
     }
+    */
 
     public async Task<int> GetBuildingIdBasedOnSupervisorId(int employeeId, CancellationToken token)
     {
@@ -74,7 +76,7 @@ public class GetIdRepository : IGetIdRepository
         var building = await _context.Employees
             .Where(x => x.EmployeeId == technicianId && x.Status == true)
             .Select(x => x.TechnicianBuildingId)
-            .FirstOrDefaultAsync(cancellationToken: token);
+            .FirstOrDefaultAsync(token);
         if (building == 0 || building == null)
             return 0;
         return building.Value;

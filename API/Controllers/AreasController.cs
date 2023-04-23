@@ -102,12 +102,12 @@ public class AreasController : ControllerBase
         {
             AreaId = id,
             Name = area.Name,
-            Location = area.Location,
+            //Location = area.Location,
             Status = area.Status,
-            ImageUrl = area.ImageUrl,
-            ImageUrl2 = area.ImageUrl2,
-            ImageUrl3 = area.ImageUrl3,
-            ImageUrl4 = area.ImageUrl4
+            AreaImageUrl1 = area.ImageUrl,
+            AreaImageUrl2 = area.ImageUrl2,
+            AreaImageUrl3 = area.ImageUrl3,
+            AreaImageUrl4 = area.ImageUrl4
         };
 
         var result = await _serviceWrapper.Areas.UpdateArea(updateArea);
@@ -149,12 +149,12 @@ public class AreasController : ControllerBase
         var newArea = new Area
         {
             Name = area.Name,
-            Location = area.Location,
+            //Location = area.Location,
             Status = area.Status,
-            ImageUrl = area.ImageUrl,
-            ImageUrl2 = area.ImageUrl2,
-            ImageUrl3 = area.ImageUrl3,
-            ImageUrl4 = area.ImageUrl4
+            AreaImageUrl1 = area.ImageUrl,
+            AreaImageUrl2 = area.ImageUrl2,
+            AreaImageUrl3 = area.ImageUrl3,
+            AreaImageUrl4 = area.ImageUrl4
         };
 
         var result = await _serviceWrapper.Areas.AddArea(newArea);
@@ -166,7 +166,7 @@ public class AreasController : ControllerBase
                 message = "Tạo khu vực không thành công",
                 data = ""
             });
-        
+
         return Ok(new
         {
             status = "Success",

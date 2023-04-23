@@ -16,21 +16,6 @@ public class RenterRepository : IRenterRepository
         _context = context;
     }
 
-    public IQueryable<Renter> GetRenterList(RenterFilter filters)
-    {
-        return _context.Renters
-            // Filter starts here
-            .Where(x =>
-                (filters.Username == null || x.Username.ToLower().Contains(filters.Username.ToLower()))
-                && (filters.Status == null || x.Status == filters.Status)
-                && (filters.Address == null || x.Address.ToLower().Contains(filters.Address.ToLower()))
-                && (filters.Phone == null || x.Phone.Contains(filters.Phone))
-                && (filters.Email == null || x.Email.ToLower().Contains(filters.Email.ToLower()))
-                && (filters.Gender == null || x.Gender == filters.Gender)
-                && (filters.FullName == null || x.FullName.ToLower().Contains(filters.FullName.ToLower())))
-            .AsNoTracking();
-    }
-
     public IQueryable<Renter> GetRenterList(RenterFilter filter, int buildingId)
     {
         throw new NotImplementedException();
@@ -341,5 +326,20 @@ public class RenterRepository : IRenterRepository
             $"\n\nGetRenterWithActiveContract=========\nNum of renters with contracts: {renters.Count()}");
         foreach (var renter in renters) Console.WriteLine(renter.Username);
         return renters;
+    }
+
+    public IQueryable<Renter> GetRenterList(RenterFilter filters)
+    {
+        return _context.Renters
+            // Filter starts here
+            .Where(x =>
+                (filters.Username == null || x.Username.ToLower().Contains(filters.Username.ToLower()))
+                && (filters.Status == null || x.Status == filters.Status)
+                && (filters.Address == null || x.Address.ToLower().Contains(filters.Address.ToLower()))
+                && (filters.Phone == null || x.Phone.Contains(filters.Phone))
+                && (filters.Email == null || x.Email.ToLower().Contains(filters.Email.ToLower()))
+                && (filters.Gender == null || x.Gender == filters.Gender)
+                && (filters.FullName == null || x.FullName.ToLower().Contains(filters.FullName.ToLower())))
+            .AsNoTracking();
     }
 }
