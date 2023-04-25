@@ -53,6 +53,37 @@ public class TicketService : ITicketService
         return pagedList;
     }
 
+    public async Task<PagedList<Ticket>?> GetTicketList(TicketFilter filters, int buildingId, CancellationToken token)
+    {
+        var queryable = _repositoryWrapper.Tickets.GetTicketList(filters, buildingId);
+
+        if (!queryable.Any())
+            return null;
+
+        var page = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var size = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
+        var pagedList = await PagedList<Ticket>
+            .Create(queryable, page, size, token);
+
+        return pagedList;
+    }
+
+    public async Task<RepositoryResponse> ApproveTicket(int id, CancellationToken token)
+    {
+        return await _repositoryWrapper.Tickets.ApproveTicket(id, token);
+    }
+
+    public async Task<RepositoryResponse> AcceptTicket(int ticketId, int userId, CancellationToken token)
+    {
+        return await _repositoryWrapper.Tickets.AcceptTicket(ticketId, userId, token);
+    }
+
+    public async Task<RepositoryResponse> SolveTicket(int ticketId, CancellationToken token)
+    {
+        return await _repositoryWrapper.Tickets.SolveTicket(ticketId, token);
+    }
+
     public async Task<Ticket?> GetTicketById(int? ticketId, CancellationToken cancellationToken)
     {
         return await _repositoryWrapper.Tickets.GetTicketDetail(ticketId)

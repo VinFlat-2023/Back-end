@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Invoice;
 using Domain.EntityRequest.InvoiceType;
@@ -32,31 +33,78 @@ public class InvoicesController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice list (For management)")]
+    [Authorize(Roles = "Renter, Supervisor")]
     [HttpGet]
     // [Authorize(Roles = "Admin, Supervisor")]
     public async Task<IActionResult> GetInvoices([FromQuery] InvoiceFilterRequest request, CancellationToken token)
     {
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
+        var userId = int.Parse(User.Identity.Name);
+
         var filter = _mapper.Map<InvoiceFilter>(request);
 
-        var list = await _serviceWrapper.Invoices.GetInvoiceList(filter, token);
-
-        var resultList = _mapper.Map<IEnumerable<InvoiceRenterDetailEntity>>(list);
-
-        if (list == null || !list.Any())
-            return NotFound(new
-            {
-                status = "Bad Request",
-                message = "List is empty",
-                data = ""
-            });
-
-        return Ok(new
+        switch (userRole)
         {
-            status = "Success",
-            message = "List found",
-            data = resultList,
-            totalPage = list.TotalPages,
-            totalCount = list.TotalCount
+            case "Supervisor":
+                var supervisorList = await _serviceWrapper.Invoices.GetInvoiceList(filter, userId, true, token);
+
+                if (supervisorList == null || !supervisorList.Any())
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "Danh sách hoá đơn trống",
+                        data = ""
+                    });
+
+                var resultSupervisorList = _mapper.Map<IEnumerable<InvoiceRenterDetailEntity>>(supervisorList);
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "Hiển thị danh sách",
+                    data = resultSupervisorList,
+                    totalPage = supervisorList.TotalPages,
+                    totalCount = supervisorList.TotalCount
+                });
+            case "Renter":
+                var renterList = await _serviceWrapper.Invoices.GetInvoiceList(filter, userId, false, token);
+
+                if (renterList == null || !renterList.Any())
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "Danh sách hoá đơn trống",
+                        data = ""
+                    });
+
+                var resulRenterList = _mapper.Map<IEnumerable<InvoiceRenterDetailEntity>>(renterList);
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "Hiển thị danh sách",
+                    data = resulRenterList,
+                    totalPage = renterList.TotalPages,
+                    totalCount = renterList.TotalCount
+                });
+            case null:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "No user logged in",
+                    data = ""
+                });
+        }
+
+        return BadRequest(new
+        {
+            status = "Bad Request",
+            message = "Bad request with invoice controller !!!",
+            data = ""
         });
     }
 
@@ -150,14 +198,14 @@ public class InvoicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "No invoice list found",
+                message = "Hiển thị danh sách",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "List found",
+            message = "Hiển thị danh sách",
             data = resultList,
             totalPage = list.TotalPages,
             totalCount = list.TotalCount
@@ -190,14 +238,14 @@ public class InvoicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "No invoice list found",
+                message = "Hiển thị danh sách",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "List found",
+            message = "Hiển thị danh sách",
             data = resultList,
             totalPage = list.TotalPages,
             totalCount = list.TotalCount
@@ -231,14 +279,14 @@ public class InvoicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "No invoice list found",
+                message = "Hiển thị danh sách",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "List found",
+            message = "Hiển thị danh sách",
             data = resultList,
             totalPage = list.TotalPages,
             totalCount = list.TotalCount
@@ -452,7 +500,7 @@ public class InvoicesController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "List found",
+            message = "Hiển thị danh sách",
             data = resultList,
             totalPage = list.TotalPages,
             totalCount = list.TotalCount
@@ -625,7 +673,7 @@ public class InvoicesController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "List found",
+            message = "Hiển thị danh sách",
             data = resultList,
             totalPage = list.TotalPages,
             totalCount = list.TotalCount

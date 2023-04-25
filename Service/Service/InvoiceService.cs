@@ -36,6 +36,23 @@ public class InvoiceService : IInvoiceService
         return pagedList;
     }
 
+    public async Task<PagedList<Invoice>?> GetInvoiceList(InvoiceFilter filters, int userId, bool isManagement,
+        CancellationToken token)
+    {
+        var queryable = _repositoryWrapper.Invoices.GetInvoiceList(filters, userId, isManagement);
+
+        if (!queryable.Any())
+            return null;
+
+        var page = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var size = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
+        var pagedList = await PagedList<Invoice>
+            .Create(queryable, page, size, token);
+
+        return pagedList;
+    }
+
     public async Task<Invoice?> GetInvoiceById(int? invoiceId, CancellationToken token)
     {
         return await _repositoryWrapper.Invoices.GetInvoiceDetail(invoiceId, token);

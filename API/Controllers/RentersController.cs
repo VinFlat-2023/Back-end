@@ -157,7 +157,7 @@ public class RentersController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "This user does not exist in our system",
+                message = "Người dùng không tồn tại hoặc không phải là khách thuê",
                 data = ""
             });
 
@@ -167,11 +167,13 @@ public class RentersController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "This renter does not exist in our system",
+                message = "Người dùng này hiện tại không có hợp đồng nào hoặc đang thuê",
                 data = ""
             });
 
-        var contract = await _serviceWrapper.Contracts.GetContractByIdWithActiveStatus(rentalCheck.RenterId, token);
+        var contract = await _serviceWrapper.Contracts
+            .GetContractByRenterIdWithActiveStatus(rentalCheck.RenterId, token);
+
         if (contract == null)
             return NotFound(new
             {
@@ -283,7 +285,8 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
-        var contract = await _serviceWrapper.Contracts.GetContractByIdWithActiveStatus(rentalCheck.RenterId, token);
+        var contract =
+            await _serviceWrapper.Contracts.GetContractByRenterIdWithActiveStatus(rentalCheck.RenterId, token);
         if (contract == null)
             return NotFound(new
             {
@@ -317,7 +320,7 @@ public class RentersController : ControllerBase
             BuildingName = building.BuildingName,
             FlatId = flatCheck.FlatId,
             FlatName = flatCheck.Name,
-            RoomId = contract.RoomId
+            RoomFlatId = contract.RoomFlatId
         };
 
         return Ok(new

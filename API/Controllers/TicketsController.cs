@@ -35,7 +35,7 @@ public class TicketsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Technician, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get ticket list with pagination and filter (For management and renter)")]
     public async Task<IActionResult> GetTickets([FromQuery] TicketFilterRequest ticketFilterRequest,
         CancellationToken token)
@@ -67,33 +67,102 @@ public class TicketsController : ControllerBase
                 return Ok(new
                 {
                     status = "Success",
-                    message = "List found",
+                    message = "Hiển thị danh sách",
                     data = resultList,
                     totalPage = list.TotalPages,
                     totalCount = list.TotalCount
                 });
 
-            case "Supervisor":
-                var supervisorTicketList =
-                    await _serviceWrapper.Tickets.GetTicketList(filter, userId, true, token);
+            case "Supervisor" or "Technician":
 
-                if (supervisorTicketList == null)
-                    return NotFound(new
-                    {
-                        status = "Not Found",
-                        message = "No ticket list found for this management",
-                        data = ""
-                    });
-
-                var supervisorTicketListReturn = _mapper.Map<IEnumerable<TicketDetailEntity>>(supervisorTicketList);
-
-                return Ok(new
+                if (userRole.ToLower() == "Supervisor".ToLower())
                 {
-                    status = "Success",
-                    message = "List found",
-                    data = supervisorTicketListReturn,
-                    totalPage = supervisorTicketList.TotalPages,
-                    totalCount = supervisorTicketList.TotalCount
+                    var buildingIdBasedOnSupervisor =
+                        await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+                    switch (buildingIdBasedOnSupervisor)
+                    {
+                        case -2:
+                            return BadRequest(new
+                            {
+                                status = "Bad Request",
+                                message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                                data = ""
+                            });
+                        case -1:
+                            return NotFound(new
+                            {
+                                status = "Not Found",
+                                message = "Người quản lý không quản lý tòa nhà nào",
+                                data = ""
+                            });
+                    }
+
+                    var supervisorTicketList =
+                        await _serviceWrapper.Tickets.GetTicketList(filter, buildingIdBasedOnSupervisor, token);
+
+                    if (supervisorTicketList == null)
+                        return NotFound(new
+                        {
+                            status = "Not Found",
+                            message = "Không có danh sách phiếu",
+                            data = ""
+                        });
+
+                    var supervisorTicketListReturn = _mapper.Map<IEnumerable<TicketDetailEntity>>(supervisorTicketList);
+
+                    return Ok(new
+                    {
+                        status = "Success",
+                        message = "Hiện thị danh sách",
+                        data = supervisorTicketListReturn,
+                        totalPage = supervisorTicketList.TotalPages,
+                        totalCount = supervisorTicketList.TotalCount
+                    });
+                }
+
+                if (userRole.ToLower() == "Technician".ToLower())
+                {
+                    var buildingIdTechnician =
+                        await _serviceWrapper.GetId.GetBuildingIdBasedOnTechnicianId(userId, token);
+                    switch (buildingIdTechnician)
+                    {
+                        case 0:
+                            return NotFound(new
+                            {
+                                status = "Not Found",
+                                message = "Người kĩ thuật viên không hỗ trợ tòa nhà nào",
+                                data = ""
+                            });
+                    }
+
+                    var technicianTicketList =
+                        await _serviceWrapper.Tickets.GetTicketList(filter, buildingIdTechnician, token);
+
+                    if (technicianTicketList == null)
+                        return NotFound(new
+                        {
+                            status = "Not Found",
+                            message = "Không có danh sách phiếu",
+                            data = ""
+                        });
+
+                    var technicianTicketListReturn = _mapper.Map<IEnumerable<TicketDetailEntity>>(technicianTicketList);
+
+                    return Ok(new
+                    {
+                        status = "Success",
+                        message = "Hiện thị danh sách",
+                        data = technicianTicketListReturn,
+                        totalPage = technicianTicketList.TotalPages,
+                        totalCount = technicianTicketList.TotalCount
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Tài khoản đang đăng nhập không hợp lệ",
+                    data = ""
                 });
 
             case "Renter":
@@ -104,7 +173,7 @@ public class TicketsController : ControllerBase
                     return NotFound(new
                     {
                         status = "Not Found",
-                        message = "No ticket list found with this renter",
+                        message = "Người thuê này hiện tại không có phiếu nào",
                         data = ""
                     });
 
@@ -113,7 +182,7 @@ public class TicketsController : ControllerBase
                 return Ok(new
                 {
                     status = "Success",
-                    message = "List found",
+                    message = "Hiển thị danh sách",
                     data = renterTicketList,
                     totalPage = renterTicketCheck.TotalPages,
                     totalCount = renterTicketCheck.TotalCount
@@ -123,7 +192,7 @@ public class TicketsController : ControllerBase
                 return NotFound(new
                 {
                     status = "Not Found",
-                    message = "No ticket found or no renter found",
+                    message = "Tài khoản không hợp lệ",
                     data = ""
                 });
         }
@@ -136,9 +205,90 @@ public class TicketsController : ControllerBase
         });
     }
 
+    [HttpPut("{id:int}/accept")]
+    [Authorize(Roles = "Renter")]
+    [SwaggerOperation("[Authorize] Accept ticket resolution [For renter]")]
+    public async Task<IActionResult> ApproveTicket(int id, CancellationToken token)
+    {
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
+        var entity = await _serviceWrapper.Tickets.GetTicketById(id, token);
+
+        if (entity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Không có phiếu nào được tìm thấy",
+                data = ""
+            });
+
+        switch (userRole)
+        {
+            case "Renter" when User.Identity?.Name == entity.Contract.RenterId.ToString():
+
+                var renterTicketCheck =
+                    await _serviceWrapper.Tickets.GetTicketById(id, entity.Contract.RenterId, token);
+
+                if (renterTicketCheck == null)
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "No ticket with this id found with this user",
+                        data = ""
+                    });
+
+                if (renterTicketCheck.Status.ToLower() == "Confirming".ToLower())
+                {
+                    var approveTicket = await _serviceWrapper.Tickets.ApproveTicket(id, token);
+                    switch (approveTicket.IsSuccess)
+                    {
+                        case true:
+                            return Ok(new
+                            {
+                                status = "Success",
+                                message = approveTicket.Message,
+                                data = ""
+                            });
+                        case false:
+                            return BadRequest(new
+                            {
+                                status = "Bad Request",
+                                message = approveTicket.Message,
+                                data = ""
+                            });
+                    }
+                }
+
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Chỉ có thể xác nhận khi trạng thái là đã xử lí",
+                    data = ""
+                });
+
+            case null:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Không có phiếu nào được tìm thấy",
+                    data = ""
+                });
+        }
+
+        return BadRequest(new
+        {
+            status = "Bad Request",
+            message = "Bad request !!!",
+            data = ""
+        });
+    }
+
     // GET: api/Requests/5
     [HttpGet("{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Technician, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get ticket by id (For management and renter)")]
     public async Task<IActionResult> GetTicket(int id, CancellationToken token)
     {
@@ -153,17 +303,17 @@ public class TicketsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "No ticket found",
+                message = "Phiếu không tồn tại",
                 data = ""
             });
 
         switch (userRole)
         {
-            case "Admin" or "Supervisor":
+            case "Technician" or "Supervisor":
                 return Ok(new
                 {
                     status = "Success",
-                    message = "Ticket found",
+                    message = "Đã tìm thấy",
                     data = entity
                 });
 
@@ -176,7 +326,7 @@ public class TicketsController : ControllerBase
                     return NotFound(new
                     {
                         status = "Not Found",
-                        message = "No ticket with this id found with this user",
+                        message = "Không tìm thấy phiếu này từ tài khoản người dùng",
                         data = ""
                     });
 
@@ -184,6 +334,7 @@ public class TicketsController : ControllerBase
                 {
                     TicketId = renterTicketCheck.TicketId,
                     Description = renterTicketCheck.Description,
+                    TicketName = renterTicketCheck.TicketName,
                     CreateDate = renterTicketCheck.CreateDate,
                     SolveDate = renterTicketCheck.SolveDate,
                     Amount = renterTicketCheck.TotalAmount,
@@ -205,7 +356,7 @@ public class TicketsController : ControllerBase
                 return Ok(new
                 {
                     status = "Success",
-                    message = "Ticket found",
+                    message = "Đã tìm thấy",
                     data = ticket
                 });
 
@@ -213,7 +364,7 @@ public class TicketsController : ControllerBase
                 return NotFound(new
                 {
                     status = "Not Found",
-                    message = "No ticket found or no renter found",
+                    message = "Không có phiếu nào được tìm thấy",
                     data = ""
                 });
         }
@@ -226,10 +377,100 @@ public class TicketsController : ControllerBase
         });
     }
 
+    [HttpPut("{id:int}/accept-ticket")]
+    [Authorize(Roles = "Technician, Supervisor")]
+    [SwaggerOperation(Summary = "[Authorize] Accept ticket to solve [For management]")]
+    public async Task<IActionResult> AcceptTicket(int id, CancellationToken token)
+    {
+        var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id, token);
+
+        if (ticketEntity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Không có phiếu nào được tìm thấy",
+                data = ""
+            });
+
+        var userId = int.Parse(User.Identity.Name);
+
+        if (ticketEntity.Status.ToLower() == "Active".ToLower())
+        {
+            var acceptTicketResult = await _serviceWrapper.Tickets.AcceptTicket(id, userId, token);
+
+            return acceptTicketResult.IsSuccess switch
+            {
+                true => Ok(new
+                {
+                    status = "Success",
+                    message = acceptTicketResult.Message,
+                    data = ""
+                }),
+                false => NotFound(new
+                {
+                    status = "Not Found",
+                    message = acceptTicketResult.Message,
+                    data = ""
+                })
+            };
+        }
+
+        return BadRequest(new
+        {
+            status = "Bad Request",
+            message = "Bạn chỉ có thể tiếp nhận phiếu chưa xử lí",
+            data = ""
+        });
+    }
+
+    [HttpPut("{id:int}/solve-ticket")]
+    [Authorize(Roles = "Technician, Supervisor")]
+    [SwaggerOperation(Summary = "[Authorize] Accept ticket to solve [For management]")]
+    public async Task<IActionResult> IsTicketSolved(int id, CancellationToken token)
+    {
+        var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id, token);
+
+        if (ticketEntity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Không có phiếu nào được tìm thấy",
+                data = ""
+            });
+
+        if (ticketEntity.Status.ToLower() == "Processing".ToLower())
+        {
+            var acceptTicketResult = await _serviceWrapper.Tickets.SolveTicket(id, token);
+
+            return acceptTicketResult.IsSuccess switch
+            {
+                true => Ok(new
+                {
+                    status = "Success",
+                    message = acceptTicketResult.Message,
+                    data = ""
+                }),
+                false => NotFound(new
+                {
+                    status = "Not Found",
+                    message = acceptTicketResult.Message,
+                    data = ""
+                })
+            };
+        }
+
+        return BadRequest(new
+        {
+            status = "Bad Request",
+            message = "Bạn chỉ có thể xác nhận phiếu đang trong quá trình xử lí",
+            data = ""
+        });
+    }
+
     // PUT: api/Requests/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Technician, Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Update ticket by id (For management)",
         Description = "date format d/M/YYYY")]
     public async Task<IActionResult> PutTicket(int id, [FromBody] TicketUpdateRequest ticketUpdateRequest,
@@ -250,13 +491,14 @@ public class TicketsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "No ticket found",
+                message = "Không có phiếu nào được tìm thấy",
                 data = ""
             });
 
         var updateTicket = new Ticket
         {
             TicketId = id,
+            TicketName = ticketUpdateRequest.TicketName ?? ticketEntity.TicketName,
             Description = ticketUpdateRequest.Description ?? ticketEntity.Description,
             TicketTypeId = ticketUpdateRequest.TicketTypeId ?? ticketEntity.TicketTypeId,
             Status = ticketUpdateRequest.Status ?? "Active",
@@ -285,7 +527,6 @@ public class TicketsController : ControllerBase
             })
         };
     }
-
 
     // POST: api/Requests
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -361,6 +602,7 @@ public class TicketsController : ControllerBase
         var newTicket = new Ticket
         {
             Description = ticketCreateRequest.Description,
+            TicketName = ticketCreateRequest.TicketName,
             CreateDate = DateTime.UtcNow,
             TicketTypeId = ticketCreateRequest.TicketTypeId,
             // TODO : Auto assign to active invoice -> invoice detail if not assigned manually
@@ -422,7 +664,6 @@ public class TicketsController : ControllerBase
                 }
             }
 
-
         return Ok(new
         {
             status = "Success",
@@ -432,16 +673,17 @@ public class TicketsController : ControllerBase
     }
 
     // DELETE: api/Requests/5
-    [HttpDelete("{id:int}/user/{userId:int}")]
+    [HttpDelete("{id:int}/user")]
     [Authorize(Roles = "Admin, Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Delete ticket by id (For management and renter)")]
-    public async Task<IActionResult> DeleteTicket(int id, int userId, CancellationToken token)
+    public async Task<IActionResult> DeleteTicket(int id, CancellationToken token)
     {
         var userRole = User.Identities
             .FirstOrDefault()?.Claims
             .FirstOrDefault(x => x.Type == ClaimTypes.Role)
             ?.Value ?? string.Empty;
 
+        /*
         if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
             return BadRequest(new
             {
@@ -449,44 +691,87 @@ public class TicketsController : ControllerBase
                 message = "You are not authorized to access this resource",
                 data = ""
             });
+        */
 
-        var renterCheck = await _serviceWrapper.Renters.GetRenterById(userId, token);
+        var userId = int.Parse(User.Identity.Name);
 
-        if (renterCheck == null)
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "User not found",
-                data = ""
-            });
-
-        // pass renter Id and ticket Id to get, management can bypass restriction bound by token id
-        var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id, userId, token);
-
-        if (ticketEntity == null)
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Ticket not found",
-                data = ""
-            });
-
-        var result = await _serviceWrapper.Tickets.DeleteTicket(id);
-        return result.IsSuccess switch
+        switch (userRole)
         {
-            true => Ok(new
-            {
-                status = "Success",
-                message = result.Message,
-                data = ""
-            }),
-            false => NotFound(new
-            {
-                status = "Not Found",
-                message = result.Message,
-                data = ""
-            })
-        };
+            case "Renter":
+                var renterCheck = await _serviceWrapper.Renters.GetRenterById(userId, token);
+
+                if (renterCheck == null)
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "Người dùng không tìm thấy",
+                        data = ""
+                    });
+
+                // pass renter Id and ticket Id to get, management can bypass restriction bound by token id
+                var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id, userId, token);
+
+                if (ticketEntity == null)
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "Phiếu yêu cầu không tìm thấy",
+                        data = ""
+                    });
+
+                if (ticketEntity.Status.ToLower() == "Active".ToLower())
+                {
+                    var result = await _serviceWrapper.Tickets.DeleteTicket(id);
+                    return result.IsSuccess switch
+                    {
+                        true => Ok(new
+                        {
+                            status = "Success",
+                            message = result.Message,
+                            data = ""
+                        }),
+                        false => NotFound(new
+                        {
+                            status = "Not Found",
+                            message = result.Message,
+                            data = ""
+                        })
+                    };
+                }
+
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Bạn không thể xoá những phiếu đang xử lí",
+                    data = ""
+                });
+
+
+            case "Supervisor":
+                var resultSuper = await _serviceWrapper.Tickets.DeleteTicket(id);
+                return resultSuper.IsSuccess switch
+                {
+                    true => Ok(new
+                    {
+                        status = "Success",
+                        message = resultSuper.Message,
+                        data = ""
+                    }),
+                    false => NotFound(new
+                    {
+                        status = "Not Found",
+                        message = resultSuper.Message,
+                        data = ""
+                    })
+                };
+        }
+
+        return BadRequest(new
+        {
+            status = "Bad Request",
+            message = "Tài khoản không hợp lệ",
+            data = ""
+        });
     }
 
     // GET: api/RequestTypes
@@ -513,7 +798,7 @@ public class TicketsController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "List found",
+            message = "Hiển thị danh sách",
             data = resultList,
             totalPage = list.TotalPages,
             totalCount = list.TotalCount

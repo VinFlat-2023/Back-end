@@ -54,6 +54,69 @@ public class InvoiceRepository : IInvoiceRepository
             .AsNoTracking();
     }
 
+
+    public IQueryable<Invoice> GetInvoiceList(InvoiceFilter filter, int userId, bool isManagement)
+    {
+        return isManagement switch
+        {
+            true => _context.Invoices
+                .Include(x => x.Employee)
+                .Include(x => x.Renter)
+                .Include(x => x.InvoiceDetails)
+                .ThenInclude(x => x.Service)
+                .ThenInclude(x => x.ServiceType)
+                .Include(x => x.InvoiceDetails)
+                .ThenInclude(x => x.PlaceholderForFee)
+                .Include(x => x.InvoiceType)
+                .Where(x => x.EmployeeId == userId)
+                // filter starts here
+                .Where(x =>
+                    (filter.Name == null || x.Name.ToLower().Contains(filter.Name.ToLower()))
+                    && (filter.Status == null || x.Status == filter.Status)
+                    && (filter.Amount == null || x.TotalAmount == filter.Amount)
+                    && (filter.Detail == null || x.Detail == filter.Detail)
+                    && (filter.RenterUsername == null ||
+                        x.Renter.Username.ToLower().Contains(filter.RenterUsername.ToLower()))
+                    && (filter.RenterFullname == null ||
+                        x.Renter.FullName.ToLower().Contains(filter.RenterFullname.ToLower()))
+                    && (filter.RenterPhoneNumber == null ||
+                        x.Renter.Phone.ToLower().Contains(filter.RenterPhoneNumber.ToLower()))
+                    && (filter.RenterEmail == null || x.Renter.Email.ToLower().Contains(filter.RenterEmail.ToLower()))
+                    && (filter.EmployeeName == null ||
+                        x.Employee.FullName.ToLower().Contains(filter.EmployeeName.ToLower()))
+                    && (filter.InvoiceTypeId == null || x.InvoiceTypeId == filter.InvoiceTypeId))
+                .AsNoTracking(),
+
+            false => _context.Invoices
+                .Include(x => x.Employee)
+                .Include(x => x.Renter)
+                .Include(x => x.InvoiceDetails)
+                .ThenInclude(x => x.Service)
+                .ThenInclude(x => x.ServiceType)
+                .Include(x => x.InvoiceDetails)
+                .ThenInclude(x => x.PlaceholderForFee)
+                .Include(x => x.InvoiceType)
+                .Where(x => x.RenterId == userId)
+                // filter starts here
+                .Where(x =>
+                    (filter.Name == null || x.Name.ToLower().Contains(filter.Name.ToLower()))
+                    && (filter.Status == null || x.Status == filter.Status)
+                    && (filter.Amount == null || x.TotalAmount == filter.Amount)
+                    && (filter.Detail == null || x.Detail == filter.Detail)
+                    && (filter.RenterUsername == null ||
+                        x.Renter.Username.ToLower().Contains(filter.RenterUsername.ToLower()))
+                    && (filter.RenterFullname == null ||
+                        x.Renter.FullName.ToLower().Contains(filter.RenterFullname.ToLower()))
+                    && (filter.RenterPhoneNumber == null ||
+                        x.Renter.Phone.ToLower().Contains(filter.RenterPhoneNumber.ToLower()))
+                    && (filter.RenterEmail == null || x.Renter.Email.ToLower().Contains(filter.RenterEmail.ToLower()))
+                    && (filter.EmployeeName == null ||
+                        x.Employee.FullName.ToLower().Contains(filter.EmployeeName.ToLower()))
+                    && (filter.InvoiceTypeId == null || x.InvoiceTypeId == filter.InvoiceTypeId))
+                .AsNoTracking()
+        };
+    }
+
     /// <summary>
     ///     Get invoice by id
     /// </summary>
@@ -235,6 +298,7 @@ public class InvoiceRepository : IInvoiceRepository
             };
         }
     }
+
 
     public async Task<RepositoryResponse> BatchInsertInvoice(IEnumerable<MassInvoiceCreateRequest> invoices)
     {

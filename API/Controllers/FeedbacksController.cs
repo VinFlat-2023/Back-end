@@ -53,7 +53,7 @@ public class FeedbacksController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "List found",
+            message = "Hiển thị danh sách",
             resultList,
             totalPage = list.TotalPages,
             totalCount = list.TotalCount
@@ -221,7 +221,7 @@ public class FeedbacksController : ControllerBase
             : Ok(new
             {
                 status = "Success",
-                message = "List found",
+                message = "Hiển thị danh sách",
                 data = resultList,
                 totalPage = list.TotalPages,
                 totalCount = list.TotalCount

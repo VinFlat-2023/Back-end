@@ -6,5 +6,5 @@ public class BasicRentalEntity
     public string BuildingName { get; set; }
     public int FlatId { get; set; }
     public string FlatName { get; set; }
-    public int RoomId { get; set; }
+    public int RoomFlatId { get; set; }
 }

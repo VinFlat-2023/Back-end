@@ -1,7 +1,4 @@
-﻿using Domain.CustomEntities;
-using Domain.EntitiesForManagement;
-
-namespace Service.IService;
+﻿namespace Service.IService;
 
 public interface INotificationService
 {

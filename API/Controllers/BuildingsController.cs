@@ -56,7 +56,7 @@ public class BuildingsController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get current building (For management (Supervisor only)")]
+    [SwaggerOperation(Summary = "[Authorize] Get current building (Supervisor only)")]
     [Authorize(Roles = "Supervisor")]
     [HttpGet("current")]
     public async Task<IActionResult> GetBuildingBasedOnSupervisor(CancellationToken token)
@@ -72,14 +72,14 @@ public class BuildingsController : ControllerBase
                 {
                     status = "Bad Request",
                     message = "Quản lí này hiện đang không quản lí toà nhà nào",
-                    data = ""
+                    data = -1
                 });
             case -2:
                 return BadRequest(new
                 {
                     status = "Bad Request",
                     message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
-                    data = ""
+                    data = -2
                 });
         }
 
@@ -90,7 +90,7 @@ public class BuildingsController : ControllerBase
             {
                 status = "Not Found",
                 message = "Building not found",
-                data = ""
+                data = 0
             });
 
         return Ok(new
@@ -199,6 +199,14 @@ public class BuildingsController : ControllerBase
 
         var validation = await _validator.ValidateParams(building, token);
 
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
         var newBuilding = new Building
         {
             BuildingName = building.BuildingName ?? "Building created by " + supervisor.FullName,
@@ -217,14 +225,6 @@ public class BuildingsController : ControllerBase
             BuildingImageUrl5 = building.ImageUrl5 ?? "",
             BuildingImageUrl6 = building.ImageUrl6 ?? ""
         };
-
-        if (!validation.IsValid)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = validation.Failures.FirstOrDefault(),
-                data = ""
-            });
 
         var result = await _serviceWrapper.Buildings.AddBuilding(newBuilding);
 

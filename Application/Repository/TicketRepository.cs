@@ -108,6 +108,39 @@ internal class TicketRepository : ITicketRepository
         };
     }
 
+    public IQueryable<Ticket> GetTicketList(TicketFilter filters, int buildingId)
+    {
+        return _context.Tickets
+            .Include(x => x.Employee)
+            .Include(x => x.Contract)
+            .Where(x => x.Contract.BuildingId == buildingId)
+            .Include(x => x.TicketType)
+            // filter starts here
+            .Where(x =>
+                (filters.Status == null || x.Status == filters.Status)
+                && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
+                && (filters.CreateDate == null || x.CreateDate == filters.CreateDate)
+                && (filters.SolveDate == null || x.SolveDate == filters.SolveDate)
+                && (filters.Amount == null || x.TotalAmount == filters.Amount)
+                && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
+                && (filters.ContractId == null || x.ContractId == filters.ContractId)
+                && (filters.EmployeeId == null || x.EmployeeId == filters.EmployeeId)
+                && (filters.Description == null || x.Description.Contains(filters.Description.ToLower()))
+                && (filters.TicketTypeName == null ||
+                    x.TicketType.TicketTypeName.Contains(filters.TicketTypeName.ToLower()))
+                && (filters.ContractName == null || x.Contract.ContractName.Contains(filters.ContractName.ToLower()))
+                && (filters.TicketTypeName == null ||
+                    x.TicketType.TicketTypeName.Contains(filters.TicketTypeName.ToLower()))
+                && (filters.EmployeeFullName == null ||
+                    x.Employee.FullName.Contains(filters.EmployeeFullName.ToLower()))
+                && (filters.RenterId == null || x.Contract.RenterId == filters.RenterId)
+                && (filters.RenterFullname == null ||
+                    x.Contract.Renter.FullName.Contains(filters.RenterFullname.ToLower()))
+                && (filters.RenterUsername == null || x.Contract.Renter.Username.Contains(filters.RenterUsername))
+                && (filters.RenterEmail == null || x.Contract.Renter.Email.Contains(filters.RenterEmail)))
+            .AsNoTracking();
+    }
+
     /// <summary>
     ///     Get ticket by id
     /// </summary>
@@ -153,14 +186,15 @@ internal class TicketRepository : ITicketRepository
     public async Task<RepositoryResponse> UpdateTicket(Ticket ticket)
     {
         var ticketData = await _context.Tickets
-            .FirstOrDefaultAsync(x => x.TicketId == ticket!.TicketId);
+            .FirstOrDefaultAsync(x => x.TicketId == ticket.TicketId);
         if (ticketData == null)
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Ticket not found"
+                Message = "Không có phiếu nào được tìm thấy"
             };
 
+        ticketData.TicketName = ticket.TicketName;
         ticketData.Description = ticket.Description;
         ticketData.SolveDate = ticket.SolveDate ?? ticketData.SolveDate;
         ticketData.TicketTypeId = ticket.TicketTypeId;
@@ -181,7 +215,7 @@ internal class TicketRepository : ITicketRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Ticket not found"
+                Message = "Không có phiếu nào được tìm thấy"
             };
 
         switch (number)
@@ -205,6 +239,73 @@ internal class TicketRepository : ITicketRepository
         };
     }
 
+    public async Task<RepositoryResponse> ApproveTicket(int id, CancellationToken token)
+    {
+        var ticketFound = await _context.Tickets
+            .FirstOrDefaultAsync(x => x.TicketId == id, token);
+
+        if (ticketFound == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Phiếu không tồn tại"
+            };
+
+        ticketFound.Status = "Solved";
+
+        await _context.SaveChangesAsync();
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Đã xác nhận thành công"
+        };
+    }
+
+    public async Task<RepositoryResponse> AcceptTicket(int ticketId, int userId, CancellationToken token)
+    {
+        var ticketFound = await _context.Tickets
+            .FirstOrDefaultAsync(x => x.TicketId == ticketId, token);
+
+        if (ticketFound == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Không có phiếu nào được tìm thấy"
+            };
+
+        ticketFound.EmployeeId = userId;
+        ticketFound.Status = "Processing";
+
+        await _context.SaveChangesAsync();
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Phiếu thu đã tiếp nhận"
+        };
+    }
+
+    public async Task<RepositoryResponse> SolveTicket(int ticketId, CancellationToken token)
+    {
+        var ticketFound = await _context.Tickets
+            .FirstOrDefaultAsync(x => x.TicketId == ticketId, token);
+
+        if (ticketFound == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Phiếu không tồn tại"
+            };
+
+        ticketFound.Status = "Confirming";
+
+        await _context.SaveChangesAsync();
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Đã xác nhận thành công"
+        };
+    }
+
     /// <summary>
     ///     DeleteFeedback ticket by id
     /// </summary>
@@ -218,14 +319,14 @@ internal class TicketRepository : ITicketRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Ticket not found"
+                Message = "Không có phiếu nào được tìm thấy"
             };
         _context.Tickets.Remove(ticketFound);
         await _context.SaveChangesAsync();
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Ticket deleted"
+            Message = "Phiếu thu đã xoá"
         };
     }
 }

@@ -67,7 +67,7 @@ public class ContractsController : ControllerBase
                 return Ok(new
                 {
                     status = "Success",
-                    message = "Contract list found",
+                    message = "Hiển thị danh sách",
                     data = adminContractListReturn,
                     totalPage = adminContractList.TotalPages,
                     totalCount = adminContractList.TotalCount
@@ -113,7 +113,7 @@ public class ContractsController : ControllerBase
                 return Ok(new
                 {
                     status = "Success",
-                    message = "Contract list found",
+                    message = "Hiển thị danh sách",
                     data = supervisorContractListReturn,
                     totalPage = supervisorContractList.TotalPages,
                     totalCount = supervisorContractList.TotalCount
@@ -138,7 +138,7 @@ public class ContractsController : ControllerBase
                 return Ok(new
                 {
                     status = "Success",
-                    message = "Contract list found",
+                    message = "Hiển thị danh sách",
                     data = renterContractListReturn,
                     totalPage = renterContractList.TotalPages,
                     totalCount = renterContractList.TotalCount
@@ -180,7 +180,7 @@ public class ContractsController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "Contract list found",
+            message = "Hiển thị danh sách",
             data = resultList,
             totalPage = list.TotalPages,
             totalCount = list.TotalCount
@@ -199,7 +199,7 @@ public class ContractsController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "Contract list found",
+            message = "Hiển thị danh sách",
             data = _mapper.Map<ContactDetailRenterEntity>(latestContract)
         });
     }
@@ -501,7 +501,7 @@ public class ContractsController : ControllerBase
                 data = ""
             });
 
-        var contractEntity = await _serviceWrapper.Contracts.GetContractByIdWithActiveStatus(entity.ContractId);
+        var contractEntity = await _serviceWrapper.Contracts.GetContractByRenterIdWithActiveStatus(entity.ContractId);
 
         if (contractEntity == null)
             return NotFound(new
@@ -691,7 +691,7 @@ public class ContractsController : ControllerBase
             RenterId = renterEntity.RenterId,
             BuildingId = buildingId,
             FlatId = contract.FlatId,
-            RoomId = contract.RoomId
+            RoomFlatId = contract.RoomFlatId
         };
 
         var result = await _serviceWrapper.Contracts.AddContract(newContract);

@@ -6,6 +6,7 @@ namespace Domain.EntityRequest.Ticket;
 
 public class TicketCreateRequest
 {
+    public string TicketName { get; set; }
     public string Description { get; set; }
     public int TicketTypeId { get; set; }
 

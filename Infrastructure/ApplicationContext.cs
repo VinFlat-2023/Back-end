@@ -775,7 +775,7 @@ public class ApplicationContext : DbContext
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "HCM",
-                Gender = "Male",
+                Gender = "Male"
             },
             new Renter
             {
@@ -789,7 +789,7 @@ public class ApplicationContext : DbContext
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "Hue",
-                Gender = "Male",
+                Gender = "Male"
             },
             new Renter
             {
@@ -803,7 +803,7 @@ public class ApplicationContext : DbContext
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "DN",
-                Gender = "Female",
+                Gender = "Female"
             }, new Renter
             {
                 RenterId = 4,
@@ -816,7 +816,7 @@ public class ApplicationContext : DbContext
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "HN",
-                Gender = "Female",
+                Gender = "Female"
             }, new Renter
             {
                 RenterId = 5,
@@ -829,7 +829,7 @@ public class ApplicationContext : DbContext
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "HCM",
-                Gender = "Male",
+                Gender = "Male"
             }, new Renter
             {
                 RenterId = 6,
@@ -842,7 +842,7 @@ public class ApplicationContext : DbContext
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "HCM",
-                Gender = "Male",
+                Gender = "Male"
             }, new Renter
             {
                 RenterId = 7,
@@ -855,7 +855,7 @@ public class ApplicationContext : DbContext
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "HCM",
-                Gender = "Male",
+                Gender = "Male"
             }
         );
 
@@ -2024,6 +2024,7 @@ public class ApplicationContext : DbContext
             new Ticket
             {
                 TicketId = 1,
+                TicketName = "Ticket của renter 3 sự cố 1",
                 Description = "Sự cố 1",
                 CreateDate = DateTime.UtcNow,
                 Status = "Active",
@@ -2036,6 +2037,7 @@ public class ApplicationContext : DbContext
             {
                 TicketId = 2,
                 Description = "Sự cố 2",
+                TicketName = "Ticket của renter 3 sự cố 2",
                 CreateDate = DateTime.UtcNow,
                 Status = "Processing",
                 SolveDate = null,
@@ -2047,8 +2049,9 @@ public class ApplicationContext : DbContext
             {
                 TicketId = 3,
                 Description = "Sự cố 3",
+                TicketName = "Ticket của renter 3 sự cố 3",
                 CreateDate = DateTime.UtcNow,
-                Status = "Completed",
+                Status = "Confirming",
                 SolveDate = null,
                 TicketTypeId = 3,
                 EmployeeId = 2,
@@ -2058,9 +2061,58 @@ public class ApplicationContext : DbContext
             {
                 TicketId = 4,
                 Description = "Sự cố 4",
+                TicketName = "Ticket của renter 3 sự cố 4",
+                CreateDate = DateTime.UtcNow,
+                Status = "Solved",
+                SolveDate = null,
+                TicketTypeId = 1,
+                EmployeeId = 2,
+                ContractId = 3
+            },
+            new Ticket
+            {
+                TicketId = 5,
+                Description = "Sự cố 1",
+                TicketName = "Ticket của renter 3 sự cố 5",
                 CreateDate = DateTime.UtcNow,
                 Status = "Active",
                 SolveDate = null,
+                TicketTypeId = 1,
+                EmployeeId = 2,
+                ContractId = 3
+            },
+            new Ticket
+            {
+                TicketId = 6,
+                Description = "Sự cố 2",
+                TicketName = "Ticket của renter 3 sự cố 6",
+                CreateDate = DateTime.UtcNow,
+                Status = "Processing",
+                SolveDate = null,
+                TicketTypeId = 2,
+                EmployeeId = 2,
+                ContractId = 3
+            },
+            new Ticket
+            {
+                TicketId = 7,
+                Description = "Sự cố 3",
+                TicketName = "Ticket 7 test",
+                CreateDate = DateTime.UtcNow,
+                Status = "Confirming",
+                SolveDate = null,
+                TicketTypeId = 3,
+                EmployeeId = 2,
+                ContractId = 3
+            },
+            new Ticket
+            {
+                TicketId = 8,
+                TicketName = "Ticket 8 esting",
+                Description = "Sự cố 4",
+                CreateDate = DateTime.UtcNow,
+                Status = "Solved",
+                SolveDate = DateTime.Now.Add(TimeSpan.FromDays(-7)),
                 TicketTypeId = 1,
                 EmployeeId = 2,
                 ContractId = 3
@@ -2433,7 +2485,7 @@ public class ApplicationContext : DbContext
                     ContractImageUrl4 =
                         "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                     FlatId = 3,
-                    RoomId = 3
+                    RoomFlatId = 3
                 },
                 new Contract
                 {
@@ -2458,7 +2510,7 @@ public class ApplicationContext : DbContext
                     ContractImageUrl4 =
                         "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                     FlatId = 3,
-                    RoomId = 3
+                    RoomFlatId = 3
                 },
                 new Contract
                 {
@@ -2486,7 +2538,7 @@ public class ApplicationContext : DbContext
                     ContractImageUrl4 =
                         "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                     FlatId = 3,
-                    RoomId = 3
+                    RoomFlatId = 3
                 },
                 new Contract
                 {
@@ -2514,7 +2566,7 @@ public class ApplicationContext : DbContext
                     ContractImageUrl4 =
                         "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                     FlatId = 3,
-                    RoomId = 2
+                    RoomFlatId = 2
                 },
                 new Contract
                 {
@@ -2542,7 +2594,7 @@ public class ApplicationContext : DbContext
                     ContractImageUrl4 =
                         "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                     FlatId = 3,
-                    RoomId = 2
+                    RoomFlatId = 2
                 },
                 new Contract
                 {
@@ -2566,7 +2618,7 @@ public class ApplicationContext : DbContext
                     ContractImageUrl2 =
                         "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                     FlatId = 3,
-                    RoomId = 2
+                    RoomFlatId = 2
                 }
             );
 

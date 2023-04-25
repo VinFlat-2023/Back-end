@@ -9,6 +9,7 @@ namespace Domain.ViewModel.TicketEntity;
 public class TicketDetailEntity
 {
     public int TicketId { get; set; }
+    public string TicketName { get; set; }
     public string Description { get; set; }
     public DateTime CreateDate { get; set; }
 

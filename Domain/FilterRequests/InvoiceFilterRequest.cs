@@ -20,8 +20,6 @@ public class InvoiceFilterRequest : PagingFilter
 
     public DateTime? CreatedTime { get; set; }
 
-    public int? RenterId { get; set; }
-
     public string? RenterUsername { get; set; }
 
     public string? RenterPhoneNumber { get; set; }
@@ -29,8 +27,6 @@ public class InvoiceFilterRequest : PagingFilter
     public string? RenterEmail { get; set; }
 
     public string? RenterFullname { get; set; }
-
-    public int? EmployeeId { get; set; }
 
     public string? EmployeeName { get; set; }
 

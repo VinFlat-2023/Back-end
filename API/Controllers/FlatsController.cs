@@ -53,7 +53,7 @@ public class FlatsController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "List found",
+            message = "Hiển thị danh sách",
             data = resultList,
             totalPage = list.TotalPages,
             totalCount = list.TotalCount
@@ -239,7 +239,7 @@ public class FlatsController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "List found",
+            message = "Hiển thị danh sách",
             data = resultList,
             totalPage = list.TotalPages,
             totalCount = list.TotalCount

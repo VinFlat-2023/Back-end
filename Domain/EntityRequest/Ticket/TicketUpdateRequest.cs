@@ -2,6 +2,7 @@
 
 public class TicketUpdateRequest
 {
+    public string? TicketName { get; set; }
     public string? Description { get; set; }
     public string? SolveDate { get; set; }
     public decimal? Amount { get; set; }

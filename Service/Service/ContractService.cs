@@ -74,10 +74,10 @@ public class ContractService : IContractService
     public async Task<Contract?> GetContractById(int? contractId, CancellationToken cancellationToken)
     {
         return await _repositoryWrapper.Contracts.GetContractDetail(contractId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<Contract?> GetContractByIdWithActiveStatus(int contractId, CancellationToken token)
+    public async Task<Contract?> GetContractByRenterIdWithActiveStatus(int contractId, CancellationToken token)
     {
         return await _repositoryWrapper.Contracts.GetContractDetail(contractId)
             .FirstOrDefaultAsync(x => x != null && x.ContractStatus == "Active", token);

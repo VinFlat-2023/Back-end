@@ -23,4 +23,5 @@ public interface IInvoiceRepository
     public IEnumerable<Invoice> GetInvoiceListByMonth(int month);
     public Task<RepositoryResponse> BatchInsertInvoice(IEnumerable<MassInvoiceCreateRequest> invoices);
     public Task<RepositoryResponse> AddServiceToLastInvoice(int invoiceId, IEnumerable<int> serviceId);
+    IQueryable<Invoice> GetInvoiceList(InvoiceFilter filters, int userId, bool isManagement);
 }

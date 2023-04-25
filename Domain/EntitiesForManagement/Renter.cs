@@ -32,6 +32,7 @@ public class Renter
     [DataType(DataType.Upload)]
     [NotMapped]
     public IFormFile? Image { get; set; }
+
     public string? CitizenNumber { get; set; }
     public string? CitizenImageUrl { get; set; }
 
@@ -40,6 +41,7 @@ public class Renter
     [DataType(DataType.Upload)]
     [NotMapped]
     public IFormFile? CitizenImage { get; set; }
+
     public string Address { get; set; }
     public string Gender { get; set; }
     public virtual ICollection<Contract> Contracts { get; set; }

@@ -362,19 +362,19 @@ public class ContractValidator : BaseValidator, IContractValidator
                     break;
             }
 
-            switch (obj?.RoomId)
+            switch (obj?.RoomFlatId)
             {
                 case null:
                     ValidatorResult.Failures.Add("Phòng là bắt buộc");
                     break;
-                case not null when obj.RoomId < 0:
+                case not null when obj.RoomFlatId < 0:
                     ValidatorResult.Failures.Add("Phòng không hợp lệ");
                     break;
-                case not null when await _conditionCheckHelper.RoomCheck(obj.RoomId, token) == null:
+                case not null when await _conditionCheckHelper.RoomCheck(obj.RoomFlatId, token) == null:
                     ValidatorResult.Failures.Add("Phòng không tồn tại");
                     break;
-                case not null when await _conditionCheckHelper.RoomCheck(obj.RoomId, token) != null:
-                    var room = await _conditionCheckHelper.RoomCheck(obj.RoomId, token);
+                case not null when await _conditionCheckHelper.RoomCheck(obj.RoomFlatId, token) != null:
+                    var room = await _conditionCheckHelper.RoomCheck(obj.RoomFlatId, token);
                     switch (room)
                     {
                         /*
@@ -530,13 +530,13 @@ public class ContractValidator : BaseValidator, IContractValidator
                 }
 
             if (contractId == null)
-                switch (obj?.RoomId)
+                switch (obj?.RoomFlatId)
                 {
                     case null:
                         ValidatorResult.Failures.Add("Room is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.RoomCheck(obj.RoomId, token) == null)
+                        if (await _conditionCheckHelper.RoomCheck(obj.RoomFlatId, token) == null)
                             ValidatorResult.Failures.Add("Room provided does not exist");
                         break;
                 }

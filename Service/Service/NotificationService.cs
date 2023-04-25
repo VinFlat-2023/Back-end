@@ -1,15 +1,7 @@
 ﻿using Application.IRepository;
-using Domain.Constants;
-using Domain.CustomEntities;
-using Domain.EntitiesForManagement;
-using Domain.EnumEntities;
 using Domain.Options;
-using Domain.Utils;
-using FirebaseAdmin.Messaging;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Service.IService;
-using Notification = Domain.EntitiesForManagement.Notification;
 
 namespace Service.Service;
 

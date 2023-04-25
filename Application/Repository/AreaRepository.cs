@@ -133,6 +133,12 @@ internal class AreaRepository : IAreaRepository
     /// <returns></returns>
     public async Task<RepositoryResponse> UpdateArea(Area? area)
     {
+        if (area == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Thông tin khu vực không được để trống"
+            };
         var areaData = await _context.Areas
             .FirstOrDefaultAsync(x => x.AreaId == area.AreaId);
 
@@ -143,13 +149,16 @@ internal class AreaRepository : IAreaRepository
                 Message = "Area not found"
             };
 
-        //areaData.Location = area?.Location ?? areaData.Location;
-        areaData.Name = area?.Name ?? areaData.Name;
-        areaData.Status = area?.Status ?? areaData.Status;
-        areaData.AreaImageUrl1 = area?.AreaImageUrl1 ?? areaData.AreaImageUrl1;
-        areaData.AreaImageUrl2 = area?.AreaImageUrl2 ?? areaData.AreaImageUrl2;
-        areaData.AreaImageUrl3 = area?.AreaImageUrl3 ?? areaData.AreaImageUrl3;
-        areaData.AreaImageUrl4 = area?.AreaImageUrl4 ?? areaData.AreaImageUrl4;
+        areaData.Name = area.Name;
+        areaData.Status = area.Status;
+        if (areaData.AreaImageUrl1 != null)
+            areaData.AreaImageUrl1 = area.AreaImageUrl1;
+        if (areaData.AreaImageUrl2 != null)
+            areaData.AreaImageUrl2 = area.AreaImageUrl2;
+        if (areaData.AreaImageUrl3 != null)
+            areaData.AreaImageUrl3 = area.AreaImageUrl3;
+        if (areaData.AreaImageUrl4 != null)
+            areaData.AreaImageUrl4 = area.AreaImageUrl4;
 
         await _context.SaveChangesAsync();
 

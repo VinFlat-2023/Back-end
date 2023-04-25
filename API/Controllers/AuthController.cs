@@ -1,5 +1,6 @@
 using Domain.ControllerEntities;
 using Domain.EntitiesForManagement;
+using Domain.EntityRequest.Password;
 using Domain.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -122,5 +123,31 @@ public class AuthController : ControllerBase
                 roleName = "Renter"
             }
         });
+    }
+
+    [HttpPost("reset-password")]
+    [SwaggerOperation("[Authorize] Reset password")]
+    public async Task<IActionResult> ResetPasswordRenter([FromBody] EmailResetPassword emailResetPassword,
+        CancellationToken token)
+    {
+        var emailCheck = await _serviceWrapper.Renters
+            .IsRenterEmailExist(emailResetPassword.registeredEmail, token);
+        switch (emailCheck.IsSuccess)
+        {
+            case true:
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "Mật khẩu mới đã được gửi tới người dùng",
+                    data = emailResetPassword.registeredEmail
+                });
+            case false:
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "Mật khẩu mới đã được gửi tới người dùng",
+                    data = emailResetPassword.registeredEmail
+                });
+        }
     }
 }

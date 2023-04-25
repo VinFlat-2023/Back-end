@@ -11,6 +11,7 @@ public class Ticket
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int TicketId { get; set; }
 
+    public string TicketName { get; set; }
     public string Description { get; set; } = null!;
     public DateTime CreateDate { get; set; }
     public DateTime? SolveDate { get; set; }

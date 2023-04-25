@@ -109,16 +109,6 @@ public class AreaValidator : BaseValidator, IAreaValidator
                             break;
                     }
 
-                    var areaNewCheck = await _conditionCheckHelper.AreaNameCheck(obj.Name, token);
-                    switch (areaNewCheck.IsSuccess)
-                    {
-                        case true:
-                            break;
-                        case false:
-                            ValidatorResult.Failures.Add(areaNewCheck.Message);
-                            break;
-                    }
-
                     break;
             }
 
