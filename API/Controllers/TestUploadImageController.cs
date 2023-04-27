@@ -225,18 +225,18 @@ public class TestUploadImageController : ControllerBase
                 data = ""
             });
 
-        var fileNameUserImage = employeeCheck.ImageUrl?.Split('/').Last();
+        var fileNameUserImage = employeeCheck.EmployeeImageUrl?.Split('/').Last();
 
         var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image?.FileName);
 
-        var updateArea = new Employee
+        var updateEmployee = new Employee
         {
             EmployeeId = employeeId,
-            ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image, fileNameUserImage,
+            EmployeeImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image, fileNameUserImage,
                 "Employee", imageExtension, false))?.Blob.Uri
         };
 
-        var result = await _serviceWrapper.Employees.UpdateEmployeeProfilePicture(updateArea);
+        var result = await _serviceWrapper.Employees.UpdateEmployeeProfilePicture(updateEmployee);
 
         return result.IsSuccess switch
         {

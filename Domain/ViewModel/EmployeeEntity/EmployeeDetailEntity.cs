@@ -10,6 +10,7 @@ public class EmployeeDetailEntity
     public string Email { get; set; }
     public string Phone { get; set; }
     public bool Status { get; set; }
+    public string? EmployeeImageUrl { get; set; }
     public string Address { get; set; }
     public RoleDetailEntity Role { get; set; }
 }

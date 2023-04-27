@@ -21,19 +21,10 @@ public class PasswordValidator : BaseValidator, IPasswordValidator
         {
             switch (renter)
             {
-                case null:
-                    ValidatorResult.Failures.Add("Dòng thông tin không được để trống");
-                    break;
-                case not null when renterId == null:
-                    ValidatorResult.Failures.Add("Khách thuê không tồn tại");
-                    break;
                 case not null:
                     var renterCheck = await _conditionCheckHelper.RenterCheck(renterId, token);
                     switch (renterCheck)
                     {
-                        case null:
-                            ValidatorResult.Failures.Add("Nhân viên không tồn tại");
-                            break;
                         case not null:
                             if (renterCheck.Password != renter.OldPassword)
                                 ValidatorResult.Failures.Add("Mật khẩu cũ không đúng");
@@ -71,19 +62,10 @@ public class PasswordValidator : BaseValidator, IPasswordValidator
         {
             switch (employee)
             {
-                case null:
-                    ValidatorResult.Failures.Add("Dòng thông tin không được để trống");
-                    break;
-                case not null when employeeId == null:
-                    ValidatorResult.Failures.Add("Nhân viên không tồn tại");
-                    break;
                 case not null:
                     var employeeCheck = await _conditionCheckHelper.EmployeeCheck(employeeId, token);
                     switch (employeeCheck)
                     {
-                        case null:
-                            ValidatorResult.Failures.Add("Nhân viên không tồn tại");
-                            break;
                         case not null:
                             if (employeeCheck.Password != employee.OldPassword)
                                 ValidatorResult.Failures.Add("Mật khẩu cũ không đúng");

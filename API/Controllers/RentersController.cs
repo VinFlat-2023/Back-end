@@ -178,7 +178,7 @@ public class RentersController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "This renter does not have any active contract",
+                message = "Người thuê này hiện tại không có hợp đồng nào bên hệ thống",
                 data = ""
             });
 
@@ -187,7 +187,7 @@ public class RentersController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "This building does not exist in our system",
+                message = "Toà nhà này không tồn tại trong hệ thống",
                 data = ""
             });
 
@@ -196,7 +196,7 @@ public class RentersController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "This flat does not exist in our system",
+                message = "Căn hộ này không tồn tại trong hệ thống",
                 data = ""
             });
 
@@ -205,7 +205,7 @@ public class RentersController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "This flat does not have any renter",
+                message = "Căn hộ này hiện đang trống",
                 data = ""
             });
 
@@ -320,7 +320,8 @@ public class RentersController : ControllerBase
             BuildingName = building.BuildingName,
             FlatId = flatCheck.FlatId,
             FlatName = flatCheck.Name,
-            RoomFlatId = contract.RoomFlatId
+            RoomFlatId = contract.RoomFlatId,
+            RoomName = "VF-2300",
         };
 
         return Ok(new
@@ -417,9 +418,9 @@ public class RentersController : ControllerBase
         var validation = await _passwordValidator.ValidateParams(renter, renterId, token);
 
         if (!validation.IsValid)
-            return BadRequest(new
+            return Ok(new
             {
-                status = "Bad Request",
+                status = "Success",
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });

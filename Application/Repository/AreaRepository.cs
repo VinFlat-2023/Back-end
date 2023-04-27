@@ -30,6 +30,12 @@ internal class AreaRepository : IAreaRepository
             .AsNoTracking();
     }
 
+    public IQueryable<Area> GetAreaList()
+    {
+        return _context.Areas
+            .AsNoTracking();
+    }
+
     /// <summary>
     ///     Get area detail by id
     /// </summary>

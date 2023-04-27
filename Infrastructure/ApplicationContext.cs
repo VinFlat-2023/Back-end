@@ -1830,6 +1830,7 @@ public class ApplicationContext : DbContext
             new RoomFlat
             {
                 RoomFlatId = 1,
+                RoomName = "VF-02",
                 RoomId = 1,
                 FlatId = 1,
                 AvailableSlots = 5,
@@ -1839,6 +1840,7 @@ public class ApplicationContext : DbContext
             new RoomFlat
             {
                 RoomFlatId = 2,
+                RoomName = "VLA-203",
                 RoomId = 2,
                 FlatId = 2,
                 AvailableSlots = 5,
@@ -1922,7 +1924,7 @@ public class ApplicationContext : DbContext
             new Room
             {
                 RoomId = 1,
-                RoomName = "Room 1 with 4 slots",
+                RoomSignName = "Room 1 with 4 slots",
                 TotalSlot = 4,
                 //FlatId = 1,
                 BuildingId = 3,
@@ -1932,7 +1934,7 @@ public class ApplicationContext : DbContext
             new Room
             {
                 RoomId = 2,
-                RoomName = "Room 1 for 5 slots",
+                RoomSignName = "Room 1 for 5 slots",
                 TotalSlot = 5,
                 //FlatId = 2,
                 BuildingId = 3,
@@ -1942,7 +1944,7 @@ public class ApplicationContext : DbContext
             new Room
             {
                 RoomId = 3,
-                RoomName = "Room 2 for 6 slots",
+                RoomSignName = "Room 2 for 6 slots",
                 TotalSlot = 5,
                 //FlatId = 3,
                 BuildingId = 3,
@@ -1952,7 +1954,7 @@ public class ApplicationContext : DbContext
             new Room
             {
                 RoomId = 4,
-                RoomName = "Room 3 for flat 3",
+                RoomSignName = "Room 3 for flat 3",
                 //FlatId = 3,
                 BuildingId = 3,
                 Status = "Ok",

@@ -27,7 +27,7 @@ public class Employee
     [NotMapped]
     public IFormFile? Image { get; set; }
 
-    public string? ImageUrl { get; set; }
+    public string? EmployeeImageUrl { get; set; }
     public string Phone { get; set; }
     public bool Status { get; set; }
     public string Address { get; set; }

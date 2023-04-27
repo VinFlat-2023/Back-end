@@ -294,7 +294,7 @@ public class EmployeeRepository : IEmployeeRepository
                 Message = "Nhân viên không tồn tại"
             };
 
-        employeeData.ImageUrl = employee.ImageUrl;
+        employeeData.EmployeeImageUrl = employee.EmployeeImageUrl;
 
         await _context.SaveChangesAsync();
 

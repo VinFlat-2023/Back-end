@@ -85,7 +85,7 @@ public class EmployeesController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get current logged in employee")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor, Technician")]
     [HttpGet("profile")]
     public async Task<IActionResult> GetCurrentLoginEmployee(CancellationToken token)
     {
@@ -218,7 +218,7 @@ public class EmployeesController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "Update employee info")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Admin, Supervisor, Technician")]
     [HttpPut("profile/update")]
     public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeUpdateRequest employee, CancellationToken token)
     {
@@ -269,17 +269,7 @@ public class EmployeesController : ControllerBase
         CancellationToken token)
     {
         var employeeId = int.Parse(User.Identity?.Name);
-
-        var validation = await _passwordValidator.ValidateParams(employee, employeeId, token);
-
-        if (!validation.IsValid)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = validation.Failures.FirstOrDefault(),
-                data = ""
-            });
-
+        
         var employeeEntity = await _serviceWrapper.Employees.GetEmployeeById(employeeId, token);
 
         if (employeeEntity == null)
@@ -290,12 +280,21 @@ public class EmployeesController : ControllerBase
                 data = ""
             });
 
+        var validation = await _passwordValidator.ValidateParams(employee, employeeId, token);
+
+        if (!validation.IsValid)
+            return Ok(new
+            {
+                status = "Success",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
         var updatePasswordEmployee = new Employee
         {
             EmployeeId = employeeId,
             Password = employee.Password
         };
-
 
         var result = await _serviceWrapper.Employees.UpdatePasswordEmployee(updatePasswordEmployee);
 

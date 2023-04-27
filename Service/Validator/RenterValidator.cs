@@ -290,7 +290,7 @@ public class RenterValidator : BaseValidator, IRenterValidator
                 case null:
                     ValidatorResult.Failures.Add("Giới tính là bắt buộc");
                     break;
-                case not null when obj.Gender.ToLower() != "female" || obj.Gender.ToLower() != "male":
+                case not null when obj.Gender.ToLower() != "nữ".ToLower() || obj.Gender.ToLower() != "nam".ToLower():
                     ValidatorResult.Failures.Add("Giới tính không hợp lệ");
                     break;
             }

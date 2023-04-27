@@ -7,6 +7,7 @@ namespace Service.IService;
 public interface IAreaService
 {
     public Task<PagedList<Area>?> GetAreaList(AreaFilter filters, CancellationToken token);
+    public Task<IEnumerable<Area>?> GetAreaList(CancellationToken filters);
     public Task<Area?> GetAreaById(int? areaId, CancellationToken cancellationToken);
     public Task<RepositoryResponse> GetAreaByName(string? areaName, CancellationToken cancellationToken);
     public Task<RepositoryResponse> GetAreaByName(string? areaName, int? areaId, CancellationToken cancellationToken);

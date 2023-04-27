@@ -3,6 +3,7 @@ using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.Options;
 using Domain.QueryFilter;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Service.IService;
 
@@ -34,6 +35,12 @@ public class AreaService : IAreaService
             .Create(queryable, page, size, token);
 
         return pagedList;
+    }
+
+    public async Task<IEnumerable<Area>?> GetAreaList(CancellationToken token)
+    {
+        return await _repositoryWrapper.Areas.GetAreaList()
+            .ToListAsync(token);
     }
 
     public async Task<Area?> GetAreaById(int? areaId, CancellationToken cancellationToken)
