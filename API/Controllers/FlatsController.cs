@@ -139,10 +139,32 @@ public class FlatsController : ControllerBase
     // POST: api/Flats
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Create flat (For management)")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     [HttpPost]
     public async Task<IActionResult> PostFlat([FromBody] FlatCreateRequest flat, CancellationToken token)
     {
+        var userId = int.Parse(User.Identity.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+
+        switch (buildingId)
+        {
+            case -1:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang không quản lí toà nhà nào",
+                    data = -1
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
+                    data = -2
+                });
+        }
+
         var validation = await _validator.ValidateParams(flat, token);
 
         if (!validation.IsValid)
@@ -162,17 +184,20 @@ public class FlatsController : ControllerBase
             ElectricityMeterBefore = 0,
             WaterMeterAfter = 0,
             ElectricityMeterAfter = 0,
-            MaxRoom = flat.MaxRoom ?? 1,
-            AvailableRoom = flat.MaxRoom ?? 1,
             FlatTypeId = flat.FlatTypeId,
-            BuildingId = flat.BuildingId,
-            FlatImageUrl1 = flat.ImageUrl ?? "",
-            FlatImageUrl2 = flat.ImageUrl2 ?? "",
-            FlatImageUrl3 = flat.ImageUrl3 ?? "",
-            FlatImageUrl4 = flat.ImageUrl4 ?? "",
-            FlatImageUrl5 = flat.ImageUrl5 ?? "",
-            FlatImageUrl6 = flat.ImageUrl6 ?? ""
+            BuildingId = buildingId,
+            FlatImageUrl1 = flat.FlatImageUrl1 ?? "",
+            FlatImageUrl2 = flat.FlatImageUrl2 ?? "",
+            FlatImageUrl3 = flat.FlatImageUrl3 ?? "",
+            FlatImageUrl4 = flat.FlatImageUrl4 ?? "",
+            FlatImageUrl5 = flat.FlatImageUrl5 ?? "",
+            FlatImageUrl6 = flat.FlatImageUrl6 ?? ""
         };
+
+        var flatType = await _serviceWrapper.FlatTypes.GetFlatTypeById(flat.FlatTypeId, token);
+
+        newFlat.MaxRoom = flatType?.RoomCapacity ?? 1;
+        newFlat.AvailableRoom = flatType?.RoomCapacity ?? 1;
 
         var result = await _serviceWrapper.Flats.AddFlat(newFlat);
 
@@ -180,14 +205,14 @@ public class FlatsController : ControllerBase
             return BadRequest(new
             {
                 status = "Bad Request",
-                message = "Flat failed to create",
+                message = "Tạo căn hộ thất bại",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "Flat created",
+            message = "Tạo căn hộ thành công",
             data = _mapper.Map<FlatDetailEntity>(result)
         });
     }
@@ -224,7 +249,29 @@ public class FlatsController : ControllerBase
     {
         var filter = _mapper.Map<FlatTypeFilter>(request);
 
-        var list = await _serviceWrapper.FlatTypes.GetFlatTypeList(filter, token);
+        var userId = int.Parse(User.Identity.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+
+        switch (buildingId)
+        {
+            case -1:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang không quản lí toà nhà nào",
+                    data = -1
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
+                    data = -2
+                });
+        }
+
+        var list = await _serviceWrapper.FlatTypes.GetFlatTypeList(filter, buildingId, token);
 
         var resultList = _mapper.Map<IEnumerable<FlatTypeDetailEntity>>(list);
 
@@ -257,7 +304,7 @@ public class FlatsController : ControllerBase
             ? NotFound(new
             {
                 status = "Not Found",
-                message = "Flat type not found",
+                message = "Loại căn hộ không tìm thấy",
                 data = ""
             })
             : Ok(new
@@ -289,6 +336,7 @@ public class FlatsController : ControllerBase
         var updateFlatType = new FlatType
         {
             FlatTypeId = id,
+            FlatTypeName = flatType.FlatTypeName,
             RoomCapacity = flatType.RoomCapacity,
             Status = flatType.Status
         };
@@ -312,13 +360,69 @@ public class FlatsController : ControllerBase
         };
     }
 
+    [SwaggerOperation(Summary = "[Authorize] Toggle flat type status (For management)")]
+    [Authorize(Roles = "Supervisor")]
+    [HttpPut("type/{id:int}/toggle-status")]
+    public async Task<IActionResult> PutFlatType(int id, CancellationToken token)
+    {
+        var flatTypeCheck = await _serviceWrapper.FlatTypes.GetFlatTypeById(id, token);
+
+        if (flatTypeCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Không tìm thấy loại căn hộ này",
+                data = ""
+            });
+
+        var result = await _serviceWrapper.FlatTypes.ToggleStatus(id);
+
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
+    }
+
     // POST: api/FlatTypes
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Create flat type (For management)")]
-    [Authorize(Roles = " Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     [HttpPost("type")]
     public async Task<IActionResult> PostFlatType([FromBody] FlatTypeCreateRequest flatType, CancellationToken token)
     {
+        var userId = int.Parse(User.Identity.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+
+        switch (buildingId)
+        {
+            case -1:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang không quản lí toà nhà nào",
+                    data = -1
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
+                    data = -2
+                });
+        }
+
         var validation = await _validator.ValidateParams(flatType, token);
 
         if (!validation.IsValid)
@@ -331,8 +435,10 @@ public class FlatsController : ControllerBase
 
         var newFlatType = new FlatType
         {
+            FlatTypeName = flatType.FlatTypeName,
             RoomCapacity = flatType.RoomCapacity,
-            Status = flatType.Status
+            Status = flatType.Status,
+            BuildingId = buildingId
         };
 
         var result = await _serviceWrapper.FlatTypes.AddFlatType(newFlatType);
@@ -341,7 +447,7 @@ public class FlatsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Flat type not found",
+                message = "Loại căn hộ không tìm thấy",
                 data = ""
             });
 

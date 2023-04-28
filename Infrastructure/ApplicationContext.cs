@@ -1934,30 +1934,30 @@ public class ApplicationContext : DbContext
             new Room
             {
                 RoomId = 2,
-                RoomSignName = "Room 1 for 5 slots",
+                RoomSignName = "Room 2 for 5 slots",
                 TotalSlot = 5,
                 //FlatId = 2,
                 BuildingId = 3,
-                Status = "Ok",
+                Status = "Active",
                 Description = "ABCDEF"
             },
             new Room
             {
                 RoomId = 3,
-                RoomSignName = "Room 2 for 6 slots",
+                RoomSignName = "Room 3 for 6 slots",
                 TotalSlot = 5,
                 //FlatId = 3,
                 BuildingId = 3,
-                Status = "Ok",
+                Status = "Active",
                 Description = "ABCDEF"
             },
             new Room
             {
                 RoomId = 4,
-                RoomSignName = "Room 3 for flat 3",
+                RoomSignName = "Room 4 for 6 slots",
                 //FlatId = 3,
                 BuildingId = 3,
-                Status = "Ok",
+                Status = "Maintaince",
                 Description = "ABCDEF"
             }
         );

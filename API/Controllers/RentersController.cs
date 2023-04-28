@@ -106,6 +106,17 @@ public class RentersController : ControllerBase
     {
         var entity = await _serviceWrapper.Renters.GetRenterById(id, token);
 
+        var renter = _mapper.Map<RenterProfileEntity>(entity);
+
+        // convert gender to Vietnamese
+
+        renter.Gender = renter.Gender switch
+        {
+            "male" => "Nam",
+            "female" => "Nữ",
+            _ => renter.Gender
+        };
+
         return entity == null
             ? NotFound(new
             {
@@ -117,7 +128,7 @@ public class RentersController : ControllerBase
             {
                 status = "Success",
                 message = "Renter found",
-                data = _mapper.Map<RenterProfileEntity>(entity)
+                data = renter
             });
     }
 
@@ -129,6 +140,15 @@ public class RentersController : ControllerBase
         var renterId = int.Parse(User.Identity?.Name);
         var entity = await _serviceWrapper.Renters.GetRenterById(renterId, token);
 
+        var renter = _mapper.Map<RenterProfileEntity>(entity);
+
+        renter.Gender = renter.Gender switch
+        {
+            "male" => "Nam",
+            "female" => "Nữ",
+            _ => renter.Gender
+        };
+
         return entity == null
             ? NotFound(new
             {
@@ -140,7 +160,7 @@ public class RentersController : ControllerBase
             {
                 status = "Success",
                 message = "Renter found",
-                data = _mapper.Map<RenterProfileEntity>(entity)
+                data = renter
             });
     }
 
@@ -321,7 +341,7 @@ public class RentersController : ControllerBase
             FlatId = flatCheck.FlatId,
             FlatName = flatCheck.Name,
             RoomFlatId = contract.RoomFlatId,
-            RoomName = "VF-2300",
+            RoomName = "VF-2300"
         };
 
         return Ok(new
@@ -358,14 +378,19 @@ public class RentersController : ControllerBase
         //var fileNameUserImage = renterCheck.ImageUrl?.Split('/').Last();
         //var fileNameCitizenImage = renterCheck.CitizenImageUrl?.Split('/').Last();
 
+        if (renter.Gender.ToLower() == "nữ".ToLower())
+            renter.Gender = "female";
+
+        if (renter.Gender.ToLower() == "nam".ToLower())
+            renter.Gender = "male";
+
         var finalizeUpdate = new Renter
         {
             RenterId = userId,
             Email = renter.Email,
             Phone = renter.Phone,
             FullName = renter.FullName,
-            BirthDate = DateTime.ParseExact(renter.BirthDate.ToString() ?? string.Empty,
-                "dd/MM/yyyy HH:mm:ss", null),
+            BirthDate = DateTime.ParseExact(renter.BirthDate, "dd/MM/yyyy", null),
             /*
             ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(renter.Image, fileNameUserImage,
                 "User", imageExtension))?.Blob.Uri,

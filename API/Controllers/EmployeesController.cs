@@ -269,7 +269,7 @@ public class EmployeesController : ControllerBase
         CancellationToken token)
     {
         var employeeId = int.Parse(User.Identity?.Name);
-        
+
         var employeeEntity = await _serviceWrapper.Employees.GetEmployeeById(employeeId, token);
 
         if (employeeEntity == null)

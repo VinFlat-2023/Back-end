@@ -23,7 +23,7 @@ public class Renter
     public string Password { get; set; }
     public string Phone { get; set; }
     public string FullName { get; set; }
-    public DateTime? BirthDate { get; set; }
+    public DateTime BirthDate { get; set; }
     public bool Status { get; set; }
     public string? ImageUrl { get; set; }
 

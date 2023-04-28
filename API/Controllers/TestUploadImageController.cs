@@ -232,7 +232,8 @@ public class TestUploadImageController : ControllerBase
         var updateEmployee = new Employee
         {
             EmployeeId = employeeId,
-            EmployeeImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image, fileNameUserImage,
+            EmployeeImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(imageUploadRequest.Image,
+                fileNameUserImage,
                 "Employee", imageExtension, false))?.Blob.Uri
         };
 

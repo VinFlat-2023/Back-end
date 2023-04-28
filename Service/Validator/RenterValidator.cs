@@ -191,8 +191,6 @@ public class RenterValidator : BaseValidator, IRenterValidator
     {
         try
         {
-            if (obj == null)
-                ValidatorResult.Failures.Add("Dữ liệu không được để trống");
             switch (renterId)
             {
                 case null:
@@ -216,7 +214,7 @@ public class RenterValidator : BaseValidator, IRenterValidator
                     ValidatorResult.Failures.Add("Địa chỉ email không hợp lệ");
                     break;
                 case not null:
-                    var employee = await _conditionCheckHelper.EmployeeEmailCheck(obj.Email, renterId, token);
+                    var employee = await _conditionCheckHelper.RenterEmailCheck(obj.Email, renterId, token);
                     switch (employee.IsSuccess)
                     {
                         case true:
@@ -226,7 +224,7 @@ public class RenterValidator : BaseValidator, IRenterValidator
                             break;
                     }
 
-                    var renter = await _conditionCheckHelper.RenterEmailCheck(obj.Email, token);
+                    var renter = await _conditionCheckHelper.EmployeeEmailCheck(obj.Email, token);
                     switch (renter.IsSuccess)
                     {
                         case true:
@@ -290,7 +288,9 @@ public class RenterValidator : BaseValidator, IRenterValidator
                 case null:
                     ValidatorResult.Failures.Add("Giới tính là bắt buộc");
                     break;
-                case not null when obj.Gender.ToLower() != "nữ".ToLower() || obj.Gender.ToLower() != "nam".ToLower():
+                case not null:
+                    if (obj.Gender.ToLower() == "nữ".ToLower() || obj.Gender.ToLower() == "nam".ToLower())
+                        break;
                     ValidatorResult.Failures.Add("Giới tính không hợp lệ");
                     break;
             }

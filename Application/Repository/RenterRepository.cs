@@ -184,7 +184,7 @@ public class RenterRepository : IRenterRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "User updated successful"
+            Message = "Thông tin tài khoản đã được cập nhật"
         };
     }
 

@@ -25,7 +25,6 @@ public interface IServiceWrapper
     public IDeviceService Devices { get; }
     public ICustomeMailService Mails { get; }
     public INotificationService Notifications { get; }
-
     public IRoomService Rooms { get; }
 
     // public IRoomTypeService RoomType { get; }

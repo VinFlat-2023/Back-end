@@ -20,12 +20,15 @@ public class FlatTypeRepository : IFlatTypeRepository
     ///     Get all flat types
     /// </summary>
     /// <returns></returns>
-    public IQueryable<FlatType> GetFlatTypeList(FlatTypeFilter filters)
+    public IQueryable<FlatType> GetFlatTypeList(FlatTypeFilter filters, int buildingId)
     {
         return _context.FlatTypes
+            .Where(x => x.BuildingId == buildingId)
             .Where(x =>
                 (filters.Status == null || x.Status == filters.Status)
-                && (filters.RoomCapacity == null || x.RoomCapacity == filters.RoomCapacity))
+                && (filters.FlatTypeName == null || (x.FlatTypeName.ToLower().Contains(filters.FlatTypeName.ToLower())
+                                                     && (filters.RoomCapacity == null ||
+                                                         x.RoomCapacity == filters.RoomCapacity))))
             .AsNoTracking();
     }
 
@@ -57,27 +60,51 @@ public class FlatTypeRepository : IFlatTypeRepository
     /// </summary>
     /// <param name="flatType"></param>
     /// <returns></returns>
-    public async Task<RepositoryResponse> UpdateFlatType(FlatType? flatType)
+    public async Task<RepositoryResponse> UpdateFlatType(FlatType flatType)
     {
         var flatTypeData = await _context.FlatTypes
-            .FirstOrDefaultAsync(x => x.FlatTypeId == flatType!.FlatTypeId);
+            .FirstOrDefaultAsync(x => x.FlatTypeId == flatType.FlatTypeId);
+
         if (flatTypeData == null)
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Flat type not found"
+                Message = "Loại căn hộ không tìm thấy"
             };
 
-        flatTypeData.RoomCapacity = flatType?.RoomCapacity ?? flatTypeData.RoomCapacity;
-        flatTypeData.Status = flatType?.Status ?? flatTypeData.Status;
+        flatTypeData.FlatTypeName = flatType.FlatTypeName;
+        flatTypeData.RoomCapacity = flatType.RoomCapacity;
+        flatTypeData.Status = flatType.Status;
 
         await _context.SaveChangesAsync();
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Flat type updated successfully"
+            Message = "Loại căn hộ đã được cập nhật thành công"
         };
     }
+
+    public async Task<RepositoryResponse> ToggleStatus(int flatTypeId)
+    {
+        var flatTypeData = await _context.FlatTypes
+            .FirstOrDefaultAsync(x => x.FlatTypeId == flatTypeId);
+        if (flatTypeData == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Loại căn hộ không tìm thấy"
+            };
+
+        _ = flatTypeData.Status = !flatTypeData.Status;
+
+        await _context.SaveChangesAsync();
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Trạng thái của loại căn hộ đã được thay đổi thành công"
+        };
+    }
+
 
     /// <summary>
     ///     Delete flat type
@@ -92,7 +119,7 @@ public class FlatTypeRepository : IFlatTypeRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Flat type not found"
+                Message = "Loại căn hộ không tìm thấy"
             };
         _context.FlatTypes.Remove(flatTypeFound);
         await _context.SaveChangesAsync();

@@ -20,9 +20,10 @@ public class FlatTypeService : IFlatTypeService
         _paginationOptions = paginationOptions.Value;
     }
 
-    public async Task<PagedList<FlatType>?> GetFlatTypeList(FlatTypeFilter filters, CancellationToken token)
+    public async Task<PagedList<FlatType>?> GetFlatTypeList(FlatTypeFilter filters, int buildingId,
+        CancellationToken token)
     {
-        var queryable = _repositoryWrapper.FlatTypes.GetFlatTypeList(filters);
+        var queryable = _repositoryWrapper.FlatTypes.GetFlatTypeList(filters, buildingId);
 
         if (!queryable.Any())
             return null;
@@ -39,7 +40,7 @@ public class FlatTypeService : IFlatTypeService
     public async Task<FlatType?> GetFlatTypeById(int? flatTypeId, CancellationToken cancellationToken)
     {
         return await _repositoryWrapper.FlatTypes.GetFlatTypeDetail(flatTypeId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<FlatType?> AddFlatType(FlatType flatType)
@@ -50,6 +51,11 @@ public class FlatTypeService : IFlatTypeService
     public async Task<RepositoryResponse> UpdateFlatType(FlatType flatType)
     {
         return await _repositoryWrapper.FlatTypes.UpdateFlatType(flatType);
+    }
+
+    public async Task<RepositoryResponse> ToggleStatus(int id)
+    {
+        return await _repositoryWrapper.FlatTypes.ToggleStatus(id);
     }
 
     public async Task<RepositoryResponse> DeleteFlatType(int flatTypeId)

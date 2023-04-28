@@ -2,8 +2,9 @@ namespace Domain.QueryFilter;
 
 public class RoomFilter : PagingFilter
 {
-    public int? AvailableSlots { get; set; }
-    public string? RoomName { get; set; }
-    public string? FlatName { get; set; }
-    public string? RoomTypeName { get; set; }
+    public int? RoomId { get; set; }
+    public string? RoomSignName { get; set; }
+    public int? TotalSlot { get; set; } // Max slot, Min slot = 1
+    public string? Description { get; set; }
+    public string? Status { get; set; } // Active / Inactive
 }

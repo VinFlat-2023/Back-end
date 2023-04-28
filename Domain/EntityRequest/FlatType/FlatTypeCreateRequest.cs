@@ -2,6 +2,7 @@
 
 public class FlatTypeCreateRequest
 {
-    public int RoomCapacity { get; set; }
+    public string FlatTypeName { get; set; }
+    public int? RoomCapacity { get; set; }
     public bool Status { get; set; }
 }

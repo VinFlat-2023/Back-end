@@ -56,7 +56,7 @@ public class AreasController : ControllerBase
             totalCount = list.TotalCount
         });
     }
-    
+
     [HttpGet("no-paging")]
     [SwaggerOperation(Summary = "[Authorize] Get area list")]
     public async Task<IActionResult> GetAreas(CancellationToken token)
@@ -77,7 +77,7 @@ public class AreasController : ControllerBase
         {
             status = "Success",
             message = "Hiển thị danh sách khu vực",
-            data = resultList,
+            data = resultList
         });
     }
 

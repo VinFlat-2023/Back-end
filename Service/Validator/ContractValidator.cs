@@ -232,10 +232,11 @@ public class ContractValidator : BaseValidator, IContractValidator
 
             switch (obj?.RenterBirthDate)
             {
-                case not null when obj.RenterBirthDate > DateTime.Now:
+                case not null when DateTime.ParseExact(obj.RenterBirthDate, "dd/MM/yyyy", null) > DateTime.Now:
                     ValidatorResult.Failures.Add("Ngày sinh không được lớn hơn ngày hiện tại");
                     break;
-                case not null when DateTime.Now.Date.Year - obj.RenterBirthDate.Value.Date.Year < 18:
+                case not null when DateTime.Now.Date.Year -
+                    DateTime.ParseExact(obj.RenterBirthDate, "dd/MM/yyyy", null).Date.Year < 18:
                     ValidatorResult.Failures.Add("Người thuê phải trên 18 tuổi");
                     break;
                 case null:

@@ -19,9 +19,9 @@ public class ContractCreateRequest
     // Renter
     public string RenterUsername { get; set; }
     public string FullName { get; set; }
-    public string? RenterEmail { get; set; }
+    public string RenterEmail { get; set; }
     public string RenterPhone { get; set; }
-    public DateTime? RenterBirthDate { get; set; }
+    public string RenterBirthDate { get; set; }
     public string Address { get; set; }
     public string Gender { get; set; }
 }
