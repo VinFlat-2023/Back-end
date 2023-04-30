@@ -43,20 +43,66 @@ public class RoomRepository : IRoomRepository
             {
                 IsSuccess = false,
                 Message = "Tạo phòng thất bại"
-            };        
+            };
     }
-    
-    public async Task<Room?> GetRoomDetail(int? roomId, CancellationToken token)
+
+    public async Task<RepositoryResponse> IsAnyoneRentedCheck(int? roomId, int? buildingId, CancellationToken token)
+    {
+        var roomCheck = await _context.Rooms
+            .Where(x => x.RoomId == roomId && x.BuildingId == buildingId)
+            .ToListAsync(token);
+
+        if (!roomCheck.Any())
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Phòng không tồn tại"
+            };
+
+        var roomFlatCheck = _context.RoomFlats
+            .Where(x => x.RoomId == roomId)
+            .Select(x => x.RoomFlatId);
+
+        if (!roomFlatCheck.Any())
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Loại phòng này chưa được sử dụng"
+            };
+
+        // Check if any active contract is using this room flat
+        var isRoomFlatRented = await _context.Contracts
+            .Where(x => x.BuildingId == buildingId
+                        && roomFlatCheck.Contains(x.RoomFlatId)
+                        && x.ContractStatus.ToLower() == "active".ToLower())
+            .ToListAsync(token);
+
+        if (isRoomFlatRented.Count() > 1 || !isRoomFlatRented.Any())
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Loại phòng này đang được sử dụng"
+            };
+
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Loại phòng này chưa được sử dụng"
+        };
+    }
+
+    public async Task<Room?> GetRoomDetail(int? roomId, int? buildingId, CancellationToken token)
     {
         return await _context.Rooms
-            .FirstOrDefaultAsync(x => x.RoomId == roomId, cancellationToken: token);
+            .FirstOrDefaultAsync(x => x.RoomId == roomId
+                                      && x.BuildingId == buildingId, token);
     }
 
-    public async Task<RepositoryResponse> UpdateRoom(Room room, CancellationToken token)
+    public async Task<RepositoryResponse> UpdateRoom(Room room, int buildingId, CancellationToken token)
     {
         var roomData = await _context.Rooms
-            .FirstOrDefaultAsync(x => x.RoomId == room.RoomId, cancellationToken: token);
-
+            .FirstOrDefaultAsync(x => x.RoomId == room.RoomId
+                                      && x.BuildingId == buildingId, token);
         if (roomData == null)
             return new RepositoryResponse
             {
@@ -75,11 +121,11 @@ public class RoomRepository : IRoomRepository
             Message = "Phòng đã được cập nhật thành công"
         };
     }
-    
-    public async Task<RepositoryResponse> DeleteRoom(int roomId)
+
+    public async Task<RepositoryResponse> DeleteRoom(int roomId, int buildingId)
     {
         var roomFound = await _context.Rooms
-            .FirstOrDefaultAsync(x => x.RoomId == roomId);
+            .FirstOrDefaultAsync(x => x.RoomId == roomId && x.BuildingId == buildingId);
         switch (roomFound)
         {
             case null:
@@ -98,5 +144,4 @@ public class RoomRepository : IRoomRepository
                 };
         }
     }
-
 }

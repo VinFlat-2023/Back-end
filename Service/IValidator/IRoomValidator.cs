@@ -1,10 +1,10 @@
-using Domain.EntitiesForManagement;
+using Domain.EntityRequest.Room;
 using Service.Validator;
 
 namespace Service.IValidator;
 
 public interface IRoomValidator
 {
-    Task<ValidatorResult> ValidateParams(Room? obj, int? roomId, CancellationToken token);
-    //Task<ValidatorResult> ValidateParams(RoomType? obj, int? roomTypeId);
+    Task<ValidatorResult> ValidateParams(RoomUpdateRequest? obj, int? roomId, int? buildingId, CancellationToken token);
+    Task<ValidatorResult> ValidateParams(RoomCreateRequest? obj, int? buildingId, CancellationToken token);
 }

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Domain.EntityRequest.Room;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.ViewModel.RoomEntity;
@@ -33,7 +34,7 @@ public class RoomController : ControllerBase
         var userId = int.Parse(User.Identity.Name);
 
         var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
-        
+
         switch (buildingId)
         {
             case -2:
@@ -51,7 +52,7 @@ public class RoomController : ControllerBase
                     data = ""
                 });
         }
-        
+
         var filter = _mapper.Map<RoomFilter>(request);
 
         var list = await _serviceWrapper.Rooms.GetRoomList(filter, buildingId, token);
@@ -62,7 +63,7 @@ public class RoomController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Room list is empty",
+                message = "Danh sách phòng trống",
                 data = ""
             });
 
@@ -76,14 +77,107 @@ public class RoomController : ControllerBase
         });
     }
 
-
-    [HttpGet("building")]
+    [HttpGet("{roomId:int}")]
     [Authorize(Roles = "Supervisor")]
-    [SwaggerOperation("[Authorize] Get all rooms in a building")]
-    public async Task<IActionResult> GetAllRoomInBuilding(int buildingId)
+    [SwaggerOperation("[Authorize] Get rooms in building(s) managed by supervisor Id")]
+    public async Task<IActionResult> GetSpecificRoom(int roomId, CancellationToken token)
     {
-        return Ok("On");
+        var userId = int.Parse(User.Identity.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+
+        switch (buildingId)
+        {
+            case -1:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang không quản lí toà nhà nào",
+                    data = -1
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
+                    data = -2
+                });
+        }
+
+        var room = await _serviceWrapper.Rooms.GetRoomById(roomId, buildingId, token);
+
+        if (room == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Không tìm thấy phòng",
+                data = ""
+            });
+
+        var result = _mapper.Map<RoomBasicDetailEntity>(room);
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Hiển thị thông tin phòng",
+            data = result
+        });
     }
-    
-    
+
+    [HttpPut("{roomId:int}")]
+    [Authorize(Roles = "Supervisor")]
+    [SwaggerOperation("[Authorize] Update rooms in building(s) managed by supervisor Id")]
+    public async Task<IActionResult> UpdateRoom(int roomId, RoomUpdateRequest request, CancellationToken token)
+    {
+        var userId = int.Parse(User.Identity.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+
+        switch (buildingId)
+        {
+            case -1:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang không quản lí toà nhà nào",
+                    data = -1
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
+                    data = -2
+                });
+        }
+
+        var validation = await _validator.ValidateParams(request, roomId, buildingId, token);
+
+        if (!validation.IsValid)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = validation.Failures.FirstOrDefault(),
+                data = ""
+            });
+
+        var room = await _serviceWrapper.Rooms.GetRoomById(roomId, buildingId, token);
+
+        if (room == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Không tìm thấy phòng",
+                data = ""
+            });
+
+        var result = _mapper.Map<RoomBasicDetailEntity>(room);
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Hiển thị thông tin phòng",
+            data = result
+        });
+    }
 }

@@ -12,7 +12,7 @@ public static class ApplicationService
     {
         services.AddDbContext<ApplicationContext>(
             option => option.UseSqlServer(
-                configuration["TotallyNotConnectionString:Secret"]));
+                configuration["TotallyNotConnectionString:Secret-Local"]));
         return services;
     }
 }

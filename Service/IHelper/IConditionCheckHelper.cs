@@ -52,5 +52,6 @@ public interface IConditionCheckHelper
     public Task<Area?> AreaCheck(int? id, CancellationToken token);
     public Task<RepositoryResponse> AreaNameCheck(string? areaName, CancellationToken token);
     public Task<RepositoryResponse> AreaNameCheck(string? areaName, int? areaId, CancellationToken token);
-    public Task<Room?> RoomCheck(int? roomId, CancellationToken token);
+    public Task<Room?> RoomCheck(int? roomId, int? buildingId, CancellationToken token);
+    public Task<RepositoryResponse> IsAnyoneRentedCheck(int? roomId, int? buildingId, CancellationToken token);
 }

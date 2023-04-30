@@ -19,9 +19,9 @@ public class RoomService : IRoomService
         _paginationOptions = paginationOptions.Value;
     }
 
-    public async Task<RepositoryResponse> UpdateRoom(Room room, CancellationToken token)
+    public async Task<RepositoryResponse> UpdateRoom(Room room, int buildingId, CancellationToken token)
     {
-        return await _repositoryWrapper.Rooms.UpdateRoom(room, token);
+        return await _repositoryWrapper.Rooms.UpdateRoom(room, buildingId, token);
     }
 
     public async Task<RepositoryResponse> AddRoom(Room room)
@@ -29,14 +29,14 @@ public class RoomService : IRoomService
         return await _repositoryWrapper.Rooms.AddRoom(room);
     }
 
-    public async Task<Room?> GetRoomById(int? id, CancellationToken token)
+    public async Task<Room?> GetRoomById(int? roomId, int? buildingId, CancellationToken token)
     {
-        return await _repositoryWrapper.Rooms.GetRoomDetail(id, token);
+        return await _repositoryWrapper.Rooms.GetRoomDetail(roomId, buildingId, token);
     }
 
-    public async Task<RepositoryResponse> DeleteRoom(int roomId)
+    public async Task<RepositoryResponse> DeleteRoom(int roomId, int buildingId)
     {
-        return await _repositoryWrapper.Rooms.DeleteRoom(roomId);
+        return await _repositoryWrapper.Rooms.DeleteRoom(roomId, buildingId);
     }
 
     public async Task<PagedList<Room>?> GetRoomList(RoomFilter filters, int buildingId, CancellationToken token)
@@ -53,5 +53,10 @@ public class RoomService : IRoomService
             .Create(queryable, page, size, token);
 
         return pagedList;
+    }
+
+    public async Task<RepositoryResponse> IsAnyoneRentedCheck(int? roomId, int? buildingId, CancellationToken token)
+    {
+        return await _repositoryWrapper.Rooms.IsAnyoneRentedCheck(roomId, buildingId, token);
     }
 }

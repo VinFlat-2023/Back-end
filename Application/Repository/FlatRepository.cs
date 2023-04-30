@@ -128,7 +128,7 @@ public class FlatRepository : IFlatRepository
     public async Task<RepositoryResponse> UpdateFlat(Flat flat)
     {
         var flatData = await _context.Flats
-            .FirstOrDefaultAsync(x => x.FlatId == flat!.FlatId);
+            .FirstOrDefaultAsync(x => x.FlatId == flat.FlatId);
 
         if (flatData == null)
             return new RepositoryResponse

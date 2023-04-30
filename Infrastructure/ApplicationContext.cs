@@ -33,8 +33,9 @@ public class ApplicationContext : DbContext
     public virtual DbSet<Notification> Notifications { get; set; } = null!;
     public virtual DbSet<NotificationType> NotificationTypes { get; set; } = null!;
     public virtual DbSet<Room> Rooms { get; set; } = null!;
+    public virtual DbSet<RoomFlat> RoomFlats { get; set; } = null!;
     public virtual DbSet<Utility> Utilities { get; set; } = null!;
-    public virtual DbSet<UtilitiesRoomFlat> UtilitiesRooms { get; set; } = null!;
+    public virtual DbSet<UtilitiesRoomFlat> UtilitiesRoomFlats { get; set; } = null!;
 
     // public virtual DbSet<RoomType> RoomTypes { get; set; } = null!;
 
