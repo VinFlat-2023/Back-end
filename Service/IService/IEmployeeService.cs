@@ -7,7 +7,7 @@ namespace Service.IService;
 public interface IEmployeeService
 {
     public Task<PagedList<Employee>?> GetEmployeeList(EmployeeFilter filter, CancellationToken token);
-    public Task<Employee?> GetEmployeeById(int? employeeId, CancellationToken cancellationToken);
+    public Task<Employee?> GetEmployeeById(int? employeeId, CancellationToken token);
     public Task<Employee?> AddEmployee(Employee employee);
     public Task<RepositoryResponse> UpdateEmployee(Employee employee);
     public Task<RepositoryResponse> UpdatePasswordEmployee(Employee employee);

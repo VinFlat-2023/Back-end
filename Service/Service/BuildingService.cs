@@ -36,7 +36,7 @@ public class BuildingService : IBuildingService
         return pagedList;
     }
 
-    public async Task<Building?> GetBuildingById(int? buildingId, CancellationToken cancellationToken)
+    public async Task<Building?> GetBuildingById(int? buildingId, CancellationToken token)
     {
         return await _repositoryWrapper.Buildings.GetBuildingDetail(buildingId)
             .FirstOrDefaultAsync();

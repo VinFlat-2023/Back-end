@@ -152,7 +152,7 @@ public class ContractValidator : BaseValidator, IContractValidator
         return await Task.FromResult(ValidatorResult);
     }
 
-    public async Task<ValidatorResult> ValidateParams(ContractCreateRequest? obj, int? buildingId,
+    public async Task<ValidatorResult> ValidateParams(ContractCreateRequest? obj, int buildingId,
         CancellationToken token)
     {
         try
@@ -359,7 +359,7 @@ public class ContractValidator : BaseValidator, IContractValidator
                 case not null when obj.FlatId < 0:
                     ValidatorResult.Failures.Add("Căn hộ không hợp lệ");
                     break;
-                case not null when await _conditionCheckHelper.FlatCheck(obj.FlatId, token) == null:
+                case not null when await _conditionCheckHelper.FlatCheck(obj.FlatId, buildingId, token) == null:
                     ValidatorResult.Failures.Add("Căn hộ không tồn tại");
                     break;
             }

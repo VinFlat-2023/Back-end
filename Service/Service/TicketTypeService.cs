@@ -36,7 +36,7 @@ public class TicketTypeService : ITicketTypeService
         return pagedList;
     }
 
-    public async Task<TicketType?> GetTicketTypeById(int? ticketTypeId, CancellationToken cancellationToken)
+    public async Task<TicketType?> GetTicketTypeById(int? ticketTypeId, CancellationToken token)
     {
         return await _repositoryWrapper.TicketTypes.GetTicketTypeDetail(ticketTypeId)
             .FirstOrDefaultAsync();

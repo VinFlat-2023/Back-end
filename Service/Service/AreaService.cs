@@ -43,20 +43,20 @@ public class AreaService : IAreaService
             .ToListAsync(token);
     }
 
-    public async Task<Area?> GetAreaById(int? areaId, CancellationToken cancellationToken)
+    public async Task<Area?> GetAreaById(int? areaId, CancellationToken token)
     {
         return await _repositoryWrapper.Areas.GetAreaDetail(areaId);
     }
 
-    public async Task<RepositoryResponse> GetAreaByName(string? areaName, CancellationToken cancellationToken)
+    public async Task<RepositoryResponse> GetAreaByName(string? areaName, CancellationToken token)
     {
-        return await _repositoryWrapper.Areas.GetAreaByName(areaName, cancellationToken);
+        return await _repositoryWrapper.Areas.GetAreaByName(areaName, token);
     }
 
     public async Task<RepositoryResponse> GetAreaByName(string? areaName, int? areaId,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
-        return await _repositoryWrapper.Areas.GetAreaByName(areaName, areaId, cancellationToken);
+        return await _repositoryWrapper.Areas.GetAreaByName(areaName, areaId, token);
     }
 
     public async Task<Area?> AddArea(Area area)
@@ -75,7 +75,7 @@ public class AreaService : IAreaService
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Area status toggled"
+                Message = "Chuyển đổi trạng thái thành công"
             };
         }
     }
@@ -123,7 +123,7 @@ public class AreaService : IAreaService
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Area status failed to toggle"
+                Message = "Chuyển đổi trạng thái thất bại"
             };
         }
     }

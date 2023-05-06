@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Repository;
 
-internal class AreaRepository : IAreaRepository
+public class AreaRepository : IAreaRepository
 {
     private readonly ApplicationContext _context;
 
@@ -48,7 +48,7 @@ internal class AreaRepository : IAreaRepository
     }
 
 
-    public async Task<RepositoryResponse> GetAreaByName(string? areaName, CancellationToken cancellationToken)
+    public async Task<RepositoryResponse> GetAreaByName(string? areaName, CancellationToken token)
     {
         if (areaName == null)
             return new RepositoryResponse
@@ -59,7 +59,7 @@ internal class AreaRepository : IAreaRepository
 
         var area = await _context.Areas
             .FirstOrDefaultAsync(x => x.Name.ToLower() == areaName.ToLower(),
-                cancellationToken);
+                token);
 
         switch (area)
         {

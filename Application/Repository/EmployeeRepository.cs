@@ -264,15 +264,15 @@ public class EmployeeRepository : IEmployeeRepository
     /// </summary>
     /// <param name="usernameOrPhoneNumber"></param>
     /// <param name="password"></param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="token"></param>
     /// <returns></returns>
     public async Task<Employee?> GetEmployee(string usernameOrPhoneNumber, string password,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         return await _context.Employees
             .Include(b => b.Role)
             .FirstOrDefaultAsync(a => (a.Username == usernameOrPhoneNumber || a.Phone == usernameOrPhoneNumber)
-                                      && a.Password == password, cancellationToken);
+                                      && a.Password == password, token);
     }
 
     public async Task<Employee?> GetEmployeeByUserName(string userName, CancellationToken token)

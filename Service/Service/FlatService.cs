@@ -36,9 +36,25 @@ public class FlatService : IFlatService
         return pagedList;
     }
 
-    public async Task<Flat?> GetFlatById(int? flatId, CancellationToken token)
+    public async Task<PagedList<Flat>?> GetFlatList(FlatFilter filters, int buildingId, CancellationToken token)
     {
-        return await _repositoryWrapper.Flats.GetFlatDetail(flatId)
+        var queryable = _repositoryWrapper.Flats.GetFlatList(filters, buildingId);
+
+        if (!queryable.Any())
+            return null;
+
+        var page = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var size = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
+        var pagedList = await PagedList<Flat>
+            .Create(queryable, page, size, token);
+
+        return pagedList;
+    }
+
+    public async Task<Flat?> GetFlatById(int? flatId, int buildingId, CancellationToken token)
+    {
+        return await _repositoryWrapper.Flats.GetFlatDetail(flatId, buildingId)
             .FirstOrDefaultAsync(token);
     }
 

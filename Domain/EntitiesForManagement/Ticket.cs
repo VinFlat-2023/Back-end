@@ -16,6 +16,7 @@ public class Ticket
     public DateTime CreateDate { get; set; }
     public DateTime? SolveDate { get; set; }
     public decimal? TotalAmount { get; set; }
+    public string? CancelledReason { get; set; }
     public string Status { get; set; } = null!;
 
     [MaxUploadedFileSize(4 * 1024 * 1024)]

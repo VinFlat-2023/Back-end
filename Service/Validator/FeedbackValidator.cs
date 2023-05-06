@@ -37,7 +37,8 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
         throw new NotImplementedException();
     }
 
-    public async Task<ValidatorResult> ValidateParams(Feedback? obj, int? feedbackId, CancellationToken token)
+    public async Task<ValidatorResult> ValidateParams(Feedback? obj, int? feedbackId, int buildingId,
+        CancellationToken token)
     {
         try
         {
@@ -75,7 +76,7 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
                         ValidatorResult.Failures.Add("Flat is required");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.FlatCheck(obj.FlatId, token) == null)
+                        if (await _conditionCheckHelper.FlatCheck(obj.FlatId, buildingId, token) == null)
                             ValidatorResult.Failures.Add("Flat provided does not exist");
                         break;
                 }

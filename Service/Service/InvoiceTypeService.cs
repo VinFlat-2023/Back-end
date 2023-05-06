@@ -25,7 +25,7 @@ public class InvoiceTypeService : IInvoiceTypeService
         return await _repositoryWrapper.InvoiceTypes.AddInvoiceType(invoiceType);
     }
 
-    public async Task<InvoiceType?> GetInvoiceTypeById(int? id, CancellationToken cancellationToken)
+    public async Task<InvoiceType?> GetInvoiceTypeById(int? id, CancellationToken token)
     {
         return await _repositoryWrapper.InvoiceTypes.GetInvoiceTypeById(id);
     }

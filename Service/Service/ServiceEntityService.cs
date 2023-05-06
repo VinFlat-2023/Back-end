@@ -37,7 +37,7 @@ public class ServiceEntityService : IServiceEntityService
         return pagedList;
     }
 
-    public async Task<ServiceEntity?> GetServiceEntityById(int? serviceEntityId, CancellationToken cancellationToken)
+    public async Task<ServiceEntity?> GetServiceEntityById(int? serviceEntityId, CancellationToken token)
     {
         return await _repositoryWrapper.ServiceEntities.GetServiceDetail(serviceEntityId)
             .FirstOrDefaultAsync();

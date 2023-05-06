@@ -620,7 +620,29 @@ public class ContractsController : ControllerBase
     [HttpPost("sign")]
     public async Task<IActionResult> PostContract([FromBody] ContractCreateRequest contract, CancellationToken token)
     {
-        var contractValidation = await _validator.ValidateParams(contract, token);
+        var employeeId = Parse(User.Identity?.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
+
+        switch (buildingId)
+        {
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                    data = ""
+                });
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Người quản lý không quản lý tòa nhà nào",
+                    data = ""
+                });
+        }
+
+        var contractValidation = await _validator.ValidateParams(contract, buildingId, token);
 
         if (!contractValidation.IsValid)
             return BadRequest(new
@@ -652,27 +674,6 @@ public class ContractsController : ControllerBase
                 data = ""
             });
 
-        var employeeId = Parse(User.Identity?.Name);
-
-        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
-
-        switch (buildingId)
-        {
-            case -2:
-                return BadRequest(new
-                {
-                    status = "Bad Request",
-                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
-                    data = ""
-                });
-            case -1:
-                return NotFound(new
-                {
-                    status = "Not Found",
-                    message = "Người quản lý không quản lý tòa nhà nào",
-                    data = ""
-                });
-        }
 
         var newContract = new Contract
         {

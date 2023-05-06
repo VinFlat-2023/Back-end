@@ -346,9 +346,9 @@ public class TicketsController : ControllerBase
                     {
                         new()
                         {
-                            ImageUrl1 = renterTicketCheck.ImageUrl1 ?? "",
-                            ImageUrl2 = renterTicketCheck.ImageUrl2 ?? "",
-                            ImageUrl3 = renterTicketCheck.ImageUrl3 ?? ""
+                            ImageUrl1 = renterTicketCheck.ImageUrl1,
+                            ImageUrl2 = renterTicketCheck.ImageUrl2,
+                            ImageUrl3 = renterTicketCheck.ImageUrl3
                         }
                     }
                 };
@@ -470,13 +470,14 @@ public class TicketsController : ControllerBase
     // PUT: api/Requests/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "Technician, Supervisor")]
+    [Authorize(Roles = "Renter")]
     [SwaggerOperation(Summary = "[Authorize] Update ticket by id (For management)",
         Description = "date format d/M/YYYY")]
     public async Task<IActionResult> PutTicket(int id, [FromBody] TicketUpdateRequest ticketUpdateRequest,
         CancellationToken token)
     {
         var validation = await _validator.ValidateParams(ticketUpdateRequest, id, token);
+
         if (!validation.IsValid)
             return BadRequest(new
             {
@@ -498,19 +499,59 @@ public class TicketsController : ControllerBase
         var updateTicket = new Ticket
         {
             TicketId = id,
-            TicketName = ticketUpdateRequest.TicketName ?? ticketEntity.TicketName,
-            Description = ticketUpdateRequest.Description ?? ticketEntity.Description,
+            TicketName = ticketUpdateRequest.TicketName,
+            Description = ticketUpdateRequest.Description,
             TicketTypeId = ticketUpdateRequest.TicketTypeId ?? ticketEntity.TicketTypeId,
-            Status = ticketUpdateRequest.Status ?? "Active",
             ImageUrl1 = ticketUpdateRequest.ImageUrl1 ?? ticketEntity.ImageUrl1,
             ImageUrl2 = ticketUpdateRequest.ImageUrl2 ?? ticketEntity.ImageUrl2,
             ImageUrl3 = ticketUpdateRequest.ImageUrl3 ?? ticketEntity.ImageUrl3,
-            TotalAmount = ticketUpdateRequest.Amount ?? ticketEntity.TotalAmount ?? 0,
-            SolveDate = ticketUpdateRequest.SolveDate.ConvertToDateTime() ?? ticketEntity.SolveDate,
-            EmployeeId = ticketUpdateRequest.EmployeeId ?? int.Parse(User.Identity?.Name)
+            TotalAmount = ticketUpdateRequest.Amount,
+            SolveDate = ticketUpdateRequest.SolveDate.ConvertToDateTime() ?? ticketEntity.SolveDate
         };
 
         var result = await _serviceWrapper.Tickets.UpdateTicket(updateTicket);
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
+    }
+
+    [HttpPut("{id:int}/status")]
+    [Authorize(Roles = "Technician, Supervisor")]
+    [SwaggerOperation(Summary = "[Authorize] Update ticket by id (For management)",
+        Description = "date format d/M/YYYY")]
+    public async Task<IActionResult> UpdateTicketStatus(int id,
+        [FromBody] TicketStatusUpdateRequest ticketStatusUpdateRequest,
+        CancellationToken token)
+    {
+        var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id, token);
+
+        if (ticketEntity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Không có phiếu nào được tìm thấy",
+                data = ""
+            });
+
+        var updateTicket = new Ticket
+        {
+            TicketId = id,
+            Status = ticketStatusUpdateRequest.Status
+        };
+
+        var result = await _serviceWrapper.Tickets.UpdateTicketStatus(updateTicket, token);
         return result.IsSuccess switch
         {
             true => Ok(new
@@ -612,15 +653,6 @@ public class TicketsController : ControllerBase
             EmployeeId = supervisorId
         };
 
-        var result = await _serviceWrapper.Tickets.AddTicket(newTicket);
-        if (result == null)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Ticket failed to create",
-                data = ""
-            });
-
         var counter = 0;
 
         if (ticketCreateRequest.ImageUploadRequest != null)
@@ -658,16 +690,36 @@ public class TicketsController : ControllerBase
                         return BadRequest(new
                         {
                             status = "Bad Request",
-                            message = "You can only upload 3 images",
+                            message = "Bạn chỉ có thể upload tối đa 3 ảnh",
                             data = ""
                         });
                 }
             }
 
+
+        var result = await _serviceWrapper.Tickets.AddTicket(newTicket);
+        if (result == null)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Tạo phiếu không thành công",
+                data = ""
+            });
+
+        if (ticketCreateRequest.ImageUploadRequest == null
+            || counter == 0
+            || !ticketCreateRequest.ImageUploadRequest.Any())
+            return Ok(new
+            {
+                status = "Success",
+                message = "Phiếu đã được tạo thành công với 0 ảnh",
+                data = ""
+            });
+
         return Ok(new
         {
             status = "Success",
-            message = "Ticket created successfully",
+            message = "Phiếu đã được tạo thành công với " + counter + " ảnh",
             data = ""
         });
     }

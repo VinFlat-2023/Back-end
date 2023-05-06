@@ -36,7 +36,7 @@ public class TestUploadImageController : ControllerBase
                 data = ""
             });
 
-        var fileNameUserImage = renterCheck.ImageUrl?.Split('/').Last() ?? "";
+        var fileNameUserImage = renterCheck.ImageUrl?.Split('/').Last();
 
         var imageExtension = ImageExtension.ImageExtensionChecker(imageUploadRequest.Image.FileName);
 

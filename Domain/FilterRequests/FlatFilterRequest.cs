@@ -9,6 +9,5 @@ public class FlatFilterRequest : PagingFilter
     public string? Status { get; set; }
     public int? FlatTypeId { get; set; }
     public string? FlatTypeName { get; set; }
-    public int? BuildingId { get; set; }
     public string? BuildingName { get; set; }
 }

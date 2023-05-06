@@ -84,16 +84,21 @@ public class TicketService : ITicketService
         return await _repositoryWrapper.Tickets.SolveTicket(ticketId, token);
     }
 
-    public async Task<Ticket?> GetTicketById(int? ticketId, CancellationToken cancellationToken)
+    public async Task<RepositoryResponse> UpdateTicketStatus(Ticket updateTicket, CancellationToken token)
     {
-        return await _repositoryWrapper.Tickets.GetTicketDetail(ticketId)
-            .FirstOrDefaultAsync(cancellationToken);
+        return await _repositoryWrapper.Tickets.UpdateTicketStatus(updateTicket, token);
     }
 
-    public async Task<Ticket?> GetTicketById(int? ticketId, int? renterId, CancellationToken cancellationToken)
+    public async Task<Ticket?> GetTicketById(int? ticketId, CancellationToken token)
+    {
+        return await _repositoryWrapper.Tickets.GetTicketDetail(ticketId)
+            .FirstOrDefaultAsync(token);
+    }
+
+    public async Task<Ticket?> GetTicketById(int? ticketId, int? renterId, CancellationToken token)
     {
         return await _repositoryWrapper.Tickets.GetTicketDetail(ticketId, renterId)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(token);
     }
 
     public async Task<Ticket?> AddTicket(Ticket ticket)

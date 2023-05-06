@@ -47,7 +47,7 @@ public class RenterService : IRenterService
         throw new NotImplementedException();
     }
 
-    public async Task<Renter?> GetRenterById(int? renterId, CancellationToken cancellationToken)
+    public async Task<Renter?> GetRenterById(int? renterId, CancellationToken token)
     {
         return await _repositoryWrapper.Renters.GetRenterDetail(renterId)
             .FirstOrDefaultAsync();
@@ -110,8 +110,8 @@ public class RenterService : IRenterService
     }
 
     public async Task<Renter?> RenterLogin(string usernameOrPhoneNumber, string password,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
-        return await _repositoryWrapper.Renters.GetRenter(usernameOrPhoneNumber, password, cancellationToken);
+        return await _repositoryWrapper.Renters.GetRenter(usernameOrPhoneNumber, password, token);
     }
 }

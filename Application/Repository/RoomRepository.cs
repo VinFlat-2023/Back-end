@@ -59,6 +59,7 @@ public class RoomRepository : IRoomRepository
                 Message = "Phòng không tồn tại"
             };
 
+        // Get list of room flat id
         var roomFlatCheck = _context.RoomFlats
             .Where(x => x.RoomId == roomId)
             .Select(x => x.RoomFlatId);
@@ -71,11 +72,10 @@ public class RoomRepository : IRoomRepository
             };
 
         // Check if any active contract is using this room flat
-        var isRoomFlatRented = await _context.Contracts
+        var isRoomFlatRented = _context.Contracts
             .Where(x => x.BuildingId == buildingId
                         && roomFlatCheck.Contains(x.RoomFlatId)
-                        && x.ContractStatus.ToLower() == "active".ToLower())
-            .ToListAsync(token);
+                        && x.ContractStatus.ToLower() == "active".ToLower());
 
         if (isRoomFlatRented.Count() > 1 || !isRoomFlatRented.Any())
             return new RepositoryResponse
@@ -94,8 +94,7 @@ public class RoomRepository : IRoomRepository
     public async Task<Room?> GetRoomDetail(int? roomId, int? buildingId, CancellationToken token)
     {
         return await _context.Rooms
-            .FirstOrDefaultAsync(x => x.RoomId == roomId
-                                      && x.BuildingId == buildingId, token);
+            .FirstOrDefaultAsync(x => x.RoomId == roomId && x.BuildingId == buildingId, token);
     }
 
     public async Task<RepositoryResponse> UpdateRoom(Room room, int buildingId, CancellationToken token)
@@ -103,6 +102,7 @@ public class RoomRepository : IRoomRepository
         var roomData = await _context.Rooms
             .FirstOrDefaultAsync(x => x.RoomId == room.RoomId
                                       && x.BuildingId == buildingId, token);
+
         if (roomData == null)
             return new RepositoryResponse
             {
@@ -112,6 +112,8 @@ public class RoomRepository : IRoomRepository
 
         roomData.RoomSignName = room.RoomSignName;
         roomData.Description = room.Description;
+        roomData.Status = room.Status;
+        roomData.TotalSlot = room.TotalSlot;
 
         await _context.SaveChangesAsync(token);
 

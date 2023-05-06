@@ -166,7 +166,7 @@ public class InvoiceRepository : IInvoiceRepository
     }
 
     public async Task<Invoice?> GetInvoiceByRenterAndInvoiceId(int renterId, int invoiceId,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         return await _context.Invoices
             .Include(x => x.Renter)
@@ -176,7 +176,7 @@ public class InvoiceRepository : IInvoiceRepository
             .Include(x => x.InvoiceDetails)
             .ThenInclude(x => x.PlaceholderForFee)
             .Include(x => x.InvoiceType)
-            .FirstOrDefaultAsync(x => x.InvoiceId == invoiceId && x.RenterId == renterId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.InvoiceId == invoiceId && x.RenterId == renterId, token);
     }
 
     public async Task<Invoice?> GetUnpaidInvoiceByRenterAndMonth(int renterId, int month, CancellationToken token)

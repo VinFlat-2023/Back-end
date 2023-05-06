@@ -151,12 +151,12 @@ public class BuildingsController : ControllerBase
             AveragePrice = building.AveragePrice ?? 0,
             Status = building.Status,
             AreaId = building.AreaId,
-            BuildingImageUrl1 = building.ImageUrl ?? "",
-            BuildingImageUrl2 = building.ImageUrl2 ?? "",
-            BuildingImageUrl3 = building.ImageUrl3 ?? "",
-            BuildingImageUrl4 = building.ImageUrl4 ?? "",
-            BuildingImageUrl5 = building.ImageUrl5 ?? "",
-            BuildingImageUrl6 = building.ImageUrl6 ?? ""
+            BuildingImageUrl1 = building.ImageUrl,
+            BuildingImageUrl2 = building.ImageUrl2,
+            BuildingImageUrl3 = building.ImageUrl3,
+            BuildingImageUrl4 = building.ImageUrl4,
+            BuildingImageUrl5 = building.ImageUrl5,
+            BuildingImageUrl6 = building.ImageUrl6
         };
 
         var result = await _serviceWrapper.Buildings.UpdateBuilding(updateBuilding);
@@ -218,12 +218,12 @@ public class BuildingsController : ControllerBase
             Status = building.Status ?? true,
             AreaId = building.AreaId,
             BuildingPhoneNumber = building.BuildingPhoneNumber ?? "0",
-            BuildingImageUrl1 = building.ImageUrl ?? "",
-            BuildingImageUrl2 = building.ImageUrl2 ?? "",
-            BuildingImageUrl3 = building.ImageUrl3 ?? "",
-            BuildingImageUrl4 = building.ImageUrl4 ?? "",
-            BuildingImageUrl5 = building.ImageUrl5 ?? "",
-            BuildingImageUrl6 = building.ImageUrl6 ?? ""
+            BuildingImageUrl1 = building.ImageUrl,
+            BuildingImageUrl2 = building.ImageUrl2,
+            BuildingImageUrl3 = building.ImageUrl3,
+            BuildingImageUrl4 = building.ImageUrl4,
+            BuildingImageUrl5 = building.ImageUrl5,
+            BuildingImageUrl6 = building.ImageUrl6
         };
 
         var result = await _serviceWrapper.Buildings.AddBuilding(newBuilding);

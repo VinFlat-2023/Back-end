@@ -211,7 +211,7 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
-        var flatCheck = await _serviceWrapper.Flats.GetFlatById(contract.FlatId, token);
+        var flatCheck = await _serviceWrapper.Flats.GetFlatById(contract.FlatId, contract.BuildingId, token);
         if (flatCheck == null)
             return NotFound(new
             {
@@ -324,7 +324,8 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
-        var flatCheck = await _serviceWrapper.Flats.GetFlatById(contract.FlatId, token);
+        var flatCheck = await _serviceWrapper.Flats.GetFlatById(contract.FlatId, contract.BuildingId, token);
+
         if (flatCheck == null)
             return NotFound(new
             {

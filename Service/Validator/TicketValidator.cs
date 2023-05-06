@@ -195,8 +195,10 @@ public class TicketValidator : BaseValidator, ITicketValidator
         {
             if (obj == null)
                 ValidatorResult.Failures.Add("Thông tin ticket không được để trống");
+
             if (ticketId == null)
                 ValidatorResult.Failures.Add("Ticket không tồn tại");
+
             switch (ticketId)
             {
                 case null:
@@ -237,20 +239,6 @@ public class TicketValidator : BaseValidator, ITicketValidator
                     ValidatorResult.Failures.Add("Số lượng / thành tiền không được để trống");
                     break;
             }
-
-            switch (obj?.EmployeeId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Nhân viên không được để trống");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.EmployeeCheck(obj.EmployeeId, token) == null)
-                        ValidatorResult.Failures.Add("Tài khoản nhân viên không tồn tại");
-                    break;
-            }
-
-            if (obj?.Status == null)
-                ValidatorResult.Failures.Add("Tình trạng của phiếu không được để trống");
         }
         catch (Exception e)
         {

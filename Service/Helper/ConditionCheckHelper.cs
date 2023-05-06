@@ -59,14 +59,14 @@ public class ConditionCheckHelper : IConditionCheckHelper
         return await _serviceWrapper.Renters.RenterUsernameCheck(username, token);
     }
 
-    public async Task<Flat?> FlatCheck(int? id, CancellationToken token)
+    public async Task<Flat?> FlatCheck(int? id, int buildingId, CancellationToken token)
     {
-        return await _serviceWrapper.Flats.GetFlatById(id, token);
+        return await _serviceWrapper.Flats.GetFlatById(id, buildingId, token);
     }
 
-    public async Task<FlatType?> FlatTypeCheck(int? id, CancellationToken token)
+    public async Task<FlatType?> FlatTypeCheck(int? id, int buildingId, CancellationToken token)
     {
-        return await _serviceWrapper.FlatTypes.GetFlatTypeById(id, token);
+        return await _serviceWrapper.FlatTypes.GetFlatTypeById(id, buildingId, token);
     }
 
     public async Task<Feedback?> FeedbackCheck(int? id, CancellationToken token)

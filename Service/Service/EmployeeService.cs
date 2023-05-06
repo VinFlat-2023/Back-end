@@ -36,10 +36,10 @@ public class EmployeeService : IEmployeeService
         return pagedList;
     }
 
-    public async Task<Employee?> GetEmployeeById(int? employeeId, CancellationToken cancellationToken)
+    public async Task<Employee?> GetEmployeeById(int? employeeId, CancellationToken token)
     {
         return await _repositoryWrapper.Employees.GetEmployeeDetail(employeeId)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(token);
     }
 
     public async Task<Employee?> GetSupervisorEmployee(int employeeId, CancellationToken token)

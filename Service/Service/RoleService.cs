@@ -35,7 +35,7 @@ public class RoleService : IRoleService
         return pagedList;
     }
 
-    public async Task<Role?> GetRoleById(int? roleId, CancellationToken cancellationToken)
+    public async Task<Role?> GetRoleById(int? roleId, CancellationToken token)
     {
         return await _repositoryWrapper.Roles.GetRoleDetail(roleId);
     }

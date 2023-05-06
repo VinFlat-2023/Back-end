@@ -43,13 +43,10 @@ public class RoomValidator : BaseValidator, IRoomValidator
                     break;
             }
 
-            switch (obj?.Description)
+            switch (obj?.Status)
             {
                 case null:
-                    ValidatorResult.Failures.Add("Mô tả không được để trống");
-                    break;
-                case { } when obj.Description.Length > 500:
-                    ValidatorResult.Failures.Add("Mô tả không được quá 500 ký tự");
+                    ValidatorResult.Failures.Add("Trạng thái không được để trống");
                     break;
             }
 
@@ -58,7 +55,7 @@ public class RoomValidator : BaseValidator, IRoomValidator
                 case null:
                     ValidatorResult.Failures.Add("Tên phòng không được để trống");
                     break;
-                case { } when obj.RoomSignName.Length > 500:
+                case not null when obj.RoomSignName.Length > 500:
                     ValidatorResult.Failures.Add("Tên phòng không được quá 500 ký tự");
                     break;
             }
@@ -76,6 +73,7 @@ public class RoomValidator : BaseValidator, IRoomValidator
                             ValidatorResult.Failures.Add("Phòng không tồn tại");
                             break;
                         case not null:
+                            // Check if anyone rented this room
                             var isAnyoneRentedCheckCheck =
                                 await _conditionCheckHelper.IsAnyoneRentedCheck(roomId, buildingId, token);
                             switch (isAnyoneRentedCheckCheck.IsSuccess)
@@ -83,14 +81,15 @@ public class RoomValidator : BaseValidator, IRoomValidator
                                 case true:
                                     break;
                                 case false:
-                                    ValidatorResult.Failures.Add(
-                                        "Loại phòng đã có người thuê không thể thay đổi số lượng chỗ");
+                                    ValidatorResult.Failures.Add(isAnyoneRentedCheckCheck.Message);
                                     break;
                             }
 
                             break;
                     }
 
+                    if (obj.TotalSlot <= 0)
+                        ValidatorResult.Failures.Add("Số lượng chỗ phải lớn hơn 0");
                     break;
             }
         }
@@ -121,22 +120,12 @@ public class RoomValidator : BaseValidator, IRoomValidator
                     break;
             }
 
-            switch (obj?.Description)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Mô tả không được để trống");
-                    break;
-                case { } when obj.Description.Length > 500:
-                    ValidatorResult.Failures.Add("Mô tả không được quá 500 ký tự");
-                    break;
-            }
-
             switch (obj?.RoomSignName)
             {
                 case null:
                     ValidatorResult.Failures.Add("Tên phòng không được để trống");
                     break;
-                case { } when obj.RoomSignName.Length > 500:
+                case not null when obj.RoomSignName.Length > 500:
                     ValidatorResult.Failures.Add("Tên phòng không được quá 500 ký tự");
                     break;
             }

@@ -306,6 +306,28 @@ internal class TicketRepository : ITicketRepository
         };
     }
 
+    public async Task<RepositoryResponse> UpdateTicketStatus(Ticket updateTicket, CancellationToken token)
+    {
+        var ticketFound = await _context.Tickets
+            .FirstOrDefaultAsync(x => x.TicketId == updateTicket.TicketId, token);
+
+        if (ticketFound == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Phiếu không tồn tại"
+            };
+
+        ticketFound.Status = updateTicket.Status;
+
+        await _context.SaveChangesAsync();
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Đã xác nhận thành công"
+        };
+    }
+
     /// <summary>
     ///     DeleteFeedback ticket by id
     /// </summary>

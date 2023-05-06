@@ -13,7 +13,7 @@ public interface IContractService
 
     public Task<Contract?> GetContractHistoryById(int contractId, CancellationToken token);
     public Task<PagedList<Contract>?> GetContractHistoryList(ContractHistoryFilter filters, CancellationToken token);
-    public Task<Contract?> GetContractById(int? contractId, CancellationToken cancellationToken);
+    public Task<Contract?> GetContractById(int? contractId, CancellationToken token);
     public Task<Contract?> GetContractByRenterIdWithActiveStatus(int contractId, CancellationToken token);
     public Task<Contract?> GetLatestContractByUserId(int renterId, CancellationToken token);
     public Task<Contract?> AddContract(Contract contract);

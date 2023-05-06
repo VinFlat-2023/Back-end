@@ -71,10 +71,10 @@ public class ContractService : IContractService
         return pagedList;
     }
 
-    public async Task<Contract?> GetContractById(int? contractId, CancellationToken cancellationToken)
+    public async Task<Contract?> GetContractById(int? contractId, CancellationToken token)
     {
         return await _repositoryWrapper.Contracts.GetContractDetail(contractId)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(token);
     }
 
     public async Task<Contract?> GetContractByRenterIdWithActiveStatus(int contractId, CancellationToken token)

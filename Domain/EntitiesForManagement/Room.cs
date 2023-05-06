@@ -15,7 +15,7 @@ public class Room
     public int RoomId { get; set; }
     public string RoomSignName { get; set; }
     public int TotalSlot { get; set; } // Max slot, Min slot = 1
-    public string Description { get; set; }
+    public string? Description { get; set; }
     public string Status { get; set; } // Active / Inactive
 
     [MaxUploadedFileSize(4 * 1024 * 1024)]

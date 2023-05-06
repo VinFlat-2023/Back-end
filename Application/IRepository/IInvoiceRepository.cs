@@ -17,7 +17,7 @@ public interface IInvoiceRepository
     public Task<Invoice?> GetInvoiceIncludeRenter(int invoiceId, CancellationToken token);
 
     public Task<Invoice?> GetInvoiceByRenterAndInvoiceId(int renterId, int invoiceId,
-        CancellationToken cancellationToken);
+        CancellationToken token);
 
     public Task<Invoice?> GetUnpaidInvoiceByRenterAndMonth(int renterId, int month, CancellationToken token);
     public IEnumerable<Invoice> GetInvoiceListByMonth(int month);

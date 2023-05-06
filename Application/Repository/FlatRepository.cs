@@ -44,12 +44,37 @@ public class FlatRepository : IFlatRepository
             .AsNoTracking();
     }
 
+    public IQueryable<Flat> GetFlatList(FlatFilter filters, int buildingId)
+    {
+        return _context.Flats
+            .Include(x => x.Building)
+            .ThenInclude(x => x.Area)
+            //.Where(x => x.BuildingId == x.Building.BuildingId)
+            .Include(x => x.FlatType)
+            .Where(x => x.BuildingId == buildingId)
+            //.Include(x => x.UtilitiesFlats)
+            //.ThenInclude(x => x.Utility)
+            //.Where(x => x.FlatTypeId == x.FlatType.FlatTypeId)
+            // filter starts here
+            .Where(f =>
+                (filters.Name == null || f.Name.Contains(filters.Name.ToLower()))
+                && (filters.Description == null || f.Description.Contains(filters.Description.ToLower()))
+                && (filters.Status == null || f.Status == filters.Status)
+                && (filters.FlatTypeId == null || f.FlatTypeId == filters.FlatTypeId)
+                && (filters.FlatTypeName == null ||
+                    f.FlatType.FlatTypeName.ToLower().Contains(filters.FlatTypeName.ToLower()))
+                && (filters.BuildingName == null ||
+                    f.Building.BuildingName.ToLower().Contains(filters.BuildingName.ToLower())))
+            .AsNoTracking();
+    }
+
     /// <summary>
     ///     Get flat by id
     /// </summary>
     /// <param name="flatId"></param>
+    /// <param name="buildingId"></param>
     /// <returns></returns>
-    public IQueryable<Flat> GetFlatDetail(int? flatId)
+    public IQueryable<Flat> GetFlatDetail(int? flatId, int buildingId)
     {
         return _context.Flats
             .Include(x => x.Building)
@@ -57,15 +82,15 @@ public class FlatRepository : IFlatRepository
             .Include(x => x.FlatType)
             //.Include(x => x.UtilitiesFlats)
             //.ThenInclude(x => x.Utility)
-            .Where(x => x.FlatId == flatId);
+            .Where(x => x.FlatId == flatId && x.BuildingId == buildingId);
     }
 
-    public async Task<RepositoryResponse> GetRoomInAFlat(int flatId, CancellationToken cancellationToken)
+    public async Task<RepositoryResponse> GetRoomInAFlat(int flatId, CancellationToken token)
     {
         var roomInFlat = await _context.Flats
             .Where(x => x.FlatId == flatId)
             .Include(x => x.RoomFlats)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(token);
 
         if (roomInFlat == null)
             return new RepositoryResponse

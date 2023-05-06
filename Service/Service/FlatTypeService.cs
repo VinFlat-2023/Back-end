@@ -37,10 +37,10 @@ public class FlatTypeService : IFlatTypeService
         return pagedList;
     }
 
-    public async Task<FlatType?> GetFlatTypeById(int? flatTypeId, CancellationToken cancellationToken)
+    public async Task<FlatType?> GetFlatTypeById(int? flatTypeId, int buildingId, CancellationToken token)
     {
         return await _repositoryWrapper.FlatTypes.GetFlatTypeDetail(flatTypeId)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(token);
     }
 
     public async Task<FlatType?> AddFlatType(FlatType flatType)

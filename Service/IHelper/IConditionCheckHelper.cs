@@ -22,9 +22,9 @@ public interface IConditionCheckHelper
 
     public Task<RepositoryResponse> EmployeeEmailCheck(string objEmail, int? employeeId, CancellationToken token);
 
-    public Task<Flat?> FlatCheck(int? id, CancellationToken token);
+    public Task<Flat?> FlatCheck(int? id, int buildingId, CancellationToken token);
 
-    public Task<FlatType?> FlatTypeCheck(int? id, CancellationToken token);
+    public Task<FlatType?> FlatTypeCheck(int? id, int buildingId, CancellationToken token);
 
     public Task<Feedback?> FeedbackCheck(int? id, CancellationToken token);
 

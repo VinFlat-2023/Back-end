@@ -16,7 +16,7 @@ public interface IEmployeeRepository
     public Task<RepositoryResponse> DeleteEmployee(int employeeId);
 
     public Task<Employee?> GetEmployee(string usernameOrPhoneNumber, string password,
-        CancellationToken cancellationToken);
+        CancellationToken token);
 
     public Task<RepositoryResponse> IsEmployeeEmailExist(string? email, CancellationToken token);
     public Task<RepositoryResponse> IsEmployeeEmailExist(string? email, int? employeeId, CancellationToken token);

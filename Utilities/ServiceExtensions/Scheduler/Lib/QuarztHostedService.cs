@@ -22,23 +22,23 @@ public class QuarztHostedService : IHostedService
 
     public IScheduler Scheduler { get; set; }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
+    public async Task StartAsync(CancellationToken token)
     {
-        Scheduler = await schedulerFactory.GetScheduler(cancellationToken);
+        Scheduler = await schedulerFactory.GetScheduler(token);
         Scheduler.JobFactory = jobFactory;
         foreach (var scheduledJob in scheduledJobs)
         {
             var job = CreateJob(scheduledJob);
             var trigger = CreateTrigger(scheduledJob);
-            await Scheduler.ScheduleJob(job, trigger, cancellationToken);
+            await Scheduler.ScheduleJob(job, trigger, token);
         }
 
-        await Scheduler.Start(cancellationToken);
+        await Scheduler.Start(token);
     }
 
-    public async Task StopAsync(CancellationToken cancellationToken)
+    public async Task StopAsync(CancellationToken token)
     {
-        await Scheduler.Shutdown(cancellationToken);
+        await Scheduler.Shutdown(token);
     }
 
     private static IJobDetail CreateJob(ScheduledJob scheduledJob)
