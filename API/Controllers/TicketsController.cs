@@ -6,7 +6,6 @@ using Domain.EntityRequest.Ticket;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.Utils;
-using Domain.ViewModel.ImageUrls;
 using Domain.ViewModel.TicketEntity;
 using Domain.ViewModel.TicketTypeEntity;
 using Microsoft.AspNetCore.Authorization;
@@ -414,34 +413,18 @@ public class TicketsController : ControllerBase
                         data = ""
                     });
 
-                var ticket = new TicketDetailEntity
-                {
-                    TicketId = renterTicketCheck.TicketId,
-                    Description = renterTicketCheck.Description,
-                    TicketName = renterTicketCheck.TicketName,
-                    CreateDate = renterTicketCheck.CreateDate,
-                    SolveDate = renterTicketCheck.SolveDate,
-                    Amount = renterTicketCheck.TotalAmount,
-                    Status = renterTicketCheck.Status,
-                    ContractId = renterTicketCheck.ContractId,
-                    EmployeeId = renterTicketCheck.EmployeeId,
-                    TicketTypeId = renterTicketCheck.TicketTypeId,
-                    ImageUrls = new List<TicketImageUrlViewModel>
-                    {
-                        new()
-                        {
-                            ImageUrl1 = renterTicketCheck.ImageUrl1,
-                            ImageUrl2 = renterTicketCheck.ImageUrl2,
-                            ImageUrl3 = renterTicketCheck.ImageUrl3
-                        }
-                    }
-                };
+                string?[] imageUrls =
+                    { renterTicketCheck.ImageUrl1, renterTicketCheck.ImageUrl2, renterTicketCheck.ImageUrl3 };
+
+                var renterTicket = _mapper.Map<TicketDetailEntity>(renterTicketCheck);
+
+                renterTicket.ImageUrls = imageUrls;
 
                 return Ok(new
                 {
                     status = "Success",
                     message = "Đã tìm thấy",
-                    data = ticket
+                    data = renterTicket
                 });
 
             case null:
@@ -658,7 +641,8 @@ public class TicketsController : ControllerBase
     [HttpPost]
     [Authorize(Roles = "Renter")]
     [SwaggerOperation(Summary = "[Authorize] Create ticket (For renter)", Description = "date format d/M/YYYY")]
-    public async Task<IActionResult> PostTicket([FromForm] TicketCreateRequest ticketCreateRequest, CancellationToken token)
+    public async Task<IActionResult> PostTicket([FromForm] TicketCreateRequest ticketCreateRequest,
+        CancellationToken token)
     {
         var userId = int.Parse(User.Identity?.Name);
 

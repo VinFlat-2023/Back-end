@@ -1,5 +1,3 @@
-using Domain.ViewModel.ImageUrls;
-
 namespace Domain.ViewModel.ContractEntity;
 
 public class ContactDetailRenterEntity
@@ -22,5 +20,5 @@ public class ContactDetailRenterEntity
     public string? ContractImageUrl2 { get; set; }
     public string? ContractImageUrl3 { get; set; }
     public string? ContractImageUrl4 { get; set; }
-    public List<ContractImageUrlViewModel>? ImageUrls { get; set; }
+    public string?[]? ImageUrls { get; set; }
 }

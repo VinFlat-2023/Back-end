@@ -1,5 +1,3 @@
-using Domain.ViewModel.ImageUrls;
-
 namespace Domain.ViewModel.ContractEntity;
 
 public class ContractMeterDetailEntity
@@ -14,11 +12,7 @@ public class ContractMeterDetailEntity
     public DateTime? EndDate { get; set; }
     public DateTime LastUpdated { get; set; }
     public string ContractStatus { get; set; }
-    public string? ContractImageUrl1 { get; set; }
-    public string? ContractImageUrl2 { get; set; }
-    public string? ContractImageUrl3 { get; set; }
-    public string? ContractImageUrl4 { get; set; }
-    public List<ContractImageUrlViewModel>? ImageUrls { get; set; }
+    public string?[]? ImageUrls { get; set; }
     public string PriceForRent { get; set; }
     public string PriceForWater { get; set; }
     public string PriceForElectricity { get; set; }

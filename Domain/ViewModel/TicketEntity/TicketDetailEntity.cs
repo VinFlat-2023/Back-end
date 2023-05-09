@@ -1,7 +1,6 @@
 using System.Globalization;
 using Domain.ViewModel.ContractEntity;
 using Domain.ViewModel.EmployeeEntity;
-using Domain.ViewModel.ImageUrls;
 using Domain.ViewModel.TicketTypeEntity;
 
 namespace Domain.ViewModel.TicketEntity;
@@ -24,7 +23,7 @@ public class TicketDetailEntity
     public decimal? Amount { get; set; }
     public string Status { get; set; }
     public string? CancelledReason { get; set; }
-    public List<TicketImageUrlViewModel>? ImageUrls { get; set; }
+    public string?[]? ImageUrls { get; set; }
     public int ContractId { get; set; }
     public ContractBasicDetailEntity Contract { get; set; }
     public int EmployeeId { get; set; }

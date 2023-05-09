@@ -1,4 +1,3 @@
-using Domain.ViewModel.ImageUrls;
 using Domain.ViewModel.RenterEntity;
 
 namespace Domain.ViewModel.ContractEntity;
@@ -15,5 +14,5 @@ public class ContractBasicDetailEntity
     public string ContractStatus { get; set; }
     public int RenterId { get; set; }
     public RenterBasicDetailEntity Renter { get; set; }
-    public List<ContractImageUrlViewModel>? ImageUrls { get; set; }
+    public string?[]? ImageUrls { get; set; }
 }

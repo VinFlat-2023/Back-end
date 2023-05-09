@@ -30,6 +30,7 @@ internal class TicketRepository : ITicketRepository
             .Where(x =>
                 (filters.Status == null || x.Status == filters.Status)
                 && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
+                && (filters.TicketId == null || x.TicketId == filters.TicketId)
                 && (filters.CreateDate == null || x.CreateDate == filters.CreateDate)
                 && (filters.SolveDate == null || x.SolveDate == filters.SolveDate)
                 && (filters.Amount == null || x.TotalAmount == filters.Amount)
@@ -64,6 +65,7 @@ internal class TicketRepository : ITicketRepository
                 // filter starts here
                 .Where(x =>
                     (filters.Status == null || x.Status == filters.Status)
+                    && (filters.TicketId == null || x.TicketId == filters.TicketId)
                     && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
                     && (filters.CreateDate == null || x.CreateDate == filters.CreateDate)
                     && (filters.Amount == null || x.TotalAmount == filters.Amount)
@@ -89,6 +91,7 @@ internal class TicketRepository : ITicketRepository
                 // filter starts here
                 .Where(x =>
                     (filters.Status == null || x.Status == filters.Status)
+                    && (filters.TicketId == null || x.TicketId == filters.TicketId)
                     && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
                     && (filters.CreateDate == null || x.CreateDate == filters.CreateDate)
                     && (filters.Amount == null || x.TotalAmount == filters.Amount)
@@ -118,6 +121,7 @@ internal class TicketRepository : ITicketRepository
             // filter starts here
             .Where(x =>
                 (filters.Status == null || x.Status == filters.Status)
+                && (filters.TicketId == null || x.TicketId == filters.TicketId)
                 && (filters.TicketTypeId == null || x.TicketTypeId == filters.TicketTypeId)
                 && (filters.CreateDate == null || x.CreateDate == filters.CreateDate)
                 && (filters.SolveDate == null || x.SolveDate == filters.SolveDate)
@@ -149,6 +153,7 @@ internal class TicketRepository : ITicketRepository
     public IQueryable<Ticket> GetTicketDetail(int? ticketId)
     {
         return _context.Tickets
+            .Include(x => x.Employee)
             .Include(x => x.Contract)
             .ThenInclude(x => x.Renter)
             .Include(x => x.TicketType)
@@ -160,6 +165,7 @@ internal class TicketRepository : ITicketRepository
     public IQueryable<Ticket> GetTicketDetail(int? ticketId, int? renterId)
     {
         return _context.Tickets
+            .Include(x => x.Employee)
             .Include(x => x.TicketType)
             .Include(x => x.Contract)
             .Where(x => x.TicketTypeId == x.TicketType.TicketTypeId)
