@@ -340,7 +340,7 @@ public class TestUploadImageController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "No ticket with this id found with this user",
+                message = "Phiếu này không tồn tại",
                 data = ""
             });
 

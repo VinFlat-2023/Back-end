@@ -86,11 +86,11 @@ public static class MailTemplateHelper
             {
                 serviceTable.Append("<tr>");
                 serviceTable.Append($"<td>{detail.Service.Name}</td >");
-                serviceTable.Append($"<td>{detail.Amount}</td >");
-                serviceTable.Append($"<td>{detail.Amount * detail.Service.Amount}</td>");
+                serviceTable.Append($"<td>{detail.Price}</td >");
+                serviceTable.Append($"<td>{detail.Price * detail.Service.Price}</td>");
 
                 serviceTable.Append("</tr>");
-                serviceTotal += detail.Amount * detail.Amount;
+                serviceTotal += detail.Price * detail.Price;
                 hasService = true;
             }
 

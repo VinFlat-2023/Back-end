@@ -233,9 +233,9 @@ public class InvoiceValidator : BaseValidator, IInvoiceValidator
                     break;
             }
 
-            switch (obj?.Amount)
+            switch (obj?.Price)
             {
-                case not null when obj.Amount < 0:
+                case not null when obj.Price < 0:
                     ValidatorResult.Failures.Add("Invoice detail amount cannot be negative");
                     break;
                 case null:

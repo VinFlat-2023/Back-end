@@ -79,6 +79,7 @@ public class TicketsController : ControllerBase
                 {
                     var buildingIdBasedOnSupervisor =
                         await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+
                     switch (buildingIdBasedOnSupervisor)
                     {
                         case -2:
@@ -205,7 +206,8 @@ public class TicketsController : ControllerBase
         });
     }
 
-    [HttpPut("{id:int}/accept")]
+    // Change from accept to confirm
+    [HttpPut("{id:int}/confirm")]
     [Authorize(Roles = "Renter")]
     [SwaggerOperation("[Authorize] Accept ticket resolution [For renter]")]
     public async Task<IActionResult> ApproveTicket(int id, CancellationToken token)
@@ -236,7 +238,7 @@ public class TicketsController : ControllerBase
                     return NotFound(new
                     {
                         status = "Not Found",
-                        message = "No ticket with this id found with this user",
+                        message = "Phiếu này không tồn tại",
                         data = ""
                     });
 
@@ -285,6 +287,88 @@ public class TicketsController : ControllerBase
             data = ""
         });
     }
+
+    [HttpPut("{id:int}/cancel")]
+    [Authorize(Roles = "Renter")]
+    [SwaggerOperation("[Authorize] Cancel ticket (For renter and supervisor")]
+    public async Task<IActionResult> CancelTicket(int id, CancellationToken token)
+    {
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
+        var entity = await _serviceWrapper.Tickets.GetTicketById(id, token);
+
+        if (entity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Không có phiếu nào được tìm thấy",
+                data = ""
+            });
+
+        switch (userRole)
+        {
+            case "Renter" when User.Identity?.Name == entity.Contract.RenterId.ToString():
+
+                var renterTicketCheck =
+                    await _serviceWrapper.Tickets.GetTicketById(id, entity.Contract.RenterId, token);
+
+                if (renterTicketCheck == null)
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "Không có phiếu nào được tìm thấy",
+                        data = ""
+                    });
+
+                if (renterTicketCheck.Status.ToLower() == "Confirming".ToLower())
+                {
+                    var approveTicket = await _serviceWrapper.Tickets.ApproveTicket(id, token);
+                    switch (approveTicket.IsSuccess)
+                    {
+                        case true:
+                            return Ok(new
+                            {
+                                status = "Success",
+                                message = approveTicket.Message,
+                                data = ""
+                            });
+                        case false:
+                            return BadRequest(new
+                            {
+                                status = "Bad Request",
+                                message = approveTicket.Message,
+                                data = ""
+                            });
+                    }
+                }
+
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Chỉ có thể xác nhận khi trạng thái là đã xử lí",
+                    data = ""
+                });
+
+            case null:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Không có phiếu nào được tìm thấy",
+                    data = ""
+                });
+        }
+
+        return BadRequest(new
+        {
+            status = "Bad Request",
+            message = "Bad request !!!",
+            data = ""
+        });
+    }
+
 
     // GET: api/Requests/5
     [HttpGet("{id:int}")]
@@ -574,8 +658,7 @@ public class TicketsController : ControllerBase
     [HttpPost]
     [Authorize(Roles = "Renter")]
     [SwaggerOperation(Summary = "[Authorize] Create ticket (For renter)", Description = "date format d/M/YYYY")]
-    public async Task<IActionResult> PostTicket([FromForm] TicketCreateRequest ticketCreateRequest,
-        CancellationToken token)
+    public async Task<IActionResult> PostTicket([FromForm] TicketCreateRequest ticketCreateRequest, CancellationToken token)
     {
         var userId = int.Parse(User.Identity?.Name);
 
@@ -698,6 +781,7 @@ public class TicketsController : ControllerBase
 
 
         var result = await _serviceWrapper.Tickets.AddTicket(newTicket);
+
         if (result == null)
             return BadRequest(new
             {

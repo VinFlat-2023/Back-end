@@ -260,7 +260,7 @@ public class ServicesController : ControllerBase
             Description = service.Description,
             Status = service.Status,
             ServiceTypeId = service.ServiceTypeId,
-            Amount = service.Amount ?? 0,
+            Price = service.Price,
             BuildingId = buildingId
         };
 
@@ -327,7 +327,7 @@ public class ServicesController : ControllerBase
             Description = service.Description,
             Status = service.Status,
             ServiceTypeId = service.ServiceTypeId,
-            Amount = service.Amount ?? 0,
+            Price = service.Price,
             BuildingId = buildingId
             // TODO : Auto get latest invoice detail ID with corresponding Invoice with active status
             // TODO : In invoice controller, auto generate invoice detail id

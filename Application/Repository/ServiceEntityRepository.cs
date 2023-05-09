@@ -30,7 +30,7 @@ internal class ServiceEntityRepository : IServiceEntityRepository
             .Where(x =>
                 (filters.Name == null || x.Name.ToLower().Contains(filters.Name.ToLower()))
                 && (filters.Status == null || x.Status == filters.Status)
-                && (filters.Amount == null || x.Amount == filters.Amount)
+                && (filters.Price == null || x.Price == filters.Price)
                 && (filters.BuildingId == null || x.BuildingId == filters.BuildingId)
                 && (filters.BuildingName == null ||
                     x.Building.BuildingName.ToLower().Contains(filters.BuildingName.ToLower()))
@@ -101,7 +101,7 @@ internal class ServiceEntityRepository : IServiceEntityRepository
         serviceData.Name = service.Name;
         serviceData.Description = service.Description;
         serviceData.Status = service.Status;
-        serviceData.Amount = service.Amount ?? serviceData.Amount;
+        serviceData.Price = service.Price;
 
         await _context.SaveChangesAsync();
         return new RepositoryResponse

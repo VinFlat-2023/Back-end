@@ -19,7 +19,7 @@ public class ServiceEntity
     public string Name { get; set; }
     public string Description { get; set; }
     public bool Status { get; set; }
-    public decimal? Amount { get; set; }
+    public decimal Price { get; set; }
 
     [MaxUploadedFileSize(4 * 1024 * 1024)]
     [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]

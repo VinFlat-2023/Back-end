@@ -2161,7 +2161,7 @@ public class ApplicationContext : DbContext
                 Name = "Lau dọn phòng",
                 Description = "Cung cấp nước 1",
                 Status = true,
-                Amount = 0,
+                Price = 0,
                 ServiceTypeId = 1,
                 BuildingId = 2
             },
@@ -2171,7 +2171,7 @@ public class ApplicationContext : DbContext
                 Name = "Thay cầu nước",
                 Description = "Cung cấp nước 2 ",
                 Status = true,
-                Amount = 0,
+                Price = 0,
                 ServiceTypeId = 1,
                 BuildingId = 1
             },
@@ -2181,7 +2181,7 @@ public class ApplicationContext : DbContext
                 Name = "Khai thanh toán",
                 Description = "Cung cấp nước 3",
                 Status = true,
-                Amount = 0,
+                Price = 0,
                 ServiceTypeId = 3,
                 BuildingId = 3
             },
@@ -2191,7 +2191,7 @@ public class ApplicationContext : DbContext
                 Name = "Xe đưa đón",
                 Description = "Cung cấp 4 cho toa nha 3",
                 Status = true,
-                Amount = 0,
+                Price = 0,
                 ServiceTypeId = 2,
                 BuildingId = 3
             }
@@ -2202,7 +2202,7 @@ public class ApplicationContext : DbContext
                 Name = "Dọn dẹp",
                 Description = "Cung cấp 5 cho toa nha 3",
                 Status = true,
-                Amount = 0,
+                Price = 0,
                 ServiceTypeId = 2,
                 BuildingId = 3
             }
@@ -2213,7 +2213,7 @@ public class ApplicationContext : DbContext
                 Name = "Chuyển vat tu",
                 Description = "Cung cấp 6 cho toa nha 3",
                 Status = true,
-                Amount = 0,
+                Price = 0,
                 ServiceTypeId = 2,
                 BuildingId = 3
             }
@@ -2355,110 +2355,110 @@ public class ApplicationContext : DbContext
             {
                 InvoiceDetailId = 1,
                 InvoiceId = 1,
-                Amount = 0,
+                Price = 0,
                 ServiceId = 1
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 2,
                 InvoiceId = 1,
-                Amount = 0,
+                Price = 0,
                 ServiceId = 2
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 3,
                 InvoiceId = 1,
-                Amount = 0
+                Price = 0
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 4,
                 InvoiceId = 2,
-                Amount = 0
+                Price = 0
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 5,
                 InvoiceId = 4,
-                Amount = 0,
+                Price = 0,
                 ServiceId = 4
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 6,
                 InvoiceId = 4,
-                Amount = 0,
+                Price = 0,
                 ServiceId = 4
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 7,
                 InvoiceId = 5,
-                Amount = 0,
+                Price = 0,
                 ServiceId = 4
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 8,
                 InvoiceId = 5,
-                Amount = 0,
+                Price = 0,
                 ServiceId = 5
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 9,
                 InvoiceId = 5,
-                Amount = 0,
+                Price = 0,
                 ServiceId = 5
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 10,
                 InvoiceId = 6,
-                Amount = 0,
+                Price = 0,
                 ServiceId = 6
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 11,
                 InvoiceId = 6,
-                Amount = 0,
+                Price = 0,
                 ServiceId = 5
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 12,
                 InvoiceId = 6,
-                Amount = 0,
+                Price = 0,
                 ServiceId = 6
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 13,
                 InvoiceId = 7,
-                Amount = 0,
+                Price = 0,
                 ServiceId = 3
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 14,
                 InvoiceId = 7,
-                Amount = 0,
+                Price = 0,
                 ServiceId = 3
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 15,
                 InvoiceId = 7,
-                Amount = 0,
+                Price = 0,
                 ServiceId = 4
             },
             new InvoiceDetail
             {
                 InvoiceDetailId = 16,
                 InvoiceId = 7,
-                Amount = 0,
+                Price = 0,
                 ServiceId = 5
             }
         );

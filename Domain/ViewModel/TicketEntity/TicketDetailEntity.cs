@@ -23,6 +23,7 @@ public class TicketDetailEntity
 
     public decimal? Amount { get; set; }
     public string Status { get; set; }
+    public string? CancelledReason { get; set; }
     public List<TicketImageUrlViewModel>? ImageUrls { get; set; }
     public int ContractId { get; set; }
     public ContractBasicDetailEntity Contract { get; set; }
