@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230510073249_RemoveWildCardId")]
+    partial class RemoveWildCardId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1084,17 +1086,17 @@ namespace Infrastructure.Migrations
                             ContractSerialNumber = "VF-0001",
                             ContractStatus = "Active",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 4, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2206),
+                            DateSigned = new DateTime(2023, 4, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5186),
                             Description = "Contract description for renter 1",
                             FlatId = 3,
-                            LastUpdated = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2209),
+                            LastUpdated = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5189),
                             PriceForElectricity = 0m,
                             PriceForRent = 1800000m,
                             PriceForService = 0m,
                             PriceForWater = 0m,
                             RenterId = 1,
                             RoomFlatId = 3,
-                            StartDate = new DateTime(2023, 4, 16, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2208)
+                            StartDate = new DateTime(2023, 4, 15, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5188)
                         },
                         new
                         {
@@ -1108,17 +1110,17 @@ namespace Infrastructure.Migrations
                             ContractSerialNumber = "VF-0002",
                             ContractStatus = "Active",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 4, 12, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2212),
+                            DateSigned = new DateTime(2023, 4, 11, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5192),
                             Description = "Contract description for renter 2",
                             FlatId = 3,
-                            LastUpdated = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2213),
+                            LastUpdated = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5193),
                             PriceForElectricity = 0m,
                             PriceForRent = 2800000m,
                             PriceForService = 0m,
                             PriceForWater = 0m,
                             RenterId = 2,
                             RoomFlatId = 3,
-                            StartDate = new DateTime(2023, 4, 14, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2213)
+                            StartDate = new DateTime(2023, 4, 13, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5193)
                         },
                         new
                         {
@@ -1132,17 +1134,17 @@ namespace Infrastructure.Migrations
                             ContractSerialNumber = "VF-0003",
                             ContractStatus = "Active",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 4, 12, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2215),
+                            DateSigned = new DateTime(2023, 4, 11, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5196),
                             Description = "Contract description for renter 3",
                             FlatId = 3,
-                            LastUpdated = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2216),
+                            LastUpdated = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5197),
                             PriceForElectricity = 120m,
                             PriceForRent = 2800000m,
                             PriceForService = 10000m,
                             PriceForWater = 1000m,
                             RenterId = 3,
                             RoomFlatId = 3,
-                            StartDate = new DateTime(2023, 4, 14, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2216)
+                            StartDate = new DateTime(2023, 4, 13, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5196)
                         },
                         new
                         {
@@ -1156,17 +1158,17 @@ namespace Infrastructure.Migrations
                             ContractSerialNumber = "VF-0004",
                             ContractStatus = "Active",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 4, 12, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2218),
+                            DateSigned = new DateTime(2023, 4, 11, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5199),
                             Description = "Contract description for renter 3",
                             FlatId = 3,
-                            LastUpdated = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2228),
+                            LastUpdated = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5199),
                             PriceForElectricity = 120m,
                             PriceForRent = 2800000m,
                             PriceForService = 10000m,
                             PriceForWater = 1000m,
                             RenterId = 3,
                             RoomFlatId = 2,
-                            StartDate = new DateTime(2023, 4, 14, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2218)
+                            StartDate = new DateTime(2023, 4, 13, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5199)
                         },
                         new
                         {
@@ -1180,17 +1182,17 @@ namespace Infrastructure.Migrations
                             ContractSerialNumber = "VF-0005",
                             ContractStatus = "Inactive",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 4, 12, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2230),
+                            DateSigned = new DateTime(2023, 4, 11, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5201),
                             Description = "Contract description for renter 3",
                             FlatId = 3,
-                            LastUpdated = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2233),
+                            LastUpdated = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5208),
                             PriceForElectricity = 120m,
                             PriceForRent = 2800000m,
                             PriceForService = 10000m,
                             PriceForWater = 1000m,
                             RenterId = 3,
                             RoomFlatId = 2,
-                            StartDate = new DateTime(2023, 4, 14, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2232)
+                            StartDate = new DateTime(2023, 4, 13, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5201)
                         },
                         new
                         {
@@ -1202,17 +1204,17 @@ namespace Infrastructure.Migrations
                             ContractSerialNumber = "VF-0006",
                             ContractStatus = "Inactive",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 4, 12, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2235),
+                            DateSigned = new DateTime(2023, 4, 11, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5210),
                             Description = "Contract description for renter 3",
                             FlatId = 3,
-                            LastUpdated = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2235),
+                            LastUpdated = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5213),
                             PriceForElectricity = 120m,
                             PriceForRent = 2800000m,
                             PriceForService = 10000m,
                             PriceForWater = 1000m,
                             RenterId = 3,
                             RoomFlatId = 2,
-                            StartDate = new DateTime(2023, 4, 14, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2235)
+                            StartDate = new DateTime(2023, 4, 13, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5212)
                         });
                 });
 
@@ -2267,7 +2269,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             InvoiceId = 1,
-                            CreatedTime = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2133),
+                            CreatedTime = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5137),
                             Detail = "Detail for invoice 1",
                             EmployeeId = 2,
                             InvoiceTypeId = 1,
@@ -2279,7 +2281,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             InvoiceId = 2,
-                            CreatedTime = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2135),
+                            CreatedTime = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5139),
                             Detail = "Detail for invoice 2",
                             EmployeeId = 3,
                             InvoiceTypeId = 1,
@@ -2291,9 +2293,9 @@ namespace Infrastructure.Migrations
                         new
                         {
                             InvoiceId = 3,
-                            CreatedTime = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2136),
+                            CreatedTime = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5140),
                             Detail = "Detail for invoice 3",
-                            DueDate = new DateTime(2023, 6, 10, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2136),
+                            DueDate = new DateTime(2023, 6, 9, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5140),
                             EmployeeId = 4,
                             InvoiceTypeId = 1,
                             Name = "Hoá đơn điện tử cho renter 3",
@@ -2304,13 +2306,13 @@ namespace Infrastructure.Migrations
                         new
                         {
                             InvoiceId = 4,
-                            CreatedTime = new DateTime(2023, 1, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2138),
+                            CreatedTime = new DateTime(2023, 1, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5142),
                             Detail = "Detail for invoice 3 (2)",
-                            DueDate = new DateTime(2023, 2, 8, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2140),
+                            DueDate = new DateTime(2023, 2, 7, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5144),
                             EmployeeId = 2,
                             InvoiceTypeId = 1,
                             Name = "Hoá đơn điện tử cho renter 3 (2)",
-                            PaymentTime = new DateTime(2023, 2, 6, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2141),
+                            PaymentTime = new DateTime(2023, 2, 5, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5145),
                             RenterId = 3,
                             Status = true,
                             TotalAmount = 0m
@@ -2318,13 +2320,13 @@ namespace Infrastructure.Migrations
                         new
                         {
                             InvoiceId = 5,
-                            CreatedTime = new DateTime(2023, 2, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2142),
+                            CreatedTime = new DateTime(2023, 2, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5146),
                             Detail = "Detail for invoice 3 (3)",
-                            DueDate = new DateTime(2023, 2, 28, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2143),
+                            DueDate = new DateTime(2023, 2, 27, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5146),
                             EmployeeId = 2,
                             InvoiceTypeId = 1,
                             Name = "Hoá đơn điện tử cho renter 3 (3)",
-                            PaymentTime = new DateTime(2023, 2, 26, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2143),
+                            PaymentTime = new DateTime(2023, 2, 25, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5147),
                             RenterId = 3,
                             Status = true,
                             TotalAmount = 0m
@@ -2332,13 +2334,13 @@ namespace Infrastructure.Migrations
                         new
                         {
                             InvoiceId = 6,
-                            CreatedTime = new DateTime(2023, 4, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2145),
+                            CreatedTime = new DateTime(2023, 4, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5148),
                             Detail = "Detail for invoice 3 (4)",
-                            DueDate = new DateTime(2023, 4, 29, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2146),
+                            DueDate = new DateTime(2023, 4, 28, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5149),
                             EmployeeId = 2,
                             InvoiceTypeId = 1,
                             Name = "Hoá đơn điện tử cho renter 3 (4)",
-                            PaymentTime = new DateTime(2023, 4, 27, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2146),
+                            PaymentTime = new DateTime(2023, 4, 26, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5149),
                             RenterId = 3,
                             Status = true,
                             TotalAmount = 0m
@@ -2346,13 +2348,13 @@ namespace Infrastructure.Migrations
                         new
                         {
                             InvoiceId = 7,
-                            CreatedTime = new DateTime(2023, 3, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2147),
+                            CreatedTime = new DateTime(2023, 3, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5150),
                             Detail = "Detail for invoice 3 (5)",
-                            DueDate = new DateTime(2023, 3, 30, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2148),
+                            DueDate = new DateTime(2023, 3, 29, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5151),
                             EmployeeId = 2,
                             InvoiceTypeId = 1,
                             Name = "Hoá đơn điện tử cho renter 3 (5)",
-                            PaymentTime = new DateTime(2023, 3, 28, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2148),
+                            PaymentTime = new DateTime(2023, 3, 27, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5151),
                             RenterId = 3,
                             Status = true,
                             TotalAmount = 0m
@@ -2696,7 +2698,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 1,
                             Address = "HCM",
-                            BirthDate = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(1661),
+                            BirthDate = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(4681),
                             CitizenNumber = "3214324523",
                             Email = "renter1@mail.com",
                             FullName = "Nguyen Van A",
@@ -2710,7 +2712,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 2,
                             Address = "Hue",
-                            BirthDate = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(1664),
+                            BirthDate = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(4685),
                             CitizenNumber = "3214324523",
                             Email = "renter2@mail.com",
                             FullName = "Nguyen Van B",
@@ -2724,7 +2726,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 3,
                             Address = "DN",
-                            BirthDate = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(1667),
+                            BirthDate = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(4687),
                             CitizenNumber = "3214324523",
                             Email = "renter3@mail.com",
                             FullName = "Nguyen Van C",
@@ -2738,7 +2740,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 4,
                             Address = "HN",
-                            BirthDate = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(1668),
+                            BirthDate = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(4688),
                             CitizenNumber = "3214324523",
                             Email = "renter4@mail.com",
                             FullName = "Nguyen Van D",
@@ -2752,7 +2754,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 5,
                             Address = "HCM",
-                            BirthDate = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(1669),
+                            BirthDate = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(4689),
                             CitizenNumber = "3214324523",
                             Email = "trankhaimnhkhoi10a3@mail.com",
                             FullName = "Tran Minh Khoi",
@@ -2766,7 +2768,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 6,
                             Address = "HCM",
-                            BirthDate = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(1670),
+                            BirthDate = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(4690),
                             CitizenNumber = "3214324523",
                             Email = "trankhaimnhkhoi@mail.com",
                             FullName = "Tran Minh Khoi",
@@ -2780,7 +2782,7 @@ namespace Infrastructure.Migrations
                         {
                             RenterId = 7,
                             Address = "HCM",
-                            BirthDate = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(1671),
+                            BirthDate = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(4692),
                             CitizenNumber = "3214324523",
                             Email = "khoitkmse150850@fpt",
                             FullName = "Tran Minh Khoi",
@@ -3206,7 +3208,7 @@ namespace Infrastructure.Migrations
                         {
                             TicketId = 1,
                             ContractId = 3,
-                            CreateDate = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(1984),
+                            CreateDate = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(4995),
                             Description = "Sự cố 1",
                             EmployeeId = 2,
                             Status = "Active",
@@ -3217,7 +3219,7 @@ namespace Infrastructure.Migrations
                         {
                             TicketId = 2,
                             ContractId = 3,
-                            CreateDate = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(1986),
+                            CreateDate = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(4996),
                             Description = "Sự cố 2",
                             EmployeeId = 2,
                             Status = "Processing",
@@ -3228,7 +3230,7 @@ namespace Infrastructure.Migrations
                         {
                             TicketId = 3,
                             ContractId = 3,
-                            CreateDate = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(1987),
+                            CreateDate = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(4997),
                             Description = "Sự cố 3",
                             EmployeeId = 2,
                             Status = "Confirming",
@@ -3239,7 +3241,7 @@ namespace Infrastructure.Migrations
                         {
                             TicketId = 4,
                             ContractId = 3,
-                            CreateDate = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2012),
+                            CreateDate = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(4998),
                             Description = "Sự cố 4",
                             EmployeeId = 2,
                             Status = "Solved",
@@ -3250,7 +3252,7 @@ namespace Infrastructure.Migrations
                         {
                             TicketId = 5,
                             ContractId = 3,
-                            CreateDate = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2013),
+                            CreateDate = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(4999),
                             Description = "Sự cố 1",
                             EmployeeId = 2,
                             Status = "Active",
@@ -3261,7 +3263,7 @@ namespace Infrastructure.Migrations
                         {
                             TicketId = 6,
                             ContractId = 3,
-                            CreateDate = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2014),
+                            CreateDate = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5000),
                             Description = "Sự cố 2",
                             EmployeeId = 2,
                             Status = "Processing",
@@ -3272,7 +3274,7 @@ namespace Infrastructure.Migrations
                         {
                             TicketId = 7,
                             ContractId = 3,
-                            CreateDate = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2015),
+                            CreateDate = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5000),
                             Description = "Sự cố 3",
                             EmployeeId = 2,
                             Status = "Confirming",
@@ -3283,10 +3285,10 @@ namespace Infrastructure.Migrations
                         {
                             TicketId = 8,
                             ContractId = 3,
-                            CreateDate = new DateTime(2023, 5, 11, 6, 10, 23, 671, DateTimeKind.Utc).AddTicks(2016),
+                            CreateDate = new DateTime(2023, 5, 10, 7, 32, 48, 138, DateTimeKind.Utc).AddTicks(5001),
                             Description = "Sự cố 4",
                             EmployeeId = 2,
-                            SolveDate = new DateTime(2023, 5, 4, 13, 10, 23, 671, DateTimeKind.Local).AddTicks(2020),
+                            SolveDate = new DateTime(2023, 5, 3, 14, 32, 48, 138, DateTimeKind.Local).AddTicks(5004),
                             Status = "Solved",
                             TicketName = "Ticket 8 esting",
                             TicketTypeId = 1

@@ -20,9 +20,7 @@ public class InvoiceTypeRepository : IInvoiceTypeRepository
     {
         return _context.InvoiceTypes
             .Where(x =>
-                (filters.InvoiceTypeName == null ||
-                 x.InvoiceTypeName.ToLower().Contains(filters.InvoiceTypeName.ToLower()))
-                && (filters.InvoiceTypeIdWildCard == null || x.InvoiceTypeIdWildCard == filters.InvoiceTypeIdWildCard)
+                (filters.InvoiceTypeName == null || x.InvoiceTypeName.ToLower().Contains(filters.InvoiceTypeName.ToLower()))
                 && (filters.Status == null || x.Status == filters.Status))
             .AsNoTracking();
     }
@@ -33,10 +31,10 @@ public class InvoiceTypeRepository : IInvoiceTypeRepository
             .FirstOrDefaultAsync(x => x.InvoiceTypeId == id);
     }
 
-    public async Task<RepositoryResponse> UpdateInvoiceType(InvoiceType? invoiceType)
+    public async Task<RepositoryResponse> UpdateInvoiceType(InvoiceType invoiceType)
     {
         var invoiceTypeData = await _context.InvoiceTypes
-            .FirstOrDefaultAsync(x => invoiceType != null && x.InvoiceTypeId == invoiceType.InvoiceTypeId);
+            .FirstOrDefaultAsync(x => x.InvoiceTypeId == invoiceType.InvoiceTypeId);
         if (invoiceTypeData == null)
             return new RepositoryResponse
             {
@@ -44,8 +42,8 @@ public class InvoiceTypeRepository : IInvoiceTypeRepository
                 Message = "InvoiceType not found"
             };
 
-        invoiceTypeData.InvoiceTypeName = invoiceType?.InvoiceTypeName ?? invoiceTypeData.InvoiceTypeName;
-        invoiceTypeData.Status = invoiceType?.Status ?? invoiceTypeData.Status;
+        invoiceTypeData.InvoiceTypeName = invoiceType.InvoiceTypeName;
+        invoiceTypeData.Status = invoiceType.Status;
 
         await _context.SaveChangesAsync();
         return new RepositoryResponse

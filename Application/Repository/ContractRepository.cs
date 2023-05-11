@@ -43,7 +43,7 @@ public class ContractRepository : IContractRepository
                 && (filters.LastUpdated == null || x.LastUpdated == filters.LastUpdated)
                 && (filters.RenterUsername == null || x.Renter.Username.ToLower()
                     .Contains(filters.RenterUsername.ToLower()))
-                && (filters.RenterPhoneNumber == null || x.Renter.Phone.ToLower()
+                && (filters.RenterPhoneNumber == null || x.Renter.PhoneNumber.ToLower()
                     .Contains(filters.RenterPhoneNumber.ToLower()))
                 && (filters.RenterEmail == null || x.Renter.Email.ToLower().Contains(filters.RenterEmail.ToLower()))
                 && (filters.RenterFullname == null ||
@@ -78,7 +78,7 @@ public class ContractRepository : IContractRepository
                     && (filters.LastUpdated == null || x.LastUpdated == filters.LastUpdated)
                     && (filters.RenterUsername == null || x.Renter.Username.ToLower()
                         .Contains(filters.RenterUsername.ToLower()))
-                    && (filters.RenterPhoneNumber == null || x.Renter.Phone.ToLower()
+                    && (filters.RenterPhoneNumber == null || x.Renter.PhoneNumber.ToLower()
                         .Contains(filters.RenterPhoneNumber.ToLower()))
                     && (filters.RenterEmail == null || x.Renter.Email.ToLower().Contains(filters.RenterEmail.ToLower()))
                     && (filters.RenterFullname == null ||
@@ -109,7 +109,7 @@ public class ContractRepository : IContractRepository
                     && (filters.LastUpdated == null || x.LastUpdated == filters.LastUpdated)
                     && (filters.RenterUsername == null || x.Renter.Username.ToLower()
                         .Contains(filters.RenterUsername.ToLower()))
-                    && (filters.RenterPhoneNumber == null || x.Renter.Phone.ToLower()
+                    && (filters.RenterPhoneNumber == null || x.Renter.PhoneNumber.ToLower()
                         .Contains(filters.RenterPhoneNumber.ToLower()))
                     && (filters.RenterEmail == null || x.Renter.Email.ToLower().Contains(filters.RenterEmail.ToLower()))
                     && (filters.RenterFullname == null ||

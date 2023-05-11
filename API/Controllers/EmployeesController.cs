@@ -130,7 +130,7 @@ public class EmployeesController : ControllerBase
             Password = "123456",
             Address = employee.Address,
             Email = employee.Email,
-            Phone = employee.Phone,
+            PhoneNumber = employee.PhoneNumber,
             Status = true,
             RoleId = employee.RoleId
         };
@@ -194,7 +194,7 @@ public class EmployeesController : ControllerBase
             EmployeeId = id,
             Address = employee.Address,
             Email = employee.Email,
-            Phone = employee.Phone,
+            PhoneNumber = employee.PhoneNumber,
             FullName = employee.Fullname
         };
 
@@ -239,7 +239,7 @@ public class EmployeesController : ControllerBase
             EmployeeId = employeeId,
             Address = employee.Address,
             Email = employee.Email,
-            Phone = employee.Phone,
+            PhoneNumber = employee.PhoneNumber,
             FullName = employee.Fullname
         };
 

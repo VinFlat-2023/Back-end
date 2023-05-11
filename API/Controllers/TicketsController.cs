@@ -322,34 +322,21 @@ public class TicketsController : ControllerBase
                         data = ""
                     });
 
-                if (renterTicketCheck.Status.ToLower() == "Confirming".ToLower())
-                {
-                    var approveTicket = await _serviceWrapper.Tickets.ApproveTicket(id, token);
-                    switch (approveTicket.IsSuccess)
+                if (renterTicketCheck.Status.ToLower() != "Confirming".ToLower())
+                    return BadRequest(new
                     {
-                        case true:
-                            return Ok(new
-                            {
-                                status = "Success",
-                                message = approveTicket.Message,
-                                data = ""
-                            });
-                        case false:
-                            return BadRequest(new
-                            {
-                                status = "Bad Request",
-                                message = approveTicket.Message,
-                                data = ""
-                            });
-                    }
-                }
-
-                return BadRequest(new
+                        status = "Bad Request",
+                        message = "Chỉ có thể xác nhận khi trạng thái là đã xử lí",
+                        data = ""
+                    });
+                
+                var approveTicket = await _serviceWrapper.Tickets.ApproveTicket(id, token);
+                
+                return approveTicket.IsSuccess switch
                 {
-                    status = "Bad Request",
-                    message = "Chỉ có thể xác nhận khi trạng thái là đã xử lí",
-                    data = ""
-                });
+                    true => Ok(new { status = "Success", message = approveTicket.Message, data = "" }),
+                    false => BadRequest(new { status = "Bad Request", message = approveTicket.Message, data = "" })
+                };
 
             case null:
                 return NotFound(new
@@ -413,8 +400,7 @@ public class TicketsController : ControllerBase
                         data = ""
                     });
 
-                string?[] imageUrls =
-                    { renterTicketCheck.ImageUrl1, renterTicketCheck.ImageUrl2, renterTicketCheck.ImageUrl3 };
+                var imageUrls = new[] { renterTicketCheck.ImageUrl1, renterTicketCheck.ImageUrl2, renterTicketCheck.ImageUrl3 };
 
                 var renterTicket = _mapper.Map<TicketDetailEntity>(renterTicketCheck);
 
@@ -461,33 +447,32 @@ public class TicketsController : ControllerBase
 
         var userId = int.Parse(User.Identity.Name);
 
-        if (ticketEntity.Status.ToLower() == "Active".ToLower())
-        {
-            var acceptTicketResult = await _serviceWrapper.Tickets.AcceptTicket(id, userId, token);
-
-            return acceptTicketResult.IsSuccess switch
+        if (ticketEntity.Status.ToLower() != "Active".ToLower())
+            return BadRequest(new
             {
-                true => Ok(new
-                {
-                    status = "Success",
-                    message = acceptTicketResult.Message,
-                    data = ""
-                }),
-                false => NotFound(new
-                {
-                    status = "Not Found",
-                    message = acceptTicketResult.Message,
-                    data = ""
-                })
-            };
-        }
+                status = "Bad Request",
+                message = "Bạn chỉ có thể tiếp nhận phiếu chưa xử lí",
+                data = ""
+            });
+        
+        var acceptTicketResult = await _serviceWrapper.Tickets.AcceptTicket(id, userId, token);
 
-        return BadRequest(new
+        return acceptTicketResult.IsSuccess switch
         {
-            status = "Bad Request",
-            message = "Bạn chỉ có thể tiếp nhận phiếu chưa xử lí",
-            data = ""
-        });
+            true => Ok(new
+            {
+                status = "Success",
+                message = acceptTicketResult.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = acceptTicketResult.Message,
+                data = ""
+            })
+        };
+
     }
 
     [HttpPut("{id:int}/solve-ticket")]
@@ -505,33 +490,32 @@ public class TicketsController : ControllerBase
                 data = ""
             });
 
-        if (ticketEntity.Status.ToLower() == "Processing".ToLower())
-        {
-            var acceptTicketResult = await _serviceWrapper.Tickets.SolveTicket(id, token);
-
-            return acceptTicketResult.IsSuccess switch
+        if (ticketEntity.Status.ToLower() != "Processing".ToLower())
+            return BadRequest(new
             {
-                true => Ok(new
-                {
-                    status = "Success",
-                    message = acceptTicketResult.Message,
-                    data = ""
-                }),
-                false => NotFound(new
-                {
-                    status = "Not Found",
-                    message = acceptTicketResult.Message,
-                    data = ""
-                })
-            };
-        }
+                status = "Bad Request",
+                message = "Bạn chỉ có thể xác nhận phiếu đang trong quá trình xử lí",
+                data = ""
+            });
+        
+        var acceptTicketResult = await _serviceWrapper.Tickets.SolveTicket(id, token);
 
-        return BadRequest(new
+        return acceptTicketResult.IsSuccess switch
         {
-            status = "Bad Request",
-            message = "Bạn chỉ có thể xác nhận phiếu đang trong quá trình xử lí",
-            data = ""
-        });
+            true => Ok(new
+            {
+                status = "Success",
+                message = acceptTicketResult.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = acceptTicketResult.Message,
+                data = ""
+            })
+        };
+
     }
 
     // PUT: api/Requests/5

@@ -161,38 +161,7 @@ public class InvoiceValidator : BaseValidator, IInvoiceValidator
                     break;
             }
 
-            switch (obj?.EmployeeId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Employee is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.EmployeeCheck(obj.EmployeeId, token) == null)
-                        ValidatorResult.Failures.Add("Employee provided does not exist");
-                    break;
-            }
-
-            switch (obj?.RenterId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Renter is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.RenterCheck(obj.RenterId, token) == null)
-                        ValidatorResult.Failures.Add("Renter provided does not exist");
-                    break;
-            }
-
-            switch (obj?.InvoiceTypeId)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Invoice type is required");
-                    break;
-                case not null:
-                    if (await _conditionCheckHelper.RenterCheck(obj.RenterId, token) == null)
-                        ValidatorResult.Failures.Add("Invoice type provided does not exist");
-                    break;
-            }
+           
         }
         catch (Exception e)
         {

@@ -6,6 +6,6 @@ public class InvoiceCreateRequest
     public bool? Status { get; set; }
     public DateTime? DueDate { get; set; }
     public string? Detail { get; set; }
-    public int RenterId { get; set; }
+    public int? RenterId { get; set; }
     public int InvoiceTypeId { get; set; }
 }

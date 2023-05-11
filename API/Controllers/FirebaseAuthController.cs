@@ -135,7 +135,7 @@ namespace API.Controllers
             }
 
             // Check duplicate phone
-            checkUser = await _userService.GetUserByPhone(request.User.Phone);
+            checkUser = await _userService.GetUserByPhone(request.User.PhoneNumber);
             if (checkUser != null)
             {
                 return BadRequest($"Số điện thoại đã tồn tại, không thể đăng kí");
@@ -169,7 +169,7 @@ namespace API.Controllers
                     Email = userEmail,
                     DateOfBirth = request.User.DateOfBirth,
                     Image = request.User.Image,
-                    Phone = request.User.Phone,
+                    PhoneNumber = request.User.PhoneNumber,
                     RoleId = request.User.RoleCode.ConvertEnumToGuid(),
                     Status = (int)UserEnum.Active,
                     UniversityId = request.User.UniversityId,
@@ -243,7 +243,7 @@ namespace API.Controllers
 //                         Fullname = request.User.Fullname,
 //                         Email = request.User.Email,
 //                         Image = request.User.Image,
-//                         Phone = request.User.Phone,
+//                         PhoneNumber = request.User.PhoneNumber,
 //                         CitizenNumber = info[0],
 //                         DateOfBirth = Utils.QRReader.ConvertStringToDateTime(info[3]),
 //                         Gender = Utils.QRReader.ConvertToGender(info[4]),
@@ -252,7 +252,7 @@ namespace API.Controllers
 //                         RoleId = request.User.RoleId,
 //                         Status = Repository.Enums.UserEnum.Active,
 //                     };
-//                     var userPhoneExisted = await _userService.GetUserByPhone(newUser.Phone);
+//                     var userPhoneExisted = await _userService.GetUserByPhone(newUser.PhoneNumber);
 //                     if (userPhoneExisted == null)
 //                     {
 //                         if (newUser.CitizenNumber != null)
@@ -284,7 +284,7 @@ namespace API.Controllers
 //                     }
 //                     else
 //                     {
-//                         return await Task.Run(() => StatusCode(StatusCodes.Status300MultipleChoices, "Duplicate Phone"));
+//                         return await Task.Run(() => StatusCode(StatusCodes.Status300MultipleChoices, "Duplicate PhoneNumber"));
 //                     }
 //
 //                 }

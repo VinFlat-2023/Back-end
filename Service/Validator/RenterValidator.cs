@@ -125,13 +125,13 @@ public class RenterValidator : BaseValidator, IRenterValidator
             var validatePhoneNumberRegex =
                 new Regex("^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$");
 
-            switch (obj?.Phone)
+            switch (obj?.PhoneNumber)
             {
-                case not null when string.IsNullOrWhiteSpace(obj.Phone):
-                    ValidatorResult.Failures.Add("Phone is required");
+                case not null when string.IsNullOrWhiteSpace(obj.PhoneNumber):
+                    ValidatorResult.Failures.Add("PhoneNumber is required");
                     break;
-                case not null when !validatePhoneNumberRegex.IsMatch(obj.Phone):
-                    ValidatorResult.Failures.Add("Phone number is invalid");
+                case not null when !validatePhoneNumberRegex.IsMatch(obj.PhoneNumber):
+                    ValidatorResult.Failures.Add("PhoneNumber number is invalid");
                     break;
             }
 
@@ -160,7 +160,7 @@ public class RenterValidator : BaseValidator, IRenterValidator
                     ValidatorResult.Failures.Add("Citizen number is required");
                     break;
                 case not null when !validateNumber.IsMatch(obj.CitizenNumber):
-                    ValidatorResult.Failures.Add("Phone number is invalid");
+                    ValidatorResult.Failures.Add("PhoneNumber number is invalid");
                     break;
                 case not null when obj.CitizenNumber.Length > 20:
                     ValidatorResult.Failures.Add("Citizen number cannot exceed 20 characters");
@@ -253,18 +253,18 @@ public class RenterValidator : BaseValidator, IRenterValidator
             var validatePhoneNumberRegex =
                 new Regex("^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$");
 
-            switch (obj?.Phone)
+            switch (obj?.PhoneNumber)
             {
-                case not null when string.IsNullOrWhiteSpace(obj.Phone):
+                case not null when string.IsNullOrWhiteSpace(obj.PhoneNumber):
                     ValidatorResult.Failures.Add("Số điện thoại không được để trống");
                     break;
-                case not null when !validatePhoneNumberRegex.IsMatch(obj.Phone):
+                case not null when !validatePhoneNumberRegex.IsMatch(obj.PhoneNumber):
                     ValidatorResult.Failures.Add("Số điện thoại không hợp lệ");
                     break;
-                case not null when obj.Phone.Length > 13:
+                case not null when obj.PhoneNumber.Length > 13:
                     ValidatorResult.Failures.Add("Số điện thoại không được vượt quá 13 ký tự");
                     break;
-                case not null when obj.Phone.Length < 7:
+                case not null when obj.PhoneNumber.Length < 7:
                     ValidatorResult.Failures.Add("Số điện thoại không được ít hơn 7 ký tự");
                     break;
             }

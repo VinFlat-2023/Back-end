@@ -16,9 +16,21 @@ public class RenterRepository : IRenterRepository
         _context = context;
     }
 
-    public IQueryable<Renter> GetRenterList(RenterFilter filter, int buildingId)
+    public IQueryable<Renter> GetRenterList(RenterFilter filters, int buildingId)
     {
-        throw new NotImplementedException();
+        return _context.Renters
+            .Include(x => x.Contracts)
+            .Where(x => x.Contracts.Any(contract => contract.BuildingId == buildingId && contract.ContractStatus.ToLower() == "active"))
+            // Filter starts here
+            .Where(y =>
+                (filters.Username == null || y.Username.ToLower().Contains(filters.Username.ToLower()))
+                && (filters.Status == null || y.Status == filters.Status)
+                && (filters.Address == null || y.Address.ToLower().Contains(filters.Address.ToLower()))
+                && (filters.PhoneNumber == null || y.PhoneNumber.Contains(filters.PhoneNumber))
+                && (filters.Email == null || y.Email.ToLower().Contains(filters.Email.ToLower()))
+                && (filters.Gender == null || y.Gender == filters.Gender)
+                && (filters.FullName == null || y.FullName.ToLower().Contains(filters.FullName.ToLower())))
+            .AsNoTracking();
     }
 
     /// <summary>
@@ -174,7 +186,7 @@ public class RenterRepository : IRenterRepository
 
         userData.FullName = renter.FullName;
         userData.Email = renter.Email;
-        userData.Phone = renter.Phone;
+        userData.PhoneNumber = renter.PhoneNumber;
         userData.Address = renter.Address;
         userData.Gender = renter.Gender;
         userData.BirthDate = renter.BirthDate;
@@ -303,7 +315,7 @@ public class RenterRepository : IRenterRepository
     public async Task<Renter?> GetRenter(string usernameOrPhoneNumber, string password, CancellationToken token)
     {
         return await _context.Renters
-            .FirstOrDefaultAsync(a => (a.Username == usernameOrPhoneNumber || a.Phone == usernameOrPhoneNumber)
+            .FirstOrDefaultAsync(a => (a.Username == usernameOrPhoneNumber || a.PhoneNumber == usernameOrPhoneNumber)
                                       && a.Password == password, token);
     }
 
@@ -336,7 +348,7 @@ public class RenterRepository : IRenterRepository
                 (filters.Username == null || x.Username.ToLower().Contains(filters.Username.ToLower()))
                 && (filters.Status == null || x.Status == filters.Status)
                 && (filters.Address == null || x.Address.ToLower().Contains(filters.Address.ToLower()))
-                && (filters.Phone == null || x.Phone.Contains(filters.Phone))
+                && (filters.PhoneNumber == null || x.PhoneNumber.Contains(filters.PhoneNumber))
                 && (filters.Email == null || x.Email.ToLower().Contains(filters.Email.ToLower()))
                 && (filters.Gender == null || x.Gender == filters.Gender)
                 && (filters.FullName == null || x.FullName.ToLower().Contains(filters.FullName.ToLower())))

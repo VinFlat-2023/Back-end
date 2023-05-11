@@ -45,7 +45,7 @@ public class InvoiceRepository : IInvoiceRepository
                 && (filter.RenterFullname == null ||
                     x.Renter.FullName.ToLower().Contains(filter.RenterFullname.ToLower()))
                 && (filter.RenterPhoneNumber == null ||
-                    x.Renter.Phone.ToLower().Contains(filter.RenterPhoneNumber.ToLower()))
+                    x.Renter.PhoneNumber.ToLower().Contains(filter.RenterPhoneNumber.ToLower()))
                 && (filter.RenterEmail == null || x.Renter.Email.ToLower().Contains(filter.RenterEmail.ToLower()))
                 && (filter.EmployeeId == null || x.EmployeeId == filter.EmployeeId)
                 && (filter.EmployeeName == null ||
@@ -80,7 +80,7 @@ public class InvoiceRepository : IInvoiceRepository
                     && (filter.RenterFullname == null ||
                         x.Renter.FullName.ToLower().Contains(filter.RenterFullname.ToLower()))
                     && (filter.RenterPhoneNumber == null ||
-                        x.Renter.Phone.ToLower().Contains(filter.RenterPhoneNumber.ToLower()))
+                        x.Renter.PhoneNumber.ToLower().Contains(filter.RenterPhoneNumber.ToLower()))
                     && (filter.RenterEmail == null || x.Renter.Email.ToLower().Contains(filter.RenterEmail.ToLower()))
                     && (filter.EmployeeName == null ||
                         x.Employee.FullName.ToLower().Contains(filter.EmployeeName.ToLower()))
@@ -108,7 +108,7 @@ public class InvoiceRepository : IInvoiceRepository
                     && (filter.RenterFullname == null ||
                         x.Renter.FullName.ToLower().Contains(filter.RenterFullname.ToLower()))
                     && (filter.RenterPhoneNumber == null ||
-                        x.Renter.Phone.ToLower().Contains(filter.RenterPhoneNumber.ToLower()))
+                        x.Renter.PhoneNumber.ToLower().Contains(filter.RenterPhoneNumber.ToLower()))
                     && (filter.RenterEmail == null || x.Renter.Email.ToLower().Contains(filter.RenterEmail.ToLower()))
                     && (filter.EmployeeName == null ||
                         x.Employee.FullName.ToLower().Contains(filter.EmployeeName.ToLower()))
@@ -203,22 +203,19 @@ public class InvoiceRepository : IInvoiceRepository
     /// </summary>
     /// <param name="invoice"></param>
     /// <returns></returns>
-    public async Task<Invoice?> UpdateInvoice(Invoice? invoice)
+    public async Task<Invoice?> UpdateInvoice(Invoice invoice)
     {
         var invoiceData = await _context.Invoices
-            .FirstOrDefaultAsync(x => invoice != null
-                                      && x.InvoiceId == invoice.InvoiceId);
+            .FirstOrDefaultAsync(x => x.InvoiceId == invoice.InvoiceId);
+        
         if (invoiceData == null)
             return null;
 
-        invoiceData.Name = invoice?.Name ?? invoiceData.Name;
-        invoiceData.TotalAmount = invoice?.TotalAmount ?? invoiceData.TotalAmount;
-        invoiceData.Status = invoice?.Status ?? invoiceData.Status;
-        invoiceData.ImageUrl = invoice?.ImageUrl ?? invoiceData.ImageUrl;
-        invoiceData.Detail = invoice?.Detail ?? invoiceData.Detail;
-        invoiceData.EmployeeId = invoice?.EmployeeId ?? invoiceData.EmployeeId;
-        invoiceData.RenterId = invoice?.RenterId ?? invoiceData.RenterId;
-        invoiceData.InvoiceTypeId = invoice?.InvoiceTypeId ?? invoiceData.InvoiceTypeId;
+        invoiceData.Name = invoice.Name;
+        invoiceData.Status = invoice.Status;
+        invoiceData.Detail = invoice.Detail;
+        invoiceData.DueDate = invoice.DueDate;
+        invoiceData.PaymentTime = invoice.PaymentTime;
 
         await _context.SaveChangesAsync();
         return invoiceData;

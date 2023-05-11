@@ -646,7 +646,7 @@ public class ContractsController : ControllerBase
             FullName = contract.FullName,
             Password = "123456",
             Email = contract.RenterEmail,
-            Phone = contract.RenterPhone,
+            PhoneNumber = contract.RenterPhone,
             BirthDate = DateTime.ParseExact(contract.RenterBirthDate, "dd/MM/yyyy", null),
             Address = contract.Address,
             Gender = contract.Gender

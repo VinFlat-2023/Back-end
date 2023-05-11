@@ -31,7 +31,7 @@ public class EmployeeRepository : IEmployeeRepository
                 && (filters.Status == null || x.Status == filters.Status)
                 && (filters.RoleName == null || x.Role.RoleName.ToLower().Contains(filters.RoleName.ToLower()))
                 && (filters.FullName == null || x.FullName.ToLower().Contains(filters.FullName.ToLower()))
-                && (filters.Phone == null || x.Phone.Contains(filters.Phone)))
+                && (filters.PhoneNumber == null || x.PhoneNumber.Contains(filters.PhoneNumber)))
             .AsNoTracking();
     }
 
@@ -168,7 +168,7 @@ public class EmployeeRepository : IEmployeeRepository
             };
 
         employeeData.Email = employee.Email;
-        employeeData.Phone = employee.Phone;
+        employeeData.PhoneNumber = employee.PhoneNumber;
         employeeData.Address = employee.Address;
         employeeData.FullName = employee.FullName;
 
@@ -271,7 +271,7 @@ public class EmployeeRepository : IEmployeeRepository
     {
         return await _context.Employees
             .Include(b => b.Role)
-            .FirstOrDefaultAsync(a => (a.Username == usernameOrPhoneNumber || a.Phone == usernameOrPhoneNumber)
+            .FirstOrDefaultAsync(a => (a.Username == usernameOrPhoneNumber || a.PhoneNumber == usernameOrPhoneNumber)
                                       && a.Password == password, token);
     }
 

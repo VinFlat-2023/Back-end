@@ -248,7 +248,7 @@ public class RentersController : ControllerBase
         {
             EmployeeId = building.EmployeeId,
             FullName = building.Employee.FullName,
-            Phone = building.Employee.Phone
+            PhoneNumber = building.Employee.PhoneNumber
         };
 
         var buildingDetail = new BuildingContractDetailEntity
@@ -389,7 +389,7 @@ public class RentersController : ControllerBase
         {
             RenterId = userId,
             Email = renter.Email,
-            Phone = renter.Phone,
+            PhoneNumber = renter.PhoneNumber,
             FullName = renter.FullName,
             BirthDate = DateTime.ParseExact(renter.BirthDate, "dd/MM/yyyy", null),
             /*
@@ -495,7 +495,7 @@ public class RentersController : ControllerBase
             Username = renter.Username,
             Email = renter.Email,
             Password = renter.Password,
-            Phone = renter.Phone,
+            PhoneNumber = renter.PhoneNumber,
             FullName = renter.FullName,
             BirthDate = renter.BirthDate,
             Status = true,

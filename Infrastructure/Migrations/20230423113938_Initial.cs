@@ -111,7 +111,7 @@ namespace Infrastructure.Migrations
                     Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: false),
@@ -260,7 +260,7 @@ namespace Infrastructure.Migrations
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TechnicianBuildingId = table.Column<int>(type: "int", nullable: true),
@@ -789,7 +789,7 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Renters",
-                columns: new[] { "RenterId", "Address", "BirthDate", "CitizenImageUrl", "CitizenNumber", "DeviceToken", "Email", "FullName", "Gender", "ImageUrl", "Password", "Phone", "Status", "Username" },
+                columns: new[] { "RenterId", "Address", "BirthDate", "CitizenImageUrl", "CitizenNumber", "DeviceToken", "Email", "FullName", "Gender", "ImageUrl", "Password", "PhoneNumber", "Status", "Username" },
                 values: new object[,]
                 {
                     { 1, "HCM", new DateTime(2023, 4, 23, 11, 39, 38, 263, DateTimeKind.Utc).AddTicks(8313), null, "3214324523", "12321fdsg45adsa", "renter1@mail.com", "Nguyen Van A", "Male", null, "renter1", "0123543125", true, "renter1" },
@@ -861,7 +861,7 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Employees",
-                columns: new[] { "EmployeeId", "Address", "Email", "FullName", "ImageUrl", "Password", "Phone", "RoleId", "Status", "SupervisorBuildingId", "TechnicianBuildingId", "Username" },
+                columns: new[] { "EmployeeId", "Address", "Email", "FullName", "ImageUrl", "Password", "PhoneNumber", "RoleId", "Status", "SupervisorBuildingId", "TechnicianBuildingId", "Username" },
                 values: new object[,]
                 {
                     { 1, "Sup1 address", "binhlinh@mail", "Bình Linh", null, "123456", "0912345678", 2, true, 1, null, "sup1" },
@@ -910,7 +910,7 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Employees",
-                columns: new[] { "EmployeeId", "Address", "Email", "FullName", "ImageUrl", "Password", "Phone", "RoleId", "Status", "SupervisorBuildingId", "TechnicianBuildingId", "Username" },
+                columns: new[] { "EmployeeId", "Address", "Email", "FullName", "ImageUrl", "Password", "PhoneNumber", "RoleId", "Status", "SupervisorBuildingId", "TechnicianBuildingId", "Username" },
                 values: new object[,]
                 {
                     { 43, "Employee address", "minhtoan@mail", "Minh Toàn", null, "123456", "0938243827", 2, true, null, null, "sup44" },

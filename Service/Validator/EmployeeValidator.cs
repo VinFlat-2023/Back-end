@@ -72,18 +72,18 @@ public class EmployeeValidator : BaseValidator, IEmployeeValidator
             var validatePhoneNumberRegex =
                 new Regex("^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$");
 
-            switch (obj?.Phone)
+            switch (obj?.PhoneNumber)
             {
-                case not null when string.IsNullOrWhiteSpace(obj.Phone):
+                case not null when string.IsNullOrWhiteSpace(obj.PhoneNumber):
                     ValidatorResult.Failures.Add("Số điện thoại không được để trống");
                     break;
-                case not null when !validatePhoneNumberRegex.IsMatch(obj.Phone):
+                case not null when !validatePhoneNumberRegex.IsMatch(obj.PhoneNumber):
                     ValidatorResult.Failures.Add("Số điện thoại không hợp lệ");
                     break;
-                case not null when obj.Phone.Length > 13:
+                case not null when obj.PhoneNumber.Length > 13:
                     ValidatorResult.Failures.Add("Số điện thoại không được vượt quá 13 ký tự");
                     break;
-                case not null when obj.Phone.Length < 7:
+                case not null when obj.PhoneNumber.Length < 7:
                     ValidatorResult.Failures.Add("Số điện thoại không được ít hơn 7 ký tự");
                     break;
             }
@@ -186,18 +186,18 @@ public class EmployeeValidator : BaseValidator, IEmployeeValidator
             var validatePhoneNumberRegex =
                 new Regex("^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$");
 
-            switch (obj?.Phone)
+            switch (obj?.PhoneNumber)
             {
-                case not null when string.IsNullOrWhiteSpace(obj.Phone):
+                case not null when string.IsNullOrWhiteSpace(obj.PhoneNumber):
                     ValidatorResult.Failures.Add("Số điện thoại không được để trống");
                     break;
-                case not null when !validatePhoneNumberRegex.IsMatch(obj.Phone):
+                case not null when !validatePhoneNumberRegex.IsMatch(obj.PhoneNumber):
                     ValidatorResult.Failures.Add("Số điện thoại không hợp lệ");
                     break;
-                case not null when obj.Phone.Length > 13:
+                case not null when obj.PhoneNumber.Length > 13:
                     ValidatorResult.Failures.Add("Số điện thoại không được vượt quá 13 ký tự");
                     break;
-                case not null when obj.Phone.Length < 7:
+                case not null when obj.PhoneNumber.Length < 7:
                     ValidatorResult.Failures.Add("Số điện thoại không được ít hơn 7 ký tự");
                     break;
                 case not null:

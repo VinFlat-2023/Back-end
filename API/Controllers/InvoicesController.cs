@@ -338,6 +338,7 @@ public class InvoicesController : ControllerBase
     public async Task<IActionResult> PutInvoice(int id, [FromBody] InvoiceUpdateRequest invoice,
         CancellationToken token)
     {
+        /*
         var validation = await _validator.ValidateParams(invoice, id, token);
         if (!validation.IsValid)
             return BadRequest(new
@@ -347,6 +348,7 @@ public class InvoicesController : ControllerBase
                 data = ""
             });
 
+*/
         var updateInvoice = new Invoice
         {
             InvoiceId = id,
@@ -371,7 +373,7 @@ public class InvoicesController : ControllerBase
         {
             status = "Success",
             message = "Invoice updated",
-            data = _mapper.Map<InvoiceRenterDetailEntity>(result)
+            data = ""
         });
     }
 
@@ -392,6 +394,7 @@ public class InvoicesController : ControllerBase
                 data = ""
             });
 
+        /*
         var validation = await _validator.ValidateParams(invoice, token);
         if (!validation.IsValid)
             return BadRequest(new
@@ -400,6 +403,7 @@ public class InvoicesController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
+            */
 
         var addNewInvoice = new Invoice
         {
@@ -419,30 +423,36 @@ public class InvoicesController : ControllerBase
                 addNewInvoice.RenterId = invoice.RenterId;
                 break;
             case 2:
-            case 3:
                 if (addNewInvoice.RenterId != null)
                     return BadRequest(new
                     {
                         status = "Bad Request",
-                        message = "This invoice type is not for renter usage"
+                        message = "Hoá đơn với loại là phiếu thu thì không được gắn với người thuê",
+                        data = ""
                     });
                 break;
+            default:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Hoá đơn với loại là phiếu thu thì không được gắn với người thuê",
+                    data = ""
+                });
         }
-
 
         var result = await _serviceWrapper.Invoices.AddInvoice(addNewInvoice);
         if (result == null)
             return BadRequest(new
             {
                 status = "Bad Request",
-                message = "Invoice failed to create",
+                message = "Hoá đơn tạo thất bại",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "Invoice created",
+            message = "Hoá đơn được tạo thành công",
             data = ""
         });
     }
@@ -479,14 +489,7 @@ public class InvoicesController : ControllerBase
         var filter = _mapper.Map<InvoiceTypeFilter>(request);
 
         var list = await _serviceWrapper.InvoiceTypes.GetInvoiceTypes(filter, token);
-        if (list != null && !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Invoice type list is empty",
-                data = ""
-            });
-
+        
         var resultList = _mapper.Map<IEnumerable<InvoiceTypeDetailEntity>>(list);
 
         if (list == null || !list.Any())
@@ -513,6 +516,7 @@ public class InvoicesController : ControllerBase
     public async Task<IActionResult> GetInvoiceTypeById(int id, CancellationToken token)
     {
         var entity = await _serviceWrapper.InvoiceTypes.GetInvoiceTypeById(id, token);
+        
         return entity == null
             ? NotFound(new
             {
