@@ -55,7 +55,7 @@ public class InvoiceRepository : IInvoiceRepository
     }
 
 
-    public IQueryable<Invoice> GetInvoiceList(InvoiceFilter filter, int userId, bool isManagement)
+    public IQueryable<Invoice> GetInvoiceList(InvoiceFilter filter, int id, bool isManagement)
     {
         return isManagement switch
         {
@@ -68,7 +68,7 @@ public class InvoiceRepository : IInvoiceRepository
                 .Include(x => x.InvoiceDetails)
                 .ThenInclude(x => x.PlaceholderForFee)
                 .Include(x => x.InvoiceType)
-                .Where(x => x.EmployeeId == userId)
+                .Where(x => x.BuildingId == id)
                 // filter starts here
                 .Where(x =>
                     (filter.Name == null || x.Name.ToLower().Contains(filter.Name.ToLower()))
@@ -96,7 +96,7 @@ public class InvoiceRepository : IInvoiceRepository
                 .Include(x => x.InvoiceDetails)
                 .ThenInclude(x => x.PlaceholderForFee)
                 .Include(x => x.InvoiceType)
-                .Where(x => x.RenterId == userId)
+                .Where(x => x.RenterId == id)
                 // filter starts here
                 .Where(x =>
                     (filter.Name == null || x.Name.ToLower().Contains(filter.Name.ToLower()))

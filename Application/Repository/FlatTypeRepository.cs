@@ -26,9 +26,9 @@ public class FlatTypeRepository : IFlatTypeRepository
             .Where(x => x.BuildingId == buildingId)
             .Where(x =>
                 (filters.Status == null || x.Status == filters.Status)
-                && (filters.FlatTypeName == null || (x.FlatTypeName.ToLower().Contains(filters.FlatTypeName.ToLower())
-                                                     && (filters.RoomCapacity == null ||
-                                                         x.RoomCapacity == filters.RoomCapacity))))
+                && (filters.FlatTypeName == null || x.FlatTypeName.ToLower().Contains(filters.FlatTypeName.ToLower())
+                    && (filters.RoomCapacity == null ||
+                        x.RoomCapacity == filters.RoomCapacity)))
             .AsNoTracking();
     }
 
@@ -102,6 +102,58 @@ public class FlatTypeRepository : IFlatTypeRepository
         {
             IsSuccess = true,
             Message = "Trạng thái của loại căn hộ đã được thay đổi thành công"
+        };
+    }
+
+    public async Task<RepositoryResponse> IsAnyFlatIsInUseWithThisType(int? flatTypeId, int buildingId,
+        CancellationToken token)
+    {
+        var flatTypeFound = await _context.FlatTypes
+            .FirstOrDefaultAsync(x => x.FlatTypeId == flatTypeId, token);
+
+        if (flatTypeFound == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Loại căn hộ không tìm thấy"
+            };
+
+        var isAnyFlatFound = await _context.Flats
+            .Where(x => x.BuildingId == buildingId && x.FlatTypeId == flatTypeId)
+            .AnyAsync(token);
+
+        if (!isAnyFlatFound)
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Không có căn hộ nào đang sử dụng loại căn hộ này"
+            };
+
+        return new RepositoryResponse
+        {
+            IsSuccess = false,
+            Message = "Đang có 1 hoặc nhiều căn hộ đang sử dụng loại căn hộ này"
+        };
+    }
+
+    public async Task<RepositoryResponse> IsFlatTypeNameDuplicate(string flatTypeName, int buildingId,
+        CancellationToken token)
+    {
+        var flatTypeFound = await _context.FlatTypes
+            .FirstOrDefaultAsync(x => x.BuildingId == buildingId
+                                      && x.FlatTypeName.ToLower() == flatTypeName.ToLower(), token);
+
+        if (flatTypeFound == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Tên loại căn hộ này có thể sử dụng"
+            };
+
+        return new RepositoryResponse
+        {
+            IsSuccess = false,
+            Message = "Tên loại căn hộ này đã tồn tại"
         };
     }
 

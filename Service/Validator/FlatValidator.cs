@@ -59,35 +59,44 @@ public class FlatValidator : BaseValidator, IFlatValidator
                 case null:
                     ValidatorResult.Failures.Add("Tổng số phòng không được để trống");
                     break;
-                case not null when obj.RoomCapacity < 1:
-                    ValidatorResult.Failures.Add("Số phòng phải lớn hơn 0");
-                    break;
-                case not null when obj.RoomCapacity > 20:
-                    ValidatorResult.Failures.Add("Số phòng phải nhỏ hơn 20");
-                    break;
+
                 case not null:
-                    var flatCheck = await _conditionCheckHelper.FlatTypeCheck(flatTypeId, buildingId, token);
-                    switch (flatCheck)
+                    switch (obj.RoomCapacity)
+                    {
+                        case < 1:
+                            ValidatorResult.Failures.Add("Số phòng phải lớn hơn 0");
+                            break;
+                        case > 20:
+                            ValidatorResult.Failures.Add("Số phòng phải nhỏ hơn 20");
+                            break;
+                    }
+
+                    var flatTypeCheck = await _conditionCheckHelper.FlatTypeCheck(flatTypeId, buildingId, token);
+
+                    switch (flatTypeCheck)
                     {
                         case null:
                             ValidatorResult.Failures.Add("Căn hộ không tồn tại");
                             break;
-                        /*
+
                         case not null:
                             // Check if there is any flat rented with this type
-                            var isAnyFlatRentedWithThisType =
-                                await _conditionCheckHelper.IsFlatRented(flatTypeId, buildingId, token);
-                            switch (isAnyFlatRentedWithThisType.IsSuccess)
+                            if (flatTypeCheck.RoomCapacity != obj.RoomCapacity)
                             {
-                                case true:
-                                    break;
-                                case false:
-                                    ValidatorResult.Failures.Add(isAnyoneRentedCheckCheck.Message);
-                                    break;
+                                var isAnyFlatRentedWithThisType =
+                                    await _conditionCheckHelper.IsAnyFlatIsInUseWithThisType(flatTypeId, buildingId,
+                                        token);
+                                switch (isAnyFlatRentedWithThisType.IsSuccess)
+                                {
+                                    case true:
+                                        break;
+                                    case false:
+                                        ValidatorResult.Failures.Add(isAnyFlatRentedWithThisType.Message);
+                                        break;
+                                }
                             }
 
                             break;
-                            */
                     }
 
                     break;
@@ -119,14 +128,24 @@ public class FlatValidator : BaseValidator, IFlatValidator
                     ValidatorResult.Failures.Add("Tên loại căn hộ không được để trống");
                     break;
                 case not null:
-                    switch (obj.FlatTypeName)
+                    switch (obj.FlatTypeName.Length)
                     {
-                        case not null when obj.FlatTypeName.Length < 3:
+                        case < 3:
                             ValidatorResult.Failures.Add("Tên loại căn hộ phải lớn hơn 3 ký tự");
                             break;
-
-                        case not null when obj.FlatTypeName.Length > 50:
+                        case > 50:
                             ValidatorResult.Failures.Add("Tên loại căn hộ phải nhỏ hơn 50 ký tự");
+                            break;
+                    }
+
+                    var duplicateFlatType =
+                        await _conditionCheckHelper.IsFlatTypeNameDuplicate(obj.FlatTypeName, buildingId, token);
+                    switch (duplicateFlatType.IsSuccess)
+                    {
+                        case true:
+                            break;
+                        case false:
+                            ValidatorResult.Failures.Add(duplicateFlatType.Message);
                             break;
                     }
 
@@ -165,6 +184,7 @@ public class FlatValidator : BaseValidator, IFlatValidator
         {
             if (obj == null)
                 ValidatorResult.Failures.Add("Thông tin căm hộ không được để trống");
+
             if (flatId != null)
                 switch (flatId)
                 {

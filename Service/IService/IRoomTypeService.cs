@@ -1,4 +1,3 @@
-/*
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
@@ -7,11 +6,16 @@ namespace Service.IService;
 
 public interface IRoomTypeService
 {
-    public Task<PagedList<RoomType>?> GetRoomTypes(RoomTypeFilter filters, CancellationToken token);
-    public Task<RoomType?> GetRoomTypeDetail(int roomTypeId);
-    public Task<RoomType?> AddRoomType(RoomType roomType);
-    public Task<RepositoryResponse> UpdateRoomType(RoomType roomType);
-    public Task<RepositoryResponse> DeleteRoomType(int roomTypeId);
-}
-*/
+    public Task<RepositoryResponse> UpdateRoomType(RoomType roomType, int buildingId, CancellationToken token);
 
+    public Task<RepositoryResponse> AddRoomType(RoomType roomType);
+
+    public Task<RoomType?> GetRoomTypeById(int? roomTypeId, int? buildingId, CancellationToken token);
+
+    public Task<RepositoryResponse> DeleteRoom(int roomTypeId, int buildingId);
+
+    public Task<PagedList<RoomType>?> GetRoomTypeList(RoomTypeFilter typeFilters, int buildingId,
+        CancellationToken token);
+
+    public Task<RepositoryResponse> IsAnyoneRentedCheck(int? roomTypeId, int? buildingId, CancellationToken token);
+}

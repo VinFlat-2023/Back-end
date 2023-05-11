@@ -50,7 +50,27 @@ public class InvoicesController : ControllerBase
         switch (userRole)
         {
             case "Supervisor":
-                var supervisorList = await _serviceWrapper.Invoices.GetInvoiceList(filter, userId, true, token);
+                var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+
+                switch (buildingId)
+                {
+                    case -1:
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = "Quản lí này hiện đang không quản lí toà nhà nào",
+                            data = -1
+                        });
+                    case -2:
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
+                            data = -2
+                        });
+                }
+
+                var supervisorList = await _serviceWrapper.Invoices.GetInvoiceList(filter, buildingId, true, token);
 
                 if (supervisorList == null || !supervisorList.Any())
                     return NotFound(new
@@ -111,10 +131,11 @@ public class InvoicesController : ControllerBase
     // GET: api/Invoices/5
     [SwaggerOperation(Summary = "[Authorize] Get invoice by Id (For management)")]
     [HttpGet("{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     public async Task<IActionResult> GetInvoiceByManagement(int id, CancellationToken token)
     {
         var entity = await _serviceWrapper.Invoices.GetInvoiceById(id, token);
+
         if (entity == null)
             return NotFound(new
             {

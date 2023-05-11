@@ -103,19 +103,19 @@ public class AutoMapper : Profile
 
     private void MapRoom()
     {
-        CreateMap<Room, RoomBasicDetailEntity>()
+        CreateMap<RoomType, RoomTypeBasicDetailEntity>()
             .ReverseMap();
 
-        CreateMap<RoomBasicDetailEntity, Room>()
+        CreateMap<RoomTypeBasicDetailEntity, RoomType>()
             .ReverseMap();
 
-        CreateMap<Room, RoomDetailEntity>()
+        CreateMap<RoomType, RoomTypeDetailEntity>()
             .ReverseMap();
 
-        CreateMap<RoomDetailEntity, Room>()
+        CreateMap<RoomTypeDetailEntity, RoomType>()
             .ReverseMap();
 
-        CreateMap<RoomFilterRequest, RoomFilter>()
+        CreateMap<RoomTypeFilterRequest, RoomTypeFilter>()
             .ReverseMap();
     }
 
@@ -154,10 +154,10 @@ public class AutoMapper : Profile
 
     private void MapUtilitiesFlat()
     {
-        CreateMap<UtilitiesRoomFlat, UtilitiesFlatDetailEntity>()
+        CreateMap<UtilitiesRoom, UtilitiesFlatDetailEntity>()
             .ReverseMap();
 
-        CreateMap<UtilitiesFlatDetailEntity, UtilitiesRoomFlat>()
+        CreateMap<UtilitiesFlatDetailEntity, UtilitiesRoom>()
             .ReverseMap();
     }
 

@@ -62,4 +62,16 @@ public class FlatTypeService : IFlatTypeService
     {
         return await _repositoryWrapper.FlatTypes.DeleteFlatType(flatTypeId);
     }
+
+    public async Task<RepositoryResponse> IsAnyFlatIsInUseWithThisType(int? flatTypeId, int buildingId,
+        CancellationToken token)
+    {
+        return await _repositoryWrapper.FlatTypes.IsAnyFlatIsInUseWithThisType(flatTypeId, buildingId, token);
+    }
+
+    public async Task<RepositoryResponse> IsFlatTypeNameDuplicate(string? flatTypeName, int buildingId,
+        CancellationToken token)
+    {
+        return await _repositoryWrapper.FlatTypes.IsFlatTypeNameDuplicate(flatTypeName, buildingId, token);
+    }
 }

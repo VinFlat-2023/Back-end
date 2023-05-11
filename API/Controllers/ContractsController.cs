@@ -685,7 +685,7 @@ public class ContractsController : ControllerBase
             RenterId = renterEntity.RenterId,
             BuildingId = buildingId,
             FlatId = contract.FlatId,
-            RoomFlatId = contract.RoomFlatId
+            RoomId = contract.RoomId
         };
 
         var result = await _serviceWrapper.Contracts.AddContract(newContract);

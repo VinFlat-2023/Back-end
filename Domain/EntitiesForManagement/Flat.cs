@@ -11,7 +11,7 @@ public class Flat
     {
         FeedBacks = new HashSet<Feedback>();
         Contracts = new HashSet<Contract>();
-        RoomFlats = new HashSet<RoomFlat>();
+        RoomFlats = new HashSet<Room>();
     }
 
     [Key]
@@ -44,7 +44,7 @@ public class Flat
     public virtual FlatType FlatType { get; set; }
     public int BuildingId { get; set; }
     public virtual Building Building { get; set; }
-    public virtual ICollection<RoomFlat> RoomFlats { get; set; }
+    public virtual ICollection<Room> RoomFlats { get; set; }
     public virtual ICollection<Feedback> FeedBacks { get; set; }
 
     public virtual ICollection<Contract> Contracts { get; set; }

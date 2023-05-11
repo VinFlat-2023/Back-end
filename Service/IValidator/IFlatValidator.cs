@@ -6,9 +6,6 @@ namespace Service.IValidator;
 
 public interface IFlatValidator
 {
-    // Task<ValidatorResult> ValidateParams(Flat? obj, int? flatId);
-
-    // Task<ValidatorResult> ValidateParams(FlatType? obj, int? flatTypeId);
     Task<ValidatorResult> ValidateParams(FlatTypeUpdateRequest? flatType, int? flatId, int building,
         CancellationToken token);
 

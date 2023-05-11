@@ -32,10 +32,10 @@ public class ApplicationContext : DbContext
     public virtual DbSet<UserDevice> UserDevices { get; set; } = null!;
     public virtual DbSet<Notification> Notifications { get; set; } = null!;
     public virtual DbSet<NotificationType> NotificationTypes { get; set; } = null!;
-    public virtual DbSet<Room> Rooms { get; set; } = null!;
-    public virtual DbSet<RoomFlat> RoomFlats { get; set; } = null!;
+    public virtual DbSet<RoomType> Rooms { get; set; } = null!;
+    public virtual DbSet<Room> RoomFlats { get; set; } = null!;
     public virtual DbSet<Utility> Utilities { get; set; } = null!;
-    public virtual DbSet<UtilitiesRoomFlat> UtilitiesRoomFlats { get; set; } = null!;
+    public virtual DbSet<UtilitiesRoom> UtilitiesRoomFlats { get; set; } = null!;
 
     // public virtual DbSet<RoomType> RoomTypes { get; set; } = null!;
 
@@ -1827,22 +1827,22 @@ public class ApplicationContext : DbContext
             }
         );
 
-        modelBuilder.Entity<RoomFlat>().HasData(
-            new RoomFlat
+        modelBuilder.Entity<Room>().HasData(
+            new Room
             {
-                RoomFlatId = 1,
-                RoomName = "VF-02",
                 RoomId = 1,
+                RoomName = "VF-02",
+                RoomTypeId = 1,
                 FlatId = 1,
                 AvailableSlots = 5,
                 ElectricityAttribute = 1,
                 WaterAttribute = 1
             },
-            new RoomFlat
+            new Room
             {
-                RoomFlatId = 2,
-                RoomName = "VLA-203",
                 RoomId = 2,
+                RoomName = "VLA-203",
+                RoomTypeId = 2,
                 FlatId = 2,
                 AvailableSlots = 5,
                 ElectricityAttribute = 1,
@@ -1850,17 +1850,17 @@ public class ApplicationContext : DbContext
             }
         );
 
-        modelBuilder.Entity<UtilitiesRoomFlat>().HasData(
-            new UtilitiesRoomFlat
+        modelBuilder.Entity<UtilitiesRoom>().HasData(
+            new UtilitiesRoom
             {
-                UtilitiesRoomFlatId = 1,
-                RoomFlatId = 1,
+                UtilitiesRoomId = 1,
+                RoomId = 1,
                 UtilityId = 1
             },
-            new UtilitiesRoomFlat
+            new UtilitiesRoom
             {
-                UtilitiesRoomFlatId = 2,
-                RoomFlatId = 2,
+                UtilitiesRoomId = 2,
+                RoomId = 2,
                 UtilityId = 2
             }
         );
@@ -1921,41 +1921,41 @@ public class ApplicationContext : DbContext
             }
         );
 
-        modelBuilder.Entity<Room>().HasData(
-            new Room
+        modelBuilder.Entity<RoomType>().HasData(
+            new RoomType
             {
-                RoomId = 1,
-                RoomSignName = "Room 1 with 4 slots",
+                RoomTypeId = 1,
+                RoomTypeName = "Room 1 with 4 slots",
                 TotalSlot = 4,
                 //FlatId = 1,
                 BuildingId = 3,
                 Status = "Ok",
                 Description = "ABCDEF"
             },
-            new Room
+            new RoomType
             {
-                RoomId = 2,
-                RoomSignName = "Room 2 for 5 slots",
+                RoomTypeId = 2,
+                RoomTypeName = "Room 2 for 5 slots",
                 TotalSlot = 5,
                 //FlatId = 2,
                 BuildingId = 3,
                 Status = "Active",
                 Description = "ABCDEF"
             },
-            new Room
+            new RoomType
             {
-                RoomId = 3,
-                RoomSignName = "Room 3 for 6 slots",
+                RoomTypeId = 3,
+                RoomTypeName = "Room 3 for 6 slots",
                 TotalSlot = 5,
                 //FlatId = 3,
                 BuildingId = 3,
                 Status = "Active",
                 Description = "ABCDEF"
             },
-            new Room
+            new RoomType
             {
-                RoomId = 4,
-                RoomSignName = "Room 4 for 6 slots",
+                RoomTypeId = 4,
+                RoomTypeName = "Room 4 for 6 slots",
                 //FlatId = 3,
                 BuildingId = 3,
                 Status = "Maintaince",
@@ -2486,7 +2486,7 @@ public class ApplicationContext : DbContext
                     ContractImageUrl4 =
                         "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                     FlatId = 3,
-                    RoomFlatId = 3
+                    RoomId = 3
                 },
                 new Contract
                 {
@@ -2511,7 +2511,7 @@ public class ApplicationContext : DbContext
                     ContractImageUrl4 =
                         "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                     FlatId = 3,
-                    RoomFlatId = 3
+                    RoomId = 3
                 },
                 new Contract
                 {
@@ -2539,7 +2539,7 @@ public class ApplicationContext : DbContext
                     ContractImageUrl4 =
                         "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                     FlatId = 3,
-                    RoomFlatId = 3
+                    RoomId = 3
                 },
                 new Contract
                 {
@@ -2567,7 +2567,7 @@ public class ApplicationContext : DbContext
                     ContractImageUrl4 =
                         "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                     FlatId = 3,
-                    RoomFlatId = 2
+                    RoomId = 2
                 },
                 new Contract
                 {
@@ -2595,7 +2595,7 @@ public class ApplicationContext : DbContext
                     ContractImageUrl4 =
                         "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                     FlatId = 3,
-                    RoomFlatId = 2
+                    RoomId = 2
                 },
                 new Contract
                 {
@@ -2619,7 +2619,7 @@ public class ApplicationContext : DbContext
                     ContractImageUrl2 =
                         "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
                     FlatId = 3,
-                    RoomFlatId = 2
+                    RoomId = 2
                 }
             );
 

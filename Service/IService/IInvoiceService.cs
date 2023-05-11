@@ -8,7 +8,7 @@ namespace Service.IService;
 public interface IInvoiceService
 {
     public Task<PagedList<Invoice>?> GetInvoiceList(InvoiceFilter filter, CancellationToken token);
-    Task<PagedList<Invoice>?> GetInvoiceList(InvoiceFilter filter, int userId, bool b, CancellationToken token);
+    Task<PagedList<Invoice>?> GetInvoiceList(InvoiceFilter filter, int id, bool isManagement, CancellationToken token);
     public Task<Invoice?> GetInvoiceById(int? invoiceId, CancellationToken token);
     public Task<Invoice?> AddInvoice(Invoice invoice);
     public Task<Invoice?> UpdateInvoice(Invoice invoice);

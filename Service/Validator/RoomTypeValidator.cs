@@ -1,19 +1,19 @@
-using Domain.EntityRequest.Room;
+using Domain.EntityRequest.RoomType;
 using Service.IHelper;
 using Service.IValidator;
 
 namespace Service.Validator;
 
-public class RoomValidator : BaseValidator, IRoomValidator
+public class RoomTypeValidator : BaseValidator, IRoomTypeValidator
 {
     private readonly IConditionCheckHelper _conditionCheckHelper;
 
-    public RoomValidator(IConditionCheckHelper conditionCheckHelper)
+    public RoomTypeValidator(IConditionCheckHelper conditionCheckHelper)
     {
         _conditionCheckHelper = conditionCheckHelper;
     }
 
-    public async Task<ValidatorResult> ValidateParams(RoomUpdateRequest? obj, int? roomId, int? buildingId,
+    public async Task<ValidatorResult> ValidateParams(RoomTypeUpdateRequest? obj, int? roomId, int? buildingId,
         CancellationToken token)
     {
         try
@@ -50,12 +50,12 @@ public class RoomValidator : BaseValidator, IRoomValidator
                     break;
             }
 
-            switch (obj?.RoomSignName)
+            switch (obj?.RoomTypeName)
             {
                 case null:
                     ValidatorResult.Failures.Add("Tên phòng không được để trống");
                     break;
-                case not null when obj.RoomSignName.Length > 500:
+                case not null when obj.RoomTypeName.Length > 500:
                     ValidatorResult.Failures.Add("Tên phòng không được quá 500 ký tự");
                     break;
             }
@@ -102,7 +102,8 @@ public class RoomValidator : BaseValidator, IRoomValidator
         return ValidatorResult;
     }
 
-    public async Task<ValidatorResult> ValidateParams(RoomCreateRequest? obj, int? buildingId, CancellationToken token)
+    public async Task<ValidatorResult> ValidateParams(RoomTypeCreateRequest? obj, int? buildingId,
+        CancellationToken token)
     {
         try
         {
@@ -120,12 +121,12 @@ public class RoomValidator : BaseValidator, IRoomValidator
                     break;
             }
 
-            switch (obj?.RoomSignName)
+            switch (obj?.RoomTypeName)
             {
                 case null:
                     ValidatorResult.Failures.Add("Tên phòng không được để trống");
                     break;
-                case not null when obj.RoomSignName.Length > 500:
+                case not null when obj.RoomTypeName.Length > 500:
                     ValidatorResult.Failures.Add("Tên phòng không được quá 500 ký tự");
                     break;
             }

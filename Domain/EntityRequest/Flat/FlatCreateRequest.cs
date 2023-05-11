@@ -1,4 +1,4 @@
-﻿using Domain.EntityRequest.RoomFlat;
+﻿using Domain.EntityRequest.Room;
 
 namespace Domain.EntityRequest.Flat;
 
@@ -8,7 +8,7 @@ public class FlatCreateRequest
     public string? Description { get; set; }
     public string Status { get; set; }
     public int FlatTypeId { get; set; }
-    public List<RoomFlatCreateRequest> RoomIds { get; set; }
+    public List<RoomCreateRequest> RoomIds { get; set; }
     public string? FlatImageUrl1 { get; set; }
     public string? FlatImageUrl2 { get; set; }
     public string? FlatImageUrl3 { get; set; }

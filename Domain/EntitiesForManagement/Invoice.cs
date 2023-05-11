@@ -35,15 +35,18 @@ public class Invoice
 
     // Contract 
     public int? ContractId { get; set; }
+    public virtual Contract? Contract { get; set; }
 
-    // Receiver employee
+    // Receiver 
     public int? RenterId { get; set; }
-
     public virtual Renter? Renter { get; set; }
 
     // Management employee
     public int EmployeeId { get; set; }
     public virtual Employee Employee { get; set; }
+
+    // Building which this invoice belongs to
+    public int BuildingId { get; set; }
     public int InvoiceTypeId { get; set; }
     public virtual InvoiceType InvoiceType { get; set; } = null!;
     public virtual ICollection<InvoiceDetail> InvoiceDetails { get; set; }

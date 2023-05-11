@@ -1,6 +1,19 @@
-namespace API.Controllers;
 /*
-[Route("api/building/room-flat")]
+using AutoMapper;
+using Domain.EntitiesForManagement;
+using Domain.EntityRequest.Room;
+using Domain.FilterRequests;
+using Domain.QueryFilter;
+using Domain.ViewModel.RoomEntity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Service.IService;
+using Service.IValidator;
+using Swashbuckle.AspNetCore.Annotations;
+
+namespace API.Controllers;
+
+[Route("api/building/room")]
 [ApiController]
 public class RoomFlatController : ControllerBase
 {
@@ -22,7 +35,7 @@ public class RoomFlatController : ControllerBase
     {
         var userId = int.Parse(User.Identity.Name);
 
-        var buildingId = await _serviceWrapper.Rooms.GetBuildingIdBasedOnSupervisorId(userId, token);
+        var buildingId = await _serviceWrapper.RoomFlats.GetBuildingIdBasedOnSupervisorId(userId, token);
 
         switch (buildingId)
         {
@@ -42,11 +55,11 @@ public class RoomFlatController : ControllerBase
                 });
         }
 
-        var filter = _mapper.Map<RoomFilter>(request);
+        var filter = _mapper.Map<RoomTypeFilter>(request);
 
-        var list = await _serviceWrapper.Rooms.GetRoomList(filter, buildingId, token);
+        var list = await _serviceWrapper.RoomsType.GetRoomTypeList(filter, buildingId, token);
 
-        var resultList = _mapper.Map<IEnumerable<RoomBasicDetailEntity>>(list);
+        var resultList = _mapper.Map<IEnumerable<RoomTypeBasicDetailEntity>>(list);
 
         if (list == null || !list.Any())
             return NotFound(new
@@ -93,7 +106,7 @@ public class RoomFlatController : ControllerBase
                 });
         }
 
-        var room = await _serviceWrapper.Rooms.GetRoomById(roomId, buildingId, token);
+        var room = await _serviceWrapper.RoomsType.GetRoomTypeById(roomId, buildingId, token);
 
         if (room == null)
             return NotFound(new
@@ -107,7 +120,7 @@ public class RoomFlatController : ControllerBase
         {
             status = "Success",
             message = "Hiển thị thông tin phòng",
-            data = _mapper.Map<RoomBasicDetailEntity>(room)
+            data = _mapper.Map<RoomTypeBasicDetailEntity>(room)
         });
     }
 
@@ -148,15 +161,15 @@ public class RoomFlatController : ControllerBase
                 data = ""
             });
 
-        var addRoom = new Room
+        var addRoom = new RoomType
         {
-            RoomSignName = request.RoomSignName,
+            RoomTypeName = request.RoomTypeName,
             TotalSlot = request.TotalSlot,
             BuildingId = buildingId,
             Status = request.Status ?? "Active"
         };
 
-        var result = await _serviceWrapper.Rooms.AddRoom(addRoom);
+        var result = await _serviceWrapper.RoomsType.AddRoomType(addRoom);
 
         return result.IsSuccess switch
         {
@@ -212,15 +225,15 @@ public class RoomFlatController : ControllerBase
                 data = ""
             });
 
-        var updateRoom = new Room
+        var updateRoom = new RoomType
         {
-            RoomSignName = request.RoomSignName,
+            RoomTypeName = request.RoomTypeName,
             TotalSlot = request.TotalSlot,
             BuildingId = buildingId,
             Status = request.Status
         };
 
-        var result = await _serviceWrapper.Rooms.UpdateRoom(updateRoom, buildingId, token);
+        var result = await _serviceWrapper.RoomsType.UpdateRoomType(updateRoom, buildingId, token);
 
         return result.IsSuccess switch
         {
@@ -239,7 +252,7 @@ public class RoomFlatController : ControllerBase
         };
     }
 
-    /*
+    
     [HttpGet("{roomId:int}")]
     [Authorize(Roles = "Supervisor")]
     [SwaggerOperation("[Authorize] Get rooms in building managed by supervisor")]
@@ -267,7 +280,7 @@ public class RoomFlatController : ControllerBase
                 });
         }
 
-        var room = await _serviceWrapper.Rooms.GetRoomById(roomId, buildingId, token);
+        var room = await _serviceWrapper.RoomsType.GetRoomTypeById(roomId, buildingId, token);
         if (room == null)
             return NotFound(new
             {
@@ -279,8 +292,9 @@ public class RoomFlatController : ControllerBase
         {
             status = "Success",
             message = "Hiển thị thông tin phòng",
-            data = _mapper.Map<RoomBasicDetailEntity>(room)
+            data = _mapper.Map<RoomTypeBasicDetailEntity>(room)
         });
     }
 }
 */
+

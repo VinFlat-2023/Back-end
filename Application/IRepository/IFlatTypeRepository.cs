@@ -12,4 +12,10 @@ public interface IFlatTypeRepository
     public Task<RepositoryResponse> UpdateFlatType(FlatType flatTypeId);
     public Task<RepositoryResponse> DeleteFlatType(int flatTypeId);
     public Task<RepositoryResponse> ToggleStatus(int id);
+
+    public Task<RepositoryResponse> IsAnyFlatIsInUseWithThisType(int? flatTypeId, int buildingId,
+        CancellationToken token);
+
+    public Task<RepositoryResponse> IsFlatTypeNameDuplicate(string flatTypeName, int buildingId,
+        CancellationToken token);
 }

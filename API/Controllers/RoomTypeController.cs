@@ -1,6 +1,6 @@
 using AutoMapper;
 using Domain.EntitiesForManagement;
-using Domain.EntityRequest.Room;
+using Domain.EntityRequest.RoomType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.ViewModel.RoomEntity;
@@ -12,15 +12,15 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace API.Controllers;
 
-[Route("api/building/room")]
+[Route("api/building/room-type")]
 [ApiController]
-public class RoomController : ControllerBase
+public class RoomTypeController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
-    private readonly IRoomValidator _validator;
+    private readonly IRoomTypeValidator _validator;
 
-    public RoomController(IMapper mapper, IServiceWrapper serviceWrapper, IRoomValidator validator)
+    public RoomTypeController(IMapper mapper, IServiceWrapper serviceWrapper, IRoomTypeValidator validator)
     {
         _mapper = mapper;
         _serviceWrapper = serviceWrapper;
@@ -29,8 +29,8 @@ public class RoomController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "Supervisor")]
-    [SwaggerOperation("[Authorize] Get all rooms in building(s) managed by supervisor Id")]
-    public async Task<IActionResult> GetAllRooms([FromQuery] RoomFilterRequest request, CancellationToken token)
+    [SwaggerOperation("[Authorize] Get all room types in building(s) managed by supervisor Id")]
+    public async Task<IActionResult> GetAllRoomTypes([FromQuery] RoomTypeFilterRequest request, CancellationToken token)
     {
         var userId = int.Parse(User.Identity.Name);
 
@@ -54,11 +54,11 @@ public class RoomController : ControllerBase
                 });
         }
 
-        var filter = _mapper.Map<RoomFilter>(request);
+        var filter = _mapper.Map<RoomTypeFilter>(request);
 
-        var list = await _serviceWrapper.Rooms.GetRoomList(filter, buildingId, token);
+        var list = await _serviceWrapper.RoomsType.GetRoomTypeList(filter, buildingId, token);
 
-        var resultList = _mapper.Map<IEnumerable<RoomBasicDetailEntity>>(list);
+        var resultList = _mapper.Map<IEnumerable<RoomTypeBasicDetailEntity>>(list);
 
         if (list == null || !list.Any())
             return NotFound(new
@@ -76,12 +76,13 @@ public class RoomController : ControllerBase
             totalPage = list.TotalPages,
             totalCount = list.TotalCount
         });
+        
     }
 
-    [HttpGet("{roomId:int}")]
+    [HttpGet("{roomTypeId:int}")]
     [Authorize(Roles = "Supervisor")]
-    [SwaggerOperation("[Authorize] Get rooms in building managed by supervisor")]
-    public async Task<IActionResult> GetSpecificRoom(int roomId, CancellationToken token)
+    [SwaggerOperation("[Authorize] Get room types in building managed by supervisor")]
+    public async Task<IActionResult> GetSpecificRoomType(int roomTypeId, CancellationToken token)
     {
         var userId = int.Parse(User.Identity.Name);
 
@@ -105,7 +106,7 @@ public class RoomController : ControllerBase
                 });
         }
 
-        var room = await _serviceWrapper.Rooms.GetRoomById(roomId, buildingId, token);
+        var room = await _serviceWrapper.RoomsType.GetRoomTypeById(roomTypeId, buildingId, token);
 
         if (room == null)
             return NotFound(new
@@ -119,14 +120,14 @@ public class RoomController : ControllerBase
         {
             status = "Success",
             message = "Hiển thị thông tin phòng",
-            data = _mapper.Map<RoomBasicDetailEntity>(room)
+            data = _mapper.Map<RoomTypeBasicDetailEntity>(room)
         });
     }
 
     [HttpPost]
     [Authorize(Roles = "Supervisor")]
-    [SwaggerOperation("[Authorize] Add rooms in building(s) managed by supervisor Id")]
-    public async Task<IActionResult> CreateRoom(RoomCreateRequest request, CancellationToken token)
+    [SwaggerOperation("[Authorize] Add room types in building(s) managed by supervisor Id")]
+    public async Task<IActionResult> CreateRoomType(RoomTypeCreateRequest request, CancellationToken token)
     {
         var userId = int.Parse(User.Identity.Name);
 
@@ -160,15 +161,15 @@ public class RoomController : ControllerBase
                 data = ""
             });
 
-        var addRoom = new Room
+        var addRoom = new RoomType
         {
-            RoomSignName = request.RoomSignName,
+            RoomTypeName = request.RoomTypeName,
             TotalSlot = request.TotalSlot,
             BuildingId = buildingId,
             Status = request.Status ?? "Active"
         };
 
-        var result = await _serviceWrapper.Rooms.AddRoom(addRoom);
+        var result = await _serviceWrapper.RoomsType.AddRoomType(addRoom);
 
         return result.IsSuccess switch
         {
@@ -187,10 +188,10 @@ public class RoomController : ControllerBase
         };
     }
 
-    [HttpPut("{roomId:int}")]
+    [HttpPut("{roomTypeId:int}")]
     [Authorize(Roles = "Supervisor")]
-    [SwaggerOperation("[Authorize] Update rooms in building(s) managed by supervisor Id")]
-    public async Task<IActionResult> UpdateRoom(int roomId, RoomUpdateRequest request, CancellationToken token)
+    [SwaggerOperation("[Authorize] Update room types in building(s) managed by supervisor Id")]
+    public async Task<IActionResult> UpdateRoomType(int roomTypeId, RoomTypeUpdateRequest request, CancellationToken token)
     {
         var userId = int.Parse(User.Identity.Name);
 
@@ -214,7 +215,7 @@ public class RoomController : ControllerBase
                 });
         }
 
-        var validation = await _validator.ValidateParams(request, roomId, buildingId, token);
+        var validation = await _validator.ValidateParams(request, roomTypeId, buildingId, token);
 
         if (!validation.IsValid)
             return BadRequest(new
@@ -224,16 +225,16 @@ public class RoomController : ControllerBase
                 data = ""
             });
 
-        var updateRoom = new Room
+        var updateRoom = new RoomType
         {
-            RoomId = roomId,
-            RoomSignName = request.RoomSignName,
+            RoomTypeId = roomTypeId,
+            RoomTypeName = request.RoomTypeName,
             TotalSlot = request.TotalSlot,
             BuildingId = buildingId,
             Status = request.Status
         };
 
-        var result = await _serviceWrapper.Rooms.UpdateRoom(updateRoom, buildingId, token);
+        var result = await _serviceWrapper.RoomsType.UpdateRoomType(updateRoom, buildingId, token);
 
         return result.IsSuccess switch
         {

@@ -13,66 +13,6 @@ public class AreaValidator : BaseValidator, IAreaValidator
         _conditionCheckHelper = conditionCheckHelper;
     }
 
-    /*
-    public async Task<ValidatorResult> ValidateParams(Area? obj, int? areaId)
-    {
-        try
-        {
-            if (areaId != null)
-                switch (obj?.AreaId)
-                {
-                    case not null when obj.AreaId != areaId:
-                        ValidatorResult.Failures.Add("Khu vực không hợp lệ");
-                        break;
-                    case null:
-                        ValidatorResult.Failures.Add("Khu vực không được để trống");
-                        break;
-                    case not null:
-                        if (await _conditionCheckHelper.AreaCheck(obj.AreaId) == null)
-                            ValidatorResult.Failures.Add("Khu vực không tồn tại");
-                        break;
-                }
-
-            switch (obj?.Name)
-            {
-                case not null when obj.Name.Length > 100:
-                    ValidatorResult.Failures.Add("Tên khu vực không được vượt quá 100 ký tự");
-                    break;
-                case not null when obj.Name.Length < 2:
-                    ValidatorResult.Failures.Add("Tên khu vực phải có ít nhất 2 kí tự");
-                    break;
-                case not null when string.IsNullOrWhiteSpace(obj.Name):
-                    ValidatorResult.Failures.Add("Tên khu vực không được để trống");
-                    break;
-                case not null when await _conditionCheckHelper.AreaNameCheck(obj.Name) != null:
-                    ValidatorResult.Failures.Add("Khu vực này đã tồn tại");
-                    break;
-            }
-
-            switch (obj?.Location)
-            {
-                case not null when string.IsNullOrWhiteSpace(obj.Location):
-                    ValidatorResult.Failures.Add("Địa chỉ không được để trống");
-                    break;
-                case not null when obj.Location.Length > 100:
-                    ValidatorResult.Failures.Add("Địa chỉ không được vượt quá 100 ký tự");
-                    break;
-            }
-
-            if (obj?.Status == null)
-                ValidatorResult.Failures.Add("Trạng thái khu vực không được để trống");
-        }
-        catch (Exception e)
-        {
-            ValidatorResult.Failures.Add("Có lỗi xảy ra khi xác thực thông tin khu vực");
-            Console.WriteLine(e.Message, e.Data);
-        }
-
-        return ValidatorResult;
-    }
-    */
-
-
     public async Task<ValidatorResult> ValidateParams(AreaUpdateRequest? obj, int? areaId, CancellationToken token)
     {
         try

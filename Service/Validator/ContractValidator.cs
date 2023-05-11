@@ -364,19 +364,19 @@ public class ContractValidator : BaseValidator, IContractValidator
                     break;
             }
 
-            switch (obj?.RoomFlatId)
+            switch (obj?.RoomId)
             {
                 case null:
                     ValidatorResult.Failures.Add("Phòng là bắt buộc");
                     break;
-                case not null when obj.RoomFlatId < 0:
+                case not null when obj.RoomId < 0:
                     ValidatorResult.Failures.Add("Phòng không hợp lệ");
                     break;
-                case not null when await _conditionCheckHelper.RoomCheck(obj.RoomFlatId, buildingId, token) == null:
+                case not null when await _conditionCheckHelper.RoomCheck(obj.RoomId, buildingId, token) == null:
                     ValidatorResult.Failures.Add("Phòng không tồn tại");
                     break;
                 case not null:
-                    var room = await _conditionCheckHelper.RoomCheck(obj.RoomFlatId, buildingId, token);
+                    var room = await _conditionCheckHelper.RoomCheck(obj.RoomId, buildingId, token);
                     switch (room)
                     {
                         /*

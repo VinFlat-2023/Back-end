@@ -231,11 +231,11 @@ public class ServiceWrapper : IServiceWrapper
     }
 
 
-    public IRoomService Rooms
+    public IRoomTypeService RoomsType
     {
         get
         {
-            if (_room == null) _room = new RoomService(_repositories, _paginationOptions);
+            if (_room == null) _room = new RoomTypeTypeService(_repositories, _paginationOptions);
             return _room;
         }
     }
@@ -312,8 +312,7 @@ public class ServiceWrapper : IServiceWrapper
     private IDeviceService _device;
     private ICustomeMailService _mail;
     private INotificationService _noti;
-
-    private IRoomService _room;
+    private IRoomTypeService _room;
 
     //private IRoomTypeService _roomType;
     private IGetIdService _getId;

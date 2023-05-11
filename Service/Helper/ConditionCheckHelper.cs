@@ -144,14 +144,26 @@ public class ConditionCheckHelper : IConditionCheckHelper
         return await _serviceWrapper.Areas.GetAreaByName(areaName, areaId, token);
     }
 
-    public async Task<Room?> RoomCheck(int? roomId, int? buildingId, CancellationToken token)
+    public async Task<RoomType?> RoomCheck(int? roomId, int? buildingId, CancellationToken token)
     {
-        return await _serviceWrapper.Rooms.GetRoomById(roomId, buildingId, token);
+        return await _serviceWrapper.RoomsType.GetRoomTypeById(roomId, buildingId, token);
     }
 
     public async Task<RepositoryResponse> IsAnyoneRentedCheck(int? roomId, int? buildingId, CancellationToken token)
     {
-        return await _serviceWrapper.Rooms.IsAnyoneRentedCheck(roomId, buildingId, token);
+        return await _serviceWrapper.RoomsType.IsAnyoneRentedCheck(roomId, buildingId, token);
+    }
+
+    public async Task<RepositoryResponse> IsAnyFlatIsInUseWithThisType(int? flatTypeId, int buildingId,
+        CancellationToken token)
+    {
+        return await _serviceWrapper.FlatTypes.IsAnyFlatIsInUseWithThisType(flatTypeId, buildingId, token);
+    }
+
+    public async Task<RepositoryResponse> IsFlatTypeNameDuplicate(string? flatTypeName, int buildingId,
+        CancellationToken token)
+    {
+        return await _serviceWrapper.FlatTypes.IsFlatTypeNameDuplicate(flatTypeName, buildingId, token);
     }
 
     /*

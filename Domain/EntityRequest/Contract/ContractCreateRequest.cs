@@ -14,7 +14,7 @@ public class ContractCreateRequest
     public string PriceForService { get; set; }
     public string PriceForRent { get; set; }
     public int FlatId { get; set; }
-    public int RoomFlatId { get; set; }
+    public int RoomId { get; set; }
 
     // Renter
     public string RenterUsername { get; set; }

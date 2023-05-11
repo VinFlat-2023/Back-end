@@ -35,7 +35,7 @@ public class Contract
     public decimal PriceForElectricity { get; set; }
     public decimal PriceForService { get; set; }
     public int BuildingId { get; set; }
-    public int RoomFlatId { get; set; }
+    public int RoomId { get; set; }
     public int RenterId { get; set; }
     public virtual Renter Renter { get; set; } = null!;
     public int FlatId { get; set; }

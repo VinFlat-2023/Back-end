@@ -341,7 +341,7 @@ public class RentersController : ControllerBase
             BuildingName = building.BuildingName,
             FlatId = flatCheck.FlatId,
             FlatName = flatCheck.Name,
-            RoomFlatId = contract.RoomFlatId,
+            RoomId = contract.RoomId,
             RoomName = "VF-2300"
         };
 

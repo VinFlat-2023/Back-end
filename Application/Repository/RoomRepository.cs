@@ -16,23 +16,26 @@ public class RoomRepository : IRoomRepository
         _context = context;
     }
 
-    public IQueryable<Room> GetRoomList(RoomFilter filters, int buildingId)
+    public IQueryable<RoomType> GetRoomList(RoomTypeFilter typeFilters, int buildingId)
     {
         return _context.Rooms
             .Where(x => x.BuildingId == buildingId)
             .Where(x =>
-                (filters.RoomId == null || x.RoomId == filters.RoomId)
-                && (filters.RoomSignName == null || x.RoomSignName.ToLower().Contains(filters.RoomSignName.ToLower()))
-                && (filters.TotalSlot == null || x.TotalSlot == filters.TotalSlot)
-                && (filters.Status == null || x.Status.ToLower() == filters.Status.ToLower())
-                && (filters.Description == null || x.Description.ToLower().Contains(filters.Description.ToLower()))
-                && (filters.RoomSignName == null || x.RoomSignName.ToLower().Contains(filters.RoomSignName.ToLower())))
+                (typeFilters.RoomTypeId == null || x.RoomTypeId == typeFilters.RoomTypeId)
+                && (typeFilters.RoomTypeName == null ||
+                    x.RoomTypeName.ToLower().Contains(typeFilters.RoomTypeName.ToLower()))
+                && (typeFilters.TotalSlot == null || x.TotalSlot == typeFilters.TotalSlot)
+                && (typeFilters.Status == null || x.Status.ToLower() == typeFilters.Status.ToLower())
+                && (typeFilters.Description == null ||
+                    x.Description.ToLower().Contains(typeFilters.Description.ToLower()))
+                && (typeFilters.RoomTypeName == null ||
+                    x.RoomTypeName.ToLower().Contains(typeFilters.RoomTypeName.ToLower())))
             .AsNoTracking();
     }
 
-    public async Task<RepositoryResponse> AddRoom(Room room)
+    public async Task<RepositoryResponse> AddRoomType(RoomType roomType)
     {
-        await _context.Rooms.AddAsync(room);
+        await _context.Rooms.AddAsync(roomType);
         return await _context.SaveChangesAsync() > 0
             ? new RepositoryResponse
             {
@@ -46,10 +49,10 @@ public class RoomRepository : IRoomRepository
             };
     }
 
-    public async Task<RepositoryResponse> IsAnyoneRentedCheck(int? roomId, int? buildingId, CancellationToken token)
+    public async Task<RepositoryResponse> IsAnyoneRentedCheck(int? roomTypeId, int? buildingId, CancellationToken token)
     {
         var roomCheck = await _context.Rooms
-            .Where(x => x.RoomId == roomId && x.BuildingId == buildingId)
+            .Where(x => x.RoomTypeId == roomTypeId && x.BuildingId == buildingId)
             .ToListAsync(token);
 
         if (!roomCheck.Any())
@@ -61,8 +64,8 @@ public class RoomRepository : IRoomRepository
 
         // Get list of room flat id
         var roomFlatCheck = _context.RoomFlats
-            .Where(x => x.RoomId == roomId)
-            .Select(x => x.RoomFlatId);
+            .Where(x => x.RoomTypeId == roomTypeId)
+            .Select(x => x.RoomId);
 
         if (!roomFlatCheck.Any())
             return new RepositoryResponse
@@ -74,7 +77,7 @@ public class RoomRepository : IRoomRepository
         // Check if any active contract is using this room flat
         var isRoomFlatRented = _context.Contracts
             .Where(x => x.BuildingId == buildingId
-                        && roomFlatCheck.Contains(x.RoomFlatId)
+                        && roomFlatCheck.Contains(x.RoomId)
                         && x.ContractStatus.ToLower() == "active".ToLower());
 
         if (isRoomFlatRented.Count() > 1 || !isRoomFlatRented.Any())
@@ -91,16 +94,16 @@ public class RoomRepository : IRoomRepository
         };
     }
 
-    public async Task<Room?> GetRoomDetail(int? roomId, int? buildingId, CancellationToken token)
+    public async Task<RoomType?> GetRoomDetail(int? roomId, int? buildingId, CancellationToken token)
     {
         return await _context.Rooms
-            .FirstOrDefaultAsync(x => x.RoomId == roomId && x.BuildingId == buildingId, token);
+            .FirstOrDefaultAsync(x => x.RoomTypeId == roomId && x.BuildingId == buildingId, token);
     }
 
-    public async Task<RepositoryResponse> UpdateRoom(Room room, int buildingId, CancellationToken token)
+    public async Task<RepositoryResponse> UpdateRoomType(RoomType roomType, int buildingId, CancellationToken token)
     {
         var roomData = await _context.Rooms
-            .FirstOrDefaultAsync(x => x.RoomId == room.RoomId
+            .FirstOrDefaultAsync(x => x.RoomTypeId == roomType.RoomTypeId
                                       && x.BuildingId == buildingId, token);
 
         if (roomData == null)
@@ -110,10 +113,10 @@ public class RoomRepository : IRoomRepository
                 Message = "Phòng không tồn tại hoặc đã bị xóa"
             };
 
-        roomData.RoomSignName = room.RoomSignName;
-        roomData.Description = room.Description;
-        roomData.Status = room.Status;
-        roomData.TotalSlot = room.TotalSlot;
+        roomData.RoomTypeName = roomType.RoomTypeName;
+        roomData.Description = roomType.Description;
+        roomData.Status = roomType.Status;
+        roomData.TotalSlot = roomType.TotalSlot;
 
         await _context.SaveChangesAsync(token);
 
@@ -127,7 +130,7 @@ public class RoomRepository : IRoomRepository
     public async Task<RepositoryResponse> DeleteRoom(int roomId, int buildingId)
     {
         var roomFound = await _context.Rooms
-            .FirstOrDefaultAsync(x => x.RoomId == roomId && x.BuildingId == buildingId);
+            .FirstOrDefaultAsync(x => x.RoomTypeId == roomId && x.BuildingId == buildingId);
         switch (roomFound)
         {
             case null:

@@ -15,22 +15,22 @@ public class RoomFlatRepository : IRoomFlatRepository
         _context = context;
     }
 
-    public IQueryable<RoomFlat> GetRoomFlatList(RoomFlatFilter filters, int buildingId)
+    public IQueryable<Room> GetRoomFlatList(RoomFlatFilter filters, int buildingId)
     {
         return _context.RoomFlats
-            .Include(x => x.Room)
+            .Include(x => x.RoomType)
             .Include(x => x.Flat)
             .Where(x => x.Flat.BuildingId == buildingId)
             .Where(f =>
                 (filters.RoomName == null || f.RoomName.Contains(filters.RoomName.ToLower()))
-                && (filters.RoomSignName == null || f.Room.RoomSignName.Contains(filters.RoomSignName.ToLower()))
+                && (filters.RoomTypeName == null || f.RoomType.RoomTypeName.Contains(filters.RoomTypeName.ToLower()))
                 && (filters.WaterAttribute == null || f.WaterAttribute == filters.WaterAttribute)
                 && (filters.ElectricityAttribute == null || f.ElectricityAttribute == filters.ElectricityAttribute)
-                && (filters.RoomId == null || f.RoomId == filters.RoomId)
+                && (filters.RoomTypeId == null || f.RoomTypeId == filters.RoomTypeId)
                 && (filters.FlatId == null || f.FlatId == filters.FlatId)
                 && (filters.FlatName == null || f.Flat.Name.ToLower().Contains(filters.FlatName.ToLower()))
                 && (filters.AvailableSlots == null || f.AvailableSlots == filters.AvailableSlots)
-                && (filters.TotalSlot == null || f.Room.TotalSlot == filters.TotalSlot))
+                && (filters.TotalSlot == null || f.RoomType.TotalSlot == filters.TotalSlot))
             .AsNoTracking();
     }
 }

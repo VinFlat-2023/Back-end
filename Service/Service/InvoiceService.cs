@@ -36,10 +36,10 @@ public class InvoiceService : IInvoiceService
         return pagedList;
     }
 
-    public async Task<PagedList<Invoice>?> GetInvoiceList(InvoiceFilter filters, int userId, bool isManagement,
+    public async Task<PagedList<Invoice>?> GetInvoiceList(InvoiceFilter filters, int id, bool isManagement,
         CancellationToken token)
     {
-        var queryable = _repositoryWrapper.Invoices.GetInvoiceList(filters, userId, isManagement);
+        var queryable = _repositoryWrapper.Invoices.GetInvoiceList(filters, id, isManagement);
 
         if (!queryable.Any())
             return null;

@@ -9,7 +9,7 @@ public class Utility
 {
     public Utility()
     {
-        UtilitiesRooms = new HashSet<UtilitiesRoomFlat>();
+        UtilitiesRooms = new HashSet<UtilitiesRoom>();
     }
 
     public int UtilityId { get; set; }
@@ -26,5 +26,5 @@ public class Utility
     public string? UtilityImageUrl2 { get; set; }
     public string? UtilityImageUrl3 { get; set; }
     public string? UtilityImageUrl4 { get; set; }
-    public virtual ICollection<UtilitiesRoomFlat> UtilitiesRooms { get; set; }
+    public virtual ICollection<UtilitiesRoom> UtilitiesRooms { get; set; }
 }
