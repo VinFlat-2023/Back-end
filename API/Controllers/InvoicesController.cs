@@ -489,7 +489,7 @@ public class InvoicesController : ControllerBase
         var filter = _mapper.Map<InvoiceTypeFilter>(request);
 
         var list = await _serviceWrapper.InvoiceTypes.GetInvoiceTypes(filter, token);
-        
+
         var resultList = _mapper.Map<IEnumerable<InvoiceTypeDetailEntity>>(list);
 
         if (list == null || !list.Any())
@@ -516,7 +516,7 @@ public class InvoicesController : ControllerBase
     public async Task<IActionResult> GetInvoiceTypeById(int id, CancellationToken token)
     {
         var entity = await _serviceWrapper.InvoiceTypes.GetInvoiceTypeById(id, token);
-        
+
         return entity == null
             ? NotFound(new
             {

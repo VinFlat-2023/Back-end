@@ -10,6 +10,7 @@ public class RenterProfileEntity
     public string? PhoneNumber { get; set; }
     public string? FullName { get; set; }
     public DateTime? BirthDate { get; set; }
+    public bool Status { get; set; }
 
     public string? BirthDateReturn
         => BirthDate?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);

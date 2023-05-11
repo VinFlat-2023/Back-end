@@ -153,6 +153,7 @@ public class ContractsController : ControllerBase
     }
     //TODO get contract by renter ID
 
+    /*
     // GET: api/Contract
     [SwaggerOperation(Summary = "Get all contract list of logged in renter (For renter)")]
     [Authorize(Roles = "Renter")]
@@ -185,6 +186,7 @@ public class ContractsController : ControllerBase
             totalCount = list.TotalCount
         });
     }
+    */
 
     [SwaggerOperation(Summary = "Get all contract list of logged in renter (For renter)")]
     [Authorize(Roles = "Renter")]
@@ -288,8 +290,11 @@ public class ContractsController : ControllerBase
                 data = ""
             });
 
-        string?[] imageUrls =
-            { entity.ContractImageUrl1, entity.ContractImageUrl1, entity.ContractImageUrl1, entity.ContractImageUrl4 };
+        var imageUrls = new[]
+        {
+            entity.ContractImageUrl1,
+            entity.ContractImageUrl2
+        };
 
         var renterContract = new ContractMeterDetailEntity
         {
@@ -304,11 +309,11 @@ public class ContractsController : ControllerBase
             LastUpdated = entity.LastUpdated,
             ContractStatus = entity.ContractStatus,
             // TODO : Fix mobile to List
-            ImageUrls = imageUrls,
             PriceForRent = entity.PriceForRent.DecimalToString(),
             PriceForService = entity.PriceForService.DecimalToString(),
             PriceForWater = entity.PriceForWater.DecimalToString(),
-            PriceForElectricity = entity.PriceForElectricity.DecimalToString()
+            PriceForElectricity = entity.PriceForElectricity.DecimalToString(),
+            ImageUrls = imageUrls
         };
 
         return Ok(new

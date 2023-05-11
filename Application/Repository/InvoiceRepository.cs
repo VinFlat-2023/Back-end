@@ -207,7 +207,7 @@ public class InvoiceRepository : IInvoiceRepository
     {
         var invoiceData = await _context.Invoices
             .FirstOrDefaultAsync(x => x.InvoiceId == invoice.InvoiceId);
-        
+
         if (invoiceData == null)
             return null;
 

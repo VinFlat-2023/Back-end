@@ -2242,13 +2242,13 @@ public class ApplicationContext : DbContext
             {
                 InvoiceTypeId = 1,
                 Status = true,
-                InvoiceTypeName = "Thu",
+                InvoiceTypeName = "Thu"
             },
             new InvoiceType
             {
                 InvoiceTypeId = 2,
                 Status = true,
-                InvoiceTypeName = "Chi",
+                InvoiceTypeName = "Chi"
             }
         );
 

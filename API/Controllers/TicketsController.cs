@@ -329,9 +329,9 @@ public class TicketsController : ControllerBase
                         message = "Chỉ có thể xác nhận khi trạng thái là đã xử lí",
                         data = ""
                     });
-                
+
                 var approveTicket = await _serviceWrapper.Tickets.ApproveTicket(id, token);
-                
+
                 return approveTicket.IsSuccess switch
                 {
                     true => Ok(new { status = "Success", message = approveTicket.Message, data = "" }),
@@ -400,7 +400,12 @@ public class TicketsController : ControllerBase
                         data = ""
                     });
 
-                var imageUrls = new[] { renterTicketCheck.ImageUrl1, renterTicketCheck.ImageUrl2, renterTicketCheck.ImageUrl3 };
+                var imageUrls = new[]
+                {
+                    renterTicketCheck.ImageUrl1,
+                    renterTicketCheck.ImageUrl2,
+                    renterTicketCheck.ImageUrl3
+                };
 
                 var renterTicket = _mapper.Map<TicketDetailEntity>(renterTicketCheck);
 
@@ -454,7 +459,7 @@ public class TicketsController : ControllerBase
                 message = "Bạn chỉ có thể tiếp nhận phiếu chưa xử lí",
                 data = ""
             });
-        
+
         var acceptTicketResult = await _serviceWrapper.Tickets.AcceptTicket(id, userId, token);
 
         return acceptTicketResult.IsSuccess switch
@@ -472,7 +477,6 @@ public class TicketsController : ControllerBase
                 data = ""
             })
         };
-
     }
 
     [HttpPut("{id:int}/solve-ticket")]
@@ -497,7 +501,7 @@ public class TicketsController : ControllerBase
                 message = "Bạn chỉ có thể xác nhận phiếu đang trong quá trình xử lí",
                 data = ""
             });
-        
+
         var acceptTicketResult = await _serviceWrapper.Tickets.SolveTicket(id, token);
 
         return acceptTicketResult.IsSuccess switch
@@ -515,7 +519,6 @@ public class TicketsController : ControllerBase
                 data = ""
             })
         };
-
     }
 
     // PUT: api/Requests/5
@@ -777,10 +780,10 @@ public class TicketsController : ControllerBase
     }
 
     // DELETE: api/Requests/5
-    [HttpDelete("{id:int}/user")]
+    [HttpPut("{id:int}/user")]
     [Authorize(Roles = "Admin, Supervisor, Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Delete ticket by id (For management and renter)")]
-    public async Task<IActionResult> DeleteTicket(int id, CancellationToken token)
+    [SwaggerOperation(Summary = "[Authorize] Move ticket to cancelled status (For management and renter)")]
+    public async Task<IActionResult> UpdateTicketToCancelledStatus(int id, CancellationToken token)
     {
         var userRole = User.Identities
             .FirstOrDefault()?.Claims
@@ -823,36 +826,33 @@ public class TicketsController : ControllerBase
                         data = ""
                     });
 
-                if (ticketEntity.Status.ToLower() == "Active".ToLower())
-                {
-                    var result = await _serviceWrapper.Tickets.DeleteTicket(id);
-                    return result.IsSuccess switch
+                if (ticketEntity.Status.ToLower() != "Active".ToLower())
+                    return BadRequest(new
                     {
-                        true => Ok(new
-                        {
-                            status = "Success",
-                            message = result.Message,
-                            data = ""
-                        }),
-                        false => NotFound(new
-                        {
-                            status = "Not Found",
-                            message = result.Message,
-                            data = ""
-                        })
-                    };
-                }
+                        status = "Bad Request",
+                        message = "Bạn không thể xoá những phiếu đang xử lí",
+                        data = ""
+                    });
 
-                return BadRequest(new
+                var result = await _serviceWrapper.Tickets.MoveTicketToCancelled(id, false, token);
+                return result.IsSuccess switch
                 {
-                    status = "Bad Request",
-                    message = "Bạn không thể xoá những phiếu đang xử lí",
-                    data = ""
-                });
-
+                    true => Ok(new
+                    {
+                        status = "Success",
+                        message = result.Message,
+                        data = ""
+                    }),
+                    false => NotFound(new
+                    {
+                        status = "Not Found",
+                        message = result.Message,
+                        data = ""
+                    })
+                };
 
             case "Supervisor":
-                var resultSuper = await _serviceWrapper.Tickets.DeleteTicket(id);
+                var resultSuper = await _serviceWrapper.Tickets.MoveTicketToCancelled(id, true, token);
                 return resultSuper.IsSuccess switch
                 {
                     true => Ok(new

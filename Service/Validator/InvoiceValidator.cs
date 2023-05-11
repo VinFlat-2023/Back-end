@@ -160,8 +160,6 @@ public class InvoiceValidator : BaseValidator, IInvoiceValidator
                     ValidatorResult.Failures.Add("Invoice detail is required");
                     break;
             }
-
-           
         }
         catch (Exception e)
         {

@@ -20,7 +20,8 @@ public class InvoiceTypeRepository : IInvoiceTypeRepository
     {
         return _context.InvoiceTypes
             .Where(x =>
-                (filters.InvoiceTypeName == null || x.InvoiceTypeName.ToLower().Contains(filters.InvoiceTypeName.ToLower()))
+                (filters.InvoiceTypeName == null ||
+                 x.InvoiceTypeName.ToLower().Contains(filters.InvoiceTypeName.ToLower()))
                 && (filters.Status == null || x.Status == filters.Status))
             .AsNoTracking();
     }

@@ -16,9 +16,5 @@ public class ContactDetailRenterEntity
     public string PriceForWater { get; set; }
     public string PriceForElectricity { get; set; }
     public string PriceForService { get; set; }
-    public string? ContractImageUrl1 { get; set; }
-    public string? ContractImageUrl2 { get; set; }
-    public string? ContractImageUrl3 { get; set; }
-    public string? ContractImageUrl4 { get; set; }
     public string?[]? ImageUrls { get; set; }
 }

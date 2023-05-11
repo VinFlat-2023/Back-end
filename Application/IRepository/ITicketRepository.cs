@@ -19,4 +19,5 @@ public interface ITicketRepository
     public Task<RepositoryResponse> AcceptTicket(int ticketId, int userId, CancellationToken token);
     public Task<RepositoryResponse> SolveTicket(int ticketId, CancellationToken token);
     public Task<RepositoryResponse> UpdateTicketStatus(Ticket updateTicket, CancellationToken token);
+    public Task<RepositoryResponse> MoveTicketToCancelled(int ticketId, bool isManagement, CancellationToken token);
 }
