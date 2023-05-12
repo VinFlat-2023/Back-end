@@ -144,7 +144,7 @@ public class ContractRepository : IContractRepository
         return _context.Contracts
             .Include(x => x.Renter)
             .Include(x => x.Flat)
-            .ThenInclude(x => x.RoomFlats)
+            .ThenInclude(x => x.Rooms)
             .Where(x => x.ContractId == contractId)
             .Include(x => x.Flat)
             .ThenInclude(x => x.Building)

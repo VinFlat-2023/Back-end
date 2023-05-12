@@ -75,6 +75,11 @@ public class EmployeeService : IEmployeeService
         }
     }
 
+    public async Task<RepositoryResponse> UpdateEmployeeManagement(Employee employee)
+    {
+        return await _repositoryWrapper.Employees.UpdateEmployeeManagement(employee);
+    }
+
     public async Task<RepositoryResponse> UpdatePasswordEmployee(Employee employee)
     {
         return await _repositoryWrapper.Employees.UpdateEmployeePassword(employee);

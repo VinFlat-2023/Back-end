@@ -3,7 +3,7 @@ using Domain.EntitiesForManagement;
 using Domain.EntityRequest.RoomType;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
-using Domain.ViewModel.RoomEntity;
+using Domain.ViewModel.RoomTypeEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -56,7 +56,7 @@ public class RoomTypeController : ControllerBase
 
         var filter = _mapper.Map<RoomTypeFilter>(request);
 
-        var list = await _serviceWrapper.RoomsType.GetRoomTypeList(filter, buildingId, token);
+        var list = await _serviceWrapper.RoomTypes.GetRoomTypeList(filter, buildingId, token);
 
         var resultList = _mapper.Map<IEnumerable<RoomTypeBasicDetailEntity>>(list);
 
@@ -76,7 +76,6 @@ public class RoomTypeController : ControllerBase
             totalPage = list.TotalPages,
             totalCount = list.TotalCount
         });
-        
     }
 
     [HttpGet("{roomTypeId:int}")]
@@ -106,7 +105,7 @@ public class RoomTypeController : ControllerBase
                 });
         }
 
-        var room = await _serviceWrapper.RoomsType.GetRoomTypeById(roomTypeId, buildingId, token);
+        var room = await _serviceWrapper.RoomTypes.GetRoomTypeById(roomTypeId, buildingId, token);
 
         if (room == null)
             return NotFound(new
@@ -169,7 +168,7 @@ public class RoomTypeController : ControllerBase
             Status = request.Status ?? "Active"
         };
 
-        var result = await _serviceWrapper.RoomsType.AddRoomType(addRoom);
+        var result = await _serviceWrapper.RoomTypes.AddRoomType(addRoom);
 
         return result.IsSuccess switch
         {
@@ -191,7 +190,8 @@ public class RoomTypeController : ControllerBase
     [HttpPut("{roomTypeId:int}")]
     [Authorize(Roles = "Supervisor")]
     [SwaggerOperation("[Authorize] Update room types in building(s) managed by supervisor Id")]
-    public async Task<IActionResult> UpdateRoomType(int roomTypeId, RoomTypeUpdateRequest request, CancellationToken token)
+    public async Task<IActionResult> UpdateRoomType(int roomTypeId, RoomTypeUpdateRequest request,
+        CancellationToken token)
     {
         var userId = int.Parse(User.Identity.Name);
 
@@ -234,7 +234,7 @@ public class RoomTypeController : ControllerBase
             Status = request.Status
         };
 
-        var result = await _serviceWrapper.RoomsType.UpdateRoomType(updateRoom, buildingId, token);
+        var result = await _serviceWrapper.RoomTypes.UpdateRoomType(updateRoom, buildingId, token);
 
         return result.IsSuccess switch
         {

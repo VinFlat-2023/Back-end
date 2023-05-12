@@ -89,7 +89,7 @@ public class FlatRepository : IFlatRepository
     {
         var roomInFlat = await _context.Flats
             .Where(x => x.FlatId == flatId)
-            .Include(x => x.RoomFlats)
+            .Include(x => x.Rooms)
             .FirstOrDefaultAsync(token);
 
         if (roomInFlat == null)
@@ -101,14 +101,14 @@ public class FlatRepository : IFlatRepository
 
         switch (roomInFlat)
         {
-            case not null when roomInFlat.RoomFlats.Any(x => x.AvailableSlots == 0):
+            case not null when roomInFlat.Rooms.Any(x => x.AvailableSlots == 0):
                 return new RepositoryResponse
                 {
                     IsSuccess = false,
                     Message = "This flat's room is not available"
                 };
 
-            case not null when roomInFlat.RoomFlats.Any(x => x.AvailableSlots >= 1):
+            case not null when roomInFlat.Rooms.Any(x => x.AvailableSlots >= 1):
             {
                 return new RepositoryResponse
                 {
@@ -118,7 +118,7 @@ public class FlatRepository : IFlatRepository
             }
 
             case null:
-            case not null when roomInFlat.RoomFlats.Any(_ => false):
+            case not null when roomInFlat.Rooms.Any(_ => false):
                 return new RepositoryResponse
                 {
                     IsSuccess = false,

@@ -3,7 +3,7 @@ using Service.Validator;
 
 namespace Service.IValidator;
 
-public interface IRoomFlatValidator
+public interface IRoomValidator
 {
     Task<ValidatorResult> ValidateParams(RoomCreateRequest? obj, int? roomId, int? buildingId,
         CancellationToken token);

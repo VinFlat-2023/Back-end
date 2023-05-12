@@ -26,7 +26,7 @@ public class BuildingRepository : IBuildingRepository
             .Include(x => x.Area)
             .Include(x => x.Employee)
             .Include(x => x.Flats)
-            .ThenInclude(x => x.RoomFlats)
+            .ThenInclude(x => x.Rooms)
             // filter starts here
             .Where(x =>
                 (filter.BuildingName == null || x.BuildingName.ToLower().Contains(filter.BuildingName.ToLower()))
@@ -41,7 +41,7 @@ public class BuildingRepository : IBuildingRepository
                 && (filter.AreaName == null || x.Area.Name.ToLower().Contains(filter.AreaName.ToLower()))
                 && (filter.AveragePrice == null || x.AveragePrice <= filter.AveragePrice)
                 && (filter.SpareSlots == null ||
-                    x.Flats.Any(flat => flat.RoomFlats.Any(room => room.AvailableSlots > 0))))
+                    x.Flats.Any(flat => flat.Rooms.Any(room => room.AvailableSlots > 0))))
             .AsNoTracking();
     }
 

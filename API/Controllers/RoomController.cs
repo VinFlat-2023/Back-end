@@ -1,7 +1,4 @@
-/*
 using AutoMapper;
-using Domain.EntitiesForManagement;
-using Domain.EntityRequest.Room;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.ViewModel.RoomEntity;
@@ -15,13 +12,13 @@ namespace API.Controllers;
 
 [Route("api/building/room")]
 [ApiController]
-public class RoomFlatController : ControllerBase
+public class RoomController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
-    private readonly IRoomFlatValidator _validator;
+    private readonly IRoomValidator _validator;
 
-    public RoomFlatController(IMapper mapper, IServiceWrapper serviceWrapper, IRoomFlatValidator validator)
+    public RoomController(IMapper mapper, IServiceWrapper serviceWrapper, IRoomValidator validator)
     {
         _mapper = mapper;
         _serviceWrapper = serviceWrapper;
@@ -30,12 +27,12 @@ public class RoomFlatController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "Supervisor")]
-    [SwaggerOperation("[Authorize] Get all room flats in building(s) managed by supervisor Id")]
-    public async Task<IActionResult> GetAllRoomFlats([FromQuery] RoomFlatFilterRequest request, CancellationToken token)
+    [SwaggerOperation("[Authorize] Get all rooms in building(s)")]
+    public async Task<IActionResult> GetAllRooms([FromQuery] RoomFilterRequest request, CancellationToken token)
     {
         var userId = int.Parse(User.Identity.Name);
 
-        var buildingId = await _serviceWrapper.RoomFlats.GetBuildingIdBasedOnSupervisorId(userId, token);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
 
         switch (buildingId)
         {
@@ -55,11 +52,11 @@ public class RoomFlatController : ControllerBase
                 });
         }
 
-        var filter = _mapper.Map<RoomTypeFilter>(request);
+        var filter = _mapper.Map<RoomFilter>(request);
 
-        var list = await _serviceWrapper.RoomsType.GetRoomTypeList(filter, buildingId, token);
+        var list = await _serviceWrapper.Rooms.GetRoomList(filter, buildingId, token);
 
-        var resultList = _mapper.Map<IEnumerable<RoomTypeBasicDetailEntity>>(list);
+        var resultList = _mapper.Map<IEnumerable<RoomDetailEntity>>(list);
 
         if (list == null || !list.Any())
             return NotFound(new
@@ -79,6 +76,7 @@ public class RoomFlatController : ControllerBase
         });
     }
 
+    /*
     [HttpGet("{roomId:int}")]
     [Authorize(Roles = "Supervisor")]
     [SwaggerOperation("[Authorize] Get rooms in building managed by supervisor")]
@@ -106,7 +104,7 @@ public class RoomFlatController : ControllerBase
                 });
         }
 
-        var room = await _serviceWrapper.RoomsType.GetRoomTypeById(roomId, buildingId, token);
+        var room = await _serviceWrapper.RoomTypes.GetRoomTypeById(roomId, buildingId, token);
 
         if (room == null)
             return NotFound(new
@@ -169,7 +167,7 @@ public class RoomFlatController : ControllerBase
             Status = request.Status ?? "Active"
         };
 
-        var result = await _serviceWrapper.RoomsType.AddRoomType(addRoom);
+        var result = await _serviceWrapper.RoomTypes.AddRoomType(addRoom);
 
         return result.IsSuccess switch
         {
@@ -233,7 +231,7 @@ public class RoomFlatController : ControllerBase
             Status = request.Status
         };
 
-        var result = await _serviceWrapper.RoomsType.UpdateRoomType(updateRoom, buildingId, token);
+        var result = await _serviceWrapper.RoomTypes.UpdateRoomType(updateRoom, buildingId, token);
 
         return result.IsSuccess switch
         {
@@ -280,7 +278,7 @@ public class RoomFlatController : ControllerBase
                 });
         }
 
-        var room = await _serviceWrapper.RoomsType.GetRoomTypeById(roomId, buildingId, token);
+        var room = await _serviceWrapper.RoomTypes.GetRoomTypeById(roomId, buildingId, token);
         if (room == null)
             return NotFound(new
             {
@@ -295,6 +293,5 @@ public class RoomFlatController : ControllerBase
             data = _mapper.Map<RoomTypeBasicDetailEntity>(room)
         });
     }
+    */
 }
-*/
-

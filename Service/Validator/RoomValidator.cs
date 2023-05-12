@@ -4,11 +4,11 @@ using Service.IValidator;
 
 namespace Service.Validator;
 
-public class RoomFlatValidator : BaseValidator, IRoomFlatValidator
+public class RoomValidator : BaseValidator, IRoomValidator
 {
     private readonly IConditionCheckHelper _conditionCheckHelper;
 
-    public RoomFlatValidator(IConditionCheckHelper conditionCheckHelper)
+    public RoomValidator(IConditionCheckHelper conditionCheckHelper)
     {
         _conditionCheckHelper = conditionCheckHelper;
     }

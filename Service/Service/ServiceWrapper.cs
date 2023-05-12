@@ -231,17 +231,7 @@ public class ServiceWrapper : IServiceWrapper
     }
 
 
-    public IRoomTypeService RoomsType
-    {
-        get
-        {
-            if (_room == null) _room = new RoomTypeTypeService(_repositories, _paginationOptions);
-            return _room;
-        }
-    }
-
-    /*
-    public IRoomTypeService RoomType
+    public IRoomTypeService RoomTypes
     {
         get
         {
@@ -249,7 +239,15 @@ public class ServiceWrapper : IServiceWrapper
             return _roomType;
         }
     }
-    */
+
+    public IRoomService Rooms
+    {
+        get
+        {
+            if (_room == null) _room = new RoomService(_repositories, _paginationOptions);
+            return _room;
+        }
+    }
 
     public IGetIdService GetId
     {
@@ -312,9 +310,8 @@ public class ServiceWrapper : IServiceWrapper
     private IDeviceService _device;
     private ICustomeMailService _mail;
     private INotificationService _noti;
-    private IRoomTypeService _room;
-
-    //private IRoomTypeService _roomType;
+    private IRoomTypeService _roomType;
+    private IRoomService _room;
     private IGetIdService _getId;
 
     #endregion

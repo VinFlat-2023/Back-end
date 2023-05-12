@@ -8,12 +8,12 @@ using Service.IService;
 
 namespace Service.Service;
 
-public class RoomTypeTypeService : IRoomTypeService
+public class RoomTypeService : IRoomTypeService
 {
     private readonly PaginationOption _paginationOptions;
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public RoomTypeTypeService(IRepositoryWrapper repositoryWrapper, IOptions<PaginationOption> paginationOptions)
+    public RoomTypeService(IRepositoryWrapper repositoryWrapper, IOptions<PaginationOption> paginationOptions)
     {
         _repositoryWrapper = repositoryWrapper;
         _paginationOptions = paginationOptions.Value;
@@ -21,34 +21,34 @@ public class RoomTypeTypeService : IRoomTypeService
 
     public async Task<RepositoryResponse> UpdateRoomType(RoomType roomType, int buildingId, CancellationToken token)
     {
-        return await _repositoryWrapper.Rooms.UpdateRoomType(roomType, buildingId, token);
+        return await _repositoryWrapper.RoomsTypes.UpdateRoomType(roomType, buildingId, token);
     }
 
     public async Task<RepositoryResponse> AddRoomType(RoomType roomType)
     {
-        return await _repositoryWrapper.Rooms.AddRoomType(roomType);
+        return await _repositoryWrapper.RoomsTypes.AddRoomType(roomType);
     }
 
     public async Task<RoomType?> GetRoomTypeById(int? roomTypeId, int? buildingId, CancellationToken token)
     {
-        return await _repositoryWrapper.Rooms.GetRoomDetail(roomTypeId, buildingId, token);
+        return await _repositoryWrapper.RoomsTypes.GetRoomTypeDetail(roomTypeId, buildingId, token);
     }
 
     public async Task<RepositoryResponse> DeleteRoom(int roomTypeId, int buildingId)
     {
-        return await _repositoryWrapper.Rooms.DeleteRoom(roomTypeId, buildingId);
+        return await _repositoryWrapper.RoomsTypes.DeleteRoomType(roomTypeId, buildingId);
     }
 
-    public async Task<PagedList<RoomType>?> GetRoomTypeList(RoomTypeFilter typeFilters, int buildingId,
+    public async Task<PagedList<RoomType>?> GetRoomTypeList(RoomTypeFilter filters, int buildingId,
         CancellationToken token)
     {
-        var queryable = _repositoryWrapper.Rooms.GetRoomList(typeFilters, buildingId);
+        var queryable = _repositoryWrapper.RoomsTypes.GetRoomTypeList(filters, buildingId);
 
         if (!queryable.Any())
             return null;
 
-        var page = typeFilters.PageNumber ?? _paginationOptions.DefaultPageNumber;
-        var size = typeFilters.PageSize ?? _paginationOptions.DefaultPageSize;
+        var page = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var size = filters.PageSize ?? _paginationOptions.DefaultPageSize;
 
         var pagedList = await PagedList<RoomType>
             .Create(queryable, page, size, token);
@@ -58,6 +58,6 @@ public class RoomTypeTypeService : IRoomTypeService
 
     public async Task<RepositoryResponse> IsAnyoneRentedCheck(int? roomTypeId, int? buildingId, CancellationToken token)
     {
-        return await _repositoryWrapper.Rooms.IsAnyoneRentedCheck(roomTypeId, buildingId, token);
+        return await _repositoryWrapper.RoomsTypes.IsAnyFlatInUseWithThisType(roomTypeId, buildingId, token);
     }
 }

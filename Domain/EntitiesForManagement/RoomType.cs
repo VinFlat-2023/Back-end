@@ -9,7 +9,7 @@ public class RoomType
 {
     public RoomType()
     {
-        RoomFlats = new HashSet<Room>();
+        Rooms = new HashSet<Room>();
     }
 
     public int RoomTypeId { get; set; }
@@ -25,5 +25,5 @@ public class RoomType
     public IFormFile? Image { get; set; }
 
     public int BuildingId { get; set; }
-    public virtual ICollection<Room> RoomFlats { get; set; }
+    public virtual ICollection<Room> Rooms { get; set; }
 }

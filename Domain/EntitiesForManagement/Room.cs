@@ -4,7 +4,7 @@ public class Room
 {
     public Room()
     {
-        UtilitiesRoomFlats = new HashSet<UtilitiesRoom>();
+        UtilitiesRoom = new HashSet<UtilitiesRoom>();
     }
 
     public int RoomId { get; set; }
@@ -20,13 +20,14 @@ public class Room
 
     // Max slot, Min slot = 1
     // Apply to this room only (not apply to all rooms in this flat)
-    public string? RoomFlatImageUrl1 { get; set; }
-    public string? RoomFlatImageUrl2 { get; set; }
-    public string? RoomFlatImageUrl3 { get; set; }
-    public string? RoomFlatImageUrl4 { get; set; }
-    public string? RoomFlatImageUrl5 { get; set; }
-    public string? RoomFlatImageUrl6 { get; set; }
+    public string? RoomImageUrl1 { get; set; }
+    public string? RoomImageUrl2 { get; set; }
+    public string? RoomImageUrl3 { get; set; }
+    public string? RoomImageUrl4 { get; set; }
+    public string? RoomImageUrl5 { get; set; }
+    public string? RoomImageUrl6 { get; set; }
     public decimal ElectricityAttribute { get; set; }
     public decimal WaterAttribute { get; set; }
-    public virtual ICollection<UtilitiesRoom> UtilitiesRoomFlats { get; set; }
+    public int BuildingId { get; set; }
+    public virtual ICollection<UtilitiesRoom> UtilitiesRoom { get; set; }
 }

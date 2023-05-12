@@ -32,10 +32,10 @@ public class ApplicationContext : DbContext
     public virtual DbSet<UserDevice> UserDevices { get; set; } = null!;
     public virtual DbSet<Notification> Notifications { get; set; } = null!;
     public virtual DbSet<NotificationType> NotificationTypes { get; set; } = null!;
-    public virtual DbSet<RoomType> Rooms { get; set; } = null!;
-    public virtual DbSet<Room> RoomFlats { get; set; } = null!;
+    public virtual DbSet<RoomType> RoomTypes { get; set; } = null!;
+    public virtual DbSet<Room> Rooms { get; set; } = null!;
     public virtual DbSet<Utility> Utilities { get; set; } = null!;
-    public virtual DbSet<UtilitiesRoom> UtilitiesRoomFlats { get; set; } = null!;
+    public virtual DbSet<UtilitiesRoom> UtilitiesRoom { get; set; } = null!;
 
     // public virtual DbSet<RoomType> RoomTypes { get; set; } = null!;
 
@@ -1836,7 +1836,8 @@ public class ApplicationContext : DbContext
                 FlatId = 1,
                 AvailableSlots = 5,
                 ElectricityAttribute = 1,
-                WaterAttribute = 1
+                WaterAttribute = 1,
+                BuildingId = 3
             },
             new Room
             {
@@ -1846,7 +1847,8 @@ public class ApplicationContext : DbContext
                 FlatId = 2,
                 AvailableSlots = 5,
                 ElectricityAttribute = 1,
-                WaterAttribute = 1
+                WaterAttribute = 1,
+                BuildingId = 3
             }
         );
 

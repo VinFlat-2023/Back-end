@@ -207,6 +207,15 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
+    public IRoomTypeRepository RoomsTypes
+    {
+        get
+        {
+            if (_roomType == null) _roomType = new RoomTypeRepository(_context);
+            return _roomType;
+        }
+    }
+
     public IRoomRepository Rooms
     {
         get
@@ -215,17 +224,6 @@ public class RepositoryWrapper : IRepositoryWrapper
             return _room;
         }
     }
-
-    /*
-    public IRoomTypeRepository RoomType
-    {
-        get
-        {
-            if (_roomType == null) _roomType = new RoomTypeRepository(_context);
-            return _roomType;
-        }
-    }
-    */
 
     public IGetIdRepository GetId
     {
@@ -259,10 +257,8 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IWalletRepository _wallets;
     private IDeviceRepository _devices;
     private INotificationRepository _notification;
-
     private IRoomRepository _room;
-
-    //private IRoomTypeRepository _roomType;
+    private IRoomTypeRepository _roomType;
     private IGetIdRepository _getId;
 
     #endregion

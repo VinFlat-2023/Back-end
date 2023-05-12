@@ -273,7 +273,7 @@ public class FlatsController : ControllerBase
 
         var totalRooms = newFlat.MaxRoom;
 
-        ICollection<Room> roomFlats = new List<Room>();
+        ICollection<Room> Rooms = new List<Room>();
 
         for (var i = 0; i < totalRooms; i++)
         {

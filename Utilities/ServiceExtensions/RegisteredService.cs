@@ -40,6 +40,7 @@ public static class RegisteredService
         services.AddScoped<IRenterValidator, RenterValidator>();
         services.AddScoped<IRoleValidator, RoleValidator>();
         services.AddScoped<IRoomTypeValidator, RoomTypeValidator>();
+        services.AddScoped<IRoomValidator, RoomValidator>();
         services.AddScoped<IServiceValidator, ServiceValidator>();
         services.AddScoped<ITicketValidator, TicketValidator>();
         services.AddScoped<ITransactionValidator, TransactionValidator>();

@@ -14,7 +14,7 @@ public interface IRoomTypeService
 
     public Task<RepositoryResponse> DeleteRoom(int roomTypeId, int buildingId);
 
-    public Task<PagedList<RoomType>?> GetRoomTypeList(RoomTypeFilter typeFilters, int buildingId,
+    public Task<PagedList<RoomType>?> GetRoomTypeList(RoomTypeFilter filters, int buildingId,
         CancellationToken token);
 
     public Task<RepositoryResponse> IsAnyoneRentedCheck(int? roomTypeId, int? buildingId, CancellationToken token);

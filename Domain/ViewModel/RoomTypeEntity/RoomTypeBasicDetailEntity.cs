@@ -1,4 +1,4 @@
-namespace Domain.ViewModel.RoomEntity;
+namespace Domain.ViewModel.RoomTypeEntity;
 
 // TODO : Room view model
 public class RoomTypeBasicDetailEntity

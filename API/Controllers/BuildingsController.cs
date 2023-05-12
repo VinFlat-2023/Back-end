@@ -207,27 +207,6 @@ public class BuildingsController : ControllerBase
                 data = ""
             });
 
-        var newBuilding = new Building
-        {
-            BuildingName = building.BuildingName ?? "Building created by " + supervisor.FullName,
-            BuildingAddress = building.BuildingAddress ?? "To be filled",
-            Description = building.Description ?? "Building description",
-            TotalFlats = 0,
-            AveragePrice = building.AveragePrice ?? 0,
-            EmployeeId = employeeId,
-            Status = building.Status ?? true,
-            AreaId = building.AreaId,
-            BuildingPhoneNumber = building.BuildingPhoneNumber ?? "0",
-            BuildingImageUrl1 = building.ImageUrl,
-            BuildingImageUrl2 = building.ImageUrl2,
-            BuildingImageUrl3 = building.ImageUrl3,
-            BuildingImageUrl4 = building.ImageUrl4,
-            BuildingImageUrl5 = building.ImageUrl5,
-            BuildingImageUrl6 = building.ImageUrl6
-        };
-
-        var result = await _serviceWrapper.Buildings.AddBuilding(newBuilding);
-
         var buildingForCurrentSupervisor =
             await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
 
@@ -249,23 +228,64 @@ public class BuildingsController : ControllerBase
                 });
         }
 
-        var buildingDetail = await _serviceWrapper.Buildings.GetBuildingById(buildingForCurrentSupervisor, token);
-
-        return result.IsSuccess switch
+        var newBuilding = new Building
         {
-            true => Ok(new
-            {
-                status = "Success",
-                message = result.Message,
-                data = _mapper.Map<BuildingDetailEntity>(buildingDetail)
-            }),
-            false => NotFound(new
-            {
-                status = "Not Found",
-                message = result.Message,
-                data = ""
-            })
+            BuildingName = building.BuildingName ?? "Building created by " + supervisor.FullName,
+            BuildingAddress = building.BuildingAddress ?? "To be filled",
+            Description = building.Description ?? "Building description",
+            TotalFlats = 0,
+            AveragePrice = building.AveragePrice ?? 0,
+            EmployeeId = employeeId,
+            Status = building.Status ?? true,
+            AreaId = building.AreaId,
+            BuildingPhoneNumber = building.BuildingPhoneNumber ?? "0",
+            BuildingImageUrl1 = building.ImageUrl,
+            BuildingImageUrl2 = building.ImageUrl2,
+            BuildingImageUrl3 = building.ImageUrl3,
+            BuildingImageUrl4 = building.ImageUrl4,
+            BuildingImageUrl5 = building.ImageUrl5,
+            BuildingImageUrl6 = building.ImageUrl6
         };
+
+        var result = await _serviceWrapper.Buildings.AddBuilding(newBuilding);
+
+        switch (result.IsSuccess)
+        {
+            case true:
+                var buildingDetail =
+                    await _serviceWrapper.Buildings.GetBuildingById(buildingForCurrentSupervisor, token);
+
+                if (buildingDetail == null)
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "Toà nhà vừa tạo không tìm thấy",
+                        data = ""
+                    });
+
+                var employeeUpdate = new Employee
+                {
+                    EmployeeId = employeeId,
+                    SupervisorBuildingId = buildingDetail.BuildingId
+                };
+
+                var employeeUpdateManagement = await _serviceWrapper.Employees.UpdateEmployee(employeeUpdate);
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = result.Message,
+                    data = _mapper.Map<BuildingDetailEntity>(buildingDetail)
+                });
+
+            case false:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = result.Message,
+                    data = ""
+                });
+        }
     }
 
     // DELETE: api/Buildings/5

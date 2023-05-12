@@ -41,6 +41,7 @@ using Domain.ViewModel.PlaceholderForFeeEntity;
 using Domain.ViewModel.RenterEntity;
 using Domain.ViewModel.RoleEntity;
 using Domain.ViewModel.RoomEntity;
+using Domain.ViewModel.RoomTypeEntity;
 using Domain.ViewModel.ServiceEntity;
 using Domain.ViewModel.ServiceTypeEntity;
 using Domain.ViewModel.TicketEntity;
@@ -80,8 +81,8 @@ public class AutoMapper : Profile
         MapPlaceholder();
         MapUtilitiesFlat();
         MapUtility();
+        MapRoomType();
         MapRoom();
-        // MapRoomType();
     }
 
     /*
@@ -101,7 +102,7 @@ public class AutoMapper : Profile
     }
     */
 
-    private void MapRoom()
+    private void MapRoomType()
     {
         CreateMap<RoomType, RoomTypeBasicDetailEntity>()
             .ReverseMap();
@@ -118,6 +119,19 @@ public class AutoMapper : Profile
         CreateMap<RoomTypeFilterRequest, RoomTypeFilter>()
             .ReverseMap();
     }
+
+    private void MapRoom()
+    {
+        CreateMap<Room, RoomFilterRequest>()
+            .ReverseMap();
+
+        CreateMap<RoomFilterRequest, RoomFilter>()
+            .ReverseMap();
+        
+        CreateMap<Room, RoomDetailEntity>()
+            .ReverseMap();
+    }
+
 
     private void MapInvoiceType()
     {
