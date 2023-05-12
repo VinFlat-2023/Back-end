@@ -230,7 +230,6 @@ public class RoomTypeController : ControllerBase
             RoomTypeId = roomTypeId,
             RoomTypeName = request.RoomTypeName,
             TotalSlot = request.TotalSlot,
-            BuildingId = buildingId,
             Status = request.Status
         };
 

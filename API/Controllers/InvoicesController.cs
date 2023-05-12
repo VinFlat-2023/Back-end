@@ -414,6 +414,28 @@ public class InvoicesController : ControllerBase
                 message = "Nhân viên không tồn tại",
                 data = ""
             });
+        
+        var buildingForCurrentSupervisor =
+            await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
+
+        switch (buildingForCurrentSupervisor)
+        {
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                    data = ""
+                });
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Người quản lý không quản lý tòa nhà nào",
+                    data = ""
+                });
+        }
+
 
         /*
         var validation = await _validator.ValidateParams(invoice, token);
@@ -435,7 +457,8 @@ public class InvoicesController : ControllerBase
             PaymentTime = null,
             CreatedTime = DateTime.UtcNow,
             InvoiceTypeId = invoice.InvoiceTypeId,
-            EmployeeId = employeeId
+            EmployeeId = employeeId,
+            BuildingId = buildingForCurrentSupervisor,
         };
 
         switch (addNewInvoice.InvoiceTypeId)
