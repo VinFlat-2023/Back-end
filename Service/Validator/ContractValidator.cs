@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using Domain.EntityRequest.Contract;
 using Domain.Utils;
+using Microsoft.IdentityModel.Tokens;
 using Service.IHelper;
 using Service.IValidator;
 
@@ -146,7 +147,7 @@ public class ContractValidator : BaseValidator, IContractValidator
         }
         catch (Exception e)
         {
-            ValidatorResult.Failures.Add("Có lỗi xảy ra khi xác thực thông tin hợp đồng");
+            ValidatorResult.Failures.Add("Có lỗi xảy ra khi xác thực hợp đồng" + e.Message);
             Console.WriteLine(e.Message, e.Data);
         }
 
@@ -242,13 +243,13 @@ public class ContractValidator : BaseValidator, IContractValidator
                     break;
             }
 
+
             switch (obj?.RenterBirthDate)
             {
-                case not null when DateTime.ParseExact(obj.RenterBirthDate, "dd-MM-yyyy", null) > DateTime.UtcNow:
+                case not null when obj.RenterBirthDate.ToDateTime() > DateTime.Now:
                     ValidatorResult.Failures.Add("Ngày sinh không được lớn hơn ngày hiện tại");
                     break;
-                case not null when DateTime.Now.Date.Year -
-                    DateTime.ParseExact(obj.RenterBirthDate, "dd-MM-yyyy", null).Date.Year < 18:
+                case not null when DateTime.Now.Year - obj.RenterBirthDate.ToDateTime().Year < 18:
                     ValidatorResult.Failures.Add("Người thuê phải trên 18 tuổi");
                     break;
                 case null:
@@ -289,7 +290,7 @@ public class ContractValidator : BaseValidator, IContractValidator
 
             switch (obj?.EndDate)
             {
-                case not null when obj.EndDate.ConvertToDateTime() <= DateTime.UtcNow:
+                case not null when obj.EndDate.ToDateTime() <= DateTime.UtcNow:
                     ValidatorResult.Failures.Add("Ngày kết thúc hợp đồng phải lớn hơn ngày hiện tại");
                     break;
                 case null:
@@ -378,6 +379,27 @@ public class ContractValidator : BaseValidator, IContractValidator
                     break;
             }
 
+            switch (obj?.CitizenNumber)
+            {
+                case not null when obj.CitizenNumber.IsNullOrEmpty():
+                    ValidatorResult.Failures.Add("Số chứng minh không được để trống");
+                    break;
+            }
+
+            switch (obj?.CitizenCardBackImageUrl)
+            {
+                case not null when obj.CitizenNumber.IsNullOrEmpty():
+                    ValidatorResult.Failures.Add("Ảnh sau CMND không được để trống");
+                    break;
+            }
+
+            switch (obj?.CitizenCardFrontImageUrl)
+            {
+                case not null when obj.CitizenNumber.IsNullOrEmpty():
+                    ValidatorResult.Failures.Add("Ảnh trước CMND không được để trống");
+                    break;
+            }
+
             switch (obj?.RoomId)
             {
                 case null:
@@ -406,7 +428,7 @@ public class ContractValidator : BaseValidator, IContractValidator
         }
         catch (Exception e)
         {
-            ValidatorResult.Failures.Add("Có lỗi xảy ra khi xác thực hợp đông");
+            ValidatorResult.Failures.Add("Có lỗi xảy ra khi xác thực hợp đồng" + e.Message);
             Console.WriteLine(e.Message, e.Data);
         }
 

@@ -12,7 +12,7 @@ public class RenterDetailEntity
     public DateTime? BirthDate { get; set; }
 
     public string? BirthDateReturn
-        => BirthDate?.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture);
+        => BirthDate?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
 
     public string? ImageUrl { get; set; }
     public string? CitizenNumber { get; set; }

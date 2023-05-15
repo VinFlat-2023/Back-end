@@ -307,14 +307,14 @@ public class InvoiceRepository : IInvoiceRepository
                          {
                              Name = invoice.Name,
                              DueDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-                                 "dd-MM-yyyy HH:mm:ss", null).AddMonths(1),
+                                 "dd/MM/yyyy HH:mm:ss", null).AddMonths(1),
                              Status = true,
                              Detail = invoice.Detail,
                              EmployeeId = invoice.EmployeeId,
                              RenterId = invoice.RenterId,
                              InvoiceTypeId = invoice.InvoiceTypeId,
                              CreatedTime = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-                                 "dd-MM-yyyy HH:mm:ss", null)
+                                 "dd/MM/yyyy HH:mm:ss", null)
                          }))
 
                 await _context.Invoices.AddAsync(invoiceEntity);

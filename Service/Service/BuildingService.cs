@@ -39,7 +39,7 @@ public class BuildingService : IBuildingService
     public async Task<Building?> GetBuildingById(int? buildingId, CancellationToken token)
     {
         return await _repositoryWrapper.Buildings.GetBuildingDetail(buildingId)
-            .FirstOrDefaultAsync(cancellationToken: token);
+            .FirstOrDefaultAsync(token);
     }
 
     public async Task<RepositoryResponse> AddBuildingAndItsManagement(Building building, int employeeId)

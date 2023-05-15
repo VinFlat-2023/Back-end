@@ -204,7 +204,7 @@ public class ContractRepository : IContractRepository
         contractData.PriceForWater = contract?.PriceForWater ?? contractData.PriceForWater;
         contractData.PriceForRent = contract?.PriceForRent ?? contractData.PriceForRent;
         contractData.LastUpdated = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-            "dd-MM-yyyy HH:mm:ss", null);
+            "dd/MM/yyyy HH:mm:ss", null);
 
         await _context.SaveChangesAsync();
 

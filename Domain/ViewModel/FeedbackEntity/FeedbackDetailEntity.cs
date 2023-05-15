@@ -14,7 +14,7 @@ public class FeedbackDetailEntity
     public DateTime CreateDate { get; set; }
 
     public string CreateDateReturn
-        => CreateDate.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture);
+        => CreateDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
 
     public int FlatId { get; set; }
     public FlatBasicDetailEntity Flat { get; set; }

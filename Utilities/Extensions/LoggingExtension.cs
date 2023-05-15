@@ -11,7 +11,7 @@ public class LoggingExtension
             var dirPath = @"D:\RiderProjects\ManagementBackEndTestBranch";
             var fileName = Path.Combine(@"D:\Log", "Log" + DateTime.ParseExact(
                 DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-                "dd-MM-yyyy HH:mm:ss", null) + ".txt");
+                "dd/MM/yyyy HH:mm:ss", null) + ".txt");
             await WriteToLog(dirPath, fileName, logMessage);
         }
         catch (Exception e)

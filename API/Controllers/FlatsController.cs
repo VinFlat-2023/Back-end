@@ -242,11 +242,6 @@ public class FlatsController : ControllerBase
                 data = ""
             });
 
-        foreach (var roomId in flat.RoomIds)
-        {
-        }
-
-
         var newFlat = new Flat
         {
             Name = flat.Name,
@@ -273,11 +268,13 @@ public class FlatsController : ControllerBase
 
         var totalRooms = newFlat.MaxRoom;
 
-        ICollection<Room> Rooms = new List<Room>();
-
-        for (var i = 0; i < totalRooms; i++)
-        {
-        }
+        if (totalRooms >= flat.RoomIds.Count)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Tổng số phòng không được quá giới hạn của loại căn hộ",
+                data = ""
+            });
 
         var result = await _serviceWrapper.Flats.AddFlat(newFlat);
 
