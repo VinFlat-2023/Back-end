@@ -10,4 +10,6 @@ public interface IRoomService
 
     Task<PagedList<Room>?> GetRoomList(RoomFilter filters, int buildingId,
         CancellationToken token);
+
+    Task<RepositoryResponse> IsRoomExistAndAvailableInThisFlat(int? roomId, int? flatId, CancellationToken token);
 }

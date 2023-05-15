@@ -414,7 +414,7 @@ public class InvoicesController : ControllerBase
                 message = "Nhân viên không tồn tại",
                 data = ""
             });
-        
+
         var buildingForCurrentSupervisor =
             await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
 
@@ -458,7 +458,7 @@ public class InvoicesController : ControllerBase
             CreatedTime = DateTime.UtcNow,
             InvoiceTypeId = invoice.InvoiceTypeId,
             EmployeeId = employeeId,
-            BuildingId = buildingForCurrentSupervisor,
+            BuildingId = buildingForCurrentSupervisor
         };
 
         switch (addNewInvoice.InvoiceTypeId)

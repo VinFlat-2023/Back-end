@@ -115,7 +115,6 @@ public class RoomTypeRepository : IRoomTypeRepository
             };
 
         roomTypeData.RoomTypeName = roomType.RoomTypeName;
-        roomTypeData.Description = roomType.Description;
         roomTypeData.Status = roomType.Status;
         roomTypeData.TotalSlot = roomType.TotalSlot;
 

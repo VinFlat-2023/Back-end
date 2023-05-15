@@ -39,4 +39,10 @@ public class RoomService : IRoomService
 
         return pagedList;
     }
+
+    public async Task<RepositoryResponse> IsRoomExistAndAvailableInThisFlat(int? roomId, int? flatId,
+        CancellationToken token)
+    {
+        return await _repositoryWrapper.Rooms.IsRoomExistAndAvailableInThisFlat(roomId, flatId, token);
+    }
 }

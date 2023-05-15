@@ -103,6 +103,7 @@ public class EmployeeValidator : BaseValidator, IEmployeeValidator
         {
             if (obj == null)
                 ValidatorResult.Failures.Add("Dữ liệu không được để trống");
+
             switch (obj?.Username)
             {
                 case not null when obj.Username.Length > 100:

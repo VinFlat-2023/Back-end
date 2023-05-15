@@ -26,9 +26,9 @@ public class FlatTypeRepository : IFlatTypeRepository
             .Where(x => x.BuildingId == buildingId)
             .Where(x =>
                 (filters.Status == null || x.Status == filters.Status)
-                && (filters.FlatTypeName == null || x.FlatTypeName.ToLower().Contains(filters.FlatTypeName.ToLower())
-                    && (filters.RoomCapacity == null ||
-                        x.RoomCapacity == filters.RoomCapacity)))
+                && (filters.FlatTypeName == null || (x.FlatTypeName.ToLower().Contains(filters.FlatTypeName.ToLower())
+                                                     && (filters.RoomCapacity == null ||
+                                                         x.RoomCapacity == filters.RoomCapacity))))
             .AsNoTracking();
     }
 

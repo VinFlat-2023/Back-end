@@ -13,7 +13,7 @@ public class RenterProfileEntity
     public bool Status { get; set; }
 
     public string? BirthDateReturn
-        => BirthDate?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+        => BirthDate?.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture);
 
     public string? Address { get; set; }
     public string? Gender { get; set; }

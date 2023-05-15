@@ -3,12 +3,12 @@
 public class ContractCreateRequest
 {
     // Contract
-    public string? ContractName { get; set; }
-    public DateTime? DateSigned { get; set; }
-    public DateTime? StartDate { get; set; }
-    public string? Description { get; set; }
-    public DateTime? EndDate { get; set; }
-    public string? ContractStatus { get; set; }
+    public string ContractName { get; set; }
+    public string DateSigned { get; set; }
+    public string StartDate { get; set; }
+    public string Description { get; set; }
+    public string EndDate { get; set; }
+    public string ContractStatus { get; set; }
     public string PriceForWater { get; set; }
     public string PriceForElectricity { get; set; }
     public string PriceForService { get; set; }
@@ -24,4 +24,7 @@ public class ContractCreateRequest
     public string RenterBirthDate { get; set; }
     public string Address { get; set; }
     public string Gender { get; set; }
+    public string CitizenNumber { get; set; }
+    public string CitizenCardFrontImageUrl { get; set; }
+    public string CitizenCardBackImageUrl { get; set; }
 }

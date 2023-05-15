@@ -115,11 +115,26 @@ public class BuildingsController : ControllerBase
                 message = "Building not found",
                 data = ""
             });
+
+        var building = _mapper.Map<BuildingDetailEntity>(entity);
+
+        var imageUrls = new[]
+        {
+            entity.BuildingImageUrl1,
+            entity.BuildingImageUrl2,
+            entity.BuildingImageUrl3,
+            entity.BuildingImageUrl4,
+            entity.BuildingImageUrl5,
+            entity.BuildingImageUrl6
+        };
+
+        building.ImageUrls = imageUrls;
+
         return Ok(new
         {
             status = "Success",
             message = "Building found",
-            data = _mapper.Map<BuildingDetailEntity>(entity)
+            data = building
         });
     }
 
@@ -141,6 +156,16 @@ public class BuildingsController : ControllerBase
                 data = ""
             });
 
+        var buildingEntity = await _serviceWrapper.Buildings.GetBuildingById(id, token);
+
+        if (buildingEntity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Building not found",
+                data = ""
+            });
+
         var updateBuilding = new Building
         {
             BuildingId = id,
@@ -151,12 +176,12 @@ public class BuildingsController : ControllerBase
             AveragePrice = building.AveragePrice ?? 0,
             Status = building.Status,
             AreaId = building.AreaId,
-            BuildingImageUrl1 = building.ImageUrl,
-            BuildingImageUrl2 = building.ImageUrl2,
-            BuildingImageUrl3 = building.ImageUrl3,
-            BuildingImageUrl4 = building.ImageUrl4,
-            BuildingImageUrl5 = building.ImageUrl5,
-            BuildingImageUrl6 = building.ImageUrl6
+            BuildingImageUrl1 = building.ImageUrl ?? buildingEntity.BuildingImageUrl1,
+            BuildingImageUrl2 = building.ImageUrl2 ?? buildingEntity.BuildingImageUrl2,
+            BuildingImageUrl3 = building.ImageUrl3 ?? buildingEntity.BuildingImageUrl3,
+            BuildingImageUrl4 = building.ImageUrl4 ?? buildingEntity.BuildingImageUrl4,
+            BuildingImageUrl5 = building.ImageUrl5 ?? buildingEntity.BuildingImageUrl5,
+            BuildingImageUrl6 = building.ImageUrl6 ?? buildingEntity.BuildingImageUrl6
         };
 
         var result = await _serviceWrapper.Buildings.UpdateBuilding(updateBuilding);
@@ -247,7 +272,7 @@ public class BuildingsController : ControllerBase
             BuildingImageUrl6 = building.ImageUrl6
         };
 
-        var result = await _serviceWrapper.Buildings.AddBuilding(newBuilding);
+        var result = await _serviceWrapper.Buildings.AddBuildingAndItsManagement(newBuilding, employeeId);
 
         switch (result.IsSuccess)
         {
@@ -269,7 +294,17 @@ public class BuildingsController : ControllerBase
                     SupervisorBuildingId = buildingDetail.BuildingId
                 };
 
+                //TODO: Implement batch insertion to include roll back
+
                 var employeeUpdateManagement = await _serviceWrapper.Employees.UpdateEmployee(employeeUpdate);
+
+                if (employeeUpdateManagement.IsSuccess == false)
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "Không thể cập nhật quản lý cho nhân viên",
+                        data = ""
+                    });
 
                 return Ok(new
                 {

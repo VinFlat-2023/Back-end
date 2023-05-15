@@ -13,12 +13,12 @@ public class TicketDetailEntity
     public DateTime CreateDate { get; set; }
 
     public string CreatedDateReturn
-        => CreateDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+        => CreateDate.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture);
 
     public DateTime? SolveDate { get; set; }
 
     public string? SolveDateReturn
-        => SolveDate?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+        => SolveDate?.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture);
 
     public decimal? Amount { get; set; }
     public string Status { get; set; }

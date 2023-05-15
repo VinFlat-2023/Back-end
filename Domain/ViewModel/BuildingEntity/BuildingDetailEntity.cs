@@ -17,6 +17,8 @@ public class BuildingDetailEntity
     public string? BuildingImageUrl4 { get; set; }
     public string? BuildingImageUrl5 { get; set; }
     public string? BuildingImageUrl6 { get; set; }
+
+    public string?[]? ImageUrls { get; set; }
     public int EmployeeId { get; set; }
     public EmployeeBuildingDetailEntity Employee { get; set; }
     public int AreaId { get; set; }

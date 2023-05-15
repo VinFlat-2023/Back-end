@@ -7,6 +7,9 @@ public interface IConditionCheckHelper
 {
     // Area
     public Task<Area?> AreaCheck(int? id, CancellationToken token);
+
+    public Task<Building?> BuildingCheck(int? id, CancellationToken token);
+
     public Task<RepositoryResponse> AreaNameCheck(string? areaName, CancellationToken token);
     public Task<RepositoryResponse> AreaNameCheck(string? areaName, int? areaId, CancellationToken token);
 
@@ -40,7 +43,6 @@ public interface IConditionCheckHelper
 
     public Task<FeedbackType?> FeedbackTypeCheck(int? id, CancellationToken token);
 
-    public Task<Building?> BuildingCheck(int? id, CancellationToken token);
 
     public Task<ServiceEntity?> ServiceCheck(int? id, CancellationToken token);
 
@@ -50,16 +52,26 @@ public interface IConditionCheckHelper
 
     public Task<Contract?> ContractCheck(int? id, CancellationToken token);
 
+    // Ticket check
+
     public Task<TicketType?> TicketTypeCheck(int? id, CancellationToken token);
 
     public Task<Ticket?> TicketCheck(int? ticketId, int? renterId, CancellationToken token);
     public Task<Ticket?> TicketCheck(int? ticketId, CancellationToken renterId);
 
+
+    // Invoice check
+
     public Task<InvoiceDetail?> InvoiceDetailCheck(int? id, CancellationToken token);
 
     public Task<InvoiceType?> InvoiceTypeCheck(int? id, CancellationToken token);
 
-    public Task<RoomType?> RoomCheck(int? roomId, int? buildingId, CancellationToken token);
+    public Task<RoomType?> RoomTypeCheck(int? roomId, int? buildingId, CancellationToken token);
+
+    // Check if exist 
+    public Task<RepositoryResponse>
+        IsRoomExistAndAvailableInThisFlat(int? roomId, int? flatId, CancellationToken token);
+
     public Task<RepositoryResponse> IsAnyoneRentedCheck(int? roomId, int? buildingId, CancellationToken token);
 
     public Task<RepositoryResponse> IsAnyFlatIsInUseWithThisType(int? flatTypeId, int buildingId,

@@ -53,11 +53,11 @@ public class ContractService : IContractService
         return pagedList;
     }
 
-    public async Task<PagedList<Contract>?> GetContractList(ContractFilter filters, int userId, int? buildingId,
+    public async Task<PagedList<Contract>?> GetContractList(ContractFilter filters, int? id,
         bool isManagement,
         CancellationToken token)
     {
-        var queryable = _repositoryWrapper.Contracts.GetContractList(filters, userId, buildingId, isManagement);
+        var queryable = _repositoryWrapper.Contracts.GetContractList(filters, id, isManagement);
 
         if (!queryable.Any())
             return null;
@@ -109,5 +109,10 @@ public class ContractService : IContractService
     public async Task<RepositoryResponse> DeleteContract(int contractId)
     {
         return await _repositoryWrapper.Contracts.DeleteContract(contractId);
+    }
+
+    public async Task<RepositoryResponse> AddContractWithRenter(Contract newContract, Renter newRenter)
+    {
+        return await _repositoryWrapper.Contracts.AddContractWithRenter(newContract, newRenter);
     }
 }

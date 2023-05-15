@@ -1,3 +1,6 @@
+using Domain.ViewModel.FlatEntity;
+using Domain.ViewModel.RenterEntity;
+
 namespace Domain.ViewModel.ContractEntity;
 
 public class ContactDetailRenterEntity
@@ -17,4 +20,9 @@ public class ContactDetailRenterEntity
     public string PriceForElectricity { get; set; }
     public string PriceForService { get; set; }
     public string?[]? ImageUrls { get; set; }
+    public int RenterId { get; set; }
+    public RenterDetailEntity Renter { get; set; }
+    public int FlatId { get; set; }
+    public FlatDetailEntity Flat { get; set; }
+    public int RoomId { get; set; }
 }

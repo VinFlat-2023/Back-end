@@ -560,7 +560,7 @@ public class TicketsController : ControllerBase
             ImageUrl2 = ticketUpdateRequest.ImageUrl2 ?? ticketEntity.ImageUrl2,
             ImageUrl3 = ticketUpdateRequest.ImageUrl3 ?? ticketEntity.ImageUrl3,
             TotalAmount = ticketUpdateRequest.Amount,
-            SolveDate = ticketUpdateRequest.SolveDate.ConvertToDateTime() ?? ticketEntity.SolveDate
+            SolveDate = ticketUpdateRequest.SolveDate.ConvertToDateTime()
         };
 
         var result = await _serviceWrapper.Tickets.UpdateTicket(updateTicket);

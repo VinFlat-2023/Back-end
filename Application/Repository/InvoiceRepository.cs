@@ -299,8 +299,7 @@ public class InvoiceRepository : IInvoiceRepository
 
     public async Task<RepositoryResponse> BatchInsertInvoice(IEnumerable<MassInvoiceCreateRequest> invoices)
     {
-        await using
-            var transaction = await _context.Database.BeginTransactionAsync();
+        await using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
             foreach (var invoiceEntity in invoices
@@ -308,16 +307,18 @@ public class InvoiceRepository : IInvoiceRepository
                          {
                              Name = invoice.Name,
                              DueDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-                                 "dd/MM/yyyy HH:mm:ss", null).AddMonths(1),
+                                 "dd-MM-yyyy HH:mm:ss", null).AddMonths(1),
                              Status = true,
                              Detail = invoice.Detail,
                              EmployeeId = invoice.EmployeeId,
                              RenterId = invoice.RenterId,
                              InvoiceTypeId = invoice.InvoiceTypeId,
                              CreatedTime = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-                                 "dd/MM/yyyy HH:mm:ss", null)
+                                 "dd-MM-yyyy HH:mm:ss", null)
                          }))
-                _context.Invoices.Add(invoiceEntity);
+
+                await _context.Invoices.AddAsync(invoiceEntity);
+
 
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();

@@ -27,7 +27,7 @@ public class RoomTypeValidator : BaseValidator, IRoomTypeValidator
                     ValidatorResult.Failures.Add("Mã phòng không được để trống");
                     break;
                 case not null:
-                    if (await _conditionCheckHelper.RoomCheck(roomId, buildingId, token) == null)
+                    if (await _conditionCheckHelper.RoomTypeCheck(roomId, buildingId, token) == null)
                         ValidatorResult.Failures.Add("Phòng không tồn tại");
                     break;
             }
@@ -66,7 +66,7 @@ public class RoomTypeValidator : BaseValidator, IRoomTypeValidator
                     ValidatorResult.Failures.Add("Số lượng chỗ không được để trống");
                     break;
                 case not null:
-                    var roomCheck = await _conditionCheckHelper.RoomCheck(roomId, buildingId, token);
+                    var roomCheck = await _conditionCheckHelper.RoomTypeCheck(roomId, buildingId, token);
                     switch (roomCheck)
                     {
                         case null:

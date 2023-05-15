@@ -34,7 +34,8 @@ public class Renter
     public IFormFile? Image { get; set; }
 
     public string? CitizenNumber { get; set; }
-    public string? CitizenImageUrl { get; set; }
+    public string? CitizenCardFrontImageUrl { get; set; }
+    public string? CitizenCardBackImageUrl { get; set; }
 
     [MaxUploadedFileSize(4 * 1024 * 1024)]
     [AllowedImageFileExtension(new[] { ".jpg", ".png", ".jpeg" })]

@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using Domain.EntityRequest.Contract;
+using Domain.Utils;
 using Service.IHelper;
 using Service.IValidator;
 
@@ -162,8 +163,18 @@ public class ContractValidator : BaseValidator, IContractValidator
                 case not null when string.IsNullOrWhiteSpace(obj.RenterUsername):
                     ValidatorResult.Failures.Add("Tên tai khoản là bắt buộc");
                     break;
-                case not null when obj.RenterUsername.Length > 100:
-                    ValidatorResult.Failures.Add("Tên tai khoản không được vượt quá 100 ký tự");
+                case not null:
+                    if (obj.RenterUsername.Length > 100)
+                        ValidatorResult.Failures.Add("Tên tai khoản không được vượt quá 100 ký tự");
+
+                    var usernameCheckRenter =
+                        await _conditionCheckHelper.RenterUsernameCheck(obj.RenterUsername, token);
+
+                    var usernameCheckEmployee =
+                        await _conditionCheckHelper.RenterUsernameCheck(obj.RenterUsername, token);
+
+                    if (usernameCheckRenter.IsSuccess is false || usernameCheckEmployee.IsSuccess is false)
+                        ValidatorResult.Failures.Add("Tên đăng nhập đã tồn tại");
                     break;
             }
 
@@ -233,11 +244,11 @@ public class ContractValidator : BaseValidator, IContractValidator
 
             switch (obj?.RenterBirthDate)
             {
-                case not null when DateTime.ParseExact(obj.RenterBirthDate, "dd/MM/yyyy", null) > DateTime.Now:
+                case not null when DateTime.ParseExact(obj.RenterBirthDate, "dd-MM-yyyy", null) > DateTime.UtcNow:
                     ValidatorResult.Failures.Add("Ngày sinh không được lớn hơn ngày hiện tại");
                     break;
                 case not null when DateTime.Now.Date.Year -
-                    DateTime.ParseExact(obj.RenterBirthDate, "dd/MM/yyyy", null).Date.Year < 18:
+                    DateTime.ParseExact(obj.RenterBirthDate, "dd-MM-yyyy", null).Date.Year < 18:
                     ValidatorResult.Failures.Add("Người thuê phải trên 18 tuổi");
                     break;
                 case null:
@@ -278,7 +289,7 @@ public class ContractValidator : BaseValidator, IContractValidator
 
             switch (obj?.EndDate)
             {
-                case not null when obj.EndDate < DateTime.Now:
+                case not null when obj.EndDate.ConvertToDateTime() <= DateTime.UtcNow:
                     ValidatorResult.Failures.Add("Ngày kết thúc hợp đồng phải lớn hơn ngày hiện tại");
                     break;
                 case null:
@@ -291,9 +302,12 @@ public class ContractValidator : BaseValidator, IContractValidator
                 case not null when string.IsNullOrWhiteSpace(obj.ContractStatus):
                     ValidatorResult.Failures.Add("Trạng thái hợp đồng không được để trống");
                     break;
-                case not null when obj.ContractStatus.ToLower() != "active"
-                                   || obj.ContractStatus.ToLower() != "inactive"
-                                   || obj.ContractStatus.ToLower() != "suspend":
+                case not null:
+                    if (obj.ContractStatus.ToLower() == "active"
+                        || obj.ContractStatus.ToLower() == "inactive"
+                        || obj.ContractStatus.ToLower() == "suspend")
+                        break;
+
                     ValidatorResult.Failures.Add(
                         "Trạng thái hợp đồng phải là 'Đang hoạt động', 'Hết hạn' hoặc 'Tạm dừng'");
                     break;
@@ -372,24 +386,19 @@ public class ContractValidator : BaseValidator, IContractValidator
                 case not null when obj.RoomId < 0:
                     ValidatorResult.Failures.Add("Phòng không hợp lệ");
                     break;
-                case not null when await _conditionCheckHelper.RoomCheck(obj.RoomId, buildingId, token) == null:
+                case not null when await _conditionCheckHelper.RoomTypeCheck(obj.RoomId, buildingId, token) == null:
                     ValidatorResult.Failures.Add("Phòng không tồn tại");
                     break;
                 case not null:
-                    var room = await _conditionCheckHelper.RoomCheck(obj.RoomId, buildingId, token);
-                    switch (room)
+                    var room = await _conditionCheckHelper.IsRoomExistAndAvailableInThisFlat(obj.RoomId, obj.FlatId,
+                        token);
+                    switch (room.IsSuccess)
                     {
-                        /*
-                        case not null when room.FlatId != obj.FlatId:
-                            ValidatorResult.Failures.Add("Phòng này không thuộc căn hộ");
+                        case false:
+                            ValidatorResult.Failures.Add(room.Message);
                             break;
-                        case { AvailableSlots: 0 }:
-                            ValidatorResult.Failures.Add("Phòng đã đầy");
+                        case true:
                             break;
-                        case { AvailableSlots: < 0 }:
-                            ValidatorResult.Failures.Add("Phòng lỗi số lượng slot, vui lòng liên hệ quản trị viên");
-                            break;
-                                                    */
                     }
 
                     break;

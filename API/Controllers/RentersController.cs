@@ -391,7 +391,7 @@ public class RentersController : ControllerBase
             Email = renter.Email,
             PhoneNumber = renter.PhoneNumber,
             FullName = renter.FullName,
-            BirthDate = DateTime.ParseExact(renter.BirthDate, "dd/MM/yyyy", null),
+            BirthDate = DateTime.ParseExact(renter.BirthDate, "dd-MM-yyyy", null),
             /*
             ImageUrl = (await _serviceWrapper.AzureStorage.UpdateAsync(renter.Image, fileNameUserImage,
                 "User", imageExtension))?.Blob.Uri,

@@ -1,3 +1,4 @@
+using System.Data;
 using System.Globalization;
 using Application.IRepository;
 using Domain.CustomEntities;
@@ -51,7 +52,7 @@ public class ContractRepository : IContractRepository
             .AsNoTracking();
     }
 
-    public IQueryable<Contract> GetContractList(ContractFilter filters, int userId, int? buildingId, bool isManagement)
+    public IQueryable<Contract> GetContractList(ContractFilter filters, int? id, bool isManagement)
     {
         return isManagement switch
         {
@@ -59,8 +60,7 @@ public class ContractRepository : IContractRepository
             true => _context.Contracts
                 .Include(x => x.Renter)
                 .Include(x => x.Flat)
-                .ThenInclude(x => x.Building)
-                .Where(x => x.Flat.Building.EmployeeId == userId)
+                .Where(x => x.BuildingId == id)
                 .Where(x =>
                     (filters.ContractName == null ||
                      x.ContractName.ToLower().Contains(filters.ContractName.ToLower()))
@@ -90,7 +90,7 @@ public class ContractRepository : IContractRepository
                 .Include(x => x.Renter)
                 .Include(x => x.Flat)
                 .ThenInclude(x => x.Building)
-                .Where(x => x.RenterId == userId)
+                .Where(x => x.RenterId == id)
                 .Where(x =>
                     (filters.ContractName == null ||
                      x.ContractName.ToLower().Contains(filters.ContractName.ToLower()))
@@ -204,7 +204,7 @@ public class ContractRepository : IContractRepository
         contractData.PriceForWater = contract?.PriceForWater ?? contractData.PriceForWater;
         contractData.PriceForRent = contract?.PriceForRent ?? contractData.PriceForRent;
         contractData.LastUpdated = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-            "dd/MM/yyyy HH:mm:ss", null);
+            "dd-MM-yyyy HH:mm:ss", null);
 
         await _context.SaveChangesAsync();
 
@@ -237,5 +237,40 @@ public class ContractRepository : IContractRepository
             IsSuccess = true,
             Message = "Contract deleted"
         };
+    }
+
+    public async Task<RepositoryResponse> AddContractWithRenter(Contract newContract, Renter newRenter)
+    {
+        await using
+            var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted);
+        try
+        {
+            await _context.Renters.AddAsync(newRenter);
+
+            await _context.SaveChangesAsync();
+
+            newContract.RenterId = newRenter.RenterId;
+
+            await _context.Contracts.AddAsync(newContract);
+
+            await _context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Tạo hợp đồng thành công"
+            };
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Tạo hợp đồng thất bại"
+            };
+        }
     }
 }

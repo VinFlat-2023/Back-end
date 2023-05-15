@@ -1,4 +1,5 @@
 using Application.IRepository;
+using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
 using Infrastructure;
@@ -32,5 +33,32 @@ public class RoomRepository : IRoomRepository
                 && (filters.AvailableSlots == null || f.AvailableSlots == filters.AvailableSlots)
                 && (filters.TotalSlot == null || f.RoomType.TotalSlot == filters.TotalSlot))
             .AsNoTracking();
+    }
+
+    public async Task<RepositoryResponse> IsRoomExistAndAvailableInThisFlat(int? roomId, int? flatId,
+        CancellationToken token)
+    {
+        var roomCheck = await _context.Rooms
+            .FirstOrDefaultAsync(x => x.FlatId == flatId && x.RoomId == roomId, token);
+
+        if (roomCheck == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Phòng này không tồn tại trong căn hộ đã chọn"
+            };
+
+        if (roomCheck.AvailableSlots == 0)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Phòng này đã đầy"
+            };
+
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Phòng này tồn tại trong căn hộ đã chọn"
+        };
     }
 }

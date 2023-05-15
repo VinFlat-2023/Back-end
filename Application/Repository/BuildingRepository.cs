@@ -63,26 +63,61 @@ public class BuildingRepository : IBuildingRepository
     ///     AddExpenseHistory new building to database
     /// </summary>
     /// <param name="building"></param>
+    /// <param name="employeeId"></param>
     /// <returns></returns>
-    public async Task<RepositoryResponse> AddBuilding(Building building)
+    public async Task<RepositoryResponse> AddBuildingAndItsManagement(Building building, int employeeId)
     {
-        var buildingCheck =
-            await _context.Buildings
-                .FirstOrDefaultAsync(x => x.EmployeeId == building.EmployeeId && x.Status == true);
-        if (buildingCheck != null)
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+
+        try
+        {
+            var isEmployeeFree =
+                await _context.Buildings
+                    .FirstOrDefaultAsync(x => x.EmployeeId == building.EmployeeId && x.Status == true);
+
+            if (isEmployeeFree != null)
+                return new RepositoryResponse
+                {
+                    IsSuccess = false,
+                    Message = "Quản lí này đang quản lí tòa nhà khác"
+                };
+
+            await _context.Buildings.AddAsync(building);
+
+            var employeeCheck = await _context.Employees
+                .FirstOrDefaultAsync(x => x.EmployeeId == employeeId);
+
+            if (employeeCheck is null)
+            {
+                await transaction.RollbackAsync();
+                return new RepositoryResponse
+                {
+                    IsSuccess = false,
+                    Message = "Nhân viên không tồn tại"
+                };
+            }
+
+            employeeCheck.SupervisorBuildingId = building.BuildingId;
+
+            await _context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Toà nhà đã được tạo thành công"
+            };
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "This employee is already assigned to a building"
+                Message = "Tạo mới tòa nhà thất bại"
             };
-
-        await _context.Buildings.AddAsync(building);
-        await _context.SaveChangesAsync();
-        return new RepositoryResponse
-        {
-            IsSuccess = true,
-            Message = "Building added successfully for this employee"
-        };
+        }
     }
 
     /// <summary>

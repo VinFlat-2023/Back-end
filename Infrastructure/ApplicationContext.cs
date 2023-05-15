@@ -96,13 +96,6 @@ public class ApplicationContext : DbContext
             entity.Property(e => e.Status).HasDefaultValueSql("((1))");
         });
 
-        modelBuilder.Entity<Employee>(entity =>
-        {
-            entity.HasIndex(e => e.Username)
-                .IsUnique();
-        });
-
-
         modelBuilder.Entity<Employee>().HasData(
             new Employee
             {
@@ -756,12 +749,6 @@ public class ApplicationContext : DbContext
                 RoleName = "Technician"
             }
         );
-
-        modelBuilder.Entity<Renter>(entity =>
-        {
-            entity.HasIndex(e => e.Username)
-                .IsUnique();
-        });
 
         modelBuilder.Entity<Renter>().HasData(
             new Renter

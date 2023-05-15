@@ -127,7 +127,7 @@ public class AutoMapper : Profile
 
         CreateMap<RoomFilterRequest, RoomFilter>()
             .ReverseMap();
-        
+
         CreateMap<Room, RoomDetailEntity>()
             .ReverseMap();
     }

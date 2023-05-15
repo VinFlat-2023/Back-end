@@ -96,7 +96,7 @@ public class ContractsController : ControllerBase
                 }
 
                 var supervisorContractList =
-                    await _serviceWrapper.Contracts.GetContractList(filter, supervisorId, buildingId, true, token);
+                    await _serviceWrapper.Contracts.GetContractList(filter, buildingId, true, token);
 
                 var supervisorContractListReturn =
                     _mapper.Map<IEnumerable<ContactDetailRenterEntity>>(supervisorContractList);
@@ -122,7 +122,7 @@ public class ContractsController : ControllerBase
                 var renterId = Parse(User.Identity?.Name);
 
                 var renterContractList =
-                    await _serviceWrapper.Contracts.GetContractList(filter, renterId, null, false, token);
+                    await _serviceWrapper.Contracts.GetContractList(filter, renterId, false, token);
 
                 var renterContractListReturn = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(renterContractList);
 
@@ -296,31 +296,19 @@ public class ContractsController : ControllerBase
             entity.ContractImageUrl2
         };
 
-        var renterContract = new ContractMeterDetailEntity
-        {
-            ContractId = entity.ContractId,
-            ContractSerialNumber = entity.ContractSerialNumber,
-            ContractName = entity.ContractName,
-            DateSigned = entity.DateSigned,
-            StartDate = entity.StartDate,
-            CreatedDate = entity.CreatedDate,
-            Description = entity.Description,
-            EndDate = entity.EndDate,
-            LastUpdated = entity.LastUpdated,
-            ContractStatus = entity.ContractStatus,
-            // TODO : Fix mobile to List
-            PriceForRent = entity.PriceForRent.DecimalToString(),
-            PriceForService = entity.PriceForService.DecimalToString(),
-            PriceForWater = entity.PriceForWater.DecimalToString(),
-            PriceForElectricity = entity.PriceForElectricity.DecimalToString(),
-            ImageUrls = imageUrls
-        };
+        var contract = _mapper.Map<ContactDetailRenterEntity>(entity);
+
+        contract.ImageUrls = imageUrls;
+        contract.PriceForRent = entity.PriceForRent.DecimalToString();
+        contract.PriceForService = entity.PriceForService.DecimalToString();
+        contract.PriceForWater = entity.PriceForWater.DecimalToString();
+        contract.PriceForElectricity = entity.PriceForElectricity.DecimalToString();
 
         return Ok(new
         {
             status = "Success",
             message = "Contract found",
-            data = renterContract
+            data = contract
         });
     }
 
@@ -652,58 +640,51 @@ public class ContractsController : ControllerBase
             Password = "123456",
             Email = contract.RenterEmail,
             PhoneNumber = contract.RenterPhone,
-            BirthDate = DateTime.ParseExact(contract.RenterBirthDate, "dd/MM/yyyy", null),
+            BirthDate = contract.RenterBirthDate.ConvertToDateTime(),
             Address = contract.Address,
-            Gender = contract.Gender
+            Gender = contract.Gender,
+            CitizenCardFrontImageUrl = contract.CitizenCardFrontImageUrl,
+            CitizenCardBackImageUrl = contract.CitizenCardBackImageUrl,
+            CitizenNumber = contract.CitizenNumber
         };
-
-        var renterEntity = await _serviceWrapper.Renters.AddRenter(newRenter);
-
-        if (renterEntity == null)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Renter failed to create",
-                data = ""
-            });
-
 
         var newContract = new Contract
         {
-            ContractName = contract.ContractName ?? "Contract for " + renterEntity.FullName,
-            DateSigned = contract.DateSigned ?? DateTimeUtils.GetCurrentDateTime(),
-            StartDate = contract.StartDate ?? DateTimeUtils.GetCurrentDateTime(),
+            ContractName = contract.ContractName,
+            ContractSerialNumber = contract.RenterUsername.Take(4) + "-" + contract.RoomId + "-" + contract.FlatId,
+            DateSigned = contract.DateSigned.ConvertToDateTime(),
+            StartDate = contract.StartDate.ConvertToDateTime(),
             CreatedDate = DateTimeUtils.GetCurrentDateTime(),
-            Description = contract.Description ?? "No description",
-            EndDate = contract.EndDate,
+            Description = contract.Description,
+            EndDate = contract.EndDate.ConvertToDateTime(),
             LastUpdated = DateTimeUtils.GetCurrentDateTime(),
-            ContractStatus = contract.ContractStatus ?? "Active",
+            ContractStatus = contract.ContractStatus,
             PriceForRent = decimal.Parse(contract.PriceForRent, CultureInfo.InvariantCulture),
             PriceForElectricity = decimal.Parse(contract.PriceForElectricity, CultureInfo.InvariantCulture),
             PriceForWater = decimal.Parse(contract.PriceForWater, CultureInfo.InvariantCulture),
             PriceForService = decimal.Parse(contract.PriceForService, CultureInfo.InvariantCulture),
-            RenterId = renterEntity.RenterId,
             BuildingId = buildingId,
             FlatId = contract.FlatId,
             RoomId = contract.RoomId
         };
 
-        var result = await _serviceWrapper.Contracts.AddContract(newContract);
+        var result = await _serviceWrapper.Contracts.AddContractWithRenter(newContract, newRenter);
 
-        if (result == null)
-            return NotFound(new
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
             {
                 status = "Not Found",
-                message = "Contract failed to create",
+                message = result.Message,
                 data = ""
-            });
-
-        return Ok(new
-        {
-            status = "Success",
-            message = "Contract created",
-            data = ""
-        });
+            })
+        };
     }
 
     // DELETE: api/Contract/5
