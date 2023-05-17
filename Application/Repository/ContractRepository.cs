@@ -241,8 +241,7 @@ public class ContractRepository : IContractRepository
 
     public async Task<RepositoryResponse> AddContractWithRenter(Contract newContract, Renter newRenter)
     {
-        await using
-            var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted);
+        await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted);
         try
         {
             await _context.Renters.AddAsync(newRenter);

@@ -58,9 +58,9 @@ public class FlatService : IFlatService
             .FirstOrDefaultAsync(token);
     }
 
-    public async Task<Flat?> AddFlat(Flat flat)
+    public async Task<RepositoryResponse> AddFlat(Flat flat, List<int> roomTypeIds, CancellationToken token)
     {
-        return await _repositoryWrapper.Flats.AddFlat(flat);
+        return await _repositoryWrapper.Flats.AddFlat(flat, roomTypeIds, token);
     }
 
     public async Task<RepositoryResponse> UpdateFlat(Flat flat)

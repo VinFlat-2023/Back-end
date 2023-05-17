@@ -39,7 +39,9 @@ public class RoomRepository : IRoomRepository
         CancellationToken token)
     {
         var roomCheck = await _context.Rooms
-            .FirstOrDefaultAsync(x => x.FlatId == flatId && x.RoomId == roomId, token);
+            .FirstOrDefaultAsync(x => x.FlatId == flatId
+                                      && x.RoomId == roomId
+                                      && x.Status.ToLower() == "active", token);
 
         if (roomCheck == null)
             return new RepositoryResponse
@@ -60,5 +62,23 @@ public class RoomRepository : IRoomRepository
             IsSuccess = true,
             Message = "Phòng này tồn tại trong căn hộ đã chọn"
         };
+    }
+
+    public async Task<Room?> GetRoomById(int roomId, int buildingId, CancellationToken token)
+    {
+        var roomCheck = await _context.Rooms
+            .FirstOrDefaultAsync(x => x.BuildingId == buildingId && x.RoomId == roomId, token);
+
+        return roomCheck ?? null;
+    }
+
+    public async Task<Room?> GetRoomInAFlatById(int? roomId, int? flatId, int? buildingId,
+        CancellationToken cancellationToken)
+    {
+        var roomInAFlatCheck = await _context.Rooms
+            .FirstOrDefaultAsync(x => x.FlatId == flatId
+                                      && x.RoomId == roomId
+                                      && x.BuildingId == buildingId, cancellationToken);
+        return roomInAFlatCheck ?? null;
     }
 }

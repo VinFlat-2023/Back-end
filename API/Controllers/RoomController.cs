@@ -1,4 +1,5 @@
 using AutoMapper;
+using Domain.EntityRequest.Room;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.ViewModel.RoomEntity;
@@ -23,6 +24,19 @@ public class RoomController : ControllerBase
         _mapper = mapper;
         _serviceWrapper = serviceWrapper;
         _validator = validator;
+    }
+
+    [HttpPut]
+    [Authorize(Roles = "Supervisor")]
+    [SwaggerOperation("[Authorize] Update room from a flat in building managed by supervisor")]
+    public async Task<IActionResult> UpdateRoomInAFlat(int roomId, RoomUpdateRequest request, CancellationToken token)
+    {
+        return Ok(new
+        {
+            status = "Success",
+            message = "Phòng cập nhật thành công",
+            data = ""
+        });
     }
 
     [HttpGet]
@@ -76,7 +90,6 @@ public class RoomController : ControllerBase
         });
     }
 
-    /*
     [HttpGet("{roomId:int}")]
     [Authorize(Roles = "Supervisor")]
     [SwaggerOperation("[Authorize] Get rooms in building managed by supervisor")]
@@ -104,7 +117,7 @@ public class RoomController : ControllerBase
                 });
         }
 
-        var room = await _serviceWrapper.RoomTypes.GetRoomTypeById(roomId, buildingId, token);
+        var room = await _serviceWrapper.Rooms.GetRoomById(roomId, buildingId, token);
 
         if (room == null)
             return NotFound(new
@@ -118,10 +131,11 @@ public class RoomController : ControllerBase
         {
             status = "Success",
             message = "Hiển thị thông tin phòng",
-            data = _mapper.Map<RoomTypeBasicDetailEntity>(room)
+            data = _mapper.Map<RoomDetailEntity>(room)
         });
     }
 
+    /*
     [HttpPost]
     [Authorize(Roles = "Supervisor")]
     [SwaggerOperation("[Authorize] Add rooms in building(s) managed by supervisor Id")]

@@ -183,7 +183,7 @@ public class FlatValidator : BaseValidator, IFlatValidator
         try
         {
             if (obj == null)
-                ValidatorResult.Failures.Add("Thông tin căm hộ không được để trống");
+                ValidatorResult.Failures.Add("Thông tin căn hộ không được để trống");
 
             if (flatId != null)
                 switch (flatId)
@@ -258,7 +258,7 @@ public class FlatValidator : BaseValidator, IFlatValidator
         try
         {
             if (obj == null)
-                ValidatorResult.Failures.Add("Thông tin căm hộ không được để trống");
+                ValidatorResult.Failures.Add("Thông tin căn hộ không được để trống");
 
             switch (obj?.Name)
             {

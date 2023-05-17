@@ -20,6 +20,11 @@ public interface IConditionCheckHelper
     public Task<FlatType?> FlatTypeCheck(int? id, int buildingId, CancellationToken token);
 
 
+    // Room
+
+    public Task<Room?> GetRoomInAFlatById(int? roomId, int? flatId, int? buildingId, CancellationToken token);
+
+
     // 
     public Task<Employee?> EmployeeCheck(int? id, CancellationToken token);
 
@@ -72,7 +77,7 @@ public interface IConditionCheckHelper
     public Task<RepositoryResponse>
         IsRoomExistAndAvailableInThisFlat(int? roomId, int? flatId, CancellationToken token);
 
-    public Task<RepositoryResponse> IsAnyoneRentedCheck(int? roomId, int? buildingId, CancellationToken token);
+    public Task<RepositoryResponse> IsAnyFlatInUseWithThisType(int? roomId, int? buildingId, CancellationToken token);
 
     public Task<RepositoryResponse> IsAnyFlatIsInUseWithThisType(int? flatTypeId, int buildingId,
         CancellationToken token);

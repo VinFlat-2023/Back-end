@@ -14,6 +14,11 @@ public class ConditionCheckHelper : IConditionCheckHelper
         _serviceWrapper = serviceWrapper;
     }
 
+    public async Task<Room?> GetRoomInAFlatById(int? roomId, int? flatId, int? buildingId, CancellationToken token)
+    {
+        return await _serviceWrapper.Rooms.GetRoomInAFlatById(roomId, flatId, buildingId, token);
+    }
+
     public async Task<Employee?> EmployeeCheck(int? id, CancellationToken token)
     {
         return await _serviceWrapper.Employees.GetEmployeeById(id, token);
@@ -155,9 +160,10 @@ public class ConditionCheckHelper : IConditionCheckHelper
         return await _serviceWrapper.Rooms.IsRoomExistAndAvailableInThisFlat(roomId, flatId, token);
     }
 
-    public async Task<RepositoryResponse> IsAnyoneRentedCheck(int? roomId, int? buildingId, CancellationToken token)
+    public async Task<RepositoryResponse> IsAnyFlatInUseWithThisType(int? roomId, int? buildingId,
+        CancellationToken token)
     {
-        return await _serviceWrapper.RoomTypes.IsAnyoneRentedCheck(roomId, buildingId, token);
+        return await _serviceWrapper.RoomTypes.IsAnyFlatInUseWithThisType(roomId, buildingId, token);
     }
 
     public async Task<RepositoryResponse> IsAnyFlatIsInUseWithThisType(int? flatTypeId, int buildingId,

@@ -1824,7 +1824,8 @@ public class ApplicationContext : DbContext
                 AvailableSlots = 5,
                 ElectricityAttribute = 1,
                 WaterAttribute = 1,
-                BuildingId = 3
+                BuildingId = 3,
+                Status = "Active"
             },
             new Room
             {
@@ -1835,7 +1836,8 @@ public class ApplicationContext : DbContext
                 AvailableSlots = 5,
                 ElectricityAttribute = 1,
                 WaterAttribute = 1,
-                BuildingId = 3
+                BuildingId = 3,
+                Status = "Active"
             }
         );
 

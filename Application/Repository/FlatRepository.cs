@@ -137,12 +137,64 @@ public class FlatRepository : IFlatRepository
     ///     AddInvoiceHistory new flat
     /// </summary>
     /// <param name="flat"></param>
+    /// <param name="roomTypeId"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<Flat> AddFlat(Flat flat)
+    public async Task<RepositoryResponse> AddFlat(Flat flat, List<int> roomTypeId, CancellationToken cancellationToken)
     {
-        await _context.Flats.AddAsync(flat);
-        await _context.SaveChangesAsync();
-        return flat;
+        await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+        try
+        {
+            await _context.Flats.AddAsync(flat, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            foreach (var roomType in roomTypeId)
+            {
+                var roomTypeName = await _context.RoomTypes
+                    .FirstOrDefaultAsync(x => x.RoomTypeId == roomType && x.Status.ToLower() == "active",
+                        cancellationToken);
+
+                if (roomTypeName == null)
+                    return new RepositoryResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Loại phòng này không tồn tại"
+                    };
+
+                var newRoom = new Room
+                {
+                    RoomName = roomTypeName.RoomTypeName,
+                    Status = roomTypeName.Status,
+                    RoomTypeId = roomTypeName.RoomTypeId,
+                    AvailableSlots = roomTypeName.TotalSlot,
+                    FlatId = flat.FlatId,
+                    ElectricityAttribute = roomTypeName.ElectricityAttribute,
+                    WaterAttribute = roomTypeName.WaterAttribute,
+                    BuildingId = roomTypeName.BuildingId
+                };
+
+                await _context.Rooms.AddAsync(newRoom, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+
+            await transaction.CommitAsync(cancellationToken);
+
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Tạo mới căn hộ thành công"
+            };
+        }
+        catch
+        {
+            await transaction.RollbackAsync(cancellationToken);
+
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Tạo mới tòa nhà thất bại"
+            };
+        }
     }
 
     /// <summary>

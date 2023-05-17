@@ -17,6 +17,8 @@ public class RoomDetailEntity
 
     public int FlatId { get; set; }
 
+    public string Status { get; set; }
+
     public virtual FlatDetailEntity Flat { get; set; }
 
     public decimal ElectricityAttribute { get; set; }

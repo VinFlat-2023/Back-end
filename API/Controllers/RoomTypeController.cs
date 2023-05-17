@@ -64,7 +64,7 @@ public class RoomTypeController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Danh sách phòng trống",
+                message = "Danh sách loại phòng trống",
                 data = ""
             });
 

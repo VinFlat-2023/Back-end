@@ -5,9 +5,6 @@ namespace Service.IValidator;
 
 public interface IRoomValidator
 {
-    Task<ValidatorResult> ValidateParams(RoomCreateRequest? obj, int? roomId, int? buildingId,
-        CancellationToken token);
-
-    Task<ValidatorResult> ValidateParams(RoomUpdateRequest? obj, int? flatId, int? roomId, int? buildingId,
+    Task<ValidatorResult> ValidateParams(RoomUpdateRequest? obj, int? roomId,
         CancellationToken token);
 }

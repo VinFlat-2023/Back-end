@@ -7,7 +7,7 @@ namespace Application.IRepository;
 public interface IFlatTypeRepository
 {
     public IQueryable<FlatType> GetFlatTypeList(FlatTypeFilter filters, int buildingId);
-    public IQueryable<FlatType> GetFlatTypeDetail(int? flatTypeId);
+    public IQueryable<FlatType> GetFlatTypeDetail(int? flatTypeId, int buildingId);
     public Task<FlatType> AddFlatType(FlatType flatTypeId);
     public Task<RepositoryResponse> UpdateFlatType(FlatType flatTypeId);
     public Task<RepositoryResponse> DeleteFlatType(int flatTypeId);

@@ -45,4 +45,15 @@ public class RoomService : IRoomService
     {
         return await _repositoryWrapper.Rooms.IsRoomExistAndAvailableInThisFlat(roomId, flatId, token);
     }
+
+    public async Task<Room?> GetRoomById(int roomId, int buildingId, CancellationToken token)
+    {
+        return await _repositoryWrapper.Rooms.GetRoomById(roomId, buildingId, token);
+    }
+
+    public async Task<Room?> GetRoomInAFlatById(int? roomId, int? flatId, int? buildingId,
+        CancellationToken cancellationToken)
+    {
+        return await _repositoryWrapper.Rooms.GetRoomInAFlatById(roomId, flatId, buildingId, cancellationToken);
+    }
 }

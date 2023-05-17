@@ -70,12 +70,12 @@ public class RoomTypeValidator : BaseValidator, IRoomTypeValidator
                     switch (roomCheck)
                     {
                         case null:
-                            ValidatorResult.Failures.Add("Phòng không tồn tại");
+                            ValidatorResult.Failures.Add("Loại phòng không tồn tại");
                             break;
                         case not null:
                             // Check if anyone rented this room
                             var isAnyoneRentedCheckCheck =
-                                await _conditionCheckHelper.IsAnyoneRentedCheck(roomId, buildingId, token);
+                                await _conditionCheckHelper.IsAnyFlatInUseWithThisType(roomId, buildingId, token);
                             switch (isAnyoneRentedCheckCheck.IsSuccess)
                             {
                                 case true:

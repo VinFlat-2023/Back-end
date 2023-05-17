@@ -7,5 +7,12 @@ namespace Application.IRepository;
 public interface IRoomRepository
 {
     public IQueryable<Room> GetRoomList(RoomFilter filters, int buildingId);
-    Task<RepositoryResponse> IsRoomExistAndAvailableInThisFlat(int? roomId, int? flatId, CancellationToken token);
+
+    public Task<RepositoryResponse>
+        IsRoomExistAndAvailableInThisFlat(int? roomId, int? flatId, CancellationToken token);
+
+    public Task<Room?> GetRoomById(int roomId, int buildingId, CancellationToken token);
+
+    public Task<Room?> GetRoomInAFlatById(int? roomId, int? flatId, int? buildingId,
+        CancellationToken cancellationToken);
 }

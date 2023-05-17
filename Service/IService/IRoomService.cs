@@ -6,10 +6,16 @@ namespace Service.IService;
 
 public interface IRoomService
 {
-    Task<RepositoryResponse> UpdateRoom(Room room, int buildingId, CancellationToken token);
+    public Task<RepositoryResponse> UpdateRoom(Room room, int buildingId, CancellationToken token);
 
-    Task<PagedList<Room>?> GetRoomList(RoomFilter filters, int buildingId,
+    public Task<PagedList<Room>?> GetRoomList(RoomFilter filters, int buildingId,
         CancellationToken token);
 
-    Task<RepositoryResponse> IsRoomExistAndAvailableInThisFlat(int? roomId, int? flatId, CancellationToken token);
+    public Task<RepositoryResponse>
+        IsRoomExistAndAvailableInThisFlat(int? roomId, int? flatId, CancellationToken token);
+
+    public Task<Room?> GetRoomById(int roomId, int buildingId, CancellationToken token);
+
+    public Task<Room?> GetRoomInAFlatById(int? roomId, int? flatId, int? buildingId,
+        CancellationToken cancellationToken);
 }

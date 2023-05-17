@@ -56,7 +56,8 @@ public class RoomTypeService : IRoomTypeService
         return pagedList;
     }
 
-    public async Task<RepositoryResponse> IsAnyoneRentedCheck(int? roomTypeId, int? buildingId, CancellationToken token)
+    public async Task<RepositoryResponse> IsAnyFlatInUseWithThisType(int? roomTypeId, int? buildingId,
+        CancellationToken token)
     {
         return await _repositoryWrapper.RoomsTypes.IsAnyFlatInUseWithThisType(roomTypeId, buildingId, token);
     }

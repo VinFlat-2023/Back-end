@@ -246,7 +246,7 @@ public class FlatsController : ControllerBase
         {
             Name = flat.Name,
             Description = flat.Description ?? "No description",
-            Status = flat.Status,
+            Status = flat.Status ?? "Active",
             WaterMeterBefore = 0,
             ElectricityMeterBefore = 0,
             WaterMeterAfter = 0,
@@ -263,12 +263,22 @@ public class FlatsController : ControllerBase
 
         var flatType = await _serviceWrapper.FlatTypes.GetFlatTypeById(flat.FlatTypeId, buildingId, token);
 
-        newFlat.MaxRoom = flatType?.RoomCapacity ?? 1;
-        newFlat.AvailableRoom = flatType?.RoomCapacity ?? 1;
+        if (flatType == null)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Loại căn hộ này không tồn tại",
+                data = ""
+            });
+
+        newFlat.MaxRoom = flatType.RoomCapacity;
+        newFlat.AvailableRoom = flatType.RoomCapacity;
 
         var totalRooms = newFlat.MaxRoom;
 
-        if (totalRooms >= flat.RoomIds.Count)
+        var totalRoomsInRequest = flat.RoomTypeId.Count;
+
+        if (totalRoomsInRequest > totalRooms)
             return BadRequest(new
             {
                 status = "Bad Request",
@@ -276,22 +286,23 @@ public class FlatsController : ControllerBase
                 data = ""
             });
 
-        var result = await _serviceWrapper.Flats.AddFlat(newFlat);
+        var result = await _serviceWrapper.Flats.AddFlat(newFlat, flat.RoomTypeId, token);
 
-        if (result == null)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Tạo căn hộ thất bại",
-                data = ""
-            });
-
-        return Ok(new
+        return result.IsSuccess switch
         {
-            status = "Success",
-            message = "Tạo căn hộ thành công",
-            data = _mapper.Map<FlatDetailEntity>(result)
-        });
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
     }
 
     // DELETE: api/Flats/5

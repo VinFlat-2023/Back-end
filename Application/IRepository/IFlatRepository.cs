@@ -10,7 +10,7 @@ public interface IFlatRepository
     public IQueryable<Flat> GetFlatList(FlatFilter filters, int buildingId);
     public IQueryable<Flat> GetFlatDetail(int? flatId, int buildingId);
     public Task<RepositoryResponse> GetRoomInAFlat(int flatId, CancellationToken token);
-    public Task<Flat> AddFlat(Flat flat);
+    public Task<RepositoryResponse> AddFlat(Flat flat, List<int> roomTypeId, CancellationToken cancellationToken);
     public Task<RepositoryResponse> UpdateFlat(Flat flat);
     public Task<RepositoryResponse> DeleteFlat(int flatId);
 }

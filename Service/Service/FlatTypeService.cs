@@ -39,7 +39,7 @@ public class FlatTypeService : IFlatTypeService
 
     public async Task<FlatType?> GetFlatTypeById(int? flatTypeId, int buildingId, CancellationToken token)
     {
-        return await _repositoryWrapper.FlatTypes.GetFlatTypeDetail(flatTypeId)
+        return await _repositoryWrapper.FlatTypes.GetFlatTypeDetail(flatTypeId, buildingId)
             .FirstOrDefaultAsync(token);
     }
 

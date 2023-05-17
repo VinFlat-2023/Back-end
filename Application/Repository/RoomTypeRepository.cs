@@ -53,14 +53,14 @@ public class RoomTypeRepository : IRoomTypeRepository
         CancellationToken token)
     {
         var roomTypeCheck = await _context.RoomTypes
-            .Where(x => x.RoomTypeId == roomTypeId && x.BuildingId == buildingId)
+            .Where(x => x.RoomTypeId == roomTypeId && x.BuildingId == buildingId && x.Status.ToLower() == "active")
             .ToListAsync(token);
 
         if (!roomTypeCheck.Any())
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Phòng không tồn tại"
+                Message = "Loại phòng không tồn tại"
             };
 
         // Get list of room flat id
