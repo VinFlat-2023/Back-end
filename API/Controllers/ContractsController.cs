@@ -396,6 +396,13 @@ public class ContractsController : ControllerBase
                         });
                 }
 
+                var imageUrls = new[]
+                {
+                    entity.ContractImageUrl1,
+                    entity.ContractImageUrl2
+                };
+
+
                 var buildingDetail = new BuildingContractDetailEntity
                 {
                     EmployeeId = employeeId,
@@ -421,7 +428,8 @@ public class ContractsController : ControllerBase
                     PriceForRent = entity.PriceForRent.DecimalToString(),
                     PriceForService = entity.PriceForService.DecimalToString(),
                     PriceForWater = entity.PriceForWater.DecimalToString(),
-                    PriceForElectricity = entity.PriceForElectricity.DecimalToString()
+                    PriceForElectricity = entity.PriceForElectricity.DecimalToString(),
+                    ImageUrls = imageUrls
                 };
 
                 var contractViewModel = new ContractDetailEntity
@@ -561,7 +569,7 @@ public class ContractsController : ControllerBase
             StartDate = contract.StartDate,
             EndDate = contract.EndDate,
             LastUpdated = DateTime.UtcNow,
-            ContractStatus = contract.ContractStatus,
+            ContractStatus = contract.ContractStatus ?? "Active",
             PriceForRent = decimal.Parse(contract.PriceForRent, CultureInfo.InvariantCulture),
             PriceForElectricity = decimal.Parse(contract.PriceForElectricity, CultureInfo.InvariantCulture),
             PriceForWater = decimal.Parse(contract.PriceForWater, CultureInfo.InvariantCulture),
@@ -668,7 +676,7 @@ public class ContractsController : ControllerBase
             RoomId = contract.RoomId
         };
 
-        var result = await _serviceWrapper.Contracts.AddContractWithRenter(newContract, newRenter);
+        var result = await _serviceWrapper.Contracts.AddContractWithRenter(newContract, newRenter, token);
 
         return result.IsSuccess switch
         {

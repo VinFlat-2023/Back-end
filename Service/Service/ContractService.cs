@@ -111,8 +111,9 @@ public class ContractService : IContractService
         return await _repositoryWrapper.Contracts.DeleteContract(contractId);
     }
 
-    public async Task<RepositoryResponse> AddContractWithRenter(Contract newContract, Renter newRenter)
+    public async Task<RepositoryResponse> AddContractWithRenter(Contract newContract, Renter newRenter,
+        CancellationToken token)
     {
-        return await _repositoryWrapper.Contracts.AddContractWithRenter(newContract, newRenter);
+        return await _repositoryWrapper.Contracts.AddContractWithRenter(newContract, newRenter, token);
     }
 }

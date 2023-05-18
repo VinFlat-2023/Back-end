@@ -239,22 +239,46 @@ public class ContractRepository : IContractRepository
         };
     }
 
-    public async Task<RepositoryResponse> AddContractWithRenter(Contract newContract, Renter newRenter)
+    public async Task<RepositoryResponse> AddContractWithRenter(Contract newContract, Renter newRenter,
+        CancellationToken token)
     {
         await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted);
         try
         {
-            await _context.Renters.AddAsync(newRenter);
+            await _context.Renters.AddAsync(newRenter, token);
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(token);
 
             newContract.RenterId = newRenter.RenterId;
 
-            await _context.Contracts.AddAsync(newContract);
+            await _context.Contracts.AddAsync(newContract, token);
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(token);
 
-            await transaction.CommitAsync();
+            var roomCheck = await _context.Rooms.FirstOrDefaultAsync(x
+                => x.RoomId == newContract.RoomId
+                   && x.FlatId == newContract.FlatId
+                   && x.Status.ToLower() == "active", token);
+
+            if (roomCheck is not { AvailableSlots: > 0 })
+            {
+                await transaction.RollbackAsync(token);
+                return new RepositoryResponse
+                {
+                    IsSuccess = false,
+                    Message = "Phòng đã đầy"
+                };
+            }
+
+            // update room slot
+            var availableSlots = roomCheck.AvailableSlots -= 1;
+
+            // if slot = 0, change room status to full
+            if (availableSlots == 0) roomCheck.Status = "Full";
+
+            await _context.SaveChangesAsync(token);
+
+            await transaction.CommitAsync(token);
 
             return new RepositoryResponse
             {
@@ -264,7 +288,7 @@ public class ContractRepository : IContractRepository
         }
         catch
         {
-            await transaction.RollbackAsync();
+            await transaction.RollbackAsync(token);
             return new RepositoryResponse
             {
                 IsSuccess = false,

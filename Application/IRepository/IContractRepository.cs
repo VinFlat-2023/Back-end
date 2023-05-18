@@ -15,5 +15,7 @@ public interface IContractRepository
     public Task<Contract?> AddContract(Contract contract);
     public Task<RepositoryResponse> UpdateContract(Contract contract);
     public Task<RepositoryResponse> DeleteContract(int contractId);
-    public Task<RepositoryResponse> AddContractWithRenter(Contract newContract, Renter newRenter);
+
+    public Task<RepositoryResponse> AddContractWithRenter(Contract newContract, Renter newRenter,
+        CancellationToken token);
 }
