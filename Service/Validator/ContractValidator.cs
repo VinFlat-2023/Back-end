@@ -432,12 +432,174 @@ public class ContractValidator : BaseValidator, IContractValidator
             Console.WriteLine(e.Message, e.Data);
         }
 
-        return await Task.FromResult(ValidatorResult);
+        return ValidatorResult;
     }
 
-    public Task<ValidatorResult> ValidateParams(ContractCreateUserExistRequest? obj, int? renterId, int buildingId,
-        CancellationToken cancellationToken)
+    public async Task<ValidatorResult> ValidateParams(ContractCreateUserExistRequest? obj, int? renterId,
+        int buildingId,
+        CancellationToken token)
     {
-        throw new NotImplementedException();
+        try
+        {
+            switch (renterId)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Người thuê không được bỏ trống");
+                    break;
+                case not null:
+                    if (await _conditionCheckHelper.RenterCheck(renterId, token) == null)
+                        ValidatorResult.Failures.Add("Người thuê không tồn tại");
+                    break;
+            }
+
+            switch (obj?.ContractName)
+            {
+                case not null when string.IsNullOrWhiteSpace(obj.ContractName):
+                    ValidatorResult.Failures.Add("Tên hợp đồng không được để trống");
+                    break;
+                case not null when obj.ContractName.Length > 100:
+                    ValidatorResult.Failures.Add("Tên hợp đồng không được vượt quá 100 ký tự");
+                    break;
+            }
+
+            switch (obj?.DateSigned)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Ngày ký hợp đồng không được để trống");
+                    break;
+            }
+
+            switch (obj?.StartDate)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Ngày bắt đầu không được để trống");
+                    break;
+            }
+
+            switch (obj?.EndDate)
+            {
+                case not null when obj.EndDate.ToDateTime() <= DateTime.UtcNow:
+                    ValidatorResult.Failures.Add("Ngày kết thúc hợp đồng phải lớn hơn ngày hiện tại");
+                    break;
+                case null:
+                    ValidatorResult.Failures.Add("Ngày kết thúc hợp đồng không được để trống");
+                    break;
+            }
+
+            switch (obj?.ContractStatus)
+            {
+                case not null when string.IsNullOrWhiteSpace(obj.ContractStatus):
+                    ValidatorResult.Failures.Add("Trạng thái hợp đồng không được để trống");
+                    break;
+                case not null:
+                    if (obj.ContractStatus.ToLower() == "active"
+                        || obj.ContractStatus.ToLower() == "inactive"
+                        || obj.ContractStatus.ToLower() == "suspend")
+                        break;
+
+                    ValidatorResult.Failures.Add(
+                        "Trạng thái hợp đồng phải là 'Đang hoạt động', 'Hết hạn' hoặc 'Tạm dừng'");
+                    break;
+            }
+
+            switch (obj?.PriceForRent)
+            {
+                case not null when string.IsNullOrWhiteSpace(obj.PriceForRent):
+                    ValidatorResult.Failures.Add("Tiền thuê nhà không được để trống");
+                    break;
+                case not null when decimal.Parse(obj.PriceForRent) < 0:
+                    ValidatorResult.Failures.Add("Tiền thuê nhà không được nhỏ hơn 0");
+                    break;
+                case not null when decimal.Parse(obj.PriceForRent) > 1000000000:
+                    ValidatorResult.Failures.Add("Tiền thuê nhà không được lớn hơn 1,000,000,000");
+                    break;
+            }
+
+            switch (obj?.PriceForElectricity)
+            {
+                case not null when string.IsNullOrWhiteSpace(obj.PriceForElectricity):
+                    ValidatorResult.Failures.Add("Tiền điện mỗi số không được để trống");
+                    break;
+                case not null when decimal.Parse(obj.PriceForElectricity) < 0:
+                    ValidatorResult.Failures.Add("Tiền điện mỗi số không được nhỏ hơn 0");
+                    break;
+                case not null when decimal.Parse(obj.PriceForElectricity) > 1000000000:
+                    ValidatorResult.Failures.Add("Tiền điện mỗi số không được lớn hơn 1,000,000,000");
+                    break;
+            }
+
+            switch (obj?.PriceForWater)
+            {
+                case not null when string.IsNullOrWhiteSpace(obj.PriceForWater):
+                    ValidatorResult.Failures.Add("Tiền nước mỗi khối không được để trống");
+                    break;
+                case not null when decimal.Parse(obj.PriceForWater) < 0:
+                    ValidatorResult.Failures.Add("Tiền nước mỗi khối không được nhỏ hơn 0");
+                    break;
+                case not null when decimal.Parse(obj.PriceForWater) > 1000000000:
+                    ValidatorResult.Failures.Add("Tiền nước mỗi khối không được lớn hơn 1,000,000,000");
+                    break;
+            }
+
+            switch (obj?.PriceForService)
+            {
+                case not null when string.IsNullOrWhiteSpace(obj.PriceForService):
+                    ValidatorResult.Failures.Add("Tiền dịch vụ toà nhà không được để trống");
+                    break;
+                case not null when decimal.Parse(obj.PriceForService) < 0:
+                    ValidatorResult.Failures.Add("Tiền dịch vụ toà nhà không được nhỏ hơn 0");
+                    break;
+                case not null when decimal.Parse(obj.PriceForService) > 1000000000:
+                    ValidatorResult.Failures.Add("Tiền dịch vụ toà nhà không được lớn hơn 1,000,000,000");
+                    break;
+            }
+
+            switch (obj?.FlatId)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Căn hộ là không được để trống");
+                    break;
+                case not null when obj.FlatId < 0:
+                    ValidatorResult.Failures.Add("Căn hộ không hợp lệ");
+                    break;
+                case not null when await _conditionCheckHelper.FlatCheck(obj.FlatId, buildingId, token) == null:
+                    ValidatorResult.Failures.Add("Căn hộ không tồn tại");
+                    break;
+            }
+
+            switch (obj?.RoomId)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Phòng là bắt buộc");
+                    break;
+                case not null when obj.RoomId < 0:
+                    ValidatorResult.Failures.Add("Phòng không hợp lệ");
+                    break;
+                case not null when await _conditionCheckHelper.RoomTypeCheck(obj.RoomId, buildingId, token) == null:
+                    ValidatorResult.Failures.Add("Phòng không tồn tại");
+                    break;
+                case not null:
+                    var room = await _conditionCheckHelper.IsRoomExistAndAvailableInThisFlat(obj.RoomId, obj.FlatId,
+                        token);
+                    switch (room.IsSuccess)
+                    {
+                        case false:
+                            ValidatorResult.Failures.Add(room.Message);
+                            break;
+                        case true:
+                            break;
+                    }
+
+                    break;
+            }
+        }
+
+        catch (Exception e)
+        {
+            ValidatorResult.Failures.Add("Có lỗi xảy ra khi xác thực hợp đồng" + e.Message);
+            Console.WriteLine(e.Message, e.Data);
+        }
+
+        return ValidatorResult;
     }
 }

@@ -77,4 +77,10 @@ public class FlatService : IFlatService
     {
         return await _repositoryWrapper.Flats.GetRoomInAFlat(flatId, token);
     }
+
+    public async Task<List<Flat>?> GetFlatList(int buildingId, CancellationToken token)
+    {
+        return await _repositoryWrapper.Flats.GetFlatList(buildingId)
+            .ToListAsync(token);
+    }
 }

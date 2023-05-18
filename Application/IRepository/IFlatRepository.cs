@@ -13,4 +13,5 @@ public interface IFlatRepository
     public Task<RepositoryResponse> AddFlat(Flat flat, List<int> roomTypeId, CancellationToken cancellationToken);
     public Task<RepositoryResponse> UpdateFlat(Flat flat);
     public Task<RepositoryResponse> DeleteFlat(int flatId);
+    public IQueryable<Flat> GetFlatList(int buildingId);
 }

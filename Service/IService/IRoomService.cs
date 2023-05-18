@@ -18,4 +18,6 @@ public interface IRoomService
 
     public Task<Room?> GetRoomInAFlatById(int? roomId, int? flatId, int? buildingId,
         CancellationToken cancellationToken);
+
+    public Task<List<Room>?> GetRoomList(int flatId, int buildingId, CancellationToken token);
 }

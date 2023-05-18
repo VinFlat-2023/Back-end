@@ -82,6 +82,54 @@ public class FlatsController : ControllerBase
         });
     }
 
+    [HttpGet("active")]
+    [SwaggerOperation(Summary = "[Authorize] Get flat list by filter request (For management)")]
+    [Authorize(Roles = "Supervisor")]
+    public async Task<IActionResult> GetFlatActiveInBuilding(CancellationToken token)
+    {
+        var userId = int.Parse(User.Identity.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+
+        switch (buildingId)
+        {
+            case -1:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang không quản lí toà nhà nào",
+                    data = -1
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
+                    data = -2
+                });
+        }
+
+        var list = await _serviceWrapper.Flats.GetFlatList(buildingId, token);
+
+        var resultList = _mapper.Map<IEnumerable<FlatDetailEntity>>(list);
+
+        if (list == null || !list.Any())
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Danh sách căn hộ hiện đang trống",
+                data = ""
+            });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Hiển thị danh sách",
+            data = resultList
+        });
+    }
+
+
     // GET: api/Flats/5
     [SwaggerOperation(Summary = "[Authorize] Get flat (For management and renter)")]
     [HttpGet("{id:int}")]

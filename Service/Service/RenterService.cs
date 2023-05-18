@@ -84,6 +84,12 @@ public class RenterService : IRenterService
         return await _repositoryWrapper.Renters.UpdatePasswordRenter(renter);
     }
 
+    public async Task<List<Renter>?> GetRenterList(int buildingId, CancellationToken token)
+    {
+        return await _repositoryWrapper.Renters.GetRenterList(buildingId)
+            .ToListAsync(token);
+    }
+
     public async Task<Renter?> AddRenter(Renter renter)
     {
         return await _repositoryWrapper.Renters.AddRenter(renter);

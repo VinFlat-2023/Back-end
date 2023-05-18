@@ -23,4 +23,5 @@ public interface IRenterRepository
     public Task<Renter?> GetARenterByUserName(string username);
     public IEnumerable<Renter> GetRenterWithActiveContract();
     public IQueryable<Renter> GetRenterDetailWithContractId(int userId);
+    public IQueryable<Renter> GetRenterList(int buildingId);
 }

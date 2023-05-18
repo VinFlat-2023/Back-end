@@ -14,6 +14,10 @@ public class RenterBasicDetailEntity
     public string? BirthDateReturn
         => BirthDate?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
 
+    public string? CitizenNumber { get; set; }
+    public string? CitizenCardFrontImageUrl { get; set; }
+    public string? CitizenCardBackImageUrl { get; set; }
+
     public bool Status { get; set; }
     public string? ImageUrl { get; set; }
 }

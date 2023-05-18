@@ -90,6 +90,54 @@ public class RoomController : ControllerBase
         });
     }
 
+    [HttpGet("flat/{flatId:int}/rooms")]
+    [Authorize(Roles = "Supervisor")]
+    [SwaggerOperation("[Authorize] Get all rooms in building(s)")]
+    public async Task<IActionResult> GetAllRoomsInFlat(int flatId, CancellationToken token)
+    {
+        var userId = int.Parse(User.Identity.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+
+        switch (buildingId)
+        {
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                    data = ""
+                });
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Người quản lý không quản lý tòa nhà nào",
+                    data = ""
+                });
+        }
+
+        var list = await _serviceWrapper.Rooms.GetRoomList(flatId, buildingId, token);
+
+        var resultList = _mapper.Map<IEnumerable<RoomDetailEntity>>(list);
+
+        if (list == null || !list.Any())
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Danh sách phòng trống",
+                data = ""
+            });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Hiển thị danh sách",
+            data = resultList
+        });
+    }
+
+
     [HttpGet("{roomId:int}")]
     [Authorize(Roles = "Supervisor")]
     [SwaggerOperation("[Authorize] Get rooms in building managed by supervisor")]

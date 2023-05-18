@@ -299,7 +299,8 @@ public class ContractRepository : IContractRepository
 
     public async Task<RepositoryResponse> AddContractWithRenter(Contract newContract, CancellationToken token)
     {
-        await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken: token);
+        await using var transaction =
+            await _context.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, token);
         try
         {
             await _context.Contracts.AddAsync(newContract, token);

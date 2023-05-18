@@ -15,4 +15,6 @@ public interface IRoomRepository
 
     public Task<Room?> GetRoomInAFlatById(int? roomId, int? flatId, int? buildingId,
         CancellationToken cancellationToken);
+
+    public IQueryable<Room> GetRoomList(int flatId, int buildingId);
 }

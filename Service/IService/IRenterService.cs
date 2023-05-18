@@ -28,4 +28,5 @@ public interface IRenterService
 
     public Task<Renter?> RenterDetailWithEmployeeId(int userId);
     public Task<RepositoryResponse> UpdatePasswordRenter(Renter renter);
+    public Task<List<Renter>?> GetRenterList(int buildingId, CancellationToken token);
 }

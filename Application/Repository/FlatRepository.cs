@@ -44,6 +44,18 @@ public class FlatRepository : IFlatRepository
             .AsNoTracking();
     }
 
+
+    public IQueryable<Flat> GetFlatList(int buildingId)
+    {
+        return _context.Flats
+            .Include(x => x.Building)
+            .ThenInclude(x => x.Area)
+            //.Where(x => x.BuildingId == x.Building.BuildingId)
+            .Include(x => x.FlatType)
+            .Where(x => x.BuildingId == buildingId && x.Status.ToLower() == "active")
+            .AsNoTracking();
+    }
+
     public IQueryable<Flat> GetFlatList(FlatFilter filters, int buildingId)
     {
         return _context.Flats

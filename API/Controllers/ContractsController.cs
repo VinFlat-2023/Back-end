@@ -741,7 +741,7 @@ public class ContractsController : ControllerBase
                         });
                 }
 
-                var contractValidation = await _validator.ValidateParams(contract, renterId: renterId, buildingId, token);
+                var contractValidation = await _validator.ValidateParams(contract, renterId, buildingId, token);
 
                 if (!contractValidation.IsValid)
                     return BadRequest(new

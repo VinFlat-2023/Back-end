@@ -16,6 +16,16 @@ public class RenterRepository : IRenterRepository
         _context = context;
     }
 
+
+    public IQueryable<Renter> GetRenterList(int buildingId)
+    {
+        return _context.Renters
+            .Include(x => x.Contracts)
+            .Where(x => x.Contracts.Any(contract =>
+                contract.BuildingId == buildingId && contract.ContractStatus.ToLower() != "active"))
+            .AsNoTracking();
+    }
+
     public IQueryable<Renter> GetRenterList(RenterFilter filters, int buildingId)
     {
         return _context.Renters
@@ -66,6 +76,7 @@ public class RenterRepository : IRenterRepository
             .ThenInclude(x => x.Building)
             .Where(x => x.RenterId == userId);
     }
+
 
     /// <summary>
     ///     Get renter by username

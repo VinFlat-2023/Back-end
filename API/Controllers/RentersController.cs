@@ -98,6 +98,64 @@ public class RentersController : ControllerBase
         });
     }
 
+    [HttpGet("contract/inactive")]
+    [Authorize(Roles = "Supervisor")]
+    [SwaggerOperation(Summary = "[Authorize] Get renter list with pagination and filter (For management)")]
+    public async Task<IActionResult> GetRentersWithNoActiveContract(CancellationToken token)
+    {
+        var employeeId = int.Parse(User.Identity?.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
+
+        switch (buildingId)
+        {
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                    data = ""
+                });
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Người quản lý không quản lý tòa nhà nào",
+                    data = ""
+                });
+        }
+
+        var entity = await _serviceWrapper.Buildings.GetBuildingById(buildingId, token);
+
+        if (entity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Toà nhà không tồn tại",
+                data = ""
+            });
+
+        var list = await _serviceWrapper.Renters.GetRenterList(buildingId, token);
+
+        var resultList = _mapper.Map<IEnumerable<RenterProfileEntity>>(list);
+
+        if (list == null || !list.Any())
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Danh sách khách thuê trống",
+                data = ""
+            });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Tìm thấy danh sách khách thuê",
+            data = resultList
+        });
+    }
+
+
     // GET: api/Renters/5
     [HttpGet("{id:int}")]
     [Authorize(Roles = "Supervisor")]

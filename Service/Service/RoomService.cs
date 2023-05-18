@@ -3,6 +3,7 @@ using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.Options;
 using Domain.QueryFilter;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Service.IService;
 
@@ -55,5 +56,11 @@ public class RoomService : IRoomService
         CancellationToken cancellationToken)
     {
         return await _repositoryWrapper.Rooms.GetRoomInAFlatById(roomId, flatId, buildingId, cancellationToken);
+    }
+
+    public async Task<List<Room>?> GetRoomList(int flatId, int buildingId, CancellationToken token)
+    {
+        return await _repositoryWrapper.Rooms.GetRoomList(flatId, buildingId)
+            .ToListAsync(token);
     }
 }

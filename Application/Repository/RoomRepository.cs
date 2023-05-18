@@ -16,6 +16,15 @@ public class RoomRepository : IRoomRepository
         _context = context;
     }
 
+    public IQueryable<Room> GetRoomList(int flatId, int buildingId)
+    {
+        return _context.Rooms
+            .Include(x => x.RoomType)
+            .Include(x => x.Flat)
+            .Where(x => x.BuildingId == buildingId && x.FlatId == flatId && x.Status.ToLower() == "active")
+            .AsNoTracking();
+    }
+
     public IQueryable<Room> GetRoomList(RoomFilter filters, int buildingId)
     {
         return _context.Rooms
