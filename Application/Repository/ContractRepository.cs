@@ -296,4 +296,55 @@ public class ContractRepository : IContractRepository
             };
         }
     }
+
+    public async Task<RepositoryResponse> AddContractWithRenter(Contract newContract, CancellationToken token)
+    {
+        await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken: token);
+        try
+        {
+            await _context.Contracts.AddAsync(newContract, token);
+
+            await _context.SaveChangesAsync(token);
+
+            var roomCheck = await _context.Rooms.FirstOrDefaultAsync(x
+                => x.RoomId == newContract.RoomId
+                   && x.FlatId == newContract.FlatId
+                   && x.Status.ToLower() == "active", token);
+
+            if (roomCheck is not { AvailableSlots: > 0 })
+            {
+                await transaction.RollbackAsync(token);
+                return new RepositoryResponse
+                {
+                    IsSuccess = false,
+                    Message = "Phòng đã đầy"
+                };
+            }
+
+            // update room slot
+            var availableSlots = roomCheck.AvailableSlots -= 1;
+
+            // if slot = 0, change room status to full
+            if (availableSlots == 0) roomCheck.Status = "Full";
+
+            await _context.SaveChangesAsync(token);
+
+            await transaction.CommitAsync(token);
+
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Tạo hợp đồng thành công"
+            };
+        }
+        catch
+        {
+            await transaction.RollbackAsync(token);
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Tạo hợp đồng thất bại"
+            };
+        }
+    }
 }

@@ -434,4 +434,10 @@ public class ContractValidator : BaseValidator, IContractValidator
 
         return await Task.FromResult(ValidatorResult);
     }
+
+    public Task<ValidatorResult> ValidateParams(ContractCreateUserExistRequest? obj, int? renterId, int buildingId,
+        CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

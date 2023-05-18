@@ -602,6 +602,7 @@ public class ContractsController : ControllerBase
         };
     }
 
+
     // POST: api/Contract
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Create Contract (For management)", Description = "date format d/M/YYYY")]
@@ -693,6 +694,112 @@ public class ContractsController : ControllerBase
                 data = ""
             })
         };
+    }
+
+    [SwaggerOperation(Summary = "[Authorize] Create Contract (For management)", Description = "date format d/M/YYYY")]
+    [Authorize(Roles = "Supervisor")]
+    [HttpPost("sign/renter/{renterId:int}")]
+    public async Task<IActionResult> PostContract(int renterId, [FromBody] ContractCreateUserExistRequest contract,
+        CancellationToken token)
+    {
+        var employeeId = Parse(User.Identity?.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
+
+        switch (buildingId)
+        {
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                    data = ""
+                });
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Người quản lý không quản lý tòa nhà nào",
+                    data = ""
+                });
+        }
+
+        var renterLatestContract = await _serviceWrapper.Contracts.GetLatestContractByUserId(renterId, token);
+
+        switch (renterLatestContract)
+        {
+            case null:
+            case not null:
+                switch (renterLatestContract?.ContractStatus)
+                {
+                    case "active":
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = "Người thuê này hiện đang có hợp đồng với bên hệ thống",
+                            data = ""
+                        });
+                }
+
+                var contractValidation = await _validator.ValidateParams(contract, renterId: renterId, buildingId, token);
+
+                if (!contractValidation.IsValid)
+                    return BadRequest(new
+                    {
+                        status = "Bad Request",
+                        message = contractValidation.Failures.FirstOrDefault(),
+                        data = ""
+                    });
+
+                var renterCheck = await _serviceWrapper.Renters.GetRenterById(renterId, token);
+
+                if (renterCheck == null)
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "Người thuê không tồn tại",
+                        data = ""
+                    });
+
+                var newContract = new Contract
+                {
+                    ContractName = contract.ContractName,
+                    ContractSerialNumber = renterCheck.Username + "N" + "-" + contract.RoomId + "-" + contract.FlatId,
+                    DateSigned = contract.DateSigned.ToDateTime(),
+                    StartDate = contract.StartDate.ToDateTime(),
+                    CreatedDate = DateTimeUtils.GetCurrentDateTime(),
+                    Description = contract.Description,
+                    EndDate = contract.EndDate.ToDateTime(),
+                    LastUpdated = DateTimeUtils.GetCurrentDateTime(),
+                    ContractStatus = contract.ContractStatus,
+                    PriceForRent = decimal.Parse(contract.PriceForRent, CultureInfo.InvariantCulture),
+                    PriceForElectricity = decimal.Parse(contract.PriceForElectricity, CultureInfo.InvariantCulture),
+                    PriceForWater = decimal.Parse(contract.PriceForWater, CultureInfo.InvariantCulture),
+                    PriceForService = decimal.Parse(contract.PriceForService, CultureInfo.InvariantCulture),
+                    BuildingId = buildingId,
+                    FlatId = contract.FlatId,
+                    RoomId = contract.RoomId,
+                    RenterId = renterId
+                };
+
+                var result = await _serviceWrapper.Contracts.AddContractWithRenter(newContract, token);
+
+                return result.IsSuccess switch
+                {
+                    true => Ok(new
+                    {
+                        status = "Success",
+                        message = result.Message,
+                        data = ""
+                    }),
+                    false => NotFound(new
+                    {
+                        status = "Not Found",
+                        message = result.Message,
+                        data = ""
+                    })
+                };
+        }
     }
 
     // DELETE: api/Contract/5

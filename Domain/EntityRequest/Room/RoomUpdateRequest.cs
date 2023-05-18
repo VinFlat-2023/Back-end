@@ -1,6 +1,6 @@
 namespace Domain.EntityRequest.Room;
 
-public class RoomUpdateRequest
+public class  RoomUpdateRequest
 {
     public string RoomName { get; set; }
     public decimal ElectricityAttribute { get; set; }

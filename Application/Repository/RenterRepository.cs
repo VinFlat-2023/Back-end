@@ -20,8 +20,7 @@ public class RenterRepository : IRenterRepository
     {
         return _context.Renters
             .Include(x => x.Contracts)
-            .Where(x => x.Contracts.Any(contract =>
-                contract.BuildingId == buildingId && contract.ContractStatus.ToLower() == "active"))
+            .Where(x => x.Contracts.Any(contract => contract.BuildingId == buildingId))
             // Filter starts here
             .Where(y =>
                 (filters.Username == null || y.Username.ToLower().Contains(filters.Username.ToLower()))

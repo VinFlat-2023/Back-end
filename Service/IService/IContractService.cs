@@ -22,4 +22,6 @@ public interface IContractService
 
     public Task<RepositoryResponse> AddContractWithRenter(Contract newContract, Renter newRenter,
         CancellationToken token);
+
+    public Task<RepositoryResponse> AddContractWithRenter(Contract newContract, CancellationToken token);
 }
