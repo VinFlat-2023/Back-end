@@ -73,13 +73,19 @@ public class ContractService : IContractService
 
     public async Task<Contract?> GetContractById(int? contractId, CancellationToken token)
     {
-        return await _repositoryWrapper.Contracts.GetContractDetail(contractId)
+        return await _repositoryWrapper.Contracts.GetContractById(contractId)
+            .FirstOrDefaultAsync(token);
+    }
+
+    public async Task<Contract?> GetContractById(int? contractId, int buildingId, CancellationToken token)
+    {
+        return await _repositoryWrapper.Contracts.GetContractById(contractId, buildingId)
             .FirstOrDefaultAsync(token);
     }
 
     public async Task<Contract?> GetContractByRenterIdWithActiveStatus(int contractId, CancellationToken token)
     {
-        return await _repositoryWrapper.Contracts.GetContractDetail(contractId)
+        return await _repositoryWrapper.Contracts.GetContractById(contractId)
             .FirstOrDefaultAsync(x => x != null && x.ContractStatus == "Active", token);
     }
 

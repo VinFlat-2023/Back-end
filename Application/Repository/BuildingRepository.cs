@@ -136,7 +136,7 @@ public class BuildingRepository : IBuildingRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Building not found"
+                Message = "Toà nhà không tồn tại"
             };
 
         switch (number)
@@ -179,7 +179,7 @@ public class BuildingRepository : IBuildingRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Building not found"
+                Message = "Toà nhà không tồn tại"
             };
 
         var count = _context.Flats
@@ -224,7 +224,7 @@ public class BuildingRepository : IBuildingRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Building not found"
+                Message = "Toà nhà không tồn tại"
             };
 
         _context.Buildings.Remove(buildingFound);

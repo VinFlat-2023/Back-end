@@ -179,7 +179,7 @@ public class RentersController : ControllerBase
             ? NotFound(new
             {
                 status = "Not Found",
-                message = "Renter not found",
+                message = "Người thuê không tồn tại",
                 data = ""
             })
             : Ok(new
@@ -211,7 +211,7 @@ public class RentersController : ControllerBase
             ? NotFound(new
             {
                 status = "Not Found",
-                message = "Renter not found",
+                message = "Người thuê không tồn tại",
                 data = ""
             })
             : Ok(new
@@ -629,7 +629,7 @@ public class RentersController : ControllerBase
             return BadRequest(new
             {
                 status = "Bad Request",
-                message = "Renter not found",
+                message = "Người thuê không tồn tại",
                 data = ""
             });
 

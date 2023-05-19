@@ -89,7 +89,7 @@ public class BuildingsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Building not found",
+                message = "Toà nhà không tồn tại",
                 data = 0
             });
 
@@ -112,7 +112,7 @@ public class BuildingsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Building not found",
+                message = "Toà nhà không tồn tại",
                 data = ""
             });
 
@@ -162,7 +162,7 @@ public class BuildingsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Building not found",
+                message = "Toà nhà không tồn tại",
                 data = ""
             });
 

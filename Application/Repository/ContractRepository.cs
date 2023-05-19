@@ -1,5 +1,4 @@
 using System.Data;
-using System.Globalization;
 using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
@@ -139,13 +138,25 @@ public class ContractRepository : IContractRepository
     /// </summary>
     /// <param name="contractId"></param>
     /// <returns></returns>
-    public IQueryable<Contract?> GetContractDetail(int? contractId)
+    public IQueryable<Contract?> GetContractById(int? contractId)
     {
         return _context.Contracts
             .Include(x => x.Renter)
             .Include(x => x.Flat)
             .ThenInclude(x => x.Rooms)
             .Where(x => x.ContractId == contractId)
+            .Include(x => x.Flat)
+            .ThenInclude(x => x.Building)
+            .ThenInclude(x => x.Employee);
+    }
+
+    public IQueryable<Contract?> GetContractById(int? contractId, int buildingId)
+    {
+        return _context.Contracts
+            .Include(x => x.Renter)
+            .Include(x => x.Flat)
+            .ThenInclude(x => x.Rooms)
+            .Where(x => x.ContractId == contractId && x.BuildingId == buildingId)
             .Include(x => x.Flat)
             .ThenInclude(x => x.Building)
             .ThenInclude(x => x.Employee);
@@ -181,7 +192,7 @@ public class ContractRepository : IContractRepository
     /// </summary>
     /// <param name="contract"></param>
     /// <returns></returns>
-    public async Task<RepositoryResponse> UpdateContract(Contract? contract)
+    public async Task<RepositoryResponse> UpdateContract(Contract contract)
     {
         var contractData = await _context.Contracts
             .FirstOrDefaultAsync(x => x.ContractId == contract!.ContractId);
@@ -190,28 +201,27 @@ public class ContractRepository : IContractRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Contract not found"
+                Message = "Hợp đồng không tồn tại"
             };
 
         //contractData.FlatId = contract?.FlatId ?? contractData.FlatId;
-        contractData.DateSigned = contract?.DateSigned ?? contractData.DateSigned;
-        contractData.ContractName = contract?.ContractName ?? contractData.ContractName;
-        contractData.EndDate = contract?.EndDate ?? contractData.EndDate;
-        contractData.StartDate = contract?.StartDate ?? contractData.StartDate;
-        contractData.ContractStatus = contract?.ContractStatus ?? contractData.ContractStatus;
-        contractData.PriceForElectricity = contract?.PriceForElectricity ?? contractData.PriceForElectricity;
-        contractData.PriceForService = contract?.PriceForService ?? contractData.PriceForService;
-        contractData.PriceForWater = contract?.PriceForWater ?? contractData.PriceForWater;
-        contractData.PriceForRent = contract?.PriceForRent ?? contractData.PriceForRent;
-        contractData.LastUpdated = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-            "dd/MM/yyyy HH:mm:ss", null);
+        contractData.DateSigned = contract.DateSigned;
+        contractData.ContractName = contract.ContractName;
+        contractData.EndDate = contract.EndDate;
+        contractData.StartDate = contract.StartDate;
+        contractData.ContractStatus = contract.ContractStatus;
+        contractData.PriceForElectricity = contract.PriceForElectricity;
+        contractData.PriceForService = contract.PriceForService;
+        contractData.PriceForWater = contract.PriceForWater;
+        contractData.PriceForRent = contract.PriceForRent;
+        contractData.LastUpdated = contract.LastUpdated;
 
         await _context.SaveChangesAsync();
 
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Contract updated"
+            Message = "Hợp đồng đã được cập nhật"
         };
     }
 
@@ -228,7 +238,7 @@ public class ContractRepository : IContractRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Contract not found"
+                Message = "Hợp đồng không tồn tại"
             };
         _context.Contracts.Remove(contractFound);
         await _context.SaveChangesAsync();

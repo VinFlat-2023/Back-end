@@ -120,7 +120,7 @@ public class ServicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Building not found",
+                message = "Toà nhà không tồn tại",
                 data = ""
             });
 

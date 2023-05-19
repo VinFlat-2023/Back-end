@@ -105,7 +105,7 @@ public class ContractsController : ControllerBase
                     return NotFound(new
                     {
                         status = "Not Found",
-                        message = "No contract found for this building managed by this supervisor",
+                        message = "Danh sách hợp đồng trống",
                         data = ""
                     });
 
@@ -130,7 +130,7 @@ public class ContractsController : ControllerBase
                     return NotFound(new
                     {
                         status = "Not Found",
-                        message = "No contract found for this renter",
+                        message = "Không hợp đồng nào được tìm thấy",
                         data = ""
                     });
 
@@ -280,40 +280,62 @@ public class ContractsController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetContractManagement(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.Contracts.GetContractById(id, token);
+        var employeeId = Parse(User.Identity?.Name);
 
-        if (entity == null)
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
+
+        switch (buildingId)
+        {
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                    data = ""
+                });
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Người quản lý không quản lý tòa nhà nào",
+                    data = ""
+                });
+        }
+
+        var contractEntity = await _serviceWrapper.Contracts.GetContractById(id, buildingId, token);
+
+        if (contractEntity == null)
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Contract not found",
+                message = "Hợp đồng không tồn tại trong hệ thống",
                 data = ""
             });
 
         var imageUrls = new[]
         {
-            entity.ContractImageUrl1,
-            entity.ContractImageUrl2
+            contractEntity.ContractImageUrl1,
+            contractEntity.ContractImageUrl2
         };
 
-        var contract = _mapper.Map<ContactDetailRenterEntity>(entity);
+        var contract = _mapper.Map<ContactDetailRenterEntity>(contractEntity);
 
         contract.ImageUrls = imageUrls;
-        contract.PriceForRent = entity.PriceForRent.DecimalToString();
-        contract.PriceForService = entity.PriceForService.DecimalToString();
-        contract.PriceForWater = entity.PriceForWater.DecimalToString();
-        contract.PriceForElectricity = entity.PriceForElectricity.DecimalToString();
+        contract.PriceForRent = contractEntity.PriceForRent.DecimalToString();
+        contract.PriceForService = contractEntity.PriceForService.DecimalToString();
+        contract.PriceForWater = contractEntity.PriceForWater.DecimalToString();
+        contract.PriceForElectricity = contractEntity.PriceForElectricity.DecimalToString();
 
         return Ok(new
         {
             status = "Success",
-            message = "Contract found",
+            message = "Tìm thấy hợp đồng",
             data = contract
         });
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get Contract using contract id with renter id (For renter)")]
-    [Authorize(Roles = "Supervisor, Renter")]
+    [Authorize(Roles = "Renter")]
     [HttpGet("{id:int}/user/{renterId:int}")]
     public async Task<IActionResult> GetContract(int id, int renterId, CancellationToken token)
     {
@@ -354,7 +376,7 @@ public class ContractsController : ControllerBase
                 return NotFound(new
                 {
                     status = "Not Found",
-                    message = "Contract not found",
+                    message = "Hợp đồng không tồn tại",
                     data = ""
                 });
             default:
@@ -363,7 +385,7 @@ public class ContractsController : ControllerBase
                     return NotFound(new
                     {
                         status = "Not Found",
-                        message = "Renter not found",
+                        message = "Người thuê không tồn tại",
                         data = ""
                     });
 
@@ -372,7 +394,7 @@ public class ContractsController : ControllerBase
                     return NotFound(new
                     {
                         status = "Not Found",
-                        message = "Building not found",
+                        message = "Toà nhà không tồn tại",
                         data = ""
                     });
 
@@ -442,7 +464,7 @@ public class ContractsController : ControllerBase
                 return Ok(new
                 {
                     status = "Success",
-                    message = "Contract found",
+                    message = "Tìm thấy hợp đồng",
                     data = contractViewModel
                 });
         }
@@ -496,7 +518,7 @@ public class ContractsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Contract not found",
+                message = "Hợp đồng không tồn tại",
                 data = ""
             });
 
@@ -539,15 +561,35 @@ public class ContractsController : ControllerBase
     public async Task<IActionResult> PutContract(int id, [FromBody] ContractUpdateRequest contract,
         CancellationToken token)
     {
-        //var imageExtension = ImageExtension.ImageExtensionChecker(contract.Image?.FileName);
+        var employeeId = Parse(User.Identity?.Name);
 
-        var contractEntity = await _serviceWrapper.Contracts.GetContractById(id, token);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
+
+        switch (buildingId)
+        {
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                    data = ""
+                });
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Người quản lý không quản lý tòa nhà nào",
+                    data = ""
+                });
+        }
+
+        var contractEntity = await _serviceWrapper.Contracts.GetContractById(id, buildingId, token);
 
         if (contractEntity == null)
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Contract not found",
+                message = "Hợp đồng không tồn tại trong hệ thống",
                 data = ""
             });
 
@@ -565,11 +607,11 @@ public class ContractsController : ControllerBase
         {
             ContractId = id,
             ContractName = contract.ContractName,
-            DateSigned = contract.DateSigned,
-            StartDate = contract.StartDate,
-            EndDate = contract.EndDate,
+            DateSigned = contract.DateSigned.ToDateTime(),
+            StartDate = contract.StartDate.ToDateTime(),
+            ContractStatus = contract.ContractStatus,
+            EndDate = contract.EndDate.ToDateTime(),
             LastUpdated = DateTime.UtcNow,
-            ContractStatus = contract.ContractStatus ?? "Active",
             PriceForRent = decimal.Parse(contract.PriceForRent, CultureInfo.InvariantCulture),
             PriceForElectricity = decimal.Parse(contract.PriceForElectricity, CultureInfo.InvariantCulture),
             PriceForWater = decimal.Parse(contract.PriceForWater, CultureInfo.InvariantCulture),
@@ -579,7 +621,7 @@ public class ContractsController : ControllerBase
             ImageUrl = (await _serviceWrapper.AzureStorage.UploadAsync(contract.Image, "Contract",
                 imageExtension))?.Blob.Uri,
             */
-            Description = contract.Description ?? "No description",
+            Description = contract.Description,
             CreatedDate = contractEntity.CreatedDate
         };
 

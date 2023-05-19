@@ -649,7 +649,7 @@ public class TicketsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Building not found",
+                message = "Toà nhà không tồn tại",
                 data = ""
             });
 
@@ -679,7 +679,7 @@ public class TicketsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Contract not found for this renter, please contact management",
+                message = "Hợp đồng không tồn tại for this renter, please contact management",
                 data = ""
             });
 
