@@ -39,7 +39,7 @@ public class AreaRepository : IAreaRepository
     public async Task<Area?> GetAreaById(int? areaId, CancellationToken cancellationToken)
     {
         return await _context.Areas
-            .FirstOrDefaultAsync(x => x.AreaId == areaId, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(x => x.AreaId == areaId, cancellationToken);
     }
 
 
@@ -152,7 +152,7 @@ public class AreaRepository : IAreaRepository
 
         areaData.Name = area.Name;
         areaData.Status = area.Status;
-        
+
         if (areaData.AreaImageUrl1 != null)
             areaData.AreaImageUrl1 = area.AreaImageUrl1;
         if (areaData.AreaImageUrl2 != null)

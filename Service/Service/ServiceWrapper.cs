@@ -17,8 +17,8 @@ public class ServiceWrapper : IServiceWrapper
     private readonly IConfiguration _configuration;
     private readonly IWebHostEnvironment _env;
     private readonly IOptions<PaginationOption> _paginationOptions;
-    private readonly IRepositoryWrapper _repositories;
     private readonly IRedisCacheHelper _redis;
+    private readonly IRepositoryWrapper _repositories;
 
     public ServiceWrapper(IRepositoryWrapper? repositories,
         ApplicationContext? context, IConfiguration configuration,

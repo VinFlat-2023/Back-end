@@ -11,12 +11,13 @@ namespace Service.Service;
 
 public class AreaService : IAreaService
 {
-    private readonly PaginationOption _paginationOptions;
-    private readonly IRepositoryWrapper _repositoryWrapper;
-    private readonly IRedisCacheHelper _redis;
     private readonly string _cacheKey = "area";
+    private readonly PaginationOption _paginationOptions;
+    private readonly IRedisCacheHelper _redis;
+    private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public AreaService(IRepositoryWrapper repositoryWrapper, IOptions<PaginationOption> paginationOptions, IRedisCacheHelper redis)
+    public AreaService(IRepositoryWrapper repositoryWrapper, IOptions<PaginationOption> paginationOptions,
+        IRedisCacheHelper redis)
     {
         _repositoryWrapper = repositoryWrapper;
         _redis = redis;
@@ -28,10 +29,7 @@ public class AreaService : IAreaService
     {
         var cacheData = await _redis.GetCacheDataAsync<PagedList<Area>>(_cacheKey);
 
-        if (cacheData != null)
-        {
-            return (cacheData, true);
-        }
+        if (cacheData != null) return (cacheData, true);
 
         var queryable = _repositoryWrapper.Areas.GetAreaList(filters);
 
@@ -43,7 +41,7 @@ public class AreaService : IAreaService
 
         var pagedList = await PagedList<Area>
             .Create(queryable, page, size, token);
-        
+
         await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
 
         return (pagedList, false);
@@ -59,8 +57,9 @@ public class AreaService : IAreaService
 
             return areaFromCache == null ? (null, false) : (areaFromCache, true);
         }
+
         var result = await _repositoryWrapper.Areas.GetAreaById(areaId, token);
-        
+
         return result == null ? (null, false) : (result, false);
     }
 

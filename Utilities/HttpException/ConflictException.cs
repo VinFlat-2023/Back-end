@@ -5,5 +5,7 @@ namespace Utilities.HttpException;
 public class ConflictException : CustomException
 {
     public ConflictException(string message)
-        : base(message, null, HttpStatusCode.Conflict) { }
+        : base(message, null, HttpStatusCode.Conflict)
+    {
+    }
 }

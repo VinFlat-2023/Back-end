@@ -6,14 +6,11 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Microsoft.IO;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
-using Quartz.Logging;
 using Utilities.HttpException;
-using ErrorResult = Domain.ErrorEntities.ErrorResult;
 
 namespace Utilities.Middleware;
 
@@ -46,14 +43,14 @@ public class ExceptionHandlerMiddleware
         {
             var requestData = GetRequestData(context);
             var requestDisplayUrl = context.Request.GetDisplayUrl();
-            
+
             _logger.LogError(exception,
                 "An unhandled exception has occurred while executing the request. " +
                 "\nUrl: {RequestDisplayUrl}. " +
                 "\nRequest Data: {RequestData}", requestDisplayUrl, requestData);
 
             var errorId = Guid.NewGuid().ToString();
-           
+
             var errorResult = new ErrorResult
             {
                 Source = exception.TargetSite?.DeclaringType?.FullName,
@@ -65,21 +62,14 @@ public class ExceptionHandlerMiddleware
             errorResult.Message.Add(exception.Message);
 
             if (exception is not CustomException && exception.InnerException != null)
-            {
                 while (exception.InnerException != null)
-                {
                     exception = exception.InnerException;
-                }
-            }
-            
+
             switch (exception)
             {
                 case CustomException e:
                     errorResult.StatusCode = (int)e.StatusCode;
-                    if (e.ErrorMessages is not null)
-                    {
-                        errorResult.Message = e.ErrorMessages;
-                    }
+                    if (e.ErrorMessages is not null) errorResult.Message = e.ErrorMessages;
 
                     break;
 
@@ -91,11 +81,11 @@ public class ExceptionHandlerMiddleware
                     errorResult.StatusCode = (int)HttpStatusCode.InternalServerError;
                     break;
             }
-            
+
             ClearCacheHeaders(context.Response);
 
             var response = context.Response;
-            
+
             if (!response.HasStarted)
             {
                 response.ContentType = "application/json";

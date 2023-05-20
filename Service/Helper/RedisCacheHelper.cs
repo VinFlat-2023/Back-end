@@ -19,9 +19,11 @@ public class RedisCacheHelper : IRedisCacheHelper
         var cacheData = await _redis.GetStringAsync(cacheKey);
 
         // Check if the cache data response contains data
-        return !string.IsNullOrEmpty(cacheData) ?
+        return !string.IsNullOrEmpty(cacheData)
+            ?
             // It did, let's deserialize it and return it
-            JsonSerializer.Deserialize<T>(cacheData) :
+            JsonSerializer.Deserialize<T>(cacheData)
+            :
             // We did not get any data return T
             default;
     }
@@ -29,13 +31,14 @@ public class RedisCacheHelper : IRedisCacheHelper
     public async Task RemoveCacheDataAsync(string cacheKey)
     {
         // Remove the cache data
-        await _redis.RemoveAsync(cacheKey);    
+        await _redis.RemoveAsync(cacheKey);
     }
 
-    public async Task SetCacheDataAsync<T>(string cacheKey, T cacheValue, double absExpRelToNow, double slidingExpiration)
+    public async Task SetCacheDataAsync<T>(string cacheKey, T cacheValue, double absExpRelToNow,
+        double slidingExpiration)
     {
         // Configure cache expiration
-        DistributedCacheEntryOptions cacheExpiry = new DistributedCacheEntryOptions
+        var cacheExpiry = new DistributedCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(absExpRelToNow),
             SlidingExpiration = TimeSpan.FromMinutes(slidingExpiration)
