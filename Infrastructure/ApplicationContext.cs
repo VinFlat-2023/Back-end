@@ -8,34 +8,35 @@ public class ApplicationContext : DbContext
     public ApplicationContext(DbContextOptions<ApplicationContext> options)
         : base(options)
     {
+        ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
     }
 
-    public virtual DbSet<Employee> Employees { get; set; } = null!;
-    public virtual DbSet<Area> Areas { get; set; } = null!;
-    public virtual DbSet<Building> Buildings { get; set; } = null!;
-    public virtual DbSet<Contract> Contracts { get; set; } = null!;
-    public virtual DbSet<Feedback> Feedbacks { get; set; } = null!;
-    public virtual DbSet<FeedbackType> FeedbackTypes { get; set; } = null!;
-    public virtual DbSet<Flat> Flats { get; set; } = null!;
-    public virtual DbSet<FlatType> FlatTypes { get; set; } = null!;
-    public virtual DbSet<Invoice> Invoices { get; set; } = null!;
-    public virtual DbSet<InvoiceDetail> InvoiceDetails { get; set; } = null!;
-    public virtual DbSet<InvoiceType> InvoiceTypes { get; set; } = null!;
-    public virtual DbSet<Renter> Renters { get; set; } = null!;
-    public virtual DbSet<Ticket> Tickets { get; set; } = null!;
-    public virtual DbSet<TicketType> TicketTypes { get; set; } = null!;
-    public virtual DbSet<Role> Roles { get; set; } = null!;
-    public virtual DbSet<ServiceEntity> Services { get; set; } = null!;
-    public virtual DbSet<ServiceType> ServiceTypes { get; set; } = null!;
-    public virtual DbSet<Wallet> Wallets { get; set; } = null!;
-    public virtual DbSet<WalletType> WalletTypes { get; set; } = null!;
-    public virtual DbSet<UserDevice> UserDevices { get; set; } = null!;
-    public virtual DbSet<Notification> Notifications { get; set; } = null!;
-    public virtual DbSet<NotificationType> NotificationTypes { get; set; } = null!;
-    public virtual DbSet<RoomType> RoomTypes { get; set; } = null!;
-    public virtual DbSet<Room> Rooms { get; set; } = null!;
-    public virtual DbSet<Utility> Utilities { get; set; } = null!;
-    public virtual DbSet<UtilitiesRoom> UtilitiesRoom { get; set; } = null!;
+    public DbSet<Employee> Employees { get; set; } = null!;
+    public DbSet<Area> Areas { get; set; } = null!;
+    public DbSet<Building> Buildings { get; set; } = null!;
+    public DbSet<Contract> Contracts { get; set; } = null!;
+    public DbSet<Feedback> Feedbacks { get; set; } = null!;
+    public DbSet<FeedbackType> FeedbackTypes { get; set; } = null!;
+    public DbSet<Flat> Flats { get; set; } = null!;
+    public DbSet<FlatType> FlatTypes { get; set; } = null!;
+    public DbSet<Invoice> Invoices { get; set; } = null!;
+    public DbSet<InvoiceDetail> InvoiceDetails { get; set; } = null!;
+    public DbSet<InvoiceType> InvoiceTypes { get; set; } = null!;
+    public DbSet<Renter> Renters { get; set; } = null!;
+    public DbSet<Ticket> Tickets { get; set; } = null!;
+    public DbSet<TicketType> TicketTypes { get; set; } = null!;
+    public DbSet<Role> Roles { get; set; } = null!;
+    public DbSet<ServiceEntity> Services { get; set; } = null!;
+    public DbSet<ServiceType> ServiceTypes { get; set; } = null!;
+    public DbSet<Wallet> Wallets { get; set; } = null!;
+    public DbSet<WalletType> WalletTypes { get; set; } = null!;
+    public DbSet<UserDevice> UserDevices { get; set; } = null!;
+    public DbSet<Notification> Notifications { get; set; } = null!;
+    public DbSet<NotificationType> NotificationTypes { get; set; } = null!;
+    public DbSet<RoomType> RoomTypes { get; set; } = null!;
+    public DbSet<Room> Rooms { get; set; } = null!;
+    public DbSet<Utility> Utilities { get; set; } = null!;
+    public DbSet<UtilitiesRoom> UtilitiesRoom { get; set; } = null!;
 
     // public virtual DbSet<RoomType> RoomTypes { get; set; } = null!;
 

@@ -205,16 +205,26 @@ public class ContractRepository : IContractRepository
             };
 
         //contractData.FlatId = contract?.FlatId ?? contractData.FlatId;
-        contractData.DateSigned = contract.DateSigned;
+
         contractData.ContractName = contract.ContractName;
-        contractData.EndDate = contract.EndDate;
+        contractData.Description = contract.Description;
+
+        contractData.DateSigned = contract.DateSigned;
         contractData.StartDate = contract.StartDate;
+        contractData.EndDate = contract.EndDate;
+        contractData.LastUpdated = contract.LastUpdated;
+
         contractData.ContractStatus = contract.ContractStatus;
+
         contractData.PriceForElectricity = contract.PriceForElectricity;
         contractData.PriceForService = contract.PriceForService;
         contractData.PriceForWater = contract.PriceForWater;
         contractData.PriceForRent = contract.PriceForRent;
-        contractData.LastUpdated = contract.LastUpdated;
+
+        contractData.ContractImageUrl1 = contract.ContractImageUrl1;
+        contractData.ContractImageUrl2 = contract.ContractImageUrl2;
+        contractData.ContractImageUrl3 = contract.ContractImageUrl3;
+        contractData.ContractImageUrl4 = contract.ContractImageUrl4;
 
         await _context.SaveChangesAsync();
 

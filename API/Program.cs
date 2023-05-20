@@ -1,8 +1,10 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Domain.Options;
+using Infrastructure;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Utilities.MiddlewareExtension;
@@ -33,6 +35,15 @@ builder.Services.AddApplicationService(config);
 builder.Services.AddRegisteredService(config);
 
 builder.Services.ConfigureModelBindingExceptionHandling();
+
+builder.Services.AddCacheConfigurationService(config);
+
+builder.Services.AddResponseCaching(options =>
+{
+    options.MaximumBodySize = 2048;
+    options.UseCaseSensitivePaths = true;
+});
+;
 
 builder.Services.AddCors(o =>
 {
@@ -98,6 +109,8 @@ app.UseSwaggerUI();
 
 app.UseCors("AllowAnyOrigin");
 
+app.UseResponseCaching();
+
 /*
 
 app.UseExceptionHandler("/error");
@@ -113,9 +126,25 @@ app.UseExceptionHandler(c => c.Run(async context =>
 
 */
 
+// Migrate latest database changes during startup
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider
+        .GetRequiredService<ApplicationContext>();
+
+    // Here is the migration executed
+    dbContext.Database.Migrate();
+}
+
 app.UseAuthentication();
 
+app.UseHttpsRedirection();
+
+app.UseRouting();
+
 app.UseAuthorization();
+
+app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
 app.ConfigMiddleware(config);
 

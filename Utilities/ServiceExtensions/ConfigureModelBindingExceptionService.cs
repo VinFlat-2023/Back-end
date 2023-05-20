@@ -12,7 +12,7 @@ public static class ConfigureModelBindingExceptionService
             options.InvalidModelStateResponseFactory = actionContext =>
             {
                 var error = actionContext.ModelState
-                    .Where(e => e.Value.Errors.Count > 0)
+                    .Where(e => e.Value?.Errors.Count > 0)
                     .Select(e => new ValidationProblemDetails(actionContext.ModelState)).FirstOrDefault();
 
                 // Here you can add logging to you log file or to your Application Insights.

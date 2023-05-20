@@ -16,6 +16,11 @@ public class ContractCreateRequest
     public int FlatId { get; set; }
     public int RoomId { get; set; }
 
+    public string? ContractImageUrl1 { get; set; }
+    public string? ContractImageUrl2 { get; set; }
+    public string? ContractImageUrl3 { get; set; }
+    public string? ContractImageUrl4 { get; set; }
+
     // Renter
     public string RenterUsername { get; set; }
     public string FullName { get; set; }

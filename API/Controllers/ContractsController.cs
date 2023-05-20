@@ -609,20 +609,22 @@ public class ContractsController : ControllerBase
             ContractName = contract.ContractName,
             DateSigned = contract.DateSigned.ToDateTime(),
             StartDate = contract.StartDate.ToDateTime(),
-            ContractStatus = contract.ContractStatus,
             EndDate = contract.EndDate.ToDateTime(),
             LastUpdated = DateTime.UtcNow,
+            ContractStatus = contract.ContractStatus,
             PriceForRent = decimal.Parse(contract.PriceForRent, CultureInfo.InvariantCulture),
             PriceForElectricity = decimal.Parse(contract.PriceForElectricity, CultureInfo.InvariantCulture),
             PriceForWater = decimal.Parse(contract.PriceForWater, CultureInfo.InvariantCulture),
             PriceForService = decimal.Parse(contract.PriceForService, CultureInfo.InvariantCulture),
-            RenterId = contractEntity.RenterId,
+            ContractImageUrl1 = contract.ContractImageUrl1,
+            ContractImageUrl2 = contract.ContractImageUrl2,
+            ContractImageUrl3 = contract.ContractImageUrl3,
+            ContractImageUrl4 = contract.ContractImageUrl4,
             /*
             ImageUrl = (await _serviceWrapper.AzureStorage.UploadAsync(contract.Image, "Contract",
                 imageExtension))?.Blob.Uri,
             */
-            Description = contract.Description,
-            CreatedDate = contractEntity.CreatedDate
+            Description = contract.Description
         };
 
         var result = await _serviceWrapper.Contracts.UpdateContract(updateContract);
@@ -716,7 +718,11 @@ public class ContractsController : ControllerBase
             PriceForService = decimal.Parse(contract.PriceForService, CultureInfo.InvariantCulture),
             BuildingId = buildingId,
             FlatId = contract.FlatId,
-            RoomId = contract.RoomId
+            RoomId = contract.RoomId,
+            ContractImageUrl1 = contract.ContractImageUrl1,
+            ContractImageUrl2 = contract.ContractImageUrl2,
+            ContractImageUrl3 = contract.ContractImageUrl3,
+            ContractImageUrl4 = contract.ContractImageUrl4
         };
 
         var result = await _serviceWrapper.Contracts.AddContractWithRenter(newContract, newRenter, token);
@@ -821,7 +827,11 @@ public class ContractsController : ControllerBase
                     BuildingId = buildingId,
                     FlatId = contract.FlatId,
                     RoomId = contract.RoomId,
-                    RenterId = renterId
+                    RenterId = renterId,
+                    ContractImageUrl1 = contract.ContractImageUrl1,
+                    ContractImageUrl2 = contract.ContractImageUrl2,
+                    ContractImageUrl3 = contract.ContractImageUrl3,
+                    ContractImageUrl4 = contract.ContractImageUrl4
                 };
 
                 var result = await _serviceWrapper.Contracts.AddContractWithRenter(newContract, token);
