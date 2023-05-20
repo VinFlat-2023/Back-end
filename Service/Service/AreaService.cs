@@ -3,8 +3,8 @@ using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.Options;
 using Domain.QueryFilter;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Service.IHelper;
 using Service.IService;
 
 namespace Service.Service;
@@ -13,39 +13,61 @@ public class AreaService : IAreaService
 {
     private readonly PaginationOption _paginationOptions;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly IRedisCacheHelper _redis;
+    private readonly string _cacheKey = "area";
 
-    public AreaService(IRepositoryWrapper repositoryWrapper, IOptions<PaginationOption> paginationOptions)
+    public AreaService(IRepositoryWrapper repositoryWrapper, IOptions<PaginationOption> paginationOptions, IRedisCacheHelper redis)
     {
         _repositoryWrapper = repositoryWrapper;
+        _redis = redis;
         _paginationOptions = paginationOptions.Value;
     }
 
 
-    public async Task<PagedList<Area>?> GetAreaList(AreaFilter filters, CancellationToken token)
+    public async Task<(PagedList<Area>?, bool)> GetAreaList(AreaFilter filters, CancellationToken token)
     {
+        var cacheData = await _redis.GetCacheDataAsync<PagedList<Area>>(_cacheKey);
+
+        if (cacheData != null)
+        {
+            return (cacheData, true);
+        }
+
         var queryable = _repositoryWrapper.Areas.GetAreaList(filters);
 
         if (!queryable.Any())
-            return null;
+            return (null, false);
 
         var page = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
         var size = filters.PageSize ?? _paginationOptions.DefaultPageSize;
 
         var pagedList = await PagedList<Area>
             .Create(queryable, page, size, token);
+        
+        await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
 
-        return pagedList;
+        return (pagedList, false);
     }
 
-    public async Task<IEnumerable<Area>?> GetAreaList(CancellationToken token)
+    public async Task<(Area?, bool)> GetAreaByIdWithCache(int? areaId, CancellationToken token)
     {
-        return await _repositoryWrapper.Areas.GetAreaList()
-            .ToListAsync(token);
+        var cacheData = await _redis.GetCacheDataAsync<PagedList<Area>>(_cacheKey);
+        // Check if the cache data contains any number of books
+        if (cacheData != null)
+        {
+            var areaFromCache = cacheData.FirstOrDefault(x => x.AreaId == areaId);
+
+            return areaFromCache == null ? (null, false) : (areaFromCache, true);
+        }
+        var result = await _repositoryWrapper.Areas.GetAreaById(areaId, token);
+        
+        return result == null ? (null, false) : (result, false);
     }
+
 
     public async Task<Area?> GetAreaById(int? areaId, CancellationToken token)
     {
-        return await _repositoryWrapper.Areas.GetAreaDetail(areaId);
+        return await _repositoryWrapper.Areas.GetAreaById(areaId, token);
     }
 
     public async Task<RepositoryResponse> GetAreaByName(string? areaName, CancellationToken token)
@@ -61,70 +83,36 @@ public class AreaService : IAreaService
 
     public async Task<Area?> AddArea(Area area)
     {
-        return await _repositoryWrapper.Areas.AddArea(area);
+        await _repositoryWrapper.Areas.AddArea(area);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        return area;
     }
 
     public async Task<RepositoryResponse> UpdateArea(Area area)
     {
-        try
-        {
-            return await _repositoryWrapper.Areas.UpdateArea(area);
-        }
-        catch
-        {
-            return new RepositoryResponse
-            {
-                IsSuccess = false,
-                Message = "Chuyển đổi trạng thái thành công"
-            };
-        }
+        var response = await _repositoryWrapper.Areas.UpdateArea(area);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        return response;
     }
 
     public async Task<RepositoryResponse> DeleteArea(int areaId)
     {
-        try
-        {
-            return await _repositoryWrapper.Areas.DeleteArea(areaId);
-        }
-        catch
-        {
-            return new RepositoryResponse
-            {
-                IsSuccess = false,
-                Message = "Area failed to delete"
-            };
-        }
+        var response = await _repositoryWrapper.Areas.DeleteArea(areaId);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        return response;
     }
 
     public async Task<RepositoryResponse> UpdateAreaImage(Area updateArea, int number)
     {
-        try
-        {
-            return await _repositoryWrapper.Areas.UpdateAreaImage(updateArea, number);
-        }
-        catch
-        {
-            return new RepositoryResponse
-            {
-                IsSuccess = false,
-                Message = "Area image failed to upload / update"
-            };
-        }
+        var response = await _repositoryWrapper.Areas.UpdateAreaImage(updateArea, number);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        return response;
     }
 
     public async Task<RepositoryResponse> ToggleAreaStatus(int areaId)
     {
-        try
-        {
-            return await _repositoryWrapper.Areas.ToggleArea(areaId);
-        }
-        catch
-        {
-            return new RepositoryResponse
-            {
-                IsSuccess = false,
-                Message = "Chuyển đổi trạng thái thất bại"
-            };
-        }
+        var response = await _repositoryWrapper.Areas.ToggleArea(areaId);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        return response;
     }
 }

@@ -37,6 +37,7 @@ public class ApplicationContext : DbContext
     public DbSet<Room> Rooms { get; set; } = null!;
     public DbSet<Utility> Utilities { get; set; } = null!;
     public DbSet<UtilitiesRoom> UtilitiesRoom { get; set; } = null!;
+    public DbSet<MetricHistory> MetricHistories { get; set; } = null!;
 
     // public virtual DbSet<RoomType> RoomTypes { get; set; } = null!;
 

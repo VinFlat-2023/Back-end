@@ -47,6 +47,8 @@ public static class RegisteredService
         services.AddScoped<IPasswordValidator, PasswordValidator>();
 
         services.AddScoped<IDynamicObjectPropertyExistExtension, DynamicObjectPropertyExistExtension>();
+       
+        services.AddTransient<IRedisCacheHelper, RedisCacheHelper>();
 
         //Add Mail services
         //Added in ServiceWrapper 

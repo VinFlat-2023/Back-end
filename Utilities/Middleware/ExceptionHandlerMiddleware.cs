@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text;
 using Domain.ErrorEntities;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +11,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IO;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
+using Quartz.Logging;
+using Utilities.HttpException;
+using ErrorResult = Domain.ErrorEntities.ErrorResult;
 
 namespace Utilities.Middleware;
 
@@ -33,77 +37,76 @@ public class ExceptionHandlerMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        var requestData = GetRequestData(context);
-        var requestDisplayUrl = context.Request.GetDisplayUrl();
         try
         {
             await LogRequest(context.Request);
             await LogResponseAsync(context);
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            _logger.LogError(ex,
+            var requestData = GetRequestData(context);
+            var requestDisplayUrl = context.Request.GetDisplayUrl();
+            
+            _logger.LogError(exception,
                 "An unhandled exception has occurred while executing the request. " +
                 "\nUrl: {RequestDisplayUrl}. " +
                 "\nRequest Data: {RequestData}", requestDisplayUrl, requestData);
 
-            if (context.Response.HasStarted) throw;
-
-            var routeData = context.GetRouteData();
-
-            ClearCacheHeaders(context.Response);
-
-            var actionContext = new ActionContext(context, routeData, EmptyActionDescriptor);
-
-            var statusCode = context.Response.StatusCode;
-            var msg = "";
-            switch (statusCode)
+            var errorId = Guid.NewGuid().ToString();
+           
+            var errorResult = new ErrorResult
             {
-                case 401:
-                    msg = "You are not authorized to access this information";
-                    break;
-                case 403:
-                    msg = "You are forbidden to access this information";
-                    break;
-                case 404:
-                    msg = "This content is not found or either deleted";
-                    break;
-                case 400:
-                    msg = "This request is not valid";
-                    break;
-                case 500:
-                    msg = "Internal server error occured";
-                    break;
-                default:
-                {
-                    if (statusCode != 100)
-                        msg = "Unknown";
-                    break;
-                }
-            }
-
-            var result = new ObjectResult(
-                new ErrorResponse(
-                    ex.Message))
-            {
-                StatusCode = statusCode
+                Source = exception.TargetSite?.DeclaringType?.FullName,
+                Exception = exception.Message.Trim(),
+                ErrorId = errorId,
+                SupportMessage = $"Provide the Error Id: {errorId} to the support team for further analysis."
             };
 
-            if (!string.IsNullOrWhiteSpace(msg))
-                await HandleExceptionAsync(statusCode, msg);
+            errorResult.Message.Add(exception.Message);
 
-            await _executor.ExecuteAsync(actionContext, result);
+            if (exception is not CustomException && exception.InnerException != null)
+            {
+                while (exception.InnerException != null)
+                {
+                    exception = exception.InnerException;
+                }
+            }
+            
+            switch (exception)
+            {
+                case CustomException e:
+                    errorResult.StatusCode = (int)e.StatusCode;
+                    if (e.ErrorMessages is not null)
+                    {
+                        errorResult.Message = e.ErrorMessages;
+                    }
+
+                    break;
+
+                case KeyNotFoundException:
+                    errorResult.StatusCode = (int)HttpStatusCode.NotFound;
+                    break;
+
+                default:
+                    errorResult.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    break;
+            }
+            
+            ClearCacheHeaders(context.Response);
+
+            var response = context.Response;
+            
+            if (!response.HasStarted)
+            {
+                response.ContentType = "application/json";
+                response.StatusCode = errorResult.StatusCode;
+                await response.WriteAsync(JsonConvert.SerializeObject(errorResult));
+            }
+            else
+            {
+                Console.WriteLine("Can't write error response. Response has already started.");
+            }
         }
-    }
-
-    private static async Task HandleExceptionAsync(int statusCode, string msg)
-    {
-        await Task.FromResult(JsonConvert.SerializeObject(new ErrorResult
-        {
-            Success = false,
-            Msg = msg,
-            Type = statusCode.ToString()
-        }));
     }
 
     private static string GetRequestData(HttpContext context)

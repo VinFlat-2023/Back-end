@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Service.IHelper;
 using Service.IService;
 
 namespace Service.Service;
@@ -17,15 +18,17 @@ public class ServiceWrapper : IServiceWrapper
     private readonly IWebHostEnvironment _env;
     private readonly IOptions<PaginationOption> _paginationOptions;
     private readonly IRepositoryWrapper _repositories;
+    private readonly IRedisCacheHelper _redis;
 
     public ServiceWrapper(IRepositoryWrapper? repositories,
         ApplicationContext? context, IConfiguration configuration,
         IOptions<PaginationOption> paginationOptions, ILoggerFactory logger,
-        IWebHostEnvironment env)
+        IWebHostEnvironment env, IRedisCacheHelper redis)
     {
         _paginationOptions = paginationOptions;
         _configuration = configuration;
         _env = env;
+        _redis = redis;
         if (repositories == null)
         {
             if (context == null)
@@ -72,7 +75,7 @@ public class ServiceWrapper : IServiceWrapper
     {
         get
         {
-            if (_area == null) _area = new AreaService(_repositories, _paginationOptions);
+            if (_area == null) _area = new AreaService(_repositories, _paginationOptions, _redis);
             return _area;
         }
     }

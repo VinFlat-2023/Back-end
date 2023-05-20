@@ -7,8 +7,7 @@ namespace Application.IRepository;
 public interface IAreaRepository
 {
     public IQueryable<Area> GetAreaList(AreaFilter filters);
-    public IQueryable<Area> GetAreaList();
-    public Task<Area?> GetAreaDetail(int? areaId);
+    public Task<Area?> GetAreaById(int? areaId, CancellationToken cancellationToken);
     public Task<Area?> AddArea(Area area);
     public Task<RepositoryResponse> UpdateArea(Area? area);
     public Task<RepositoryResponse> ToggleArea(int areaId);

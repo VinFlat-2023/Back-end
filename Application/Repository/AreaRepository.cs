@@ -30,21 +30,16 @@ public class AreaRepository : IAreaRepository
             .AsNoTracking();
     }
 
-    public IQueryable<Area> GetAreaList()
-    {
-        return _context.Areas
-            .AsNoTracking();
-    }
-
     /// <summary>
     ///     Get area detail by id
     /// </summary>
     /// <param name="areaId"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<Area?> GetAreaDetail(int? areaId)
+    public async Task<Area?> GetAreaById(int? areaId, CancellationToken cancellationToken)
     {
         return await _context.Areas
-            .FirstOrDefaultAsync(x => x.AreaId == areaId);
+            .FirstOrDefaultAsync(x => x.AreaId == areaId, cancellationToken: cancellationToken);
     }
 
 
@@ -157,6 +152,7 @@ public class AreaRepository : IAreaRepository
 
         areaData.Name = area.Name;
         areaData.Status = area.Status;
+        
         if (areaData.AreaImageUrl1 != null)
             areaData.AreaImageUrl1 = area.AreaImageUrl1;
         if (areaData.AreaImageUrl2 != null)

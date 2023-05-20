@@ -39,7 +39,7 @@ public class AreasController : ControllerBase
 
         var resultList = _mapper.Map<IEnumerable<AreaDetailEntity>>(list);
 
-        if (list == null || !list.Any())
+        if (list == (null, false) || !list.Item1.Any())
             return NotFound(new
             {
                 status = "Not Found",
@@ -52,35 +52,10 @@ public class AreasController : ControllerBase
             status = "Success",
             message = "Hiển thị danh sách khu vực",
             data = resultList,
-            totalPage = list.TotalPages,
-            totalCount = list.TotalCount
+            totalPage = list.Item1.TotalPages,
+            totalCount = list.Item1.TotalCount
         });
     }
-
-    [HttpGet("no-paging")]
-    [SwaggerOperation(Summary = "[Authorize] Get area list")]
-    public async Task<IActionResult> GetAreas(CancellationToken token)
-    {
-        var list = await _serviceWrapper.Areas.GetAreaList(token);
-
-        var resultList = _mapper.Map<IEnumerable<AreaDetailEntity>>(list);
-
-        if (list == null || !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Danh sách khu vực trống",
-                data = ""
-            });
-
-        return Ok(new
-        {
-            status = "Success",
-            message = "Hiển thị danh sách khu vực",
-            data = resultList
-        });
-    }
-
 
     // GET: api/Areas/5
     [SwaggerOperation(Summary = "[Authorize] Get area using id")]

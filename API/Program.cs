@@ -36,8 +36,6 @@ builder.Services.AddRegisteredService(config);
 
 builder.Services.ConfigureModelBindingExceptionHandling();
 
-builder.Services.AddCacheConfigurationService(config);
-
 builder.Services.AddResponseCaching(options =>
 {
     options.MaximumBodySize = 2048;
@@ -80,6 +78,8 @@ builder.Services.Configure<FormOptions>(options =>
 });
 
 builder.Services.AddAuthorizationService();
+
+builder.Services.AddRedisCacheService(config);
 
 builder.Services.Configure<PaginationOption>(config.GetSection("Pagination"));
 

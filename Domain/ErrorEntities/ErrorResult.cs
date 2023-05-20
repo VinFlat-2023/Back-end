@@ -2,9 +2,11 @@ namespace Domain.ErrorEntities;
 
 public class ErrorResult
 {
-    public bool Success { get; set; } = true;
-    public string Msg { get; set; } = "";
-    public string Type { get; set; } = "";
-    public object Data { get; set; } = "";
-    public object DataExt { get; set; } = "";
+    public List<string> Message { get; set; } = new();
+
+    public string? Source { get; set; }
+    public string? Exception { get; set; }
+    public string? ErrorId { get; set; }
+    public string? SupportMessage { get; set; }
+    public int StatusCode { get; set; }
 }
