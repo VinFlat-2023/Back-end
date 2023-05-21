@@ -10,8 +10,8 @@ public static class RedisCacheService
     {
         services.AddStackExchangeRedisCache(options =>
         {
-            options.Configuration = configuration.GetConnectionString("AzureRedisUrl");
-            options.InstanceName = "master";
+            options.Configuration = configuration["TotallyNotConnectionString:AzureRedisUrl"];
+            options.InstanceName = "vinflat";
         });
         return services;
     }

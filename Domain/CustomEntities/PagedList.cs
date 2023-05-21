@@ -1,16 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Domain.CustomEntities;
 
+[Serializable]
 public class PagedList<T> : List<T>
 {
-    private PagedList(IEnumerable<T> items, int count, int pageNumber, int pageSize)
+    [JsonConstructor]
+    public PagedList(IEnumerable<T> items, int count, int pageNumber, int pageSize)
     {
         TotalCount = count;
         PageSize = pageSize;
         CurrentPage = pageNumber;
         TotalPages = (int)Math.Ceiling(count / (double)pageSize);
         AddRange(items);
+    }
+
+    [JsonConstructor]
+    public PagedList()
+    {
     }
 
     private int CurrentPage { get; }
@@ -39,8 +47,9 @@ public class PagedList<T> : List<T>
 
     public static PagedList<T> Create(IEnumerable<T> source, int pageNumber, int pageSize)
     {
-        var count = source.Count();
-        var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        var enumerable = source as T[] ?? source.ToArray();
+        var count = enumerable.Length;
+        var items = enumerable.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
         return new PagedList<T>(items, count, pageNumber, pageSize);
     }
 
@@ -49,5 +58,15 @@ public class PagedList<T> : List<T>
         var count = source.Count();
         var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
         return new PagedList<T>(items, count, pageNumber, pageSize);
+    }
+
+    public class PaginationEntityStruct<TA> where TA : struct
+    {
+        public PaginationEntityStruct()
+        {
+            Items = new List<TA>();
+        }
+
+        public IEnumerable<TA> Items { get; set; }
     }
 }

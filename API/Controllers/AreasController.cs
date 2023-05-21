@@ -35,25 +35,26 @@ public class AreasController : ControllerBase
     {
         var filter = _mapper.Map<AreaFilter>(request);
 
-        var list = await _serviceWrapper.Areas.GetAreaList(filter, token);
+        var (list, fromCache) = await _serviceWrapper.Areas.GetAreaList(filter, token);
 
-        var resultList = _mapper.Map<IEnumerable<AreaDetailEntity>>(list);
-
-        if (list == (null, false) || !list.Item1.Any())
+        if ((list, fromCache) == (null, false))
             return NotFound(new
             {
                 status = "Not Found",
                 message = "Danh sách khu vực trống",
-                data = ""
+                data = filter
             });
+
+        var resultList = _mapper.Map<IEnumerable<AreaDetailEntity>>(list);
 
         return Ok(new
         {
             status = "Success",
             message = "Hiển thị danh sách khu vực",
             data = resultList,
-            totalPage = list.Item1.TotalPages,
-            totalCount = list.Item1.TotalCount
+            dataFromCache = fromCache,
+            totalPage = list.TotalPages,
+            totalCount = list.TotalCount
         });
     }
 
@@ -62,10 +63,9 @@ public class AreasController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetArea(int id, CancellationToken token)
     {
-        var entity = await _serviceWrapper.Areas.GetAreaById(id, token);
+        var entity = await _serviceWrapper.Areas.GetAreaByIdWithCache(id, token);
 
         if (entity == null)
-
             return NotFound(new
             {
                 status = "Not Found",
@@ -73,11 +73,13 @@ public class AreasController : ControllerBase
                 data = ""
             });
 
+        var result = _mapper.Map<AreaDetailEntity>(entity);
+
         return Ok(new
         {
             status = "Success",
             message = "Đã tìm thấy khu vực",
-            data = _mapper.Map<AreaDetailEntity>(entity)
+            data = result
         });
     }
 

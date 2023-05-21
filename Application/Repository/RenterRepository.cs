@@ -21,8 +21,10 @@ public class RenterRepository : IRenterRepository
     {
         return _context.Renters
             .Include(x => x.Contracts)
-            .Where(x => x.Contracts.Any(contract =>
-                contract.BuildingId == buildingId && contract.ContractStatus.ToLower() != "active"))
+            .Where(x => x.Contracts
+                .Any(contract => contract.BuildingId == buildingId
+                                 && contract.ContractStatus.ToLower() != "active"))
+            .Distinct()
             .AsNoTracking();
     }
 
