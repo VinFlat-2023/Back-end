@@ -20,6 +20,7 @@ public class PaginationEntityClass<T> where T : class
     {
         Items = new List<T>();
     }
+
     public IEnumerable<T> Items { get; set; }
     public PaginationMetaData MetaData { get; set; }
 }
@@ -30,6 +31,7 @@ public class PaginationEntityStruct<T> where T : struct
     {
         Items = new List<T>();
     }
+
     public IEnumerable<T> Items { get; set; }
     public PaginationMetaData MetaData { get; set; }
 }

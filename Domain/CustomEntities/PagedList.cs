@@ -21,16 +21,16 @@ public class PagedList<T> : List<T>
     {
     }
 
-    private int CurrentPage { get; }
+    public int CurrentPage { get; }
 
     public int TotalPages { get; set; }
 
-    private int PageSize { get; }
+    public int PageSize { get; }
 
     public int TotalCount { get; set; }
 
-    private bool HasPreviousPage => CurrentPage > 1;
-    private bool HasNextPage => CurrentPage < TotalPages;
+    public bool HasPreviousPage => CurrentPage > 1;
+    public bool HasNextPage => CurrentPage < TotalPages;
     public int? PrevPageNumber => HasPreviousPage ? CurrentPage - 1 : null;
     public int? NextPageNumber => HasNextPage ? CurrentPage + 1 : null;
 

@@ -289,7 +289,7 @@ internal class TicketRepository : ITicketRepository
             Message = "Phiếu thu đã tiếp nhận"
         };
     }
-    
+
     public async Task<RepositoryResponse> MoveTicketToCancelled(int ticketId, CancellationToken token)
     {
         var ticketFound = await _context.Tickets
@@ -304,17 +304,16 @@ internal class TicketRepository : ITicketRepository
 
         ticketFound.CancelledReason = "Khách hàng huỷ phiếu";
         ticketFound.Status = "Processing";
-        
+
         _context.Attach(ticketFound).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
-        
+
         return new RepositoryResponse
         {
             IsSuccess = true,
             Message = "Phiếu thu đã huỷ"
         };
-
     }
 
     public async Task<RepositoryResponse> SolveTicket(int ticketId, CancellationToken token)
@@ -332,7 +331,7 @@ internal class TicketRepository : ITicketRepository
         ticketFound.Status = "Confirming";
 
         await _context.SaveChangesAsync();
-        
+
         return new RepositoryResponse
         {
             IsSuccess = true,

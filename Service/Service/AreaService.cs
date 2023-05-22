@@ -37,6 +37,7 @@ public class AreaService : IAreaService
 
         if (cacheData != null)
         {
+            Console.Write(cacheData);
             if (test)
             {
                 await _redis.RemoveCacheDataAsync(_cacheKey);
