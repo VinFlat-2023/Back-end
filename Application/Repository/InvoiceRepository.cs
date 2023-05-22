@@ -216,6 +216,8 @@ public class InvoiceRepository : IInvoiceRepository
         invoiceData.Detail = invoice.Detail;
         invoiceData.DueDate = invoice.DueDate;
         invoiceData.PaymentTime = invoice.PaymentTime;
+        
+        _context.Attach(invoiceData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
         return invoiceData;
@@ -276,13 +278,15 @@ public class InvoiceRepository : IInvoiceRepository
 
                 _context.InvoiceDetails.Add(serviceEntity);
             }
-
+            
             await _context.SaveChangesAsync();
+            
             await transaction.CommitAsync();
+            
             return new RepositoryResponse
             {
                 IsSuccess = true,
-                Message = "Service(s) added to invoice"
+                Message = "Dịch vụ đã được thêm vào hóa đơn"
             };
         }
         catch
@@ -291,7 +295,7 @@ public class InvoiceRepository : IInvoiceRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Service(s) not added to invoice"
+                Message = "Thêm dịch vụ vào hóa đơn thất bại"
             };
         }
     }
@@ -327,7 +331,7 @@ public class InvoiceRepository : IInvoiceRepository
             return new RepositoryResponse
             {
                 IsSuccess = true,
-                Message = "Batch inserted invoice successfully"
+                Message = "Hóa đơn đã được tạo thành công"
             };
         }
         catch
@@ -336,7 +340,7 @@ public class InvoiceRepository : IInvoiceRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Batch inserted invoice failed"
+                Message = "Tạo hóa đơn thất bại"
             };
         }
     }

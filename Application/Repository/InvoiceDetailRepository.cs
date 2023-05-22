@@ -64,7 +64,7 @@ public class InvoiceDetailRepository : IInvoiceDetailRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Invoice detail not found"
+                Message = "Chi tiết hoá đơn không tồn tại"
             };
 
         _context.InvoiceDetails.Remove(invoiceDetail);
@@ -72,7 +72,7 @@ public class InvoiceDetailRepository : IInvoiceDetailRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Invoice detail deleted successfully"
+            Message = "Chi tiết hoá đơn đã được xóa thành công"
         };
     }
 

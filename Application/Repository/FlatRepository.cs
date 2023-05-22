@@ -117,7 +117,7 @@ public class FlatRepository : IFlatRepository
                 return new RepositoryResponse
                 {
                     IsSuccess = false,
-                    Message = "This flat's room is not available"
+                    Message = "Phòng này đã đầy"
                 };
 
             case not null when roomInFlat.Rooms.Any(x => x.AvailableSlots >= 1):
@@ -125,7 +125,7 @@ public class FlatRepository : IFlatRepository
                 return new RepositoryResponse
                 {
                     IsSuccess = true,
-                    Message = "This flat's room is still available"
+                    Message = "Phòng này còn trống"
                 };
             }
 
@@ -134,7 +134,7 @@ public class FlatRepository : IFlatRepository
                 return new RepositoryResponse
                 {
                     IsSuccess = false,
-                    Message = "Flat service is unavailable"
+                    Message = "Căn hộ đang bảo trì"
                 };
         }
 
@@ -239,6 +239,8 @@ public class FlatRepository : IFlatRepository
         flatData.FlatImageUrl4 = flat.FlatImageUrl4 ?? flatData.FlatImageUrl4;
         flatData.FlatImageUrl5 = flat.FlatImageUrl5 ?? flatData.FlatImageUrl5;
         flatData.FlatImageUrl6 = flat.FlatImageUrl6 ?? flatData.FlatImageUrl6;
+        
+        _context.Attach(flatData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
         return new RepositoryResponse

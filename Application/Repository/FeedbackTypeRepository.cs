@@ -68,6 +68,8 @@ internal class FeedbackTypeRepository : IFeedbackTypeRepository
             };
 
         feedbackTypeData.Name = feedbackType?.Name ?? feedbackTypeData.Name;
+        
+        _context.Attach(feedbackTypeData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
         return new RepositoryResponse

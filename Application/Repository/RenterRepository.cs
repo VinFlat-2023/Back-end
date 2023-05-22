@@ -157,7 +157,7 @@ public class RenterRepository : IRenterRepository
                 Message = "Địa chỉ email không được để trống"
             };
 
-        if (renter.Email?.Length == 0 || email.ToLower().Equals(renter.Email?.ToLower()))
+        if (renter.Email.Length == 0 || email.ToLower().Equals(renter.Email.ToLower()))
             return new RepositoryResponse
             {
                 IsSuccess = true,
@@ -187,22 +187,24 @@ public class RenterRepository : IRenterRepository
     /// <returns></returns>
     public async Task<RepositoryResponse> UpdateRenter(Renter renter)
     {
-        var userData = await _context.Renters
+        var renterFound = await _context.Renters
             .FirstOrDefaultAsync(x => x.RenterId == renter.RenterId);
 
-        if (userData == null)
+        if (renterFound == null)
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "User not found"
+                Message = "Người dùng không tồn tại"
             };
 
-        userData.FullName = renter.FullName;
-        userData.Email = renter.Email;
-        userData.PhoneNumber = renter.PhoneNumber;
-        userData.Address = renter.Address;
-        userData.Gender = renter.Gender;
-        userData.BirthDate = renter.BirthDate;
+        renterFound.FullName = renter.FullName;
+        renterFound.Email = renter.Email;
+        renterFound.PhoneNumber = renter.PhoneNumber;
+        renterFound.Address = renter.Address;
+        renterFound.Gender = renter.Gender;
+        renterFound.BirthDate = renter.BirthDate;
+        
+        _context.Attach(renterFound).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
 
@@ -215,24 +217,26 @@ public class RenterRepository : IRenterRepository
 
     public async Task<RepositoryResponse> UpdateImageRenter(Renter renter)
     {
-        var userData = await _context.Renters
+        var renterFound = await _context.Renters
             .FirstOrDefaultAsync(x => x.RenterId == renter.RenterId);
 
-        if (userData == null)
+        if (renterFound == null)
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "User not found"
+                Message = "Người dùng không tồn tại"
             };
 
-        userData.ImageUrl = renter.ImageUrl;
+        renterFound.ImageUrl = renter.ImageUrl;
+        
+        _context.Attach(renterFound).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
 
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "User image updated successful"
+            Message = "Hình ảnh khách thuê đã được cập nhật"
         };
     }
 
@@ -243,24 +247,26 @@ public class RenterRepository : IRenterRepository
     /// <returns></returns>
     public async Task<RepositoryResponse> UpdatePasswordRenter(Renter renter)
     {
-        var userData = await _context.Renters
+        var renterFound = await _context.Renters
             .FirstOrDefaultAsync(x => x.RenterId == renter!.RenterId);
 
-        if (userData == null)
+        if (renterFound == null)
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "User not found"
+                Message = "Người dùng không tồn tại"
             };
 
-        userData.Password = renter.Password;
+        renterFound.Password = renter.Password;
+        
+        _context.Attach(renterFound).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
 
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "User password updated successful"
+            Message = "Mật khẩu tài khoản đã được cập nhật"
         };
     }
 
@@ -278,16 +284,18 @@ public class RenterRepository : IRenterRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "User not found"
+                Message = "Người dùng không tồn tại"
             };
 
         _ = renterFound.Status == !renterFound.Status;
+        
+        _context.Attach(renterFound).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "User status updated successful"
+            Message = "Trạng thái tài khoản đã được cập nhật"
         };
     }
 
@@ -305,7 +313,7 @@ public class RenterRepository : IRenterRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "User not found"
+                Message = "Người dùng không tồn tại"
             };
 
         _context.Renters.Remove(renterFound);
@@ -314,7 +322,7 @@ public class RenterRepository : IRenterRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "User deleted"
+            Message = "Người dùng đã được xóa"
         };
     }
 

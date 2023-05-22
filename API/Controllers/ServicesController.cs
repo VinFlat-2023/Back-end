@@ -78,7 +78,7 @@ public class ServicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "User not found",
+                message = "Người dùng không tồn tại",
                 data = ""
             });
 
@@ -159,7 +159,7 @@ public class ServicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "User not found",
+                message = "Người dùng không tồn tại",
                 data = ""
             });
 

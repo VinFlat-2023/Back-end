@@ -162,6 +162,8 @@ public class AreaRepository : IAreaRepository
         if (areaData.AreaImageUrl4 != null)
             areaData.AreaImageUrl4 = area.AreaImageUrl4;
 
+        _context.Attach(areaData).State = EntityState.Modified;
+
         await _context.SaveChangesAsync();
 
         return new RepositoryResponse
@@ -189,6 +191,9 @@ public class AreaRepository : IAreaRepository
             };
 
         _ = areaFound.Status == !areaFound.Status;
+        
+        _context.Attach(areaFound).State = EntityState.Modified;
+
         await _context.SaveChangesAsync();
 
         return new RepositoryResponse
@@ -218,8 +223,7 @@ public class AreaRepository : IAreaRepository
 
         _context.Areas.Remove(areaFound);
         await _context.SaveChangesAsync();
-
-
+        
         return new RepositoryResponse
         {
             Message = "Khu vực đã được xoá khỏi hệ thống",
@@ -254,6 +258,8 @@ public class AreaRepository : IAreaRepository
                 areaData.AreaImageUrl4 = updateArea.AreaImageUrl4;
                 break;
         }
+        
+        _context.Attach(areaData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
 

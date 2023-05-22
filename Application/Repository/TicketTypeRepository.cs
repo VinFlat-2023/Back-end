@@ -72,6 +72,8 @@ internal class TicketTypeRepository : ITicketTypeRepository
         requestTypeData.Description = ticketType?.Description ?? requestTypeData.Description;
         requestTypeData.TicketTypeName = ticketType?.TicketTypeName ?? requestTypeData.TicketTypeName;
         requestTypeData.Status = ticketType?.Status ?? requestTypeData.Status;
+        
+        _context.Attach(requestTypeData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
 
@@ -124,6 +126,7 @@ internal class TicketTypeRepository : ITicketTypeRepository
             };
 
         ticketTypeStatus.Status = !ticketTypeStatus.Status;
+        _context.Attach(ticketTypeStatus).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
         return new RepositoryResponse

@@ -85,6 +85,8 @@ internal class FeedbackRepository : IFeedbackRepository
         feedbackData.Description = feedback?.Description ?? feedbackData.Description;
         feedbackData.Status = feedback?.Status ?? feedbackData.Status;
         feedbackData.FeedbackTypeId = feedback?.FeedbackTypeId ?? feedbackData.FeedbackTypeId;
+        
+        _context.Attach(feedbackData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
         return new RepositoryResponse

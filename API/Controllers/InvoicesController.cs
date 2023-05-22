@@ -164,7 +164,7 @@ public class InvoicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "User not found",
+                message = "Người dùng không tồn tại",
                 data = ""
             });
 

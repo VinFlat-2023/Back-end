@@ -98,7 +98,8 @@ public class RoomTypeRepository : IRoomTypeRepository
     public async Task<RoomType?> GetRoomTypeDetail(int? roomTypeId, int? buildingId, CancellationToken token)
     {
         return await _context.RoomTypes
-            .FirstOrDefaultAsync(x => x.RoomTypeId == roomTypeId && x.BuildingId == buildingId, token);
+            .FirstOrDefaultAsync(x => x.RoomTypeId == roomTypeId 
+                                      && x.BuildingId == buildingId, token);
     }
 
     public async Task<RepositoryResponse> UpdateRoomType(RoomType roomType, int buildingId, CancellationToken token)
@@ -117,6 +118,8 @@ public class RoomTypeRepository : IRoomTypeRepository
         roomTypeData.RoomTypeName = roomType.RoomTypeName;
         roomTypeData.Status = roomType.Status;
         roomTypeData.TotalSlot = roomType.TotalSlot;
+        
+        _context.Attach(roomTypeData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync(token);
 

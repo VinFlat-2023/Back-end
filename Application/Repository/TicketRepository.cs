@@ -191,20 +191,22 @@ internal class TicketRepository : ITicketRepository
     /// <returns></returns>
     public async Task<RepositoryResponse> UpdateTicket(Ticket ticket)
     {
-        var ticketData = await _context.Tickets
+        var ticketFound = await _context.Tickets
             .FirstOrDefaultAsync(x => x.TicketId == ticket.TicketId);
-        if (ticketData == null)
+        if (ticketFound == null)
             return new RepositoryResponse
             {
                 IsSuccess = false,
                 Message = "Không có phiếu nào được tìm thấy"
             };
 
-        ticketData.TicketName = ticket.TicketName;
-        ticketData.Description = ticket.Description;
-        ticketData.SolveDate = ticket.SolveDate ?? ticketData.SolveDate;
-        ticketData.TicketTypeId = ticket.TicketTypeId;
+        ticketFound.TicketName = ticket.TicketName;
+        ticketFound.Description = ticket.Description;
+        ticketFound.SolveDate = ticket.SolveDate ?? ticketFound.SolveDate;
+        ticketFound.TicketTypeId = ticket.TicketTypeId;
 
+        _context.Attach(ticketFound).State = EntityState.Modified;
+        
         await _context.SaveChangesAsync();
         return new RepositoryResponse
         {
@@ -215,9 +217,9 @@ internal class TicketRepository : ITicketRepository
 
     public async Task<RepositoryResponse> UpdateTicketImage(Ticket ticket, int number)
     {
-        var ticketData = await _context.Tickets
+        var ticketFound = await _context.Tickets
             .FirstOrDefaultAsync(x => x.TicketId == ticket!.TicketId);
-        if (ticketData == null)
+        if (ticketFound == null)
             return new RepositoryResponse
             {
                 IsSuccess = false,
@@ -227,15 +229,17 @@ internal class TicketRepository : ITicketRepository
         switch (number)
         {
             case 1:
-                ticketData.ImageUrl1 = ticket.ImageUrl1;
+                ticketFound.ImageUrl1 = ticket.ImageUrl1;
                 break;
             case 2:
-                ticketData.ImageUrl2 = ticket.ImageUrl2;
+                ticketFound.ImageUrl2 = ticket.ImageUrl2;
                 break;
             case 3:
-                ticketData.ImageUrl3 = ticket.ImageUrl3;
+                ticketFound.ImageUrl3 = ticket.ImageUrl3;
                 break;
         }
+
+        _context.Attach(ticketFound).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
         return new RepositoryResponse
@@ -259,7 +263,9 @@ internal class TicketRepository : ITicketRepository
 
         ticketFound.Status = "Solved";
 
-        await _context.SaveChangesAsync();
+        _context.Attach(ticketFound).State = EntityState.Modified;
+
+        await _context.SaveChangesAsync(token);
         return new RepositoryResponse
         {
             IsSuccess = true,
@@ -282,7 +288,10 @@ internal class TicketRepository : ITicketRepository
         ticketFound.EmployeeId = userId;
         ticketFound.Status = "Processing";
 
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(token);
+        
+        _context.Attach(ticketFound).State = EntityState.Modified;
+        
         return new RepositoryResponse
         {
             IsSuccess = true,
@@ -307,12 +316,12 @@ internal class TicketRepository : ITicketRepository
 
         _context.Attach(ticketFound).State = EntityState.Modified;
 
-        await _context.SaveChangesAsync();
-
+        await _context.SaveChangesAsync(token);
+        
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Phiếu thu đã huỷ"
+            Message = "Phiếu thu đã huỷ" 
         };
     }
 
@@ -329,8 +338,10 @@ internal class TicketRepository : ITicketRepository
             };
 
         ticketFound.Status = "Confirming";
+        
+        _context.Attach(ticketFound).State = EntityState.Modified;
 
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(token);
 
         return new RepositoryResponse
         {
@@ -352,8 +363,11 @@ internal class TicketRepository : ITicketRepository
             };
 
         ticketFound.Status = updateTicket.Status;
+        
+        _context.Attach(ticketFound).State = EntityState.Modified;
 
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(token);
+        
         return new RepositoryResponse
         {
             IsSuccess = true,
@@ -371,13 +385,17 @@ internal class TicketRepository : ITicketRepository
     {
         var ticketFound = await _context.Tickets
             .FirstOrDefaultAsync(x => x.TicketId == ticketId);
+        
         if (ticketFound == null)
+            
             return new RepositoryResponse
             {
                 IsSuccess = false,
                 Message = "Không có phiếu nào được tìm thấy"
             };
+        
         _context.Tickets.Remove(ticketFound);
+        
         await _context.SaveChangesAsync();
         return new RepositoryResponse
         {

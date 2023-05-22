@@ -98,6 +98,8 @@ public class BuildingRepository : IBuildingRepository
             }
 
             employeeCheck.SupervisorBuildingId = building.BuildingId;
+            
+            _context.Attach(employeeCheck).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
 
@@ -199,6 +201,8 @@ public class BuildingRepository : IBuildingRepository
         buildingData.BuildingImageUrl4 = building.BuildingImageUrl4 ?? buildingData.BuildingImageUrl4;
         buildingData.BuildingImageUrl5 = building.BuildingImageUrl5 ?? buildingData.BuildingImageUrl5;
         buildingData.BuildingImageUrl6 = building.BuildingImageUrl6 ?? buildingData.BuildingImageUrl6;
+        
+        _context.Attach(buildingData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
 
