@@ -560,7 +560,7 @@ public class TicketsController : ControllerBase
             ImageUrl2 = ticketUpdateRequest.ImageUrl2 ?? ticketEntity.ImageUrl2,
             ImageUrl3 = ticketUpdateRequest.ImageUrl3 ?? ticketEntity.ImageUrl3,
             TotalAmount = ticketUpdateRequest.Amount,
-            SolveDate = ticketUpdateRequest.SolveDate.ToDateTime()
+            SolveDate = ticketUpdateRequest.SolveDate?.ToDateTime() ?? ticketEntity.SolveDate,
         };
 
         var result = await _serviceWrapper.Tickets.UpdateTicket(updateTicket);
@@ -780,103 +780,62 @@ public class TicketsController : ControllerBase
     }
 
     // DELETE: api/Requests/5
-    [HttpPut("{id:int}/user")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Move ticket to cancelled status (For management and renter)")]
+    [HttpPut("{id:int}/user/cancelled")]
+    [Authorize(Roles = "Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Move ticket to cancelled status (For renter)")]
     public async Task<IActionResult> UpdateTicketToCancelledStatus(int id, CancellationToken token)
     {
-        var userRole = User.Identities
-            .FirstOrDefault()?.Claims
-            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
-            ?.Value ?? string.Empty;
+        var userId = int.Parse(User.Identity.Name);
 
-        /*
-        if (userRole is not ("Admin" or "Supervisor") || (User.Identity?.Name != id.ToString() && userRole != "Renter"))
+        var renterCheck = await _serviceWrapper.Renters.GetRenterById(userId, token);
+
+        if (renterCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Người dùng không tìm thấy",
+                data = ""
+            });
+
+        // pass renter Id and ticket Id to get, management can bypass restriction bound by token id
+        var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id, userId, token);
+
+        if (ticketEntity == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Phiếu yêu cầu không tìm thấy",
+                data = ""
+            });
+
+        if (ticketEntity.Status.ToLower() != "active".ToLower())
             return BadRequest(new
             {
                 status = "Bad Request",
-                message = "You are not authorized to access this resource",
+                message = "Bạn không thể xoá những phiếu đang xử lí",
                 data = ""
             });
-        */
 
-        var userId = int.Parse(User.Identity.Name);
+        var result = await _serviceWrapper.Tickets.MoveTicketToCancelled(id, token);
 
-        switch (userRole)
+        return result.IsSuccess switch
         {
-            case "Renter":
-                var renterCheck = await _serviceWrapper.Renters.GetRenterById(userId, token);
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
 
-                if (renterCheck == null)
-                    return NotFound(new
-                    {
-                        status = "Not Found",
-                        message = "Người dùng không tìm thấy",
-                        data = ""
-                    });
-
-                // pass renter Id and ticket Id to get, management can bypass restriction bound by token id
-                var ticketEntity = await _serviceWrapper.Tickets.GetTicketById(id, userId, token);
-
-                if (ticketEntity == null)
-                    return NotFound(new
-                    {
-                        status = "Not Found",
-                        message = "Phiếu yêu cầu không tìm thấy",
-                        data = ""
-                    });
-
-                if (ticketEntity.Status.ToLower() != "Active".ToLower())
-                    return BadRequest(new
-                    {
-                        status = "Bad Request",
-                        message = "Bạn không thể xoá những phiếu đang xử lí",
-                        data = ""
-                    });
-
-                var result = await _serviceWrapper.Tickets.MoveTicketToCancelled(id, false, token);
-                return result.IsSuccess switch
-                {
-                    true => Ok(new
-                    {
-                        status = "Success",
-                        message = result.Message,
-                        data = ""
-                    }),
-                    false => NotFound(new
-                    {
-                        status = "Not Found",
-                        message = result.Message,
-                        data = ""
-                    })
-                };
-
-            case "Supervisor":
-                var resultSuper = await _serviceWrapper.Tickets.MoveTicketToCancelled(id, true, token);
-                return resultSuper.IsSuccess switch
-                {
-                    true => Ok(new
-                    {
-                        status = "Success",
-                        message = resultSuper.Message,
-                        data = ""
-                    }),
-                    false => NotFound(new
-                    {
-                        status = "Not Found",
-                        message = resultSuper.Message,
-                        data = ""
-                    })
-                };
-        }
-
-        return BadRequest(new
-        {
-            status = "Bad Request",
-            message = "Tài khoản không hợp lệ",
-            data = ""
-        });
     }
+
 
     // GET: api/RequestTypes
     [HttpGet("type")]

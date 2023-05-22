@@ -89,10 +89,10 @@ public class TicketService : ITicketService
         return await _repositoryWrapper.Tickets.UpdateTicketStatus(updateTicket, token);
     }
 
-    public async Task<RepositoryResponse> MoveTicketToCancelled(int ticketId, bool isManagement,
+    public async Task<RepositoryResponse> MoveTicketToCancelled(int ticketId,
         CancellationToken cancellationToken)
     {
-        return await _repositoryWrapper.Tickets.MoveTicketToCancelled(ticketId, isManagement, cancellationToken);
+        return await _repositoryWrapper.Tickets.MoveTicketToCancelled(ticketId, cancellationToken);
     }
 
     public async Task<Ticket?> GetTicketById(int? ticketId, CancellationToken token)
