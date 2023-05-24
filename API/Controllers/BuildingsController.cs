@@ -103,7 +103,6 @@ public class BuildingsController : ControllerBase
 
     // GET: api/Buildings/5
     [SwaggerOperation(Summary = "[Authorize] Get building info (For management and renter)")]
-    [Authorize(Roles = "Admin")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetBuilding(int id, CancellationToken token)
     {

@@ -1,4 +1,5 @@
-﻿using Application.IRepository;
+﻿/*
+using Application.IRepository;
 using Domain.EntitiesForManagement;
 using Service.IService;
 
@@ -43,3 +44,5 @@ public class DeviceService : IDeviceService
         return await _wrapper.Devices.UpdateUserDeviceInfo(ud);
     }
 }
+*/
+

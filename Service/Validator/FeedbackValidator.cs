@@ -1,3 +1,4 @@
+/*
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.FeedBack;
 using Domain.EntityRequest.FeedbackType;
@@ -166,3 +167,5 @@ public class FeedbackValidator : BaseValidator, IFeedbackValidator
         return ValidatorResult;
     }
 }
+*/
+

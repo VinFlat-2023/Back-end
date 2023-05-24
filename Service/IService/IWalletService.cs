@@ -1,4 +1,5 @@
-﻿using Domain.EntitiesForManagement;
+﻿/*
+using Domain.EntitiesForManagement;
 
 namespace Service.IService;
 
@@ -12,3 +13,5 @@ public interface IWalletService
     public Task<Wallet?> UpdateWallet(Wallet? wallet);
     public Task<bool> DisableWallet(Guid walletId, int employeeId);
 }
+*/
+

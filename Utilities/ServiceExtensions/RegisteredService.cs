@@ -34,7 +34,7 @@ public static class RegisteredService
         services.AddScoped<IAreaValidator, AreaValidator>();
         services.AddScoped<IBuildingValidator, BuildingValidator>();
         services.AddScoped<IContractValidator, ContractValidator>();
-        services.AddScoped<IFeedbackValidator, FeedbackValidator>();
+        // services.AddScoped<IFeedbackValidator, FeedbackValidator>();
         services.AddScoped<IFlatValidator, FlatValidator>();
         services.AddScoped<IInvoiceValidator, InvoiceValidator>();
         services.AddScoped<IRenterValidator, RenterValidator>();

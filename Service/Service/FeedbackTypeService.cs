@@ -1,3 +1,5 @@
+/*
+ 
 using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
@@ -57,3 +59,5 @@ public class FeedbackTypeService : IFeedbackTypeService
         return await _repositoryWrapper.FeedbackTypes.DeleteFeedbackType(feedbackTypeId);
     }
 }
+*/
+

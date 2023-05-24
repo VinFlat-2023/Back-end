@@ -26,8 +26,6 @@ public class RoomTypeRepository : IRoomTypeRepository
                     x.RoomTypeName.ToLower().Contains(filters.RoomTypeName.ToLower()))
                 && (filters.TotalSlot == null || x.TotalSlot == filters.TotalSlot)
                 && (filters.Status == null || x.Status.ToLower() == filters.Status.ToLower())
-                && (filters.Description == null ||
-                    x.Description.ToLower().Contains(filters.Description.ToLower()))
                 && (filters.RoomTypeName == null ||
                     x.RoomTypeName.ToLower().Contains(filters.RoomTypeName.ToLower())))
             .AsNoTracking();
@@ -98,7 +96,7 @@ public class RoomTypeRepository : IRoomTypeRepository
     public async Task<RoomType?> GetRoomTypeDetail(int? roomTypeId, int? buildingId, CancellationToken token)
     {
         return await _context.RoomTypes
-            .FirstOrDefaultAsync(x => x.RoomTypeId == roomTypeId 
+            .FirstOrDefaultAsync(x => x.RoomTypeId == roomTypeId
                                       && x.BuildingId == buildingId, token);
     }
 
@@ -118,7 +116,7 @@ public class RoomTypeRepository : IRoomTypeRepository
         roomTypeData.RoomTypeName = roomType.RoomTypeName;
         roomTypeData.Status = roomType.Status;
         roomTypeData.TotalSlot = roomType.TotalSlot;
-        
+
         _context.Attach(roomTypeData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync(token);

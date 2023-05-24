@@ -1,3 +1,4 @@
+/*
 using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
@@ -57,3 +58,5 @@ public class FeedbackService : IFeedbackService
         return await _repositoryWrapper.Feedbacks.DeleteFeedback(feedbackId);
     }
 }
+*/
+

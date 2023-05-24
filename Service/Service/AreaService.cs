@@ -3,6 +3,7 @@ using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.Options;
 using Domain.QueryFilter;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Service.IHelper;
 using Service.IService;
@@ -12,6 +13,9 @@ namespace Service.Service;
 public class AreaService : IAreaService
 {
     private readonly string _cacheKey = "area";
+    private readonly string _cacheKeyAreaList = "area";
+    private readonly string _cacheKeyPageNumber = "page-number-area";
+    private readonly string _cacheKeyPageSize = "page-size-area";
     private readonly PaginationOption _paginationOptions;
     private readonly IRedisCacheHelper _redis;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -24,55 +28,69 @@ public class AreaService : IAreaService
         _paginationOptions = paginationOptions.Value;
     }
 
-
-    public async Task<(PagedList<Area>?, bool)> GetAreaList(AreaFilter filters, CancellationToken token)
+    public async Task<PagedList<Area>?> GetAreaList(AreaFilter filters, CancellationToken token)
     {
-        var cacheData = await _redis.GetCachePagedDataAsync<PagedList<Area>>(_cacheKey);
+        var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<Area>>(_cacheKey);
+        var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
+        var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
 
-        var page = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
-        var size = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+        var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
 
-        var test = filters.GetType().GetProperties()
+        var ifNullFilter = filters.GetType().GetProperties()
             .All(p => p.GetValue(filters) == null);
 
-        if (cacheData != null)
+        if (cacheDataList != null)
         {
-            Console.Write(cacheData);
-            if (test)
+            if (ifNullFilter)
             {
                 await _redis.RemoveCacheDataAsync(_cacheKey);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
             }
             else
             {
-                var matches2 = cacheData.TotalCount == size * page
-                               && cacheData.TotalPages == cacheData.TotalCount / size;
-
-                if (matches2)
-                    return (cacheData, true);
-
-                var matches = cacheData.Where(p =>
+                var matches = cacheDataList.Where(p =>
                     (filters.Name == null || p.Name == filters.Name)
                     && (filters.Status == null || p.Status == filters.Status)
-                    && cacheData.Count / size == page
-                    && cacheData.Count == size * page);
+                    && cacheDataPageNumber == pageNumber && cacheDataPageSize == pageSize);
 
                 if (matches.Any())
-                    return (cacheData, true);
+                    return cacheDataList;
 
                 await _redis.RemoveCacheDataAsync(_cacheKey);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
             }
         }
 
         var queryable = _repositoryWrapper.Areas.GetAreaList(filters);
 
         if (!queryable.Any())
-            return (null, false);
+            return null;
 
-        var pagedList = await PagedList<Area>.Create(queryable, page, size, token);
+        var pagedList = await PagedList<Area>.Create(queryable, pageNumber, pageSize, token);
 
         await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
+        await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
+        await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
 
-        return (pagedList, false);
+        return pagedList;
+    }
+
+
+    public async Task<List<Area>?> GetAreaList(CancellationToken token)
+    {
+        var cacheDataList = await _redis.GetCachePagedDataAsync<List<Area>>(_cacheKeyAreaList);
+
+        if (cacheDataList != null) return cacheDataList;
+
+        var listArea = await _repositoryWrapper.Areas.GetAreaList()
+            .ToListAsync(token);
+
+        await _redis.SetCacheDataAsync(_cacheKeyAreaList, listArea, 10, 5);
+
+        return listArea;
     }
 
     public async Task<Area?> GetAreaByIdWithCache(int? areaId, CancellationToken token)

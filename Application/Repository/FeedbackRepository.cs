@@ -1,4 +1,5 @@
-﻿using Application.IRepository;
+﻿/*
+using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
@@ -85,7 +86,7 @@ internal class FeedbackRepository : IFeedbackRepository
         feedbackData.Description = feedback?.Description ?? feedbackData.Description;
         feedbackData.Status = feedback?.Status ?? feedbackData.Status;
         feedbackData.FeedbackTypeId = feedback?.FeedbackTypeId ?? feedbackData.FeedbackTypeId;
-        
+
         _context.Attach(feedbackData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
@@ -120,3 +121,5 @@ internal class FeedbackRepository : IFeedbackRepository
         };
     }
 }
+*/
+

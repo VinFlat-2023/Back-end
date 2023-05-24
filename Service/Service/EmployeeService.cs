@@ -5,33 +5,78 @@ using Domain.Options;
 using Domain.QueryFilter;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Service.IHelper;
 using Service.IService;
 
 namespace Service.Service;
 
 public class EmployeeService : IEmployeeService
 {
+    private readonly string _cacheKey = "employee";
+    private readonly string _cacheKeyPageNumber = "page-number-employee";
+    private readonly string _cacheKeyPageSize = "page-size-employee";
     private readonly PaginationOption _paginationOptions;
+    private readonly IRedisCacheHelper _redis;
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public EmployeeService(IRepositoryWrapper repositoryWrapper, IOptions<PaginationOption> paginationOptions)
+    public EmployeeService(IRepositoryWrapper repositoryWrapper, IOptions<PaginationOption> paginationOptions,
+        IRedisCacheHelper redis)
     {
         _repositoryWrapper = repositoryWrapper;
+        _redis = redis;
         _paginationOptions = paginationOptions.Value;
     }
 
     public async Task<PagedList<Employee>?> GetEmployeeList(EmployeeFilter filters, CancellationToken token)
     {
+        var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<Employee>>(_cacheKey);
+        var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
+        var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
+
+        var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
+        var ifNullFilter = filters.GetType().GetProperties()
+            .All(p => p.GetValue(filters) == null);
+
+        if (cacheDataList != null)
+        {
+            if (ifNullFilter)
+            {
+                await _redis.RemoveCacheDataAsync(_cacheKey);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+            }
+            else
+            {
+                var matches = cacheDataList.Where(x =>
+                    (filters.Username == null ||
+                     x.Username.Contains(filters.Username))
+                    && (filters.Status == null || x.Status == filters.Status)
+                    && (filters.RoleName == null || x.Role.RoleName.ToLower().Contains(filters.RoleName.ToLower()))
+                    && (filters.FullName == null || x.FullName.ToLower().Contains(filters.FullName.ToLower()))
+                    && (filters.PhoneNumber == null || x.PhoneNumber.Contains(filters.PhoneNumber))
+                    && cacheDataPageNumber == pageNumber && cacheDataPageSize == pageSize);
+
+                if (matches.Any())
+                    return cacheDataList;
+
+                await _redis.RemoveCacheDataAsync(_cacheKey);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+            }
+        }
+
         var queryable = _repositoryWrapper.Employees.GetEmployeeList(filters);
 
         if (!queryable.Any())
             return null;
 
-        var page = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
-        var size = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+        var pagedList = await PagedList<Employee>.Create(queryable, pageNumber, pageSize, token);
 
-        var pagedList = await PagedList<Employee>
-            .Create(queryable, page, size, token);
+        await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
+        await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
+        await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
 
         return pagedList;
     }

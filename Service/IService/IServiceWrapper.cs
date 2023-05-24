@@ -6,9 +6,11 @@ public interface IServiceWrapper
     public IEmployeeService Employees { get; }
     public IAreaService Areas { get; }
     public IBuildingService Buildings { get; }
+
     public IContractService Contracts { get; }
-    public IFeedbackService Feedbacks { get; }
-    public IFeedbackTypeService FeedbackTypes { get; }
+
+    // public IFeedbackService Feedbacks { get; }
+    // public IFeedbackTypeService FeedbackTypes { get; }
     public IFlatService Flats { get; }
     public IFlatTypeService FlatTypes { get; }
     public IInvoiceService Invoices { get; }
@@ -20,9 +22,11 @@ public interface IServiceWrapper
     public IRoleService Roles { get; }
     public ITokenService Tokens { get; }
     public IServiceEntityService ServicesEntity { get; }
+
     public IServiceTypeService ServiceTypes { get; }
-    public IWalletService Wallets { get; }
-    public IDeviceService Devices { get; }
+
+    // public IWalletService Wallets { get; }
+    // public IDeviceService Devices { get; }
     public ICustomeMailService Mails { get; }
     public INotificationService Notifications { get; }
 

@@ -20,11 +20,11 @@ public class InvoiceDetailRepository : IInvoiceDetailRepository
     {
         return _context.InvoiceDetails
             .Include(x => x.Service)
-            .Where(x => x.ServiceId == x.Service.ServiceId)
+            // .Where(x => x.ServiceId == x.Service.ServiceId)
             //.Include(x => x.Ticket)
             //.Where(x => x.TicketId == x.Ticket.TicketId)
             .Include(x => x.Invoice)
-            .Where(x => x.InvoiceId == x.Invoice.InvoiceId)
+            // .Where(x => x.InvoiceId == x.Invoice.InvoiceId)
             // filter starts here
             .Where(x =>
                 (filters.ServiceId == null || x.ServiceId == filters.ServiceId)

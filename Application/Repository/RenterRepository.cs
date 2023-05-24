@@ -203,7 +203,7 @@ public class RenterRepository : IRenterRepository
         renterFound.Address = renter.Address;
         renterFound.Gender = renter.Gender;
         renterFound.BirthDate = renter.BirthDate;
-        
+
         _context.Attach(renterFound).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
@@ -228,7 +228,7 @@ public class RenterRepository : IRenterRepository
             };
 
         renterFound.ImageUrl = renter.ImageUrl;
-        
+
         _context.Attach(renterFound).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
@@ -258,7 +258,7 @@ public class RenterRepository : IRenterRepository
             };
 
         renterFound.Password = renter.Password;
-        
+
         _context.Attach(renterFound).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
@@ -288,7 +288,7 @@ public class RenterRepository : IRenterRepository
             };
 
         _ = renterFound.Status == !renterFound.Status;
-        
+
         _context.Attach(renterFound).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();

@@ -43,11 +43,11 @@ public interface IConditionCheckHelper
 
     public Task<RepositoryResponse> EmployeeEmailCheck(string objEmail, int? employeeId, CancellationToken token);
 
-
+    /*
     public Task<Feedback?> FeedbackCheck(int? id, CancellationToken token);
 
     public Task<FeedbackType?> FeedbackTypeCheck(int? id, CancellationToken token);
-
+    */
 
     public Task<ServiceEntity?> ServiceCheck(int? id, CancellationToken token);
 

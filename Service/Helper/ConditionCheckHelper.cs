@@ -74,6 +74,7 @@ public class ConditionCheckHelper : IConditionCheckHelper
         return await _serviceWrapper.FlatTypes.GetFlatTypeById(id, buildingId, token);
     }
 
+    /*
     public async Task<Feedback?> FeedbackCheck(int? id, CancellationToken token)
     {
         return await _serviceWrapper.Feedbacks.GetFeedbackById(id, token);
@@ -83,7 +84,7 @@ public class ConditionCheckHelper : IConditionCheckHelper
     {
         return await _serviceWrapper.FeedbackTypes.GetFeedbackTypeById(id, token);
     }
-
+    */
     public async Task<Building?> BuildingCheck(int? id, CancellationToken token)
     {
         return await _serviceWrapper.Buildings.GetBuildingById(id, token);

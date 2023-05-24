@@ -206,7 +206,7 @@ internal class TicketRepository : ITicketRepository
         ticketFound.TicketTypeId = ticket.TicketTypeId;
 
         _context.Attach(ticketFound).State = EntityState.Modified;
-        
+
         await _context.SaveChangesAsync();
         return new RepositoryResponse
         {
@@ -289,9 +289,9 @@ internal class TicketRepository : ITicketRepository
         ticketFound.Status = "Processing";
 
         await _context.SaveChangesAsync(token);
-        
+
         _context.Attach(ticketFound).State = EntityState.Modified;
-        
+
         return new RepositoryResponse
         {
             IsSuccess = true,
@@ -317,11 +317,11 @@ internal class TicketRepository : ITicketRepository
         _context.Attach(ticketFound).State = EntityState.Modified;
 
         await _context.SaveChangesAsync(token);
-        
+
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Phiếu thu đã huỷ" 
+            Message = "Phiếu thu đã huỷ"
         };
     }
 
@@ -338,7 +338,7 @@ internal class TicketRepository : ITicketRepository
             };
 
         ticketFound.Status = "Confirming";
-        
+
         _context.Attach(ticketFound).State = EntityState.Modified;
 
         await _context.SaveChangesAsync(token);
@@ -363,11 +363,11 @@ internal class TicketRepository : ITicketRepository
             };
 
         ticketFound.Status = updateTicket.Status;
-        
+
         _context.Attach(ticketFound).State = EntityState.Modified;
 
         await _context.SaveChangesAsync(token);
-        
+
         return new RepositoryResponse
         {
             IsSuccess = true,
@@ -385,17 +385,17 @@ internal class TicketRepository : ITicketRepository
     {
         var ticketFound = await _context.Tickets
             .FirstOrDefaultAsync(x => x.TicketId == ticketId);
-        
+
         if (ticketFound == null)
-            
+
             return new RepositoryResponse
             {
                 IsSuccess = false,
                 Message = "Không có phiếu nào được tìm thấy"
             };
-        
+
         _context.Tickets.Remove(ticketFound);
-        
+
         await _context.SaveChangesAsync();
         return new RepositoryResponse
         {

@@ -160,6 +160,8 @@ public class FlatsController : ControllerBase
 
         var entity = await _serviceWrapper.Flats.GetFlatById(id, buildingId, token);
 
+        var result = _mapper.Map<FlatDetailEntity>(entity);
+
         if (entity == null)
             return NotFound(new
             {
@@ -172,7 +174,7 @@ public class FlatsController : ControllerBase
             {
                 status = "Success",
                 message = "Căn hộ đã được tìm thấy",
-                data = _mapper.Map<FlatDetailEntity>(entity)
+                data = result
             });
     }
 

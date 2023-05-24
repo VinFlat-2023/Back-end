@@ -216,7 +216,7 @@ public class InvoiceRepository : IInvoiceRepository
         invoiceData.Detail = invoice.Detail;
         invoiceData.DueDate = invoice.DueDate;
         invoiceData.PaymentTime = invoice.PaymentTime;
-        
+
         _context.Attach(invoiceData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
@@ -278,11 +278,11 @@ public class InvoiceRepository : IInvoiceRepository
 
                 _context.InvoiceDetails.Add(serviceEntity);
             }
-            
+
             await _context.SaveChangesAsync();
-            
+
             await transaction.CommitAsync();
-            
+
             return new RepositoryResponse
             {
                 IsSuccess = true,

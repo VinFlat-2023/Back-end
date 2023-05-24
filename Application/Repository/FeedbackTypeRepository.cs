@@ -1,4 +1,5 @@
-﻿using Application.IRepository;
+﻿/*
+using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
@@ -68,7 +69,7 @@ internal class FeedbackTypeRepository : IFeedbackTypeRepository
             };
 
         feedbackTypeData.Name = feedbackType?.Name ?? feedbackTypeData.Name;
-        
+
         _context.Attach(feedbackTypeData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
@@ -103,3 +104,5 @@ internal class FeedbackTypeRepository : IFeedbackTypeRepository
         };
     }
 }
+*/
+

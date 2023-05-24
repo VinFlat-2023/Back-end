@@ -1,7 +1,5 @@
 using Domain.ControllerEntities;
-using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Password;
-using Domain.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
 using Swashbuckle.AspNetCore.Annotations;
@@ -39,6 +37,8 @@ public class AuthController : ControllerBase
                 message = "Tên đăng nhập, số điện thoại hoặc mật khẩu không đúng",
                 data = ""
             });
+
+        /*
         if (StringUtils.IsNotEmpty(loginModel.DeviceToken))
         {
             var userDeviceFound = await _serviceWrapper.Devices.GetUdByDeviceToken(loginModel.DeviceToken);
@@ -57,6 +57,7 @@ public class AuthController : ControllerBase
                 await _serviceWrapper.Devices.UpdateUserDeviceInfo(userDeviceFound);
             }
         }
+        */
 
         var jwtToken = _serviceWrapper.Tokens.CreateTokenForEmployee(employee);
         return Ok(new
@@ -92,6 +93,7 @@ public class AuthController : ControllerBase
                 data = ""
             });
 
+        /*
         if (StringUtils.IsNotEmpty(loginModel.DeviceToken))
         {
             var userDeviceFound = await _serviceWrapper.Devices.GetUdByDeviceToken(loginModel.DeviceToken);
@@ -110,6 +112,7 @@ public class AuthController : ControllerBase
                 await _serviceWrapper.Devices.UpdateUserDeviceInfo(userDeviceFound);
             }
         }
+        */
 
         var jwtToken = _serviceWrapper.Tokens.CreateTokenForRenter(renter);
         return Ok(new

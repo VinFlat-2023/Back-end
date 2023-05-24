@@ -72,6 +72,7 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
+    /*
     public IFeedbackRepository Feedbacks
     {
         get
@@ -90,6 +91,7 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
+    */
     public IFlatRepository Flats
     {
         get
@@ -171,6 +173,7 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
+    /*
     public IWalletRepository Wallets
     {
         get
@@ -179,7 +182,9 @@ public class RepositoryWrapper : IRepositoryWrapper
             return _wallets;
         }
     }
+    */
 
+    /*
     public IDeviceRepository Devices
     {
         get
@@ -188,6 +193,7 @@ public class RepositoryWrapper : IRepositoryWrapper
             return _devices;
         }
     }
+    */
 
     public IInvoiceTypeRepository InvoiceTypes
     {
@@ -242,9 +248,11 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IEmployeeRepository _employees;
     private IAreaRepository _areas;
     private IBuildingRepository _buildings;
+
     private IContractRepository _contracts;
-    private IFeedbackRepository _feedbacks;
-    private IFeedbackTypeRepository _feedbackTypes;
+
+    // private IFeedbackRepository _feedbacks;
+    // private IFeedbackTypeRepository _feedbackTypes;
     private IFlatRepository _flats;
     private IFlatTypeRepository _flatTypes;
     private IInvoiceRepository _invoices;
@@ -253,9 +261,11 @@ public class RepositoryWrapper : IRepositoryWrapper
     private ITicketTypeRepository _ticketTypes;
     private IRoleRepository _roles;
     private IServiceEntityRepository _servicesEntity;
+
     private IServiceTypeRepository _serviceTypes;
-    private IWalletRepository _wallets;
-    private IDeviceRepository _devices;
+
+    // private IWalletRepository _wallets;
+    // private IDeviceRepository _devices;
     private INotificationRepository _notification;
     private IRoomRepository _room;
     private IRoomTypeRepository _roomType;

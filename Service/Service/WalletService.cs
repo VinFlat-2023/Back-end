@@ -1,4 +1,5 @@
-﻿using Application.IRepository;
+﻿/*
+using Application.IRepository;
 using Domain.EntitiesForManagement;
 using Service.IService;
 
@@ -48,3 +49,5 @@ public class WalletService : IWalletService
         return await _repositoryWrapper.Wallets.UpdateWallet(wallet);
     }
 }
+*/
+

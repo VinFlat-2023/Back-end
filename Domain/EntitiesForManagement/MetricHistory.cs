@@ -21,4 +21,6 @@ public class MetricHistory
     public DateTime EndDate { get; set; }
 
     public int FlatId { get; set; }
+
+    public virtual Flat Flat { get; set; }
 }

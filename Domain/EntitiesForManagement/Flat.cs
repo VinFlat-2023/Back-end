@@ -9,7 +9,6 @@ public class Flat
 {
     public Flat()
     {
-        FeedBacks = new HashSet<Feedback>();
         Contracts = new HashSet<Contract>();
         Rooms = new HashSet<Room>();
     }
@@ -45,8 +44,5 @@ public class Flat
     public int BuildingId { get; set; }
     public virtual Building Building { get; set; }
     public virtual ICollection<Room> Rooms { get; set; }
-    public virtual ICollection<Feedback> FeedBacks { get; set; }
-
     public virtual ICollection<Contract> Contracts { get; set; }
-    //public virtual ICollection<UtilitiesRoomFlat> UtilitiesRooms { get; set; }
 }

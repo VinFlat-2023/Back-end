@@ -5,33 +5,81 @@ using Domain.Options;
 using Domain.QueryFilter;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Service.IHelper;
 using Service.IService;
 
 namespace Service.Service;
 
 public class RenterService : IRenterService
 {
+    private readonly string _cacheKey = "renter";
+    private readonly string _cacheKeyPageNumber = "page-number-renter";
+    private readonly string _cacheKeyPageSize = "page-size-renter";
     private readonly PaginationOption _paginationOptions;
+    private readonly IRedisCacheHelper _redis;
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public RenterService(IRepositoryWrapper repositoryWrapper, IOptions<PaginationOption> paginationOptions)
+    public RenterService(IRepositoryWrapper repositoryWrapper, IOptions<PaginationOption> paginationOptions,
+        IRedisCacheHelper redis)
     {
         _repositoryWrapper = repositoryWrapper;
+        _redis = redis;
         _paginationOptions = paginationOptions.Value;
     }
 
     public async Task<PagedList<Renter>?> GetRenterList(RenterFilter filters, int buildingId, CancellationToken token)
     {
+        var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<Renter>>(_cacheKey);
+        var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
+        var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
+
+        var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
+        var ifNullFilter = filters.GetType().GetProperties()
+            .All(p => p.GetValue(filters) == null);
+
+        if (cacheDataList != null)
+        {
+            if (ifNullFilter)
+            {
+                await _redis.RemoveCacheDataAsync(_cacheKey);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+            }
+            else
+            {
+                var matches =
+                    cacheDataList.Where(y =>
+                        (filters.Username == null || y.Username.ToLower().Contains(filters.Username.ToLower()))
+                        && (filters.Status == null || y.Status == filters.Status)
+                        && (filters.Address == null || y.Address.ToLower().Contains(filters.Address.ToLower()))
+                        && (filters.PhoneNumber == null || y.PhoneNumber.Contains(filters.PhoneNumber))
+                        && (filters.Email == null || y.Email.ToLower().Contains(filters.Email.ToLower()))
+                        && (filters.Gender == null || y.Gender == filters.Gender)
+                        && (filters.FullName == null || y.FullName.ToLower().Contains(filters.FullName.ToLower()))
+                        && cacheDataPageNumber == pageNumber && cacheDataPageSize == pageSize);
+
+                if (matches.Any())
+                    return cacheDataList;
+
+                await _redis.RemoveCacheDataAsync(_cacheKey);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+            }
+        }
+
         var queryable = _repositoryWrapper.Renters.GetRenterList(filters, buildingId);
 
         if (!queryable.Any())
             return null;
 
-        var page = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
-        var size = filters.PageSize ?? _paginationOptions.DefaultPageSize;
-
         var pagedList = await PagedList<Renter>
-            .Create(queryable, page, size, token);
+            .Create(queryable, pageNumber, pageSize, token);
+
+        await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
+        await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
+        await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
 
         return pagedList;
     }
@@ -50,7 +98,7 @@ public class RenterService : IRenterService
     public async Task<Renter?> GetRenterById(int? renterId, CancellationToken token)
     {
         return await _repositoryWrapper.Renters.GetRenterDetail(renterId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(token);
     }
 
     public async Task<Renter?> GetRenterByUsername(string username)

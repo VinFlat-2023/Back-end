@@ -45,7 +45,7 @@ public class InvoiceTypeRepository : IInvoiceTypeRepository
 
         invoiceTypeData.InvoiceTypeName = invoiceType.InvoiceTypeName;
         invoiceTypeData.Status = invoiceType.Status;
-        
+
         _context.Attach(invoiceTypeData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();

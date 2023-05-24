@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Distributed;
 using Service.IHelper;
 
@@ -32,14 +33,23 @@ public class RedisCacheHelper : IRedisCacheHelper
     {
         var cacheData = await _redis.GetStringAsync(cacheKey);
 
+
         // Check if the cache data response contains data
-        return !string.IsNullOrEmpty(cacheData)
-            ?
-            // It did, let's deserialize it and return it
-            JsonSerializer.Deserialize<TPageList>(cacheData)
-            :
-            // We did not get any data return T
-            default;
+        try
+        {
+            if (!string.IsNullOrEmpty(cacheData))
+                // It did, let's deserialize it and return it
+                return JsonSerializer.Deserialize<TPageList>(cacheData);
+
+            // failed to deserialize, remove cache to avoid future errors
+        }
+        catch
+        {
+            await _redis.RemoveAsync(cacheKey);
+        }
+
+        // We did not get any data return T
+        return default;
     }
 
     public async Task RemoveCacheDataAsync(string cacheKey)
@@ -57,8 +67,14 @@ public class RedisCacheHelper : IRedisCacheHelper
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(absExpRelToNow),
             SlidingExpiration = TimeSpan.FromMinutes(slidingExpiration)
         };
+        JsonSerializerOptions options = new()
+        {
+            ReferenceHandler = ReferenceHandler.IgnoreCycles,
+            WriteIndented = true
+        };
+
 
         // Set the cache
-        await _redis.SetStringAsync(cacheKey, JsonSerializer.Serialize(cacheValue), cacheExpiry);
+        await _redis.SetStringAsync(cacheKey, JsonSerializer.Serialize(cacheValue, options), cacheExpiry);
     }
 }

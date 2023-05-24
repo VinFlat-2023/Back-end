@@ -6,7 +6,7 @@ namespace Service.IService;
 
 public interface IAreaService
 {
-    public Task<(PagedList<Area>?, bool)> GetAreaList(AreaFilter filters, CancellationToken token);
+    public Task<PagedList<Area>?> GetAreaList(AreaFilter filters, CancellationToken token);
     public Task<Area?> GetAreaByIdWithCache(int? areaId, CancellationToken token);
     public Task<Area?> GetAreaById(int? areaId, CancellationToken token);
     public Task<RepositoryResponse> GetAreaByName(string? areaName, CancellationToken token);
@@ -16,4 +16,5 @@ public interface IAreaService
     public Task<RepositoryResponse> DeleteArea(int areaId);
     public Task<RepositoryResponse> UpdateAreaImage(Area updateArea, int number);
     public Task<RepositoryResponse> ToggleAreaStatus(int areaId);
+    public Task<List<Area>?> GetAreaList(CancellationToken filters);
 }

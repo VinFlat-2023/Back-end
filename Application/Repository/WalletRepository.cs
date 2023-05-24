@@ -1,4 +1,5 @@
-﻿using Application.IRepository;
+﻿/*
+using Application.IRepository;
 using Domain.EntitiesForManagement;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -72,3 +73,5 @@ public class WalletRepository : IWalletRepository
         return wallet;
     }
 }
+*/
+

@@ -1,3 +1,4 @@
+/*
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.QueryFilter;
@@ -12,3 +13,5 @@ public interface IFeedbackTypeService
     public Task<RepositoryResponse> UpdateFeedbackType(FeedbackType feedbackType);
     public Task<RepositoryResponse> DeleteFeedbackType(int feedbackTypeId);
 }
+*/
+

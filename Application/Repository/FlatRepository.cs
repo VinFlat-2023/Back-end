@@ -27,6 +27,7 @@ public class FlatRepository : IFlatRepository
             .ThenInclude(x => x.Area)
             //.Where(x => x.BuildingId == x.Building.BuildingId)
             .Include(x => x.FlatType)
+            .Include(x => x.Rooms)
             //.Include(x => x.UtilitiesFlats)
             //.ThenInclude(x => x.Utility)
             //.Where(x => x.FlatTypeId == x.FlatType.FlatTypeId)
@@ -52,6 +53,7 @@ public class FlatRepository : IFlatRepository
             .ThenInclude(x => x.Area)
             //.Where(x => x.BuildingId == x.Building.BuildingId)
             .Include(x => x.FlatType)
+            .Include(x => x.Rooms)
             .Where(x => x.BuildingId == buildingId && x.Status.ToLower() == "active")
             .AsNoTracking();
     }
@@ -63,6 +65,8 @@ public class FlatRepository : IFlatRepository
             .ThenInclude(x => x.Area)
             //.Where(x => x.BuildingId == x.Building.BuildingId)
             .Include(x => x.FlatType)
+            .Include(x => x.Rooms)
+            .Where(x => x.Rooms.Any(x => x.BuildingId == buildingId))
             .Where(x => x.BuildingId == buildingId)
             //.Include(x => x.UtilitiesFlats)
             //.ThenInclude(x => x.Utility)
@@ -92,6 +96,7 @@ public class FlatRepository : IFlatRepository
             .Include(x => x.Building)
             .ThenInclude(x => x.Area)
             .Include(x => x.FlatType)
+            .Include(x => x.Rooms)
             //.Include(x => x.UtilitiesFlats)
             //.ThenInclude(x => x.Utility)
             .Where(x => x.FlatId == flatId && x.BuildingId == buildingId);
@@ -239,7 +244,7 @@ public class FlatRepository : IFlatRepository
         flatData.FlatImageUrl4 = flat.FlatImageUrl4 ?? flatData.FlatImageUrl4;
         flatData.FlatImageUrl5 = flat.FlatImageUrl5 ?? flatData.FlatImageUrl5;
         flatData.FlatImageUrl6 = flat.FlatImageUrl6 ?? flatData.FlatImageUrl6;
-        
+
         _context.Attach(flatData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();

@@ -76,7 +76,7 @@ public class FlatTypeRepository : IFlatTypeRepository
         flatTypeData.FlatTypeName = flatType.FlatTypeName;
         flatTypeData.RoomCapacity = flatType.RoomCapacity;
         flatTypeData.Status = flatType.Status;
-        
+
         _context.Attach(flatTypeData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
@@ -91,7 +91,7 @@ public class FlatTypeRepository : IFlatTypeRepository
     {
         var flatTypeData = await _context.FlatTypes
             .FirstOrDefaultAsync(x => x.FlatTypeId == flatTypeId);
-        
+
         if (flatTypeData == null)
             return new RepositoryResponse
             {

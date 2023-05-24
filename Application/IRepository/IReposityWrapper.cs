@@ -6,9 +6,11 @@ public interface IRepositoryWrapper
     public IEmployeeRepository Employees { get; }
     public IAreaRepository Areas { get; }
     public IBuildingRepository Buildings { get; }
+
     public IContractRepository Contracts { get; }
-    public IFeedbackTypeRepository FeedbackTypes { get; }
-    public IFeedbackRepository Feedbacks { get; }
+
+    // public IFeedbackTypeRepository FeedbackTypes { get; }
+    // public IFeedbackRepository Feedbacks { get; }
     public IFlatRepository Flats { get; }
     public IFlatTypeRepository FlatTypes { get; }
     public IInvoiceRepository Invoices { get; }
@@ -19,9 +21,11 @@ public interface IRepositoryWrapper
     public IInvoiceTypeRepository InvoiceTypes { get; }
     public IInvoiceDetailRepository InvoiceDetails { get; }
     public IServiceEntityRepository ServiceEntities { get; }
+
     public IServiceTypeRepository ServiceTypes { get; }
-    public IWalletRepository Wallets { get; }
-    public IDeviceRepository Devices { get; }
+
+    // public IWalletRepository Wallets { get; }
+    // public IDeviceRepository Devices { get; }
     public INotificationRepository Notifications { get; }
     public IRoomTypeRepository RoomsTypes { get; }
     public IRoomRepository Rooms { get; }

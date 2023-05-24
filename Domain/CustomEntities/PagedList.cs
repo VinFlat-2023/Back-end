@@ -33,7 +33,7 @@ public class PagedList<T> : List<T>
     public bool HasNextPage => CurrentPage < TotalPages;
     public int? PrevPageNumber => HasPreviousPage ? CurrentPage - 1 : null;
     public int? NextPageNumber => HasNextPage ? CurrentPage + 1 : null;
-    
+
     public static async Task<PagedList<T>> Create(IQueryable<T> source, int pageNumber, int pageSize,
         CancellationToken token)
     {
@@ -59,5 +59,4 @@ public class PagedList<T> : List<T>
         var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
         return new PagedList<T>(items, count, pageNumber, pageSize);
     }
-    
 }

@@ -1,3 +1,4 @@
+/*
 using Domain.EntityRequest.FeedBack;
 using Domain.EntityRequest.FeedbackType;
 using Service.Validator;
@@ -16,3 +17,5 @@ public interface IFeedbackValidator
     Task<ValidatorResult> ValidateParams(FeedbackTypeUpdateRequest? feedbackType, int? feedbackTypeId,
         CancellationToken token);
 }
+*/
+

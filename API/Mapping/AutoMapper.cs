@@ -130,6 +130,15 @@ public class AutoMapper : Profile
 
         CreateMap<Room, RoomDetailEntity>()
             .ReverseMap();
+
+        CreateMap<RoomDetailEntity, Room>()
+            .ReverseMap();
+
+        CreateMap<Room, RoomBasicDetailEntity>()
+            .ReverseMap();
+
+        CreateMap<RoomBasicDetailEntity, Room>()
+            .ReverseMap();
     }
 
 

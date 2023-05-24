@@ -10,7 +10,6 @@ using Domain.ViewModel.RenterEntity;
 using Domain.ViewModel.ServiceEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using Service.IService;
 using Service.IValidator;
 using Swashbuckle.AspNetCore.Annotations;
@@ -185,7 +184,7 @@ public class RentersController : ControllerBase
             : Ok(new
             {
                 status = "Success",
-                message = "Renter found",
+                message = "Đã tìm thấy",
                 data = renter
             });
     }
@@ -217,7 +216,7 @@ public class RentersController : ControllerBase
             : Ok(new
             {
                 status = "Success",
-                message = "Renter found",
+                message = "Đã tìm thấy",
                 data = renter
             });
     }
@@ -228,16 +227,6 @@ public class RentersController : ControllerBase
     public async Task<IActionResult> GetRental(CancellationToken token)
     {
         var userId = int.Parse(User.Identity?.Name);
-
-        var userEntity = await _serviceWrapper.Renters.GetRenterById(userId, token);
-
-        if (userEntity == null)
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Người dùng không tồn tại hoặc không phải là khách thuê",
-                data = ""
-            });
 
         var rentalCheck = await _serviceWrapper.Renters.GetRenterById(userId, token);
 
@@ -331,7 +320,7 @@ public class RentersController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "Rental found",
+            message = "Đã tìm thấy hợp đồng hiện tại của người thuê",
             data = rentalDetailEntity
         });
     }
@@ -343,23 +332,13 @@ public class RentersController : ControllerBase
     {
         var userId = int.Parse(User.Identity?.Name);
 
-        var userEntity = await _serviceWrapper.Renters.GetRenterById(userId, token);
-
-        if (userEntity == null)
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "This user does not exist in our system",
-                data = ""
-            });
-
         var rentalCheck = await _serviceWrapper.Renters.GetRenterById(userId, token);
 
         if (rentalCheck == null)
             return NotFound(new
             {
                 status = "Not Found",
-                message = "This renter does not exist in our system",
+                message = "Khách thuê không tồn tại trong hệ thống",
                 data = ""
             });
 
@@ -369,7 +348,7 @@ public class RentersController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "This renter does not have any active contract",
+                message = "Khách thuê này hiện đang không có hợp đồng thuê",
                 data = ""
             });
 
@@ -378,7 +357,7 @@ public class RentersController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "This building does not exist in our system",
+                message = "Toà nhà không tồn tại trong hệ thống",
                 data = ""
             });
 
@@ -388,7 +367,7 @@ public class RentersController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "This flat does not exist in our system",
+                message = "Căn hộ này không tòn tại trong hệ thống",
                 data = ""
             });
 
@@ -406,7 +385,7 @@ public class RentersController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "Rental found",
+            message = "Đã tìm thấy",
             data = basicRental
         });
     }
@@ -633,10 +612,12 @@ public class RentersController : ControllerBase
                 data = ""
             });
 
+        /*
         var listUserDevice = await _serviceWrapper.Devices.GetDeviceByUserName(renter.Username);
 
         if (!listUserDevice.IsNullOrEmpty())
             await _serviceWrapper.Devices.DeleteUserDevice(listUserDevice);
+        */
 
         var result = await _serviceWrapper.Renters.DeleteRenter(id);
 

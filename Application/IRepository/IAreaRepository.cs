@@ -15,4 +15,5 @@ public interface IAreaRepository
     public Task<RepositoryResponse> UpdateAreaImage(Area updateArea, int number);
     public Task<RepositoryResponse> GetAreaByName(string? areaName, CancellationToken token);
     public Task<RepositoryResponse> GetAreaByName(string? areaName, int? areaId, CancellationToken cancellationToken1);
+    public IQueryable<Area> GetAreaList();
 }

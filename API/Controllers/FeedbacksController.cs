@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿/*
+using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.FeedBack;
 using Domain.EntityRequest.FeedbackType;
@@ -358,3 +359,5 @@ public class FeedbacksController : ControllerBase
         };
     }
 }
+*/
+

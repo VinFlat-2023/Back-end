@@ -2,11 +2,6 @@ namespace Domain.EntitiesForManagement;
 
 public class Room
 {
-    public Room()
-    {
-        UtilitiesRoom = new HashSet<UtilitiesRoom>();
-    }
-
     public int RoomId { get; set; }
     public string RoomName { get; set; }
 
@@ -29,5 +24,4 @@ public class Room
     public string? RoomImageUrl4 { get; set; }
     public string? RoomImageUrl5 { get; set; }
     public string? RoomImageUrl6 { get; set; }
-    public virtual ICollection<UtilitiesRoom> UtilitiesRoom { get; set; }
 }

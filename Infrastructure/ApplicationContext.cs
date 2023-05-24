@@ -27,16 +27,20 @@ public class ApplicationContext : DbContext
     public DbSet<TicketType> TicketTypes { get; set; } = null!;
     public DbSet<Role> Roles { get; set; } = null!;
     public DbSet<ServiceEntity> Services { get; set; } = null!;
+
     public DbSet<ServiceType> ServiceTypes { get; set; } = null!;
-    public DbSet<Wallet> Wallets { get; set; } = null!;
-    public DbSet<WalletType> WalletTypes { get; set; } = null!;
-    public DbSet<UserDevice> UserDevices { get; set; } = null!;
+
+    // public DbSet<Wallet> Wallets { get; set; } = null!;
+    // public DbSet<WalletType> WalletTypes { get; set; } = null!;
+    // public DbSet<UserDevice> UserDevices { get; set; } = null!;
     public DbSet<Notification> Notifications { get; set; } = null!;
     public DbSet<NotificationType> NotificationTypes { get; set; } = null!;
     public DbSet<RoomType> RoomTypes { get; set; } = null!;
+
     public DbSet<Room> Rooms { get; set; } = null!;
-    public DbSet<Utility> Utilities { get; set; } = null!;
-    public DbSet<UtilitiesRoom> UtilitiesRoom { get; set; } = null!;
+
+    // public DbSet<Utility> Utilities { get; set; } = null!;
+    // public DbSet<UtilitiesRoom> UtilitiesRoom { get; set; } = null!;
     public DbSet<MetricHistory> MetricHistories { get; set; } = null!;
 
     // public virtual DbSet<RoomType> RoomTypes { get; set; } = null!;
@@ -734,19 +738,16 @@ public class ApplicationContext : DbContext
         modelBuilder.Entity<Role>().HasData(
             new Role
             {
-                Status = true,
                 RoleId = 1,
                 RoleName = "Admin"
             },
             new Role
             {
-                Status = true,
                 RoleId = 2,
                 RoleName = "Supervisor"
             },
             new Role
             {
-                Status = true,
                 RoleId = 3,
                 RoleName = "Technician"
             }
@@ -1922,8 +1923,8 @@ public class ApplicationContext : DbContext
                 TotalSlot = 4,
                 //FlatId = 1,
                 BuildingId = 3,
-                Status = "Ok",
-                Description = "ABCDEF"
+                Status = "Ok"
+                //Description = "ABCDEF"
             },
             new RoomType
             {
@@ -1932,8 +1933,8 @@ public class ApplicationContext : DbContext
                 TotalSlot = 5,
                 //FlatId = 2,
                 BuildingId = 3,
-                Status = "Active",
-                Description = "ABCDEF"
+                Status = "Active"
+                //Description = "ABCDEF"
             },
             new RoomType
             {
@@ -1942,8 +1943,8 @@ public class ApplicationContext : DbContext
                 TotalSlot = 5,
                 //FlatId = 3,
                 BuildingId = 3,
-                Status = "Active",
-                Description = "ABCDEF"
+                Status = "Active"
+                //Description = "ABCDEF"
             },
             new RoomType
             {
@@ -1951,8 +1952,8 @@ public class ApplicationContext : DbContext
                 RoomTypeName = "Room 4 for 6 slots",
                 //FlatId = 3,
                 BuildingId = 3,
-                Status = "Maintaince",
-                Description = "ABCDEF"
+                Status = "Maintaince"
+                //Description = "ABCDEF"
             }
         );
 

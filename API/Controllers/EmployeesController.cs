@@ -7,7 +7,6 @@ using Domain.Utils;
 using Domain.ViewModel.EmployeeEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using Service.IService;
 using Service.IValidator;
 using Swashbuckle.AspNetCore.Annotations;
@@ -142,13 +141,14 @@ public class EmployeesController : ControllerBase
             return BadRequest(new
             {
                 status = "Bad Request",
-                message = "Employee failed to create",
+                message = "Tạo nhân viên thất bại",
                 data = ""
             });
 
         if (!StringUtils.IsNotEmpty(employee.DeviceToken))
             return CreatedAtAction("GetEmployee", new { id = result.EmployeeId }, result);
 
+        /*
         var userDeviceFound = await _serviceWrapper.Devices.GetUdByDeviceToken(employee.DeviceToken);
 
         if (userDeviceFound.UserName == result.Username)
@@ -160,13 +160,14 @@ public class EmployeesController : ControllerBase
             });
 
         userDeviceFound.UserName = result.Username;
-
+    
         await _serviceWrapper.Devices.UpdateUserDeviceInfo(userDeviceFound);
+        */
 
         return Ok(new
         {
             status = "Success",
-            message = "Device token generated successfully",
+            message = "Nhân viên được tạo thành công",
             data = ""
         });
     }
@@ -360,11 +361,13 @@ public class EmployeesController : ControllerBase
                 data = ""
             });
 
+        /*
         var listUserDevice =
             await _serviceWrapper.Devices.GetDeviceByUserName(employee.Username);
 
         if (!listUserDevice.IsNullOrEmpty())
             await _serviceWrapper.Devices.DeleteUserDevice(listUserDevice);
+        */
 
         var result = await _serviceWrapper.Employees.DeleteEmployee(id);
 

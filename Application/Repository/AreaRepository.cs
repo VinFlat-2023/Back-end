@@ -115,6 +115,11 @@ public class AreaRepository : IAreaRepository
         };
     }
 
+    public IQueryable<Area> GetAreaList()
+    {
+        return _context.Areas.AsNoTracking();
+    }
+
     /// <summary>
     ///     AddExpenseHistory new area
     /// </summary>
@@ -191,7 +196,7 @@ public class AreaRepository : IAreaRepository
             };
 
         _ = areaFound.Status == !areaFound.Status;
-        
+
         _context.Attach(areaFound).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
@@ -223,7 +228,7 @@ public class AreaRepository : IAreaRepository
 
         _context.Areas.Remove(areaFound);
         await _context.SaveChangesAsync();
-        
+
         return new RepositoryResponse
         {
             Message = "Khu vực đã được xoá khỏi hệ thống",
@@ -258,7 +263,7 @@ public class AreaRepository : IAreaRepository
                 areaData.AreaImageUrl4 = updateArea.AreaImageUrl4;
                 break;
         }
-        
+
         _context.Attach(areaData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();

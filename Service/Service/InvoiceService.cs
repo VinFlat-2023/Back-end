@@ -5,18 +5,25 @@ using Domain.EntityRequest.Invoice;
 using Domain.Options;
 using Domain.QueryFilter;
 using Microsoft.Extensions.Options;
+using Service.IHelper;
 using Service.IService;
 
 namespace Service.Service;
 
 public class InvoiceService : IInvoiceService
 {
+    private readonly string _cacheKey = "invoice";
+    private readonly string _cacheKeyPageNumber = "page-number-invoice";
+    private readonly string _cacheKeyPageSize = "page-size-invoice";
     private readonly PaginationOption _paginationOptions;
+    private readonly IRedisCacheHelper _redis;
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public InvoiceService(IRepositoryWrapper repositoryWrapper, IOptions<PaginationOption> paginationOptions)
+    public InvoiceService(IRepositoryWrapper repositoryWrapper, IOptions<PaginationOption> paginationOptions,
+        IRedisCacheHelper redis)
     {
         _repositoryWrapper = repositoryWrapper;
+        _redis = redis;
         _paginationOptions = paginationOptions.Value;
     }
 
@@ -39,16 +46,65 @@ public class InvoiceService : IInvoiceService
     public async Task<PagedList<Invoice>?> GetInvoiceList(InvoiceFilter filters, int id, bool isManagement,
         CancellationToken token)
     {
+        var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<Invoice>>(_cacheKey);
+        var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
+        var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
+
+        var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
+        var ifNullFilter = filters.GetType().GetProperties()
+            .All(p => p.GetValue(filters) == null);
+
+        if (cacheDataList != null)
+        {
+            if (ifNullFilter)
+            {
+                await _redis.RemoveCacheDataAsync(_cacheKey);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+            }
+            else
+            {
+                var matches =
+                    cacheDataList.Where(x =>
+                        (filters.Name == null || x.Name.ToLower().Contains(filters.Name.ToLower()))
+                        && (filters.Status == null || x.Status == filters.Status)
+                        && (filters.Amount == null || x.TotalAmount == filters.Amount)
+                        && (filters.Detail == null || x.Detail == filters.Detail)
+                        && (filters.RenterUsername == null ||
+                            x.Renter.Username.ToLower().Contains(filters.RenterUsername.ToLower()))
+                        && (filters.RenterFullname == null ||
+                            x.Renter.FullName.ToLower().Contains(filters.RenterFullname.ToLower()))
+                        && (filters.RenterPhoneNumber == null ||
+                            x.Renter.PhoneNumber.ToLower().Contains(filters.RenterPhoneNumber.ToLower()))
+                        && (filters.RenterEmail == null ||
+                            x.Renter.Email.ToLower().Contains(filters.RenterEmail.ToLower()))
+                        && (filters.EmployeeName == null ||
+                            x.Employee.FullName.ToLower().Contains(filters.EmployeeName.ToLower()))
+                        && (filters.InvoiceTypeId == null || x.InvoiceTypeId == filters.InvoiceTypeId)
+                        && cacheDataPageNumber == pageNumber && cacheDataPageSize == pageSize);
+
+                if (matches.Any())
+                    return cacheDataList;
+
+                await _redis.RemoveCacheDataAsync(_cacheKey);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+            }
+        }
+
         var queryable = _repositoryWrapper.Invoices.GetInvoiceList(filters, id, isManagement);
 
         if (!queryable.Any())
             return null;
 
-        var page = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
-        var size = filters.PageSize ?? _paginationOptions.DefaultPageSize;
-
         var pagedList = await PagedList<Invoice>
-            .Create(queryable, page, size, token);
+            .Create(queryable, pageNumber, pageSize, token);
+
+        await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
+        await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
+        await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
 
         return pagedList;
     }

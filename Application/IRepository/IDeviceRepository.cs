@@ -1,4 +1,5 @@
-﻿using Domain.EntitiesForManagement;
+﻿/*
+ using Domain.EntitiesForManagement;
 
 namespace Application.IRepository;
 
@@ -11,3 +12,5 @@ public interface IDeviceRepository
     public Task<UserDevice> GetUDByDeviceToken(string? deviceToken);
     public Task<List<UserDevice>> GetListUserDeviceByToken(string deviceToken);
 }
+*/
+

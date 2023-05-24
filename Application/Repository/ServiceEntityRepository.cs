@@ -102,9 +102,9 @@ internal class ServiceEntityRepository : IServiceEntityRepository
         serviceData.Description = service.Description;
         serviceData.Status = service.Status;
         serviceData.Price = service.Price;
-        
+
         _context.Attach(serviceData).State = EntityState.Modified;
-        
+
         await _context.SaveChangesAsync();
         return new RepositoryResponse
         {

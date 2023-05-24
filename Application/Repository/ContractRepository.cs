@@ -225,7 +225,7 @@ public class ContractRepository : IContractRepository
         contractData.ContractImageUrl2 = contract.ContractImageUrl2;
         contractData.ContractImageUrl3 = contract.ContractImageUrl3;
         contractData.ContractImageUrl4 = contract.ContractImageUrl4;
-        
+
         _context.Attach(contractData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
@@ -349,7 +349,7 @@ public class ContractRepository : IContractRepository
 
             // if slot = 0, change room status to full
             if (availableSlots == 0) roomCheck.Status = "Full";
-            
+
             _context.Attach(roomCheck).State = EntityState.Modified;
 
             await _context.SaveChangesAsync(token);

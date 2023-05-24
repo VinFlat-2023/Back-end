@@ -171,7 +171,7 @@ public class EmployeeRepository : IEmployeeRepository
         employeeData.PhoneNumber = employee.PhoneNumber;
         employeeData.Address = employee.Address;
         employeeData.FullName = employee.FullName;
-        
+
         _context.Attach(employeeData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
@@ -196,7 +196,7 @@ public class EmployeeRepository : IEmployeeRepository
             };
 
         employeeData.SupervisorBuildingId = employee.SupervisorBuildingId;
-        
+
         _context.Attach(employeeData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
@@ -221,7 +221,7 @@ public class EmployeeRepository : IEmployeeRepository
             };
 
         employeeData.Password = employee.Password;
-        
+
         _context.Attach(employeeData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
@@ -251,7 +251,7 @@ public class EmployeeRepository : IEmployeeRepository
             };
 
         employeeFound.Status = !employeeFound.Status;
-        
+
         _context.Attach(employeeFound).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
@@ -326,7 +326,7 @@ public class EmployeeRepository : IEmployeeRepository
             };
 
         employeeData.EmployeeImageUrl = employee.EmployeeImageUrl;
-        
+
         _context.Attach(employeeData).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
