@@ -162,7 +162,7 @@ public class ContractRepository : IContractRepository
             .ThenInclude(x => x.Employee);
     }
 
-    public IQueryable<Contract?> GetContractByRenterId(int renterId)
+    public IQueryable<Contract?> GetContractByRenterId(int? renterId)
     {
         return _context.Contracts
             .Include(x => x.Renter)

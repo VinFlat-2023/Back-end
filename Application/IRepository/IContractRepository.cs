@@ -11,7 +11,7 @@ public interface IContractRepository
     public IQueryable<Contract> GetContractHistoryList(ContractHistoryFilter filters);
     public IQueryable<Contract?> GetContractById(int? contractId);
     public IQueryable<Contract?> GetContractById(int? contractId, int buildingId);
-    public IQueryable<Contract?> GetContractByRenterId(int renterId);
+    public IQueryable<Contract?> GetContractByRenterId(int? renterId);
     public IQueryable<Contract?> GetContractHistoryDetail(int contractId);
     public Task<Contract?> AddContract(Contract contract);
     public Task<RepositoryResponse> UpdateContract(Contract contract);

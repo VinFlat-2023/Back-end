@@ -184,7 +184,7 @@ public class ContractService : IContractService
             .FirstOrDefaultAsync(x => x != null && x.ContractStatus == "Active", token);
     }
 
-    public async Task<Contract?> GetLatestContractByUserId(int renterId, CancellationToken token)
+    public async Task<Contract?> GetLatestContractByUserId(int? renterId, CancellationToken token)
     {
         return await _repositoryWrapper.Contracts.GetContractByRenterId(renterId)
             .OrderBy(x => x.CreatedDate)

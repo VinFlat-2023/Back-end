@@ -14,4 +14,6 @@ public interface IFlatService
     public Task<RepositoryResponse> DeleteFlat(int flatId);
     public Task<RepositoryResponse> GetRoomInAFlat(int flatId, CancellationToken token);
     public Task<List<Flat>?> GetFlatList(int buildingId, CancellationToken token);
+    public Task<MetricNumber?> GetTotalWaterAndElectricity(int buildingId, CancellationToken token);
+    public Task<MetricNumber?> GetTotalWaterAndElectricityByFlat(int flatId, int buildingId, CancellationToken token);
 }

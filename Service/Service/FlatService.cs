@@ -174,4 +174,15 @@ public class FlatService : IFlatService
         return await _repositoryWrapper.Flats.GetFlatList(buildingId)
             .ToListAsync(token);
     }
+
+    public async Task<MetricNumber?> GetTotalWaterAndElectricity(int buildingId, CancellationToken token)
+    {
+        return await _repositoryWrapper.Flats.GetTotalWaterAndElectricity(buildingId, token);
+    }
+
+    public async Task<MetricNumber?> GetTotalWaterAndElectricityByFlat(int flatId, int buildingId,
+        CancellationToken token)
+    {
+        return await _repositoryWrapper.Flats.GetTotalWaterAndElectricityByFlat(flatId, buildingId, token);
+    }
 }

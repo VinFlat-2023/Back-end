@@ -11,6 +11,7 @@ public class Flat
     {
         Contracts = new HashSet<Contract>();
         Rooms = new HashSet<Room>();
+        MetricHistories = new HashSet<MetricHistory>();
     }
 
     [Key]
@@ -21,8 +22,8 @@ public class Flat
     public string Description { get; set; }
     public string Status { get; set; }
     public int? WaterMeterBefore { get; set; }
-    public int? ElectricityMeterBefore { get; set; }
     public int? WaterMeterAfter { get; set; }
+    public int? ElectricityMeterBefore { get; set; }
     public int? ElectricityMeterAfter { get; set; }
     public int MaxRoom { get; set; }
     public int AvailableRoom { get; set; }
@@ -43,6 +44,7 @@ public class Flat
     public virtual FlatType FlatType { get; set; }
     public int BuildingId { get; set; }
     public virtual Building Building { get; set; }
+    public virtual ICollection<MetricHistory> MetricHistories { get; set; }
     public virtual ICollection<Room> Rooms { get; set; }
     public virtual ICollection<Contract> Contracts { get; set; }
 }

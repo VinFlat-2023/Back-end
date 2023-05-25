@@ -106,18 +106,7 @@ public class EmployeeService : IEmployeeService
 
     public async Task<RepositoryResponse> UpdateEmployee(Employee employee)
     {
-        try
-        {
-            return await _repositoryWrapper.Employees.UpdateEmployee(employee);
-        }
-        catch
-        {
-            return new RepositoryResponse
-            {
-                IsSuccess = false,
-                Message = "Employee failed to update"
-            };
-        }
+        return await _repositoryWrapper.Employees.UpdateEmployee(employee);
     }
 
     public async Task<RepositoryResponse> UpdateEmployeeManagement(Employee employee)

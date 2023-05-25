@@ -84,7 +84,7 @@ public class TicketTypeService : ITicketTypeService
     public async Task<TicketType?> GetTicketTypeById(int? ticketTypeId, CancellationToken token)
     {
         return await _repositoryWrapper.TicketTypes.GetTicketTypeDetail(ticketTypeId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(token);
     }
 
     public async Task<TicketType?> AddTicketType(TicketType ticketType)

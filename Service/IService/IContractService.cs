@@ -16,7 +16,7 @@ public interface IContractService
     public Task<Contract?> GetContractById(int? contractId, CancellationToken token);
     public Task<Contract?> GetContractById(int? contractId, int buildingId, CancellationToken token);
     public Task<Contract?> GetContractByRenterIdWithActiveStatus(int contractId, CancellationToken token);
-    public Task<Contract?> GetLatestContractByUserId(int renterId, CancellationToken token);
+    public Task<Contract?> GetLatestContractByUserId(int? renterId, CancellationToken token);
     public Task<Contract?> AddContract(Contract contract);
     public Task<RepositoryResponse> UpdateContract(Contract contract);
     public Task<RepositoryResponse> DeleteContract(int contractId);

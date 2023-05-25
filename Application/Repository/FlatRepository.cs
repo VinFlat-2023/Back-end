@@ -58,6 +58,54 @@ public class FlatRepository : IFlatRepository
             .AsNoTracking();
     }
 
+    public async Task<MetricNumber?> GetTotalWaterAndElectricity(int buildingId, CancellationToken token)
+    {
+        var dataWater = await _context.Flats
+            .Where(x => x.BuildingId == buildingId && x.Status.ToLower() != "inactive")
+            .Select(x => x.WaterMeterAfter)
+            .SumAsync(x => x, token);
+
+        var dataElectricity = await _context.Flats
+            .Where(x => x.BuildingId == buildingId && x.Status.ToLower() != "inactive")
+            .Select(x => x.ElectricityMeterAfter)
+            .SumAsync(x => x, token);
+
+        if (dataWater == null || dataElectricity == null)
+            return null;
+
+        return new MetricNumber
+        {
+            WaterNumber = dataWater,
+            ElectricityNumber = dataElectricity,
+            LastFetch = DateTime.Now.ToString("dd/MM/yyyy")
+        };
+    }
+
+    public async Task<MetricNumber?> GetTotalWaterAndElectricityByFlat(int flatId, int buildingId,
+        CancellationToken token)
+    {
+        var dataWater = await _context.Flats
+            .Where(x => x.FlatId == flatId && x.BuildingId == buildingId && x.Status.ToLower() != "inactive")
+            .Select(x => x.WaterMeterAfter)
+            .SumAsync(x => x, token);
+
+        var dataElectricity = await _context.Flats
+            .Where(x => x.FlatId == flatId && x.BuildingId == buildingId && x.Status.ToLower() == "inactive")
+            .Select(x => x.ElectricityMeterAfter)
+            .SumAsync(x => x, token);
+
+        if (dataWater == null || dataElectricity == null)
+            return null;
+
+        return new MetricNumber
+        {
+            WaterNumber = dataWater,
+            ElectricityNumber = dataElectricity,
+            LastFetch = DateTime.Now.ToString("dd/MM/yyyy")
+        };
+    }
+
+
     public IQueryable<Flat> GetFlatList(FlatFilter filters, int buildingId)
     {
         return _context.Flats
@@ -235,8 +283,8 @@ public class FlatRepository : IFlatRepository
         flatData.Description = flat.Description;
         flatData.Status = flat.Status;
         flatData.WaterMeterBefore = flat.WaterMeterBefore ?? flatData.WaterMeterBefore;
-        flatData.ElectricityMeterBefore = flat.ElectricityMeterBefore ?? flatData.ElectricityMeterBefore;
         flatData.WaterMeterAfter = flat.WaterMeterAfter ?? flatData.WaterMeterAfter;
+        flatData.ElectricityMeterBefore = flat.ElectricityMeterBefore ?? flatData.ElectricityMeterBefore;
         flatData.ElectricityMeterAfter = flat.ElectricityMeterAfter ?? flatData.ElectricityMeterAfter;
         flatData.FlatImageUrl1 = flat.FlatImageUrl1 ?? flatData.FlatImageUrl1;
         flatData.FlatImageUrl2 = flat.FlatImageUrl2 ?? flatData.FlatImageUrl2;

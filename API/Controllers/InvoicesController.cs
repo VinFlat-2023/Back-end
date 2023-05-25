@@ -187,6 +187,7 @@ public class InvoicesController : ControllerBase
                 message = "Invoice not found for this user",
                 data = ""
             });
+
         return Ok(new
         {
             status = "Success",
@@ -436,7 +437,6 @@ public class InvoicesController : ControllerBase
                 });
         }
 
-
         /*
         var validation = await _validator.ValidateParams(invoice, token);
         if (!validation.IsValid)
@@ -465,6 +465,18 @@ public class InvoicesController : ControllerBase
         {
             case 1:
                 addNewInvoice.RenterId = invoice.RenterId;
+
+                var contractLatest = await _serviceWrapper.Contracts.GetLatestContractByUserId(invoice.RenterId, token);
+
+                if (contractLatest == null)
+                    return BadRequest(new
+                    {
+                        status = "Bad Request",
+                        message = "Không tìm thấy hợp đồng",
+                        data = ""
+                    });
+
+                addNewInvoice.ContractId = contractLatest.ContractId;
                 break;
             case 2:
                 if (addNewInvoice.RenterId != null)

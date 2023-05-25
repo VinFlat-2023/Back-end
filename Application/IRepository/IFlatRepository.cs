@@ -14,4 +14,6 @@ public interface IFlatRepository
     public Task<RepositoryResponse> UpdateFlat(Flat flat);
     public Task<RepositoryResponse> DeleteFlat(int flatId);
     public IQueryable<Flat> GetFlatList(int buildingId);
+    public Task<MetricNumber?> GetTotalWaterAndElectricity(int buildingId, CancellationToken token);
+    public Task<MetricNumber?> GetTotalWaterAndElectricityByFlat(int flatId, int buildingId, CancellationToken token);
 }

@@ -287,10 +287,10 @@ internal class TicketRepository : ITicketRepository
 
         ticketFound.EmployeeId = userId;
         ticketFound.Status = "Processing";
+        
+        _context.Attach(ticketFound).State = EntityState.Modified;
 
         await _context.SaveChangesAsync(token);
-
-        _context.Attach(ticketFound).State = EntityState.Modified;
 
         return new RepositoryResponse
         {
@@ -312,7 +312,7 @@ internal class TicketRepository : ITicketRepository
             };
 
         ticketFound.CancelledReason = "Khách hàng huỷ phiếu";
-        ticketFound.Status = "Processing";
+        ticketFound.Status = "Cancelled";
 
         _context.Attach(ticketFound).State = EntityState.Modified;
 
