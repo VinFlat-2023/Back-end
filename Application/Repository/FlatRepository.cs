@@ -1,6 +1,7 @@
 using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
+using Domain.EntityRequest.Metric;
 using Domain.QueryFilter;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -70,9 +71,6 @@ public class FlatRepository : IFlatRepository
             .Select(x => x.ElectricityMeterAfter)
             .SumAsync(x => x, token);
 
-        if (dataWater == null || dataElectricity == null)
-            return null;
-
         return new MetricNumber
         {
             WaterNumber = dataWater,
@@ -94,9 +92,6 @@ public class FlatRepository : IFlatRepository
             .Select(x => x.ElectricityMeterAfter)
             .SumAsync(x => x, token);
 
-        if (dataWater == null || dataElectricity == null)
-            return null;
-
         return new MetricNumber
         {
             WaterNumber = dataWater,
@@ -105,6 +100,34 @@ public class FlatRepository : IFlatRepository
         };
     }
 
+    public async Task<RepositoryResponse> SetTotalWaterAndElectricityByFlat(UpdateMetricRequest request, int flatId,
+        int buildingId,
+        CancellationToken token)
+    {
+        var flatCheck = await _context.Flats
+            .FirstOrDefaultAsync(x => x.FlatId == flatId && x.BuildingId == buildingId, token);
+
+        if (flatCheck == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Căn hộ không tồn tại"
+            };
+
+        // TODO 
+        flatCheck.WaterMeterBefore = flatCheck.WaterMeterAfter;
+        flatCheck.WaterMeterAfter = request.WaterNumber;
+
+        flatCheck.ElectricityMeterBefore = flatCheck.WaterMeterAfter;
+        flatCheck.ElectricityMeterAfter = request.ElectricityNumber;
+
+
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Cập nhật điện nước thành công"
+        };
+    }
 
     public IQueryable<Flat> GetFlatList(FlatFilter filters, int buildingId)
     {
@@ -114,7 +137,7 @@ public class FlatRepository : IFlatRepository
             //.Where(x => x.BuildingId == x.Building.BuildingId)
             .Include(x => x.FlatType)
             .Include(x => x.Rooms)
-            .Where(x => x.Rooms.Any(x => x.BuildingId == buildingId))
+            .Where(x => x.Rooms.Any(room => room.BuildingId == buildingId))
             .Where(x => x.BuildingId == buildingId)
             //.Include(x => x.UtilitiesFlats)
             //.ThenInclude(x => x.Utility)
@@ -130,6 +153,14 @@ public class FlatRepository : IFlatRepository
                 && (filters.BuildingName == null ||
                     f.Building.BuildingName.ToLower().Contains(filters.BuildingName.ToLower())))
             .AsNoTracking();
+    }
+
+    public IQueryable<int> GetTotalFlatBasedOnFilter(MetricFlatFilter filters, int buildingId)
+    {
+        return _context.Flats
+            .Where(x => x.BuildingId == buildingId)
+            .Where(f => filters.Status == null || f.Status == filters.Status)
+            .Select(x => x.FlatId);
     }
 
     /// <summary>
@@ -282,10 +313,10 @@ public class FlatRepository : IFlatRepository
         flatData.Name = flat.Name;
         flatData.Description = flat.Description;
         flatData.Status = flat.Status;
-        flatData.WaterMeterBefore = flat.WaterMeterBefore ?? flatData.WaterMeterBefore;
-        flatData.WaterMeterAfter = flat.WaterMeterAfter ?? flatData.WaterMeterAfter;
-        flatData.ElectricityMeterBefore = flat.ElectricityMeterBefore ?? flatData.ElectricityMeterBefore;
-        flatData.ElectricityMeterAfter = flat.ElectricityMeterAfter ?? flatData.ElectricityMeterAfter;
+        flatData.WaterMeterBefore = flat.WaterMeterBefore;
+        flatData.WaterMeterAfter = flat.WaterMeterAfter;
+        flatData.ElectricityMeterBefore = flat.ElectricityMeterBefore;
+        flatData.ElectricityMeterAfter = flat.ElectricityMeterAfter;
         flatData.FlatImageUrl1 = flat.FlatImageUrl1 ?? flatData.FlatImageUrl1;
         flatData.FlatImageUrl2 = flat.FlatImageUrl2 ?? flatData.FlatImageUrl2;
         flatData.FlatImageUrl3 = flat.FlatImageUrl3 ?? flatData.FlatImageUrl3;

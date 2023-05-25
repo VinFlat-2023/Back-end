@@ -128,6 +128,9 @@ public class AutoMapper : Profile
         CreateMap<RoomFilterRequest, RoomFilter>()
             .ReverseMap();
 
+        CreateMap<MetricRoomFilterRequest, MetricRoomFilter>()
+            .ReverseMap();
+
         CreateMap<Room, RoomDetailEntity>()
             .ReverseMap();
 
@@ -339,11 +342,13 @@ public class AutoMapper : Profile
     {
         CreateMap<FlatCreateRequest, Flat>()
             .ReverseMap();
-
         CreateMap<FlatUpdateRequest, Flat>()
             .ReverseMap();
 
         CreateMap<FlatFilterRequest, FlatFilter>()
+            .ReverseMap();
+
+        CreateMap<MetricFlatFilterRequest, MetricFlatFilter>()
             .ReverseMap();
 
         CreateMap<Flat, FlatDetailEntity>()
@@ -441,7 +446,14 @@ public class AutoMapper : Profile
             .ForMember(c => c.EndDate,
                 option => option.MapFrom(w => w.EndDate));
         CreateMap<Contract, ContractUpdateRequest>();
+
         CreateMap<ContractFilterRequest, ContractFilter>()
+            .ReverseMap();
+
+        CreateMap<MetricContractFilterRequest, MetricContractFilter>()
+            .ReverseMap();
+        
+        CreateMap<MetricRenterContractFilterRequest, MetricRenterContractFilterRequest>()
             .ReverseMap();
 
         CreateMap<Contract, ContractBasicDetailEntity>()
@@ -480,7 +492,11 @@ public class AutoMapper : Profile
             .ReverseMap();
         CreateMap<RenterUpdateRequest, Renter>().ReverseMap()
             .ReverseMap();
+        
         CreateMap<RenterFilterRequest, RenterFilter>()
+            .ReverseMap();
+        
+        CreateMap<MetricRenterFilterRequest, MetricRenterFilter>()
             .ReverseMap();
 
         CreateMap<Renter, RenterProfileEntity>()

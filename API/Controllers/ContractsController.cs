@@ -321,6 +321,7 @@ public class ContractsController : ControllerBase
         var contract = _mapper.Map<ContactDetailRenterEntity>(contractEntity);
 
         contract.ImageUrls = imageUrls;
+
         contract.PriceForRent = contractEntity.PriceForRent.DecimalToString();
         contract.PriceForService = contractEntity.PriceForService.DecimalToString();
         contract.PriceForWater = contractEntity.PriceForWater.DecimalToString();

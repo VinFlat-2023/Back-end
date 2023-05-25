@@ -72,14 +72,14 @@ public class BuildingsController : ControllerBase
                 {
                     status = "Bad Request",
                     message = "Quản lí này hiện đang không quản lí toà nhà nào",
-                    data = -1
+                    data = ""
                 });
             case -2:
                 return BadRequest(new
                 {
                     status = "Bad Request",
                     message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
-                    data = -2
+                    data = ""
                 });
         }
 
@@ -96,7 +96,7 @@ public class BuildingsController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "Building found",
+            message = "Tải thành công thông tin kí túc xá",
             data = _mapper.Map<BuildingDetailEntity>(entity)
         });
     }

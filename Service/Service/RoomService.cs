@@ -115,4 +115,15 @@ public class RoomService : IRoomService
         return await _repositoryWrapper.Rooms.GetRoomList(flatId, buildingId)
             .ToListAsync(token);
     }
+
+    public async Task<int?> GetTotalRoomInBuilding(MetricRoomFilter filters, int buildingId,
+        CancellationToken token)
+    {
+        var queryable = _repositoryWrapper.Rooms.GetTotalRoomInBuilding(filters, buildingId);
+
+        if (!queryable.Any())
+            return null;
+
+        return await queryable.SumAsync(token);
+    }
 }

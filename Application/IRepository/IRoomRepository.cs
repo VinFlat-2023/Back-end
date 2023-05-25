@@ -17,4 +17,5 @@ public interface IRoomRepository
         CancellationToken cancellationToken);
 
     public IQueryable<Room> GetRoomList(int flatId, int buildingId);
+    public IQueryable<int> GetTotalRoomInBuilding(MetricRoomFilter filter, int buildingId);
 }

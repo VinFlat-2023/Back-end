@@ -189,7 +189,7 @@ internal class TicketRepository : ITicketRepository
     /// </summary>
     /// <param name="ticket"></param>
     /// <returns></returns>
-    public async Task<RepositoryResponse> UpdateTicket(Ticket ticket)
+    public async Task<RepositoryResponse> UpdateTicket(Ticket ticket, int number)
     {
         var ticketFound = await _context.Tickets
             .FirstOrDefaultAsync(x => x.TicketId == ticket.TicketId);
@@ -202,8 +202,19 @@ internal class TicketRepository : ITicketRepository
 
         ticketFound.TicketName = ticket.TicketName;
         ticketFound.Description = ticket.Description;
-        ticketFound.SolveDate = ticket.SolveDate ?? ticketFound.SolveDate;
         ticketFound.TicketTypeId = ticket.TicketTypeId;
+        switch (number)
+        {
+            case 1:
+                ticketFound.ImageUrl1 = ticket.ImageUrl1;
+                break;
+            case 2:
+                ticketFound.ImageUrl2 = ticket.ImageUrl2;
+                break;
+            case 3:
+                ticketFound.ImageUrl3 = ticket.ImageUrl3;
+                break;
+        }
 
         _context.Attach(ticketFound).State = EntityState.Modified;
 
@@ -211,7 +222,7 @@ internal class TicketRepository : ITicketRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Ticket updated successfully"
+            Message = "Phiếu đã được cập nhật thành công"
         };
     }
 
@@ -245,7 +256,7 @@ internal class TicketRepository : ITicketRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Ticket updated successfully"
+            Message = "Hình ảnh phiếu đã được cập nhật thành công"
         };
     }
 
@@ -287,7 +298,7 @@ internal class TicketRepository : ITicketRepository
 
         ticketFound.EmployeeId = userId;
         ticketFound.Status = "Processing";
-        
+
         _context.Attach(ticketFound).State = EntityState.Modified;
 
         await _context.SaveChangesAsync(token);

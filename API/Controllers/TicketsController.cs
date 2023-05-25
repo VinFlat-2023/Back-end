@@ -5,7 +5,6 @@ using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Ticket;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
-using Domain.Utils;
 using Domain.ViewModel.TicketEntity;
 using Domain.ViewModel.TicketTypeEntity;
 using Microsoft.AspNetCore.Authorization;
@@ -525,9 +524,9 @@ public class TicketsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
     [Authorize(Roles = "Renter")]
-    [SwaggerOperation(Summary = "[Authorize] Update ticket by id (For management)",
+    [SwaggerOperation(Summary = "[Authorize] Update ticket by id (For renter)",
         Description = "date format d/M/YYYY")]
-    public async Task<IActionResult> PutTicket(int id, [FromBody] TicketUpdateRequest ticketUpdateRequest,
+    public async Task<IActionResult> PutTicket(int id, [FromForm] TicketUpdateRequest ticketUpdateRequest,
         CancellationToken token)
     {
         var validation = await _validator.ValidateParams(ticketUpdateRequest, id, token);
@@ -555,15 +554,53 @@ public class TicketsController : ControllerBase
             TicketId = id,
             TicketName = ticketUpdateRequest.TicketName,
             Description = ticketUpdateRequest.Description,
-            TicketTypeId = ticketUpdateRequest.TicketTypeId ?? ticketEntity.TicketTypeId,
-            ImageUrl1 = ticketUpdateRequest.ImageUrl1 ?? ticketEntity.ImageUrl1,
-            ImageUrl2 = ticketUpdateRequest.ImageUrl2 ?? ticketEntity.ImageUrl2,
-            ImageUrl3 = ticketUpdateRequest.ImageUrl3 ?? ticketEntity.ImageUrl3,
-            TotalAmount = ticketUpdateRequest.Amount,
-            SolveDate = ticketUpdateRequest.SolveDate?.ToDateTime() ?? ticketEntity.SolveDate
+            TicketTypeId = ticketUpdateRequest.TicketTypeId ?? ticketEntity.TicketTypeId
         };
 
-        var result = await _serviceWrapper.Tickets.UpdateTicket(updateTicket);
+        var counter = 0;
+
+        if (ticketUpdateRequest.ImageUploadRequest != null)
+            foreach (var image in ticketUpdateRequest.ImageUploadRequest)
+            {
+                counter++;
+                var imageExtension = ImageExtension.ImageExtensionChecker(image.FileName);
+
+                switch (counter)
+                {
+                    case 1:
+                        var fileNameCheck1 = updateTicket.ImageUrl1?.Split('/').Last();
+
+                        updateTicket.ImageUrl1 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck1,
+                            "Ticket", imageExtension, false))?.Blob.Uri;
+
+                        break;
+
+                    case 2:
+                        var fileNameCheck2 = updateTicket.ImageUrl2?.Split('/').Last();
+
+                        updateTicket.ImageUrl2 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck2,
+                            "Ticket", imageExtension, false))?.Blob.Uri;
+
+                        break;
+
+                    case 3:
+                        var fileNameCheck3 = updateTicket.ImageUrl3?.Split('/').Last();
+
+                        updateTicket.ImageUrl3 = (await _serviceWrapper.AzureStorage.UpdateAsync(image, fileNameCheck3,
+                            "Ticket", imageExtension, false))?.Blob.Uri;
+
+                        break;
+                    case >= 4:
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = "Bạn chỉ có thể upload tối đa 3 ảnh",
+                            data = ""
+                        });
+                }
+            }
+
+        var result = await _serviceWrapper.Tickets.UpdateTicket(updateTicket, counter);
         return result.IsSuccess switch
         {
             true => Ok(new

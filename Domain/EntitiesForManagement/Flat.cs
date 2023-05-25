@@ -21,10 +21,10 @@ public class Flat
     public string Name { get; set; }
     public string Description { get; set; }
     public string Status { get; set; }
-    public int? WaterMeterBefore { get; set; }
-    public int? WaterMeterAfter { get; set; }
-    public int? ElectricityMeterBefore { get; set; }
-    public int? ElectricityMeterAfter { get; set; }
+    public decimal WaterMeterBefore { get; set; }
+    public decimal WaterMeterAfter { get; set; }
+    public decimal ElectricityMeterBefore { get; set; }
+    public decimal ElectricityMeterAfter { get; set; }
     public int MaxRoom { get; set; }
     public int AvailableRoom { get; set; }
 

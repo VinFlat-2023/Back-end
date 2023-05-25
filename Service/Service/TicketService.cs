@@ -176,9 +176,9 @@ public class TicketService : ITicketService
         return await _repositoryWrapper.Tickets.CreateTicket(ticket);
     }
 
-    public async Task<RepositoryResponse> UpdateTicket(Ticket ticket)
+    public async Task<RepositoryResponse> UpdateTicket(Ticket ticket, int number)
     {
-        return await _repositoryWrapper.Tickets.UpdateTicket(ticket);
+        return await _repositoryWrapper.Tickets.UpdateTicket(ticket, number);
     }
 
     public async Task<RepositoryResponse> DeleteTicket(int ticketId)

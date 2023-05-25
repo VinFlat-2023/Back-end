@@ -12,7 +12,7 @@ public interface ITicketRepository
     public IQueryable<Ticket> GetTicketDetail(int? ticketId);
     public IQueryable<Ticket> GetTicketDetail(int? ticketId, int? renterId);
     public Task<Ticket> CreateTicket(Ticket ticket);
-    public Task<RepositoryResponse> UpdateTicket(Ticket ticket);
+    public Task<RepositoryResponse> UpdateTicket(Ticket ticket, int number);
     public Task<RepositoryResponse> DeleteTicket(int ticketId);
     public Task<RepositoryResponse> UpdateTicketImage(Ticket ticket, int number);
     public Task<RepositoryResponse> ApproveTicket(int id, CancellationToken token);

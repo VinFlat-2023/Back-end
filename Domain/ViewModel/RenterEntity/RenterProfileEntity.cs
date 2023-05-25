@@ -8,6 +8,7 @@ public class RenterProfileEntity
     public string? Username { get; set; }
     public string? Email { get; set; }
     public string? PhoneNumber { get; set; }
+    public string? Phone => PhoneNumber;
     public string? FullName { get; set; }
     public DateTime? BirthDate { get; set; }
     public bool Status { get; set; }

@@ -134,6 +134,9 @@ public class EmployeesController : ControllerBase
             RoleId = employee.RoleId
         };
 
+        if (employee.RoleId == 3)
+            newEmployee.TechnicianBuildingId = employee.BuildingId;
+
         // Create User Device token
         var result = await _serviceWrapper.Employees.AddEmployee(newEmployee);
 
@@ -195,9 +198,15 @@ public class EmployeesController : ControllerBase
             EmployeeId = id,
             Address = employee.Address,
             Email = employee.Email,
-            PhoneNumber = employee.PhoneNumber,
             FullName = employee.Fullname
         };
+
+        if (employee.Phone != null)
+            updateEmployee.PhoneNumber = employee.Phone;
+
+        if (employee.PhoneNumber != null)
+            updateEmployee.PhoneNumber = employee.PhoneNumber;
+
 
         var result = await _serviceWrapper.Employees.UpdateEmployee(updateEmployee);
 
@@ -240,9 +249,14 @@ public class EmployeesController : ControllerBase
             EmployeeId = employeeId,
             Address = employee.Address,
             Email = employee.Email,
-            PhoneNumber = employee.PhoneNumber,
             FullName = employee.Fullname
         };
+
+        if (employee.PhoneNumber != null)
+            updateEmployee.PhoneNumber = employee.PhoneNumber;
+
+        if (employee.Phone != null)
+            updateEmployee.PhoneNumber = employee.Phone;
 
         var result = await _serviceWrapper.Employees.UpdateEmployee(updateEmployee);
 

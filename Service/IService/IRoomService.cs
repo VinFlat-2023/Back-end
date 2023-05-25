@@ -20,4 +20,7 @@ public interface IRoomService
         CancellationToken cancellationToken);
 
     public Task<List<Room>?> GetRoomList(int flatId, int buildingId, CancellationToken token);
+
+    public Task<int?> GetTotalRoomInBuilding(MetricRoomFilter metricRoomFilterRequest, int buildingId,
+        CancellationToken token);
 }

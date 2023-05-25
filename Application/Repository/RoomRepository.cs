@@ -25,6 +25,14 @@ public class RoomRepository : IRoomRepository
             .AsNoTracking();
     }
 
+    public IQueryable<int> GetTotalRoomInBuilding(MetricRoomFilter filter, int buildingId)
+    {
+        return _context.Rooms
+            .Where(x => x.BuildingId == buildingId)
+            .Where(f => filter.Status == null || f.Status == filter.Status)
+            .Select(x => x.RoomId);
+    }
+
     public IQueryable<Room> GetRoomList(RoomFilter filters, int buildingId)
     {
         return _context.Rooms
@@ -89,5 +97,14 @@ public class RoomRepository : IRoomRepository
                                       && x.RoomId == roomId
                                       && x.BuildingId == buildingId, cancellationToken);
         return roomInAFlatCheck ?? null;
+    }
+
+    public async Task<int?> GetTotalRoomInBuilding(MetricRoomFilter metricRoomFilter, int buildingId,
+        CancellationToken token)
+    {
+        return await _context.Rooms
+            .Where(x => x.BuildingId == buildingId)
+            .Select(x => x.RoomId)
+            .SumAsync(x => x, token);
     }
 }

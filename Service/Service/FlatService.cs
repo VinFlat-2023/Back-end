@@ -1,6 +1,7 @@
 using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
+using Domain.EntityRequest.Metric;
 using Domain.Options;
 using Domain.QueryFilter;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,17 @@ public class FlatService : IFlatService
         _repositoryWrapper = repositoryWrapper;
         _redis = redis;
         _paginationOptions = paginationOptions.Value;
+    }
+
+    public async Task<int?> GetTotalFlatBasedOnFilter(MetricFlatFilter filters, int buildingId,
+        CancellationToken token)
+    {
+        var queryable = _repositoryWrapper.Flats.GetTotalFlatBasedOnFilter(filters, buildingId);
+
+        if (!queryable.Any())
+            return null;
+
+        return await queryable.SumAsync(token);
     }
 
     public async Task<PagedList<Flat>?> GetFlatList(FlatFilter filters, CancellationToken token)
@@ -184,5 +196,13 @@ public class FlatService : IFlatService
         CancellationToken token)
     {
         return await _repositoryWrapper.Flats.GetTotalWaterAndElectricityByFlat(flatId, buildingId, token);
+    }
+
+    public async Task<RepositoryResponse> SetTotalWaterAndElectricityByFlat(UpdateMetricRequest request, int flatId,
+        int buildingId,
+        CancellationToken cancellationToken)
+    {
+        return await _repositoryWrapper.Flats.SetTotalWaterAndElectricityByFlat(request, flatId, buildingId,
+            cancellationToken);
     }
 }

@@ -155,6 +155,8 @@ public class ContractRepository : IContractRepository
         return _context.Contracts
             .Include(x => x.Renter)
             .Include(x => x.Flat)
+            .ThenInclude(x => x.Building)
+            .Include(x => x.Flat)
             .ThenInclude(x => x.Rooms)
             .Where(x => x.ContractId == contractId && x.BuildingId == buildingId)
             .Include(x => x.Flat)
@@ -371,5 +373,14 @@ public class ContractRepository : IContractRepository
                 Message = "Tạo hợp đồng thất bại"
             };
         }
+    }
+
+    public IQueryable<int> GetTotalRenterWithActiveContract(MetricRenterContractFilter filter, int buildingId)
+    {
+        return _context.Contracts
+            .Where(x => x.BuildingId == buildingId)
+            .Where(x => filter.Status == null || x.ContractStatus == filter.Status)
+            .DistinctBy(x => x.RenterId)
+            .Select(x => x.ContractId);
     }
 }

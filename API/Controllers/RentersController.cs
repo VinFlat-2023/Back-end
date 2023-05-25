@@ -426,7 +426,6 @@ public class RentersController : ControllerBase
         {
             RenterId = userId,
             Email = renter.Email,
-            PhoneNumber = renter.PhoneNumber,
             FullName = renter.FullName,
             BirthDate = DateTime.ParseExact(renter.BirthDate, "dd/MM/yyyy", null),
             /*
@@ -439,6 +438,12 @@ public class RentersController : ControllerBase
             Address = renter.Address,
             Gender = renter.Gender
         };
+
+        if (renter.Phone != null)
+            finalizeUpdate.PhoneNumber = renter.Phone;
+
+        if (renter.PhoneNumber != null)
+            finalizeUpdate.PhoneNumber = renter.PhoneNumber;
 
         var result = await _serviceWrapper.Renters.UpdateRenter(finalizeUpdate);
 

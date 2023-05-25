@@ -1,5 +1,6 @@
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
+using Domain.FilterRequests;
 using Domain.QueryFilter;
 
 namespace Application.IRepository;
@@ -21,4 +22,5 @@ public interface IContractRepository
         CancellationToken token);
 
     public Task<RepositoryResponse> AddContractWithRenter(Contract newContract, CancellationToken token);
+    public IQueryable<int> GetTotalRenterWithActiveContract(MetricRenterContractFilter filter, int buildingId);
 }

@@ -229,16 +229,6 @@ public class TicketValidator : BaseValidator, ITicketValidator
                     ValidatorResult.Failures.Add("Loại yêu cầu không tồn tại");
                     break;
             }
-
-            switch (obj?.Amount)
-            {
-                case not null when obj.Amount < 0:
-                    ValidatorResult.Failures.Add("Số lượng / thành tiền không được nhỏ hơn 0");
-                    break;
-                case null:
-                    ValidatorResult.Failures.Add("Số lượng / thành tiền không được để trống");
-                    break;
-            }
         }
         catch (Exception e)
         {

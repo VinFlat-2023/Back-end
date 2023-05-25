@@ -766,7 +766,9 @@ public class ApplicationContext : DbContext
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "HCM",
-                Gender = "Male"
+                Gender = "Male",
+                CitizenCardBackImageUrl = "ewqe",
+                CitizenCardFrontImageUrl = "Ewqea"
             },
             new Renter
             {
@@ -780,7 +782,9 @@ public class ApplicationContext : DbContext
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "Hue",
-                Gender = "Male"
+                Gender = "Male",
+                CitizenCardBackImageUrl = "ewqe",
+                CitizenCardFrontImageUrl = "Ewqea"
             },
             new Renter
             {
@@ -794,7 +798,9 @@ public class ApplicationContext : DbContext
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "DN",
-                Gender = "Female"
+                Gender = "Female",
+                CitizenCardBackImageUrl = "ewqe",
+                CitizenCardFrontImageUrl = "Ewqea"
             }, new Renter
             {
                 RenterId = 4,
@@ -807,7 +813,9 @@ public class ApplicationContext : DbContext
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "HN",
-                Gender = "Female"
+                Gender = "Female",
+                CitizenCardBackImageUrl = "ewqe",
+                CitizenCardFrontImageUrl = "Ewqea"
             }, new Renter
             {
                 RenterId = 5,
@@ -820,7 +828,9 @@ public class ApplicationContext : DbContext
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "HCM",
-                Gender = "Male"
+                Gender = "Male",
+                CitizenCardBackImageUrl = "ewqe",
+                CitizenCardFrontImageUrl = "Ewqea"
             }, new Renter
             {
                 RenterId = 6,
@@ -833,7 +843,9 @@ public class ApplicationContext : DbContext
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "HCM",
-                Gender = "Male"
+                Gender = "Male",
+                CitizenCardBackImageUrl = "ewqe",
+                CitizenCardFrontImageUrl = "Ewqea"
             }, new Renter
             {
                 RenterId = 7,
@@ -846,7 +858,9 @@ public class ApplicationContext : DbContext
                 Status = true,
                 CitizenNumber = "3214324523",
                 Address = "HCM",
-                Gender = "Male"
+                Gender = "Male",
+                CitizenCardBackImageUrl = "ewqe",
+                CitizenCardFrontImageUrl = "Ewqea"
             }
         );
 

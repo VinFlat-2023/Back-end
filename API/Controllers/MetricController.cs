@@ -1,5 +1,8 @@
 using AutoMapper;
 using Domain.CustomEntities;
+using Domain.EntityRequest.Metric;
+using Domain.FilterRequests;
+using Domain.QueryFilter;
 using Domain.ViewModel.FlatEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +10,7 @@ using Service.IService;
 
 namespace API.Controllers;
 
-[Route("api/metric")]
+[Route("api/metric/current/building")]
 [ApiController]
 public class MetricController : ControllerBase
 {
@@ -20,7 +23,7 @@ public class MetricController : ControllerBase
         _serviceWrapper = serviceWrapper;
     }
 
-    [HttpGet("current/building")]
+    [HttpGet("total-water-and-electricity")]
     [Authorize(Roles = "Supervisor, Technician")]
     public async Task<IActionResult> GetTotalWaterAndElectricity(CancellationToken token)
     {
@@ -35,14 +38,14 @@ public class MetricController : ControllerBase
                 {
                     status = "Bad Request",
                     message = "Quản lí này hiện đang không quản lí toà nhà nào",
-                    data = -1
+                    data = ""
                 });
             case -2:
                 return BadRequest(new
                 {
                     status = "Bad Request",
                     message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
-                    data = -2
+                    data = ""
                 });
         }
 
@@ -53,7 +56,7 @@ public class MetricController : ControllerBase
             {
                 status = "Not Found",
                 message = "Không tìm thấy dữ liệu",
-                data = result
+                data = ""
             });
 
         return Ok(new
@@ -64,7 +67,193 @@ public class MetricController : ControllerBase
         });
     }
 
-    [HttpGet("current/building/flat/{flatId:int}")]
+    [HttpGet("flats")]
+    [Authorize(Roles = "Supervisor, Technician")]
+    public async Task<IActionResult> GetTotalFlatInBuilding([FromQuery] MetricFlatFilterRequest request,
+        CancellationToken token)
+    {
+        var filter = _mapper.Map<MetricFlatFilter>(request);
+
+        var userId = int.Parse(User.Identity.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+
+        switch (buildingId)
+        {
+            case -1:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang không quản lí toà nhà nào",
+                    data = ""
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
+                    data = ""
+                });
+        }
+
+        var result = await _serviceWrapper.Flats.GetTotalFlatBasedOnFilter(filter, buildingId, token);
+
+        if (result == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Không tìm thấy dữ liệu",
+                data = ""
+            });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Hiển thị tổng số điện nước",
+            data = result
+        });
+    }
+
+    [HttpGet("rooms")]
+    [Authorize(Roles = "Supervisor, Technician")]
+    public async Task<IActionResult> GetTotalRoomInBuilding([FromQuery] MetricRoomFilterRequest request,
+        CancellationToken token)
+    {
+        var filter = _mapper.Map<MetricRoomFilter>(request);
+
+        var userId = int.Parse(User.Identity.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+
+        switch (buildingId)
+        {
+            case -1:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang không quản lí toà nhà nào",
+                    data = ""
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
+                    data = ""
+                });
+        }
+
+        var result = await _serviceWrapper.Rooms.GetTotalRoomInBuilding(filter, buildingId, token);
+
+        if (result == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Không tìm thấy dữ liệu",
+                data = ""
+            });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Hiển thị tổng số điện nước",
+            data = result
+        });
+    }
+    
+    [HttpGet("renter")]
+    [Authorize(Roles = "Supervisor, Technician")]
+    public async Task<IActionResult> GetTotalRenter([FromQuery] MetricRenterContractFilterRequest request, CancellationToken token)
+    {
+        var filter = _mapper.Map<MetricRenterContractFilter>(request);
+
+        var userId = int.Parse(User.Identity.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+
+        switch (buildingId)
+        {
+            case -1:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang không quản lí toà nhà nào",
+                    data = ""
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
+                    data = ""
+                });
+        }
+
+        var result = await _serviceWrapper.Contracts.GetTotalRenterWithActiveContract(filter, buildingId, token);
+
+        if (result == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Không tìm thấy dữ liệu",
+                data = ""
+            });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Hiển thị tổng số người thuê đang có hợp đồng hoạt động",
+            data = result
+        });
+    }
+
+    [HttpGet("renter/contract")]
+    [Authorize(Roles = "Supervisor, Technician")]
+    public async Task<IActionResult> GetTotalRenterWithActiveContract([FromQuery] MetricRenterContractFilterRequest request, CancellationToken token)
+    {
+        var filter = _mapper.Map<MetricRenterContractFilter>(request);
+
+        var userId = int.Parse(User.Identity.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+
+        switch (buildingId)
+        {
+            case -1:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang không quản lí toà nhà nào",
+                    data = ""
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
+                    data = ""
+                });
+        }
+
+        var result = await _serviceWrapper.Contracts.GetTotalRenterWithActiveContract(filter, buildingId, token);
+
+        if (result == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Không tìm thấy dữ liệu",
+                data = ""
+            });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Hiển thị tổng số người thuê đang có hợp đồng hoạt động",
+            data = result
+        });
+    }
+
+    [HttpGet("flat/{flatId:int}/water-and-electricity")]
     [Authorize(Roles = "Supervisor, Technician")]
     public async Task<IActionResult> GetTotalWaterAndElectricity(int flatId, CancellationToken token)
     {
@@ -79,7 +268,7 @@ public class MetricController : ControllerBase
                 {
                     status = "Bad Request",
                     message = "Quản lí này hiện đang không quản lí toà nhà nào",
-                    data = -1
+                    data = ""
                 });
             case -2:
                 return BadRequest(new
@@ -108,9 +297,8 @@ public class MetricController : ControllerBase
             {
                 status = "Not Found",
                 message = "Không tìm thấy dữ liệu",
-                data = result
+                data = ""
             });
-
 
         var resultForFlat = new MetricNumberForFlat
         {
@@ -127,5 +315,51 @@ public class MetricController : ControllerBase
             message = "Hiển thị tổng số điện nước của căn hộ",
             data = resultForFlat
         });
+    }
+
+    [HttpPut("flat/{flatId:int}")]
+    [Authorize(Roles = "Supervisor, Technician")]
+    public async Task<IActionResult> UpdateWaterAndElectricMeter([FromBody] UpdateMetricRequest request, int flatId,
+        CancellationToken token)
+    {
+        var userId = int.Parse(User.Identity.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+
+        switch (buildingId)
+        {
+            case -1:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang không quản lí toà nhà nào",
+                    data = ""
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
+                    data = -2
+                });
+        }
+
+        var result = await _serviceWrapper.Flats.SetTotalWaterAndElectricityByFlat(request, flatId, buildingId, token);
+
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
     }
 }
