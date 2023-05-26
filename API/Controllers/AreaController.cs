@@ -14,13 +14,13 @@ namespace API.Controllers;
 
 [Route("api/areas")]
 [ApiController]
-public class AreasController : ControllerBase
+public class AreaController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
     private readonly IAreaValidator _validator;
 
-    public AreasController(IMapper mapper, IServiceWrapper serviceWrapper,
+    public AreaController(IMapper mapper, IServiceWrapper serviceWrapper,
         IAreaValidator validator)
     {
         _mapper = mapper;

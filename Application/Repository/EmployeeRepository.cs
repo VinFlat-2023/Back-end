@@ -131,7 +131,7 @@ public class EmployeeRepository : IEmployeeRepository
     /// </summary>
     /// <param name="employeeId"></param>
     /// <returns></returns>
-    public IQueryable<Employee> GetEmployeeDetail(int? employeeId)
+    public IQueryable<Employee> GetEmployeeById(int? employeeId)
     {
         return _context.Employees
             .Include(x => x.Role)
@@ -297,7 +297,7 @@ public class EmployeeRepository : IEmployeeRepository
     /// <param name="password"></param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public async Task<Employee?> GetEmployee(string usernameOrPhoneNumber, string password,
+    public async Task<Employee?> EmployeeLogin(string usernameOrPhoneNumber, string password,
         CancellationToken token)
     {
         return await _context.Employees

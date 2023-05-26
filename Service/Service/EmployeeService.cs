@@ -83,13 +83,13 @@ public class EmployeeService : IEmployeeService
 
     public async Task<Employee?> GetEmployeeById(int? employeeId, CancellationToken token)
     {
-        return await _repositoryWrapper.Employees.GetEmployeeDetail(employeeId)
+        return await _repositoryWrapper.Employees.GetEmployeeById(employeeId)
             .FirstOrDefaultAsync(token);
     }
 
     public async Task<Employee?> GetSupervisorEmployee(int employeeId, CancellationToken token)
     {
-        return await _repositoryWrapper.Employees.GetEmployeeDetail(employeeId)
+        return await _repositoryWrapper.Employees.GetEmployeeById(employeeId)
             .Where(x => x.Role.RoleName == "Supervisor")
             .FirstOrDefaultAsync(token);
     }
@@ -147,6 +147,6 @@ public class EmployeeService : IEmployeeService
 
     public async Task<Employee?> EmployeeLogin(string usernameOrPhoneNumber, string password, CancellationToken token)
     {
-        return await _repositoryWrapper.Employees.GetEmployee(usernameOrPhoneNumber, password, token);
+        return await _repositoryWrapper.Employees.EmployeeLogin(usernameOrPhoneNumber, password, token);
     }
 }

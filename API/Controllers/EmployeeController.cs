@@ -15,14 +15,14 @@ namespace API.Controllers;
 
 [Route("api/employees")]
 [ApiController]
-public class EmployeesController : ControllerBase
+public class EmployeeController : ControllerBase
 {
     private readonly IEmployeeValidator _employeeValidator;
     private readonly IMapper _mapper;
     private readonly IPasswordValidator _passwordValidator;
     private readonly IServiceWrapper _serviceWrapper;
 
-    public EmployeesController(IServiceWrapper serviceWrapper, IMapper mapper,
+    public EmployeeController(IServiceWrapper serviceWrapper, IMapper mapper,
         IEmployeeValidator employeeValidator, IPasswordValidator passwordValidator)
     {
         _serviceWrapper = serviceWrapper;
@@ -61,12 +61,13 @@ public class EmployeesController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get employee by ID")]
+    [SwaggerOperation(Summary = "[Authorize] Get employee by Id")]
     [Authorize(Roles = "Admin, Supervisor")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetEmployee(int id, CancellationToken token)
     {
         var entity = await _serviceWrapper.Employees.GetEmployeeById(id, token);
+        
         if (entity == null)
             return NotFound(new
             {
@@ -89,7 +90,9 @@ public class EmployeesController : ControllerBase
     public async Task<IActionResult> GetCurrentLoginEmployee(CancellationToken token)
     {
         var employeeId = int.Parse(User.Identity?.Name);
+        
         var entity = await _serviceWrapper.Employees.GetEmployeeById(employeeId, token);
+        
         if (entity == null)
             return NotFound(new
             {
@@ -170,7 +173,7 @@ public class EmployeesController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "Nhân viên được tạo thành công",
+            message = "Tạo mới nhân viên thành công",
             data = ""
         });
     }

@@ -17,14 +17,14 @@ namespace API.Controllers;
 
 [Route("api/invoices")]
 [ApiController]
-public class InvoicesController : ControllerBase
+public class InvoiceController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
     private readonly IInvoiceValidator _validator;
 
     // GET: api/Invoices
-    public InvoicesController(IMapper mapper, IServiceWrapper serviceWrapper,
+    public InvoiceController(IMapper mapper, IServiceWrapper serviceWrapper,
         IInvoiceValidator validator)
     {
         _mapper = mapper;

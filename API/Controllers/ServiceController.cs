@@ -16,13 +16,13 @@ namespace API.Controllers;
 
 [Route("api/services")]
 [ApiController]
-public class ServicesController : ControllerBase
+public class ServiceController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
     private readonly IServiceValidator _validator;
 
-    public ServicesController(IServiceWrapper serviceWrapper, IMapper mapper,
+    public ServiceController(IServiceWrapper serviceWrapper, IMapper mapper,
         IServiceValidator validator)
     {
         _serviceWrapper = serviceWrapper;

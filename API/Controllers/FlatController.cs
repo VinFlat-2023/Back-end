@@ -16,14 +16,14 @@ namespace API.Controllers;
 
 [Route("api/flats")]
 [ApiController]
-public class FlatsController : ControllerBase
+public class FlatController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
     private readonly IFlatValidator _validator;
 
     // GET: api/Flats
-    public FlatsController(IMapper mapper, IServiceWrapper serviceWrapper,
+    public FlatController(IMapper mapper, IServiceWrapper serviceWrapper,
         IFlatValidator validator)
     {
         _mapper = mapper;

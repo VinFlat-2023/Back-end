@@ -14,13 +14,13 @@ namespace API.Controllers;
 
 [Route("api/buildings")]
 [ApiController]
-public class BuildingsController : ControllerBase
+public class BuildingController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
     private readonly IBuildingValidator _validator;
 
-    public BuildingsController(IMapper mapper, IServiceWrapper serviceWrapper,
+    public BuildingController(IMapper mapper, IServiceWrapper serviceWrapper,
         IBuildingValidator validator)
     {
         _mapper = mapper;

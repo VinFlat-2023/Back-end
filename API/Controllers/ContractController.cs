@@ -21,13 +21,13 @@ namespace API.Controllers;
 
 [Route("api/contracts")]
 [ApiController]
-public class ContractsController : ControllerBase
+public class ContractController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
     private readonly IContractValidator _validator;
 
-    public ContractsController(IMapper mapper, IServiceWrapper serviceWrapper,
+    public ContractController(IMapper mapper, IServiceWrapper serviceWrapper,
         IContractValidator validator)
     {
         _mapper = mapper;

@@ -19,14 +19,14 @@ namespace API.Controllers;
 
 [Route("api/renters")]
 [ApiController]
-public class RentersController : ControllerBase
+public class RenterController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IPasswordValidator _passwordValidator;
     private readonly IRenterValidator _renterValidator;
     private readonly IServiceWrapper _serviceWrapper;
 
-    public RentersController(IMapper mapper, IServiceWrapper serviceWrapper,
+    public RenterController(IMapper mapper, IServiceWrapper serviceWrapper,
         IRenterValidator renterValidator, IPasswordValidator passwordValidator)
     {
         _mapper = mapper;

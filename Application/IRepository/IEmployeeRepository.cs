@@ -8,7 +8,7 @@ public interface IEmployeeRepository
 {
     public IQueryable<Employee> GetEmployeeList(EmployeeFilter filters);
     public IQueryable<Employee> GetEmployeeList(EmployeeFilter filters, int buildingId);
-    public IQueryable<Employee> GetEmployeeDetail(int? employeeId);
+    public IQueryable<Employee> GetEmployeeById(int? employeeId);
     public Task<Employee?> AddEmployee(Employee employee);
     public Task<RepositoryResponse> UpdateEmployee(Employee employee);
     public Task<RepositoryResponse> UpdateEmployeeManagement(Employee employee);
@@ -16,7 +16,7 @@ public interface IEmployeeRepository
     public Task<RepositoryResponse> ToggleEmployee(int employeeId);
     public Task<RepositoryResponse> DeleteEmployee(int employeeId);
 
-    public Task<Employee?> GetEmployee(string usernameOrPhoneNumber, string password,
+    public Task<Employee?> EmployeeLogin(string usernameOrPhoneNumber, string password,
         CancellationToken token);
 
     public Task<RepositoryResponse> IsEmployeeEmailExist(string? email, CancellationToken token);

@@ -17,14 +17,14 @@ namespace API.Controllers;
 
 [Route("api/tickets")]
 [ApiController]
-public class TicketsController : ControllerBase
+public class TicketController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IServiceWrapper _serviceWrapper;
     private readonly ITicketValidator _validator;
 
     // GET: api/Requests
-    public TicketsController(IMapper mapper, IServiceWrapper serviceWrapper,
+    public TicketController(IMapper mapper, IServiceWrapper serviceWrapper,
         ITicketValidator validator)
     {
         _mapper = mapper;
