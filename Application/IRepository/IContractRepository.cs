@@ -1,6 +1,5 @@
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
-using Domain.FilterRequests;
 using Domain.QueryFilter;
 
 namespace Application.IRepository;

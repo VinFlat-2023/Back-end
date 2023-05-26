@@ -223,10 +223,10 @@ public class ContractService : IContractService
         return await _repositoryWrapper.Contracts.AddContractWithRenter(newContract, token);
     }
 
-    public async Task<int?> GetTotalRenterWithActiveContract(MetricRenterContractFilter filter, int buildingId, CancellationToken token)
+    public async Task<int?> GetTotalRenterWithActiveContract(MetricRenterContractFilter filter, int buildingId,
+        CancellationToken token)
     {
         return await _repositoryWrapper.Contracts.GetTotalRenterWithActiveContract(filter, buildingId)
             .SumAsync(token);
     }
-    
 }

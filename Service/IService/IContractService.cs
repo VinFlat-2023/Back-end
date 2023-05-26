@@ -25,5 +25,7 @@ public interface IContractService
         CancellationToken token);
 
     public Task<RepositoryResponse> AddContractWithRenter(Contract newContract, CancellationToken token);
-    public Task<int?> GetTotalRenterWithActiveContract(MetricRenterContractFilter filter, int buildingId, CancellationToken token);
+
+    public Task<int?> GetTotalRenterWithActiveContract(MetricRenterContractFilter filter, int buildingId,
+        CancellationToken token);
 }

@@ -160,10 +160,11 @@ public class MetricController : ControllerBase
             data = result
         });
     }
-    
+
     [HttpGet("renter")]
     [Authorize(Roles = "Supervisor, Technician")]
-    public async Task<IActionResult> GetTotalRenter([FromQuery] MetricRenterContractFilterRequest request, CancellationToken token)
+    public async Task<IActionResult> GetTotalRenter([FromQuery] MetricRenterContractFilterRequest request,
+        CancellationToken token)
     {
         var filter = _mapper.Map<MetricRenterContractFilter>(request);
 
@@ -209,7 +210,8 @@ public class MetricController : ControllerBase
 
     [HttpGet("renter/contract")]
     [Authorize(Roles = "Supervisor, Technician")]
-    public async Task<IActionResult> GetTotalRenterWithActiveContract([FromQuery] MetricRenterContractFilterRequest request, CancellationToken token)
+    public async Task<IActionResult> GetTotalRenterWithActiveContract(
+        [FromQuery] MetricRenterContractFilterRequest request, CancellationToken token)
     {
         var filter = _mapper.Map<MetricRenterContractFilter>(request);
 

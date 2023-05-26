@@ -452,7 +452,7 @@ public class AutoMapper : Profile
 
         CreateMap<MetricContractFilterRequest, MetricContractFilter>()
             .ReverseMap();
-        
+
         CreateMap<MetricRenterContractFilterRequest, MetricRenterContractFilterRequest>()
             .ReverseMap();
 
@@ -492,10 +492,10 @@ public class AutoMapper : Profile
             .ReverseMap();
         CreateMap<RenterUpdateRequest, Renter>().ReverseMap()
             .ReverseMap();
-        
+
         CreateMap<RenterFilterRequest, RenterFilter>()
             .ReverseMap();
-        
+
         CreateMap<MetricRenterFilterRequest, MetricRenterFilter>()
             .ReverseMap();
 
