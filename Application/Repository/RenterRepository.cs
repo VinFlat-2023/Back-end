@@ -333,11 +333,13 @@ public class RenterRepository : IRenterRepository
     /// <param name="password"></param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public async Task<Renter?> GetRenter(string usernameOrPhoneNumber, string password, CancellationToken token)
+    public async Task<Renter?> RenterLogin(string usernameOrPhoneNumber, string password, CancellationToken token)
     {
         return await _context.Renters
-            .FirstOrDefaultAsync(a => (a.Username == usernameOrPhoneNumber || a.PhoneNumber == usernameOrPhoneNumber)
-                                      && a.Password == password, token);
+            .FirstOrDefaultAsync(a =>
+                (a.Username == usernameOrPhoneNumber
+                 || a.PhoneNumber == usernameOrPhoneNumber)
+                && a.Password == password, token);
     }
 
     public async Task<Renter?> GetARenterByUserName(string userName)

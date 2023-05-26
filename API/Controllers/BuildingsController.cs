@@ -89,7 +89,7 @@ public class BuildingsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Toà nhà không tồn tại",
+                message = "Toà nhà này không tồn tại trong hệ thống",
                 data = 0
             });
 
@@ -111,7 +111,7 @@ public class BuildingsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Toà nhà không tồn tại",
+                message = "Toà nhà này không tồn tại trong hệ thống",
                 data = ""
             });
 
@@ -161,7 +161,7 @@ public class BuildingsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Toà nhà không tồn tại",
+                message = "Toà nhà này không tồn tại trong hệ thống",
                 data = ""
             });
 
@@ -217,7 +217,7 @@ public class BuildingsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Supervisor not found",
+                message = "Nhân viên không tồn tại",
                 data = ""
             });
 
@@ -301,7 +301,7 @@ public class BuildingsController : ControllerBase
                     return NotFound(new
                     {
                         status = "Not Found",
-                        message = "Không thể cập nhật quản lý cho nhân viên",
+                        message = "Không thể cập nhật quản lý cho toà nhà",
                         data = ""
                     });
 

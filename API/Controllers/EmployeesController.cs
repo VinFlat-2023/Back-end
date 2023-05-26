@@ -47,7 +47,7 @@ public class EmployeesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Employee list is empty",
+                message = "Danh sách nhân viên trống",
                 data = ""
             });
 
@@ -78,7 +78,7 @@ public class EmployeesController : ControllerBase
             new
             {
                 status = "Success",
-                message = "Employee found",
+                message = "Đã tìm thấy",
                 data = _mapper.Map<EmployeeDetailEntity>(entity)
             });
     }
@@ -101,7 +101,7 @@ public class EmployeesController : ControllerBase
             new
             {
                 status = "Success",
-                message = "Employee found",
+                message = "Đã tìm thấy",
                 data = _mapper.Map<EmployeeDetailEntity>(entity)
             });
     }

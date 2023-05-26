@@ -135,22 +135,21 @@ public class AuthController : ControllerBase
     {
         var emailCheck = await _serviceWrapper.Renters
             .IsRenterEmailExist(emailResetPassword.registeredEmail, token);
-        switch (emailCheck.IsSuccess)
+
+        return emailCheck.IsSuccess switch
         {
-            case true:
-                return Ok(new
-                {
-                    status = "Success",
-                    message = "Mật khẩu mới đã được gửi tới người dùng",
-                    data = emailResetPassword.registeredEmail
-                });
-            case false:
-                return Ok(new
-                {
-                    status = "Success",
-                    message = "Mật khẩu mới đã được gửi tới người dùng",
-                    data = emailResetPassword.registeredEmail
-                });
-        }
+            true => Ok(new
+            {
+                status = "Success",
+                message = "Mật khẩu mới đã được gửi tới người dùng",
+                data = emailResetPassword.registeredEmail
+            }),
+            false => Ok(new
+            {
+                status = "Success",
+                message = "Mật khẩu mới đã được gửi tới người dùng",
+                data = emailResetPassword.registeredEmail
+            })
+        };
     }
 }

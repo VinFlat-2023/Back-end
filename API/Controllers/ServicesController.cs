@@ -120,7 +120,7 @@ public class ServicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Toà nhà không tồn tại",
+                message = "Toà nhà này không tồn tại trong hệ thống",
                 data = ""
             });
 
@@ -169,7 +169,7 @@ public class ServicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Invoice not found for this user",
+                message = "Hoá đơn không tồn tại ",
                 data = ""
             });
 
@@ -187,7 +187,7 @@ public class ServicesController : ControllerBase
             }),
             null => NotFound(new
             {
-                status = "Not Found", message = "Invoice not found for this user or service(s) not found", data = ""
+                status = "Not Found", message = "Hoá đơn không tồn tại ", data = ""
             })
         };
     }

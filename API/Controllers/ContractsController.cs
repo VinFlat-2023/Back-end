@@ -57,7 +57,7 @@ public class ContractsController : ControllerBase
                     return NotFound(new
                     {
                         status = "Not Found",
-                        message = "No contract available",
+                        message = "Không có hợp đồng nào",
                         data = ""
                     });
 
@@ -377,7 +377,7 @@ public class ContractsController : ControllerBase
                 return NotFound(new
                 {
                     status = "Not Found",
-                    message = "Hợp đồng không tồn tại",
+                    message = "Toà nhà này không tồn tại trong hệ thống",
                     data = ""
                 });
             default:
@@ -395,7 +395,7 @@ public class ContractsController : ControllerBase
                     return NotFound(new
                     {
                         status = "Not Found",
-                        message = "Toà nhà không tồn tại",
+                        message = "Toà nhà này không tồn tại trong hệ thống",
                         data = ""
                     });
 
@@ -499,7 +499,7 @@ public class ContractsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "No user found",
+                message = "Không tìm thấy người dùng",
                 data = ""
             });
 

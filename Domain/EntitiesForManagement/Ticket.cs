@@ -35,7 +35,7 @@ public class Ticket
     public virtual Contract Contract { get; set; }
 
     // Management
-    public int EmployeeId { get; set; }
+    public int? EmployeeId { get; set; }
     public virtual Employee Employee { get; set; }
     public int TicketTypeId { get; set; }
     public virtual TicketType TicketType { get; set; }

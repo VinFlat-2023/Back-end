@@ -10,5 +10,5 @@ public interface IGetIdRepository
     //Task<int> GetRoomIdBasedOnFlatId(int flatId, CancellationToken token);
     Task<int> GetBuildingIdBasedOnSupervisorId(int employeeId, CancellationToken token);
     Task<int> GetBuildingIdBasedOnTechnicianId(int employeeId, CancellationToken token);
-    Task<int> GetSupervisorIdByBuildingId(int entityBuildingId, CancellationToken token);
+    Task<int?> GetSupervisorIdByBuildingId(int entityBuildingId, CancellationToken token);
 }

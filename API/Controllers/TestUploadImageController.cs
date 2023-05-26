@@ -281,7 +281,7 @@ public class TestUploadImageController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Hợp đồng không tồn tại",
+                message = "Toà nhà này không tồn tại trong hệ thống",
                 data = ""
             });
 
@@ -473,7 +473,7 @@ public class TestUploadImageController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Toà nhà không tồn tại",
+                message = "Toà nhà này không tồn tại trong hệ thống",
                 data = ""
             });
 
@@ -638,7 +638,7 @@ public class TestUploadImageController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Toà nhà không tồn tại",
+                message = "Toà nhà này không tồn tại trong hệ thống",
                 data = ""
             });
 
@@ -804,7 +804,7 @@ public class TestUploadImageController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Toà nhà không tồn tại",
+                message = "Toà nhà này không tồn tại trong hệ thống",
                 data = ""
             });
 
@@ -1009,7 +1009,7 @@ public class TestUploadImageController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Toà nhà không tồn tại",
+                message = "Toà nhà này không tồn tại trong hệ thống",
                 data = ""
             });
 

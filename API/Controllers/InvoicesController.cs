@@ -140,13 +140,13 @@ public class InvoicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "No invoice found",
+                message = "Hoá đơn không tồn tại",
                 data = ""
             });
         return Ok(new
         {
             status = "Success",
-            message = "Invoice found",
+            message = "Hoá đơn tìm thấy",
             data = _mapper.Map<InvoiceRenterDetailEntity>(entity)
         });
     }
@@ -174,7 +174,7 @@ public class InvoicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Invoice not found for this user",
+                message = "Hoá đơn không tồn tại ",
                 data = ""
             });
 
@@ -184,14 +184,14 @@ public class InvoicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Invoice not found for this user",
+                message = "Hoá đơn không tồn tại ",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "Invoice found",
+            message = "Hoá đơn tìm thấy",
             data = _mapper.Map<InvoiceRenterDetailEntity>(invoice)
         });
     }
@@ -207,7 +207,7 @@ public class InvoicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "No user found",
+                message = "Không tìm thấy người dùng",
                 data = ""
             });
 
@@ -247,7 +247,7 @@ public class InvoicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "No user found",
+                message = "Không tìm thấy người dùng",
                 data = ""
             });
 
@@ -286,7 +286,7 @@ public class InvoicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "No user found",
+                message = "Không tìm thấy người dùng",
                 data = ""
             });
 
@@ -329,7 +329,7 @@ public class InvoicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "No user found",
+                message = "Không tìm thấy người dùng",
                 data = ""
             });
 
@@ -339,7 +339,7 @@ public class InvoicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "No invoice found",
+                message = "Hoá đơn không tồn tại",
                 data = ""
             });
 
@@ -387,14 +387,14 @@ public class InvoicesController : ControllerBase
             return BadRequest(new
             {
                 status = "Bad request",
-                message = "Invoice failed to update",
+                message = "Cập nhật hoá đơn thất bại",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "Invoice updated",
+            message = "Cập nhật hoá đơn thành công",
             data = ""
         });
     }
@@ -552,7 +552,7 @@ public class InvoicesController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Invoice type list is empty",
+                message = "Loại hoá đơn không tồn tại",
                 data = ""
             });
 

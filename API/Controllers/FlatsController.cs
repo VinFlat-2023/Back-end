@@ -240,14 +240,14 @@ public class FlatsController : ControllerBase
             false => BadRequest(new
             {
                 status = "Bad Request",
-                message = "Renter failed to update",
+                message = "Cập nhật căn hộ thất bại",
                 data = ""
             }),
             true => Ok(
                 new
                 {
                     status = "Success",
-                    message = "Renter updated",
+                    message = "Căn hộ đã được cập nhật",
                     data = ""
                 })
         };
@@ -346,9 +346,9 @@ public class FlatsController : ControllerBase
                 message = result.Message,
                 data = ""
             }),
-            false => NotFound(new
+            false => BadRequest(new
             {
-                status = "Not Found",
+                status = "Bad Request",
                 message = result.Message,
                 data = ""
             })
@@ -417,7 +417,7 @@ public class FlatsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Flat type list is empty",
+                message = "Danh sách loại căn hộ hiện đang trống",
                 data = ""
             });
 
@@ -470,7 +470,7 @@ public class FlatsController : ControllerBase
             : Ok(new
             {
                 status = "Success",
-                message = "Flat type found",
+                message = "Hiện thị thông tin loại căn hộ",
                 data = _mapper.Map<FlatTypeDetailEntity>(entity)
             });
     }
@@ -658,7 +658,7 @@ public class FlatsController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "Flat type created",
+            message = "Tạo loại căn hộ thành công",
             data = ""
         });
     }

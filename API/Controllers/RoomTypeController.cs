@@ -111,14 +111,14 @@ public class RoomTypeController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Không tìm thấy phòng",
+                message = "Không tìm thấy loại phòng",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "Hiển thị thông tin phòng",
+            message = "Hiển thị thông tin loại phòng",
             data = _mapper.Map<RoomTypeBasicDetailEntity>(room)
         });
     }

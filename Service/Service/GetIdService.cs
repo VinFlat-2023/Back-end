@@ -44,7 +44,7 @@ public class GetIdService : IGetIdService
     }
     */
 
-    public async Task<int> GetSupervisorIdByBuildingId(int entityBuildingId, CancellationToken token)
+    public async Task<int?> GetSupervisorIdByBuildingId(int entityBuildingId, CancellationToken token)
     {
         return await _repositoryWrapper.GetId.GetSupervisorIdByBuildingId(entityBuildingId, token);
     }

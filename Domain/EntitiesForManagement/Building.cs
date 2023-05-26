@@ -38,8 +38,8 @@ public class Building
     public bool Status { get; set; }
 
     // Management Company
-    public int EmployeeId { get; set; }
-    public virtual Employee Employee { get; set; }
+    public int? EmployeeId { get; set; }
+    public virtual Employee? Employee { get; set; }
     [ForeignKey("AreaId")] public int AreaId { get; set; }
     public virtual Area Area { get; set; }
     public virtual ICollection<Flat> Flats { get; set; }

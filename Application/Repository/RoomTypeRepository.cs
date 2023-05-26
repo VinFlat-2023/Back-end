@@ -38,12 +38,12 @@ public class RoomTypeRepository : IRoomTypeRepository
             ? new RepositoryResponse
             {
                 IsSuccess = true,
-                Message = "Tạo phòng thành công"
+                Message = "Tạo loại phòng thành công"
             }
             : new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Tạo phòng thất bại"
+                Message = "Tạo loại phòng thất bại"
             };
     }
 

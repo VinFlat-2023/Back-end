@@ -56,7 +56,7 @@ public class TicketsController : ControllerBase
                     return NotFound(new
                     {
                         status = "Not Found",
-                        message = "Ticket list is empty",
+                        message = "Danh sách yêu cầu trống",
                         data = ""
                     });
 
@@ -160,7 +160,7 @@ public class TicketsController : ControllerBase
                 return BadRequest(new
                 {
                     status = "Bad Request",
-                    message = "Tài khoản đang đăng nhập không hợp lệ",
+                    message = "Tài khoản không hợp lệ",
                     data = ""
                 });
 
@@ -172,7 +172,7 @@ public class TicketsController : ControllerBase
                     return NotFound(new
                     {
                         status = "Not Found",
-                        message = "Người thuê này hiện tại không có phiếu nào",
+                        message = "Người thuê này hiện tại không có yêu cầu nào",
                         data = ""
                     });
 
@@ -325,7 +325,7 @@ public class TicketsController : ControllerBase
                     return BadRequest(new
                     {
                         status = "Bad Request",
-                        message = "Chỉ có thể xác nhận khi trạng thái là đã xử lí",
+                        message = "Chỉ có thể xác nhận khi trạng thái là đang đợi xác nhận",
                         data = ""
                     });
 
@@ -686,7 +686,7 @@ public class TicketsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Toà nhà không tồn tại",
+                message = "Toà nhà này không tồn tại trong hệ thống",
                 data = ""
             });
 
@@ -698,14 +698,14 @@ public class TicketsController : ControllerBase
                 return NotFound(new
                 {
                     status = "Not Found",
-                    message = "Employee not found for this building",
+                    message = "Nhân viên không tìm thấy trong toà nhà",
                     data = ""
                 });
             case -1:
                 return BadRequest(new
                 {
                     status = "Bad Request",
-                    message = "More than one employee found for this building",
+                    message = "Nhiều hơn 1 quản lí đang quản lí toà nhà này",
                     data = ""
                 });
         }
@@ -716,7 +716,7 @@ public class TicketsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Hợp đồng không tồn tại for this renter, please contact management",
+                message = "Hợp đồng không tồn tại trong hệ thống",
                 data = ""
             });
 
@@ -729,7 +729,6 @@ public class TicketsController : ControllerBase
                 message = validation.Failures.FirstOrDefault(),
                 data = ""
             });
-
 
         var newTicket = new Ticket
         {
@@ -830,7 +829,7 @@ public class TicketsController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Người dùng không tìm thấy",
+                message = "Không tìm thấy người dùng",
                 data = ""
             });
 

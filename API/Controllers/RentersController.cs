@@ -71,7 +71,7 @@ public class RentersController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Toà nhà không tồn tại",
+                message = "Toà nhà này không tồn tại trong hệ thống",
                 data = ""
             });
 
@@ -130,7 +130,7 @@ public class RentersController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Toà nhà không tồn tại",
+                message = "Toà nhà này không tồn tại trong hệ thống",
                 data = ""
             });
 
@@ -250,6 +250,7 @@ public class RentersController : ControllerBase
             });
 
         var building = await _serviceWrapper.Buildings.GetBuildingById(contract.BuildingId, token);
+
         if (building == null)
             return NotFound(new
             {
@@ -257,6 +258,25 @@ public class RentersController : ControllerBase
                 message = "Toà nhà này không tồn tại trong hệ thống",
                 data = ""
             });
+
+        var supervisorCheck = await _serviceWrapper.GetId.GetSupervisorIdByBuildingId(building.BuildingId, token);
+        switch (supervisorCheck)
+        {
+            case 0:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Toà nhà này hiện chưa có người quản lý",
+                    data = ""
+                });
+            case -1:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Toà nhà này hiện có nhiều hơn 1 người quản lý",
+                    data = ""
+                });
+        }
 
         var flatCheck = await _serviceWrapper.Flats.GetFlatById(contract.FlatId, contract.BuildingId, token);
         if (flatCheck == null)

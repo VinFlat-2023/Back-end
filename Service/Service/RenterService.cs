@@ -166,6 +166,6 @@ public class RenterService : IRenterService
     public async Task<Renter?> RenterLogin(string usernameOrPhoneNumber, string password,
         CancellationToken token)
     {
-        return await _repositoryWrapper.Renters.GetRenter(usernameOrPhoneNumber, password, token);
+        return await _repositoryWrapper.Renters.RenterLogin(usernameOrPhoneNumber, password, token);
     }
 }

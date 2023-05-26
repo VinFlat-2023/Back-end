@@ -82,11 +82,13 @@ public class GetIdRepository : IGetIdRepository
         return building.Value;
     }
 
-    public async Task<int> GetSupervisorIdByBuildingId(int entityBuildingId, CancellationToken token)
+    public async Task<int?> GetSupervisorIdByBuildingId(int entityBuildingId, CancellationToken token)
     {
         var employeeList = await _context.Employees
             .Include(x => x.Role)
-            .Where(x => x.Role.RoleName.ToLower() == "Supervisor".ToLower())
+            .Where(x =>
+                x.Role.RoleName.ToLower() == "Supervisor".ToLower()
+                && x.SupervisorBuildingId == entityBuildingId)
             .Select(x => x.EmployeeId)
             .ToListAsync(token);
 
@@ -98,8 +100,7 @@ public class GetIdRepository : IGetIdRepository
             .ThenInclude(x => x.Role)
             //.Where(x => x.BuildingId == entityBuildingId)
             .Where(x => x.BuildingId == entityBuildingId
-                        && employeeList.Contains(x.EmployeeId)
-                        && x.Status == true)
+                        && employeeList.Contains(x.EmployeeId.Value) && x.Status == true)
             .Select(x => x.EmployeeId);
 
         if (employee.Count() > 1 || !employee.Any())
