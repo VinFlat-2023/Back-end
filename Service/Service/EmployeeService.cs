@@ -109,6 +109,11 @@ public class EmployeeService : IEmployeeService
         return await _repositoryWrapper.Employees.UpdateEmployee(employee);
     }
 
+    public async Task<RepositoryResponse> UpdateEmployeeBuilding(Employee employee)
+    {
+        return await _repositoryWrapper.Employees.UpdateEmployeeBuilding(employee);
+    }
+
     public async Task<RepositoryResponse> UpdateEmployeeManagement(Employee employee)
     {
         return await _repositoryWrapper.Employees.UpdateEmployeeManagement(employee);

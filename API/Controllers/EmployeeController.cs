@@ -67,7 +67,7 @@ public class EmployeeController : ControllerBase
     public async Task<IActionResult> GetEmployee(int id, CancellationToken token)
     {
         var entity = await _serviceWrapper.Employees.GetEmployeeById(id, token);
-        
+
         if (entity == null)
             return NotFound(new
             {
@@ -90,9 +90,9 @@ public class EmployeeController : ControllerBase
     public async Task<IActionResult> GetCurrentLoginEmployee(CancellationToken token)
     {
         var employeeId = int.Parse(User.Identity?.Name);
-        
+
         var entity = await _serviceWrapper.Employees.GetEmployeeById(employeeId, token);
-        
+
         if (entity == null)
             return NotFound(new
             {
@@ -137,8 +137,15 @@ public class EmployeeController : ControllerBase
             RoleId = employee.RoleId
         };
 
-        if (employee.RoleId == 3)
-            newEmployee.TechnicianBuildingId = employee.BuildingId;
+        switch (employee.RoleId)
+        {
+            case 3:
+                newEmployee.TechnicianBuildingId = employee.BuildingId;
+                break;
+            case 2 when employee.BuildingId != null:
+                newEmployee.SupervisorBuildingId = employee.BuildingId;
+                break;
+        }
 
         // Create User Device token
         var result = await _serviceWrapper.Employees.AddEmployee(newEmployee);

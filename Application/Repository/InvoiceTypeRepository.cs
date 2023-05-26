@@ -40,7 +40,7 @@ public class InvoiceTypeRepository : IInvoiceTypeRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "InvoiceType not found"
+                Message = "Loại hóa đơn không tồn tại"
             };
 
         invoiceTypeData.InvoiceTypeName = invoiceType.InvoiceTypeName;
@@ -52,7 +52,7 @@ public class InvoiceTypeRepository : IInvoiceTypeRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "InvoiceType updated successfully"
+            Message = "Loại hóa đơn đã được cập nhật thành công"
         };
     }
 

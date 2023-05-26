@@ -100,6 +100,17 @@ public class ServiceValidator : BaseValidator, IServiceValidator
         throw new NotImplementedException();
     }
 
+    public Task<ValidatorResult> ValidateParams(ServiceTypeCreateRequest? serviceType, int? serviceTypeId,
+        CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<ValidatorResult> ValidateParams(ServiceTypeCreateRequest? serviceType, CancellationToken serviceTypeId)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<ValidatorResult> ValidateParams(ServiceType? obj, int? serviceTypeId, CancellationToken token)
     {
         try
@@ -139,16 +150,5 @@ public class ServiceValidator : BaseValidator, IServiceValidator
         }
 
         return ValidatorResult;
-    }
-
-    public Task<ValidatorResult> ValidateParams(ServiceTypeCreateRequest? serviceType, int? serviceTypeId,
-        CancellationToken token)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<ValidatorResult> ValidateParams(ServiceTypeCreateRequest? serviceType, CancellationToken serviceTypeId)
-    {
-        throw new NotImplementedException();
     }
 }

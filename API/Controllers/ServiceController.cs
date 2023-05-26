@@ -203,13 +203,13 @@ public class ServiceController : ControllerBase
             ? NotFound(new
             {
                 status = "Not Found",
-                message = "Service not found",
+                message = "Dịch vụ không tồn tại",
                 data = ""
             })
             : Ok(new
             {
                 status = "Success",
-                message = "Service found",
+                message = "Hiện thị dịch vụ",
                 data = _mapper.Map<ServiceDetailEntity>(entity)
             });
     }
@@ -338,14 +338,14 @@ public class ServiceController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Service not found",
+                message = "Hiện thị thông tin dịch vụ",
                 data = ""
             });
 
         return Ok(new
         {
             status = "Success",
-            message = "Service added",
+            message = "Tạo mới dịch vụ thành công",
             data = ""
         });
     }
@@ -383,13 +383,6 @@ public class ServiceController : ControllerBase
         var filter = _mapper.Map<ServiceTypeFilter>(request);
 
         var list = await _serviceWrapper.ServiceTypes.GetServiceTypeList(filter, token);
-        if (list != null && !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Service type list is empty",
-                data = ""
-            });
 
         var resultList = _mapper.Map<IEnumerable<ServiceTypeDetailEntity>>(list);
 
@@ -397,7 +390,7 @@ public class ServiceController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Service type list is empty",
+                message = "Hiển thị danh sách loại dịch vụ",
                 data = ""
             });
 
@@ -422,13 +415,13 @@ public class ServiceController : ControllerBase
             ? NotFound(new
             {
                 status = "Not Found",
-                message = "Service type not found",
+                message = "Loại dịch vụ không tồn tại",
                 data = ""
             })
             : Ok(new
             {
                 status = "Success",
-                message = "Service type found",
+                message = "Hiển thị thông tin loại dịch vụ",
                 data = _mapper.Map<ServiceTypeDetailEntity>(entity)
             });
     }
@@ -504,13 +497,13 @@ public class ServiceController : ControllerBase
             return BadRequest(new
             {
                 status = "Bad Request",
-                message = "Service type failed to create",
+                message = "Tạo mới loại dịch vụ thất bại",
                 data = ""
             });
         return Ok(new
         {
             status = "Success",
-            message = "Service type created",
+            message = "Tạo mới thành công",
             data = ""
         });
     }

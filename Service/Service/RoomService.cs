@@ -27,9 +27,9 @@ public class RoomService : IRoomService
         _paginationOptions = paginationOptions.Value;
     }
 
-    public Task<RepositoryResponse> UpdateRoom(Room room, int buildingId, CancellationToken token)
+    public async Task<RepositoryResponse> UpdateRoom(Room room, int buildingId, CancellationToken token)
     {
-        throw new NotImplementedException();
+        return await _repositoryWrapper.Rooms.UpdateRoom(room, buildingId, token);
     }
 
     public async Task<PagedList<Room>?> GetRoomList(RoomFilter filters, int buildingId, CancellationToken token)

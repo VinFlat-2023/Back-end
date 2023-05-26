@@ -115,7 +115,7 @@ public class InvoiceController : ControllerBase
                 return BadRequest(new
                 {
                     status = "Bad Request",
-                    message = "No user logged in",
+                    message = "Lỗi đăng nhập",
                     data = ""
                 });
         }
@@ -123,7 +123,7 @@ public class InvoiceController : ControllerBase
         return BadRequest(new
         {
             status = "Bad Request",
-            message = "Bad request with invoice controller !!!",
+            message = "Lỗi hệ thống",
             data = ""
         });
     }
@@ -146,7 +146,7 @@ public class InvoiceController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "Hoá đơn tìm thấy",
+            message = "Đã tìm thấy hoá đơn",
             data = _mapper.Map<InvoiceRenterDetailEntity>(entity)
         });
     }
@@ -191,7 +191,7 @@ public class InvoiceController : ControllerBase
         return Ok(new
         {
             status = "Success",
-            message = "Hoá đơn tìm thấy",
+            message = "Đã tìm thấy hoá đơn",
             data = _mapper.Map<InvoiceRenterDetailEntity>(invoice)
         });
     }
@@ -577,13 +577,13 @@ public class InvoiceController : ControllerBase
             ? NotFound(new
             {
                 status = "Not Found",
-                message = "Invoice type not found",
+                message = "Loại hoá đơn không tồn tại",
                 data = ""
             })
             : Ok(new
             {
                 status = "Success",
-                message = "Invoice type found",
+                message = "Hiển thị chi tiết loại hoá đơn",
                 data = _mapper.Map<InvoiceTypeDetailEntity>(entity)
             });
     }
@@ -649,19 +649,22 @@ public class InvoiceController : ControllerBase
 
 
         var result = await _serviceWrapper.InvoiceTypes.UpdateInvoiceType(updateInvoiceType);
-        return result == null
-            ? NotFound(new
-            {
-                status = "Not Found",
-                message = "Invoice type failed to update",
-                data = ""
-            })
-            : Ok(new
+
+        return result.IsSuccess switch
+        {
+            true => Ok(new
             {
                 status = "Success",
-                message = "Invoice type updated",
+                message = result.Message,
                 data = ""
-            });
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
     }
 
     [SwaggerOperation(Summary = "[Authorize] Delete invoice type (For management)")]
@@ -726,7 +729,7 @@ public class InvoiceController : ControllerBase
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Invoice detail list is empty",
+                message = "Danh sách trống",
                 data = ""
             });
 

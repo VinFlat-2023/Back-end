@@ -18,4 +18,5 @@ public interface IRoomRepository
 
     public IQueryable<Room> GetRoomList(int flatId, int buildingId);
     public IQueryable<int> GetTotalRoomInBuilding(MetricRoomFilter filter, int buildingId);
+    public Task<RepositoryResponse> UpdateRoom(Room room, int buildingId, CancellationToken token);
 }

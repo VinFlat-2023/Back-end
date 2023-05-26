@@ -155,6 +155,11 @@ public class ConditionCheckHelper : IConditionCheckHelper
         return await _serviceWrapper.RoomTypes.GetRoomTypeById(roomId, buildingId, token);
     }
 
+    public async Task<Room?> RoomCheck(int roomId, int buildingId, CancellationToken token)
+    {
+        return await _serviceWrapper.Rooms.GetRoomById(roomId, buildingId, token);
+    }
+
     public async Task<RepositoryResponse> IsRoomExistAndAvailableInThisFlat(int? roomId, int? flatId,
         CancellationToken token)
     {

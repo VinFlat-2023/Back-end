@@ -237,12 +237,13 @@ public class FlatController : ControllerBase
 
         return result.IsSuccess switch
         {
-            false => BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Cập nhật căn hộ thất bại",
-                data = ""
-            }),
+            false => BadRequest(
+                new
+                {
+                    status = "Bad Request",
+                    message = "Cập nhật căn hộ thất bại",
+                    data = ""
+                }),
             true => Ok(
                 new
                 {

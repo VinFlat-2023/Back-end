@@ -10,6 +10,7 @@ public interface IEmployeeService
     public Task<Employee?> GetEmployeeById(int? employeeId, CancellationToken token);
     public Task<Employee?> AddEmployee(Employee employee);
     public Task<RepositoryResponse> UpdateEmployee(Employee employee);
+    public Task<RepositoryResponse> UpdateEmployeeBuilding(Employee employee);
     public Task<RepositoryResponse> UpdateEmployeeManagement(Employee employee);
     public Task<RepositoryResponse> UpdatePasswordEmployee(Employee employee);
     public Task<RepositoryResponse> ToggleEmployeeStatus(int employeeId);

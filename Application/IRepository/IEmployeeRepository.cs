@@ -11,6 +11,7 @@ public interface IEmployeeRepository
     public IQueryable<Employee> GetEmployeeById(int? employeeId);
     public Task<Employee?> AddEmployee(Employee employee);
     public Task<RepositoryResponse> UpdateEmployee(Employee employee);
+    public Task<RepositoryResponse> UpdateEmployeeBuilding(Employee employee);
     public Task<RepositoryResponse> UpdateEmployeeManagement(Employee employee);
     public Task<RepositoryResponse> UpdateEmployeePassword(Employee employee);
     public Task<RepositoryResponse> ToggleEmployee(int employeeId);

@@ -66,7 +66,7 @@ internal class TicketTypeRepository : ITicketTypeRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "TicketType not found"
+                Message = "Loại yêu cầu không tồn tại"
             };
 
         requestTypeData.Description = ticketType?.Description ?? requestTypeData.Description;
@@ -80,7 +80,7 @@ internal class TicketTypeRepository : ITicketTypeRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "TicketType updated successfully"
+            Message = "Loại yêu cầu đã được cập nhật thành công"
         };
     }
 
@@ -97,14 +97,14 @@ internal class TicketTypeRepository : ITicketTypeRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "TicketType not found"
+                Message = "Loại yêu cầu không tồn tại"
             };
         _context.TicketTypes.Remove(ticketTypeFound);
         await _context.SaveChangesAsync();
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "TicketType deleted successfully"
+            Message = "Loại yêu cầu đã được xóa thành công"
         };
     }
 
@@ -122,7 +122,7 @@ internal class TicketTypeRepository : ITicketTypeRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "TicketType not found"
+                Message = "Loại yêu cầu không tồn tại"
             };
 
         ticketTypeStatus.Status = !ticketTypeStatus.Status;
@@ -132,7 +132,7 @@ internal class TicketTypeRepository : ITicketTypeRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "TicketType status toggled successfully"
+            Message = "Loại yêu cầu đã được cập nhật thành công"
         };
     }
 }

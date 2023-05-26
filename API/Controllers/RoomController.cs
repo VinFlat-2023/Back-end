@@ -1,4 +1,5 @@
 using AutoMapper;
+using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Room;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
@@ -26,17 +27,103 @@ public class RoomController : ControllerBase
         _validator = validator;
     }
 
-    [HttpPut]
+    [HttpPut("{roomId}")]
     [Authorize(Roles = "Supervisor")]
     [SwaggerOperation("[Authorize] Update room from a flat in building managed by supervisor")]
     public async Task<IActionResult> UpdateRoomInAFlat(int roomId, RoomUpdateRequest request, CancellationToken token)
     {
-        return Ok(new
+        var userId = int.Parse(User.Identity.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+
+        switch (buildingId)
         {
-            status = "Success",
-            message = "Phòng cập nhật thành công",
-            data = ""
-        });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                    data = ""
+                });
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Người quản lý không quản lý tòa nhà nào",
+                    data = ""
+                });
+        }
+
+        var updateRoom = new Room
+        {
+            RoomId = roomId,
+            RoomName = request.RoomName,
+            ElectricityAttribute = request.ElectricityAttribute,
+            WaterAttribute = request.WaterAttribute,
+            Status = request.Status
+        };
+
+        var roomCheck = await _serviceWrapper.Rooms.GetRoomById(roomId, buildingId, token);
+
+        if (roomCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Phòng không tồn tại",
+                data = ""
+            });
+
+        var roomTypeCheck = await _serviceWrapper.RoomTypes.GetRoomTypeById(roomCheck.RoomTypeId, buildingId, token);
+
+        if (roomTypeCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Loại phòng không tồn tại",
+                data = ""
+            });
+
+        if (roomCheck.AvailableSlots == roomTypeCheck.TotalSlot
+            && request.Status.ToLower() == "active")
+            updateRoom.RoomTypeId = request.RoomTypeId;
+
+        if ((roomCheck.AvailableSlots == roomTypeCheck.TotalSlot
+             && request.Status.ToLower() == "maintenance") ||
+            request.Status.ToLower() == "inactive")
+        {
+            updateRoom.FlatId = request.FlatId;
+            updateRoom.RoomTypeId = request.RoomTypeId;
+        }
+
+        if ((roomCheck.AvailableSlots != roomTypeCheck.TotalSlot
+             && request.Status.ToLower() == "maintenance") ||
+            request.Status.ToLower() == "inactive")
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Phòng đang có người ở, không thể chuyển sang trạng thái bảo trì hoặc không hoạt động",
+                data = ""
+            });
+
+        var result = await _serviceWrapper.Rooms.UpdateRoom(updateRoom, buildingId, token);
+
+        return result.IsSuccess switch
+        {
+            true => Ok(new
+            {
+                status = "Success",
+                message = result.Message,
+                data = ""
+            }),
+            false => NotFound(new
+            {
+                status = "Not Found",
+                message = result.Message,
+                data = ""
+            })
+        };
+
+        //var validationResult = await _validator.ValidateAsync(updateRoom, token);
     }
 
     [HttpGet]

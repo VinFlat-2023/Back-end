@@ -168,7 +168,7 @@ public class BuildingRepository : IBuildingRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Building image updated successfully"
+            Message = "Hình ảnh đã được cập nhật"
         };
     }
 
@@ -209,7 +209,7 @@ public class BuildingRepository : IBuildingRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Building updated successfully"
+            Message = "Cập nhật thành công"
         };
     }
 

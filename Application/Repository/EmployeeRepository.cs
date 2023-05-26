@@ -183,6 +183,31 @@ public class EmployeeRepository : IEmployeeRepository
         };
     }
 
+    public async Task<RepositoryResponse> UpdateEmployeeBuilding(Employee employee)
+    {
+        var employeeData = await _context.Employees
+            .FirstOrDefaultAsync(x => x.EmployeeId == employee.EmployeeId);
+
+        if (employeeData == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Nhân viên không tồn tại"
+            };
+
+        employeeData.SupervisorBuildingId = employee.SupervisorBuildingId;
+
+        _context.Attach(employeeData).State = EntityState.Modified;
+
+        await _context.SaveChangesAsync();
+
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Thông tin của nhân viên đã được cập nhật thành công"
+        };
+    }
+
     public async Task<RepositoryResponse> UpdateEmployeeManagement(Employee employee)
     {
         var employeeData = await _context.Employees

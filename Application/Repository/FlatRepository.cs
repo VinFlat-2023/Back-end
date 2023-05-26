@@ -225,7 +225,7 @@ public class FlatRepository : IFlatRepository
         return new RepositoryResponse
         {
             IsSuccess = false,
-            Message = "Internal server error for flat services"
+            Message = "Lỗi hệ thống ở căn hộ"
         };
     }
 

@@ -15,8 +15,8 @@ public class Room
     public int BuildingId { get; set; }
     public int RoomTypeId { get; set; }
     public virtual RoomType RoomType { get; set; }
-    public int FlatId { get; set; }
-    public virtual Flat Flat { get; set; }
+    public int? FlatId { get; set; }
+    public virtual Flat? Flat { get; set; }
 
     public string? RoomImageUrl1 { get; set; }
     public string? RoomImageUrl2 { get; set; }

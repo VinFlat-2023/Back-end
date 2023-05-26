@@ -97,7 +97,7 @@ public class RenterService : IRenterService
 
     public async Task<Renter?> GetRenterById(int? renterId, CancellationToken token)
     {
-        return await _repositoryWrapper.Renters.GetRenterDetail(renterId)
+        return await _repositoryWrapper.Renters.GetRenterById(renterId)
             .FirstOrDefaultAsync(token);
     }
 

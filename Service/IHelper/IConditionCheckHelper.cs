@@ -73,6 +73,8 @@ public interface IConditionCheckHelper
 
     public Task<RoomType?> RoomTypeCheck(int? roomId, int? buildingId, CancellationToken token);
 
+    public Task<Room?> RoomCheck(int objRoomId, int buildingId, CancellationToken token);
+
     // Check if exist 
     public Task<RepositoryResponse>
         IsRoomExistAndAvailableInThisFlat(int? roomId, int? flatId, CancellationToken token);

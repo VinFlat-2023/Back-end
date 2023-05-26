@@ -152,7 +152,7 @@ public class AreaRepository : IAreaRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Area not found"
+                Message = "Không tìm thấy khu vực này"
             };
 
         areaData.Name = area.Name;

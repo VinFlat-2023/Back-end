@@ -87,7 +87,7 @@ public class GetIdRepository : IGetIdRepository
         var employeeList = await _context.Employees
             .Include(x => x.Role)
             .Where(x =>
-                x.Role.RoleName.ToLower() == "Supervisor".ToLower()
+                x.Role.RoleName.ToLower() == "supervisor".ToLower()
                 && x.SupervisorBuildingId == entityBuildingId)
             .Select(x => x.EmployeeId)
             .ToListAsync(token);

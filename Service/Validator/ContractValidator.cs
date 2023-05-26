@@ -50,6 +50,13 @@ public class ContractValidator : BaseValidator, IContractValidator
                     break;
             }
 
+            switch (obj?.StartDate)
+            {
+                case null:
+                    ValidatorResult.Failures.Add("Ngày bắt đầu là bắt buộc");
+                    break;
+            }
+
             switch (obj?.Description)
             {
                 case not null when string.IsNullOrWhiteSpace(obj.Description):
@@ -57,13 +64,6 @@ public class ContractValidator : BaseValidator, IContractValidator
                     break;
                 case not null when obj.Description.Length > 500:
                     ValidatorResult.Failures.Add("Mô tả không được vượt quá 500 ký tự");
-                    break;
-            }
-
-            switch (obj?.StartDate)
-            {
-                case null:
-                    ValidatorResult.Failures.Add("Ngày bắt đầu là bắt buộc");
                     break;
             }
 
@@ -273,10 +273,23 @@ public class ContractValidator : BaseValidator, IContractValidator
                     break;
             }
 
+            switch (obj?.EndDate)
+            {
+                case not null when obj.EndDate.ToDateTime() <= DateTime.UtcNow:
+                    ValidatorResult.Failures.Add("Ngày kết thúc hợp đồng phải lớn hơn ngày hiện tại");
+                    break;
+                case null:
+                    ValidatorResult.Failures.Add("Ngày kết thúc hợp đồng không được để trống");
+                    break;
+            }
+
             switch (obj?.DateSigned)
             {
                 case null:
                     ValidatorResult.Failures.Add("Ngày ký hợp đồng không được để trống");
+                    break;
+                case not null when obj.DateSigned.ToDateTime() > obj.EndDate.ToDateTime():
+                    ValidatorResult.Failures.Add("Ngày ký hợp đồng không được lớn hơn ngày kết thúc hợp đồng");
                     break;
             }
 
@@ -285,15 +298,8 @@ public class ContractValidator : BaseValidator, IContractValidator
                 case null:
                     ValidatorResult.Failures.Add("Ngày bắt đầu không được để trống");
                     break;
-            }
-
-            switch (obj?.EndDate)
-            {
-                case not null when obj.EndDate.ToDateTime() <= DateTime.UtcNow:
-                    ValidatorResult.Failures.Add("Ngày kết thúc hợp đồng phải lớn hơn ngày hiện tại");
-                    break;
-                case null:
-                    ValidatorResult.Failures.Add("Ngày kết thúc hợp đồng không được để trống");
+                case not null when obj.StartDate.ToDateTime() > obj.EndDate.ToDateTime():
+                    ValidatorResult.Failures.Add("Ngày ký hợp đồng không được lớn hơn ngày kết thúc hợp đồng");
                     break;
             }
 
@@ -409,7 +415,7 @@ public class ContractValidator : BaseValidator, IContractValidator
                 case not null when obj.RoomId < 0:
                     ValidatorResult.Failures.Add("Phòng không hợp lệ");
                     break;
-                case not null when await _conditionCheckHelper.RoomTypeCheck(obj.RoomId, buildingId, token) == null:
+                case not null when await _conditionCheckHelper.RoomCheck(obj.RoomId, buildingId, token) == null:
                     ValidatorResult.Failures.Add("Phòng không tồn tại");
                     break;
                 case not null:
@@ -578,7 +584,7 @@ public class ContractValidator : BaseValidator, IContractValidator
                 case not null when obj.RoomId < 0:
                     ValidatorResult.Failures.Add("Phòng không hợp lệ");
                     break;
-                case not null when await _conditionCheckHelper.RoomTypeCheck(obj.RoomId, buildingId, token) == null:
+                case not null when await _conditionCheckHelper.RoomCheck(obj.RoomId, buildingId, token) == null:
                     ValidatorResult.Failures.Add("Phòng không tồn tại");
                     break;
                 case not null:

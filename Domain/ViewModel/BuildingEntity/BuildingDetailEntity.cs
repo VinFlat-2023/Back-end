@@ -6,6 +6,7 @@ public class BuildingDetailEntity
 {
     public int BuildingId { get; set; }
     public string BuildingName { get; set; } = null!;
+    public string BuildingPhoneNumber { get; set; }
     public string? Description { get; set; }
     public int? TotalRooms { get; set; }
     public bool Status { get; set; }

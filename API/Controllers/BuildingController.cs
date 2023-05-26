@@ -244,85 +244,89 @@ public class BuildingController : ControllerBase
                     data = ""
                 });
             case -1:
-                return NotFound(new
+                var newBuilding = new Building
                 {
-                    status = "Not Found",
-                    message = "Người quản lý không quản lý tòa nhà nào",
-                    data = ""
-                });
-        }
-
-        var newBuilding = new Building
-        {
-            BuildingName = building.BuildingName ?? "Building created by " + supervisor.FullName,
-            BuildingAddress = building.BuildingAddress ?? "To be filled",
-            Description = building.Description ?? "Building description",
-            TotalFlats = 0,
-            AveragePrice = building.AveragePrice ?? 0,
-            EmployeeId = employeeId,
-            Status = building.Status ?? true,
-            AreaId = building.AreaId,
-            BuildingPhoneNumber = building.BuildingPhoneNumber ?? "0",
-            BuildingImageUrl1 = building.ImageUrl,
-            BuildingImageUrl2 = building.ImageUrl2,
-            BuildingImageUrl3 = building.ImageUrl3,
-            BuildingImageUrl4 = building.ImageUrl4,
-            BuildingImageUrl5 = building.ImageUrl5,
-            BuildingImageUrl6 = building.ImageUrl6
-        };
-
-        var result = await _serviceWrapper.Buildings.AddBuildingAndItsManagement(newBuilding, employeeId);
-
-        switch (result.IsSuccess)
-        {
-            case true:
-                var buildingDetail =
-                    await _serviceWrapper.Buildings.GetBuildingById(buildingForCurrentSupervisor, token);
-
-                if (buildingDetail == null)
-                    return NotFound(new
-                    {
-                        status = "Not Found",
-                        message = "Toà nhà vừa tạo không tìm thấy",
-                        data = ""
-                    });
-
-                var employeeUpdate = new Employee
-                {
+                    BuildingName = building.BuildingName ?? "Building created by " + supervisor.FullName,
+                    BuildingAddress = building.BuildingAddress ?? "To be filled",
+                    Description = building.Description ?? "Building description",
+                    TotalFlats = 0,
+                    AveragePrice = building.AveragePrice ?? 0,
                     EmployeeId = employeeId,
-                    SupervisorBuildingId = buildingDetail.BuildingId
+                    Status = building.Status ?? true,
+                    AreaId = building.AreaId,
+                    BuildingPhoneNumber = building.BuildingPhoneNumber ?? "0",
+                    BuildingImageUrl1 = building.ImageUrl,
+                    BuildingImageUrl2 = building.ImageUrl2,
+                    BuildingImageUrl3 = building.ImageUrl3,
+                    BuildingImageUrl4 = building.ImageUrl4,
+                    BuildingImageUrl5 = building.ImageUrl5,
+                    BuildingImageUrl6 = building.ImageUrl6
                 };
 
-                //TODO: Implement batch insertion to include roll back
+                var result = await _serviceWrapper.Buildings.AddBuildingAndItsManagement(newBuilding, employeeId);
 
-                var employeeUpdateManagement = await _serviceWrapper.Employees.UpdateEmployee(employeeUpdate);
-
-                if (employeeUpdateManagement.IsSuccess == false)
-                    return NotFound(new
-                    {
-                        status = "Not Found",
-                        message = "Không thể cập nhật quản lý cho toà nhà",
-                        data = ""
-                    });
-
-                return Ok(new
+                switch (result.IsSuccess)
                 {
-                    status = "Success",
-                    message = result.Message,
-                    data = _mapper.Map<BuildingDetailEntity>(buildingDetail)
-                });
+                    case true:
+                        var buildingId =
+                            await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
 
-            case false:
-                return NotFound(new
-                {
-                    status = "Not Found",
-                    message = result.Message,
-                    data = ""
-                });
+                        var buildingDetail =
+                            await _serviceWrapper.Buildings.GetBuildingById(buildingId, token);
+
+                        if (buildingDetail == null)
+                            return NotFound(new
+                            {
+                                status = "Not Found",
+                                message = "Toà nhà vừa tạo không tìm thấy",
+                                data = ""
+                            });
+
+                        var employeeUpdate = new Employee
+                        {
+                            EmployeeId = employeeId,
+                            SupervisorBuildingId = buildingDetail.BuildingId
+                        };
+
+                        //TODO: Implement batch insertion to include roll back
+
+                        var employeeUpdateManagement =
+                            await _serviceWrapper.Employees.UpdateEmployeeBuilding(employeeUpdate);
+
+                        if (employeeUpdateManagement.IsSuccess == false)
+                            return NotFound(new
+                            {
+                                status = "Not Found",
+                                message = "Không thể cập nhật quản lý cho toà nhà",
+                                data = ""
+                            });
+
+                        return Ok(new
+                        {
+                            status = "Success",
+                            message = result.Message,
+                            data = _mapper.Map<BuildingDetailEntity>(buildingDetail)
+                        });
+
+                    case false:
+                        return NotFound(new
+                        {
+                            status = "Not Found",
+                            message = result.Message,
+                            data = ""
+                        });
+                }
         }
+
+        return BadRequest(new
+        {
+            status = "Bad Request",
+            message = "Lỗi hệ thống",
+            data = ""
+        });
     }
 
-    // DELETE: api/Buildings/5
+// DELETE: api/Buildings/5
     [SwaggerOperation(Summary = "[Authorize] Remove building (For management)")]
     [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]

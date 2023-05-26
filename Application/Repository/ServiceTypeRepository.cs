@@ -65,7 +65,7 @@ internal class ServiceTypeRepository : IServiceTypeRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Service type not found"
+                Message = "Loại dịch vụ không tồn tại"
             };
 
         serviceTypeData.Name = serviceType.Name;
@@ -75,7 +75,7 @@ internal class ServiceTypeRepository : IServiceTypeRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Service type updated successfully"
+            Message = "Loại dịch vụ đã được cập nhật thành công"
         };
     }
 
@@ -92,14 +92,14 @@ internal class ServiceTypeRepository : IServiceTypeRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Service type not found"
+                Message = "Loại dịch vụ không tồn tại"
             };
         _context.ServiceTypes.Remove(serviceTypeFound);
         await _context.SaveChangesAsync();
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Service type deleted successfully"
+            Message = "Loại dịch vụ đã được xóa thành công"
         };
     }
 }

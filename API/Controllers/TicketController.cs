@@ -199,7 +199,7 @@ public class TicketController : ControllerBase
         return BadRequest(new
         {
             status = "Bad Request",
-            message = "Bad request with ticket controller !!!",
+            message = "Lỗi hệ thống",
             data = ""
         });
     }
@@ -349,7 +349,7 @@ public class TicketController : ControllerBase
         return BadRequest(new
         {
             status = "Bad Request",
-            message = "Bad request !!!",
+            message = "Lỗi hệ thống",
             data = ""
         });
     }

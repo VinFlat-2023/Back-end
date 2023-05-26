@@ -33,6 +33,35 @@ public class RoomRepository : IRoomRepository
             .Select(x => x.RoomId);
     }
 
+    public async Task<RepositoryResponse> UpdateRoom(Room room, int buildingId, CancellationToken token)
+    {
+        var roomCheck = await _context.Rooms
+            .FirstOrDefaultAsync(x => x.BuildingId == buildingId && x.RoomId == room.RoomId, token);
+
+        if (roomCheck == null)
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Phòng này không tồn tại trong tòa nhà đã chọn"
+            };
+
+        roomCheck.RoomName = room.RoomName;
+        roomCheck.RoomTypeId = room.RoomTypeId;
+        roomCheck.FlatId = room.FlatId;
+        roomCheck.WaterAttribute = room.WaterAttribute;
+        roomCheck.ElectricityAttribute = room.ElectricityAttribute;
+        roomCheck.Status = room.Status;
+
+        _context.Attach(roomCheck).State = EntityState.Modified;
+        await _context.SaveChangesAsync(token);
+
+        return new RepositoryResponse
+        {
+            IsSuccess = true,
+            Message = "Cập nhật phòng thành công"
+        };
+    }
+
     public IQueryable<Room> GetRoomList(RoomFilter filters, int buildingId)
     {
         return _context.Rooms

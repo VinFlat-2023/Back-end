@@ -94,7 +94,7 @@ internal class ServiceEntityRepository : IServiceEntityRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Service not found"
+                Message = "Dịch vụ không tồn tại"
             };
 
         serviceData.ServiceTypeId = service.ServiceTypeId;
@@ -109,7 +109,7 @@ internal class ServiceEntityRepository : IServiceEntityRepository
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Service updated successfully"
+            Message = "Dịch vụ đã được cập nhật thành công"
         };
     }
 
@@ -126,14 +126,14 @@ internal class ServiceEntityRepository : IServiceEntityRepository
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Service not found"
+                Message = "Dịch vụ không tồn tại"
             };
         _context.Services.Remove(serviceFound);
         await _context.SaveChangesAsync();
         return new RepositoryResponse
         {
             IsSuccess = true,
-            Message = "Service deleted successfully"
+            Message = "Dịch vụ đã được xóa thành công"
         };
     }
 }

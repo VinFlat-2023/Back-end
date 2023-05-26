@@ -147,7 +147,7 @@ public class ContractController : ControllerBase
         return BadRequest(new
         {
             status = "Bad Request",
-            message = "Something went wrong",
+            message = "Lỗi hệ thống",
             data = ""
         });
     }
@@ -353,7 +353,7 @@ public class ContractController : ControllerBase
                 return BadRequest(new
                 {
                     status = "Bad Request",
-                    message = "You are not authorized to access this resource due to invalid renter ID",
+                    message = "Người dùng không có quyền truy cập tài nguyên này",
                     data = ""
                 });
 
@@ -361,7 +361,7 @@ public class ContractController : ControllerBase
                 return BadRequest(new
                 {
                     status = "Bad Request",
-                    message = "You are not authorized to access this resource due to invalid token",
+                    message = "Người dùng không có quyền truy cập tài nguyên này",
                     data = ""
                 });
 
@@ -369,7 +369,7 @@ public class ContractController : ControllerBase
                 return BadRequest(new
                 {
                     status = "Bad Request",
-                    message = "You are not authorized to access this resource",
+                    message = "Người dùng không có quyền truy cập tài nguyên này",
                     data = ""
                 });
 
@@ -407,14 +407,14 @@ public class ContractController : ControllerBase
                         return NotFound(new
                         {
                             status = "Not Found",
-                            message = "Employee not found for this building",
+                            message = "Toà nhà này hiện chưa có người quản lý",
                             data = ""
                         });
                     case -1:
                         return BadRequest(new
                         {
                             status = "Bad Request",
-                            message = "Something went wrong",
+                            message = "Toà nhà này hiện có nhiều hơn 1 người quản lý",
                             data = ""
                         });
                 }

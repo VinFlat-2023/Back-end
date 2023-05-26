@@ -62,7 +62,7 @@ public class RenterRepository : IRenterRepository
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    public IQueryable<Renter> GetRenterDetail(int? userId)
+    public IQueryable<Renter> GetRenterById(int? userId)
     {
         return _context.Renters
             .Include(x => x.Contracts
