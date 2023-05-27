@@ -37,7 +37,7 @@ public class ContractController : ControllerBase
 
     // GET: api/Contract
     [SwaggerOperation(Summary = "Get contract list using query (For management and renter)")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Supervisor, Renter")]
     [HttpGet]
     public async Task<IActionResult> GetContracts([FromQuery] ContractFilterRequest request, CancellationToken token)
     {
@@ -50,6 +50,7 @@ public class ContractController : ControllerBase
 
         switch (userRole)
         {
+            /*
             case "Admin":
                 var adminContractList = await _serviceWrapper.Contracts.GetContractList(filter, token);
 
@@ -71,7 +72,7 @@ public class ContractController : ControllerBase
                     totalPage = adminContractList.TotalPages,
                     totalCount = adminContractList.TotalCount
                 });
-
+            */
             case "Supervisor":
                 var supervisorId = Parse(User.Identity?.Name);
 
@@ -557,7 +558,7 @@ public class ContractController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Update Contract info (For management)",
         Description = "date format d/M/YYYY")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutContract(int id, [FromBody] ContractUpdateRequest contract,
         CancellationToken token)

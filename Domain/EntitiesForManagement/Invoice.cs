@@ -21,7 +21,7 @@ public class Invoice
     public DateTime? DueDate { get; set; }
     public DateTime? PaymentTime { get; set; }
 
-    public string? Detail { get; set; }
+    public string Detail { get; set; }
 
     // Contract 
     public int? ContractId { get; set; }

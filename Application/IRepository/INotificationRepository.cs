@@ -1,4 +1,5 @@
-﻿using Domain.EntitiesForManagement;
+﻿/*
+using Domain.EntitiesForManagement;
 
 namespace Application.IRepository;
 
@@ -12,3 +13,5 @@ public interface INotificationRepository
     public Task<bool> UpdateStatusNotificationByUserName(int notificationId, string userName);
     public Task<bool> UpdateBulkNotification(List<Notification> notificationList);
 }
+*/
+

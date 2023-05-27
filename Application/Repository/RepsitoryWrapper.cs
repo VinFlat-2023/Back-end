@@ -204,6 +204,7 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
+    /*
     public INotificationRepository Notifications
     {
         get
@@ -212,7 +213,7 @@ public class RepositoryWrapper : IRepositoryWrapper
             return _notification;
         }
     }
-
+    */
     public IRoomTypeRepository RoomsTypes
     {
         get
@@ -266,7 +267,7 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     // private IWalletRepository _wallets;
     // private IDeviceRepository _devices;
-    private INotificationRepository _notification;
+    // private INotificationRepository _notification;
     private IRoomRepository _room;
     private IRoomTypeRepository _roomType;
     private IGetIdRepository _getId;

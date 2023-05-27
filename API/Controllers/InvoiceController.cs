@@ -452,7 +452,7 @@ public class InvoiceController : ControllerBase
         {
             Name = invoice.Name,
             Status = true,
-            DueDate = invoice.DueDate ?? null,
+            DueDate = invoice.DueDate,
             Detail = invoice.Detail,
             PaymentTime = null,
             CreatedTime = DateTime.UtcNow,

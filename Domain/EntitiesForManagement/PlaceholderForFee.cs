@@ -8,10 +8,10 @@ public class PlaceholderForFee
     public int? TicketId { get; set; }
 
     // Contract ID if any fee is created from contract
-    public int? ContractServiceId { get; set; }
+    public int? ContractId { get; set; }
 
     // Name for service fee
     public string Name { get; set; } = null!;
     public string? Description { get; set; }
-    public decimal? Amount { get; set; }
+    public decimal Price { get; set; }
 }

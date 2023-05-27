@@ -16,10 +16,6 @@ public class MetricHistory
 
     public DateTime? RecordedDate { get; set; }
 
-    public DateTime StartDate { get; set; }
-
-    public DateTime EndDate { get; set; }
-
     public int FlatId { get; set; }
 
     public virtual Flat Flat { get; set; }

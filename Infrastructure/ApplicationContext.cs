@@ -14,9 +14,11 @@ public class ApplicationContext : DbContext
     public DbSet<Employee> Employees { get; set; } = null!;
     public DbSet<Area> Areas { get; set; } = null!;
     public DbSet<Building> Buildings { get; set; } = null!;
+
     public DbSet<Contract> Contracts { get; set; } = null!;
-    public DbSet<Feedback> Feedbacks { get; set; } = null!;
-    public DbSet<FeedbackType> FeedbackTypes { get; set; } = null!;
+
+    // public DbSet<Feedback> Feedbacks { get; set; } = null!;
+    // public DbSet<FeedbackType> FeedbackTypes { get; set; } = null!;
     public DbSet<Flat> Flats { get; set; } = null!;
     public DbSet<FlatType> FlatTypes { get; set; } = null!;
     public DbSet<Invoice> Invoices { get; set; } = null!;
@@ -27,22 +29,18 @@ public class ApplicationContext : DbContext
     public DbSet<TicketType> TicketTypes { get; set; } = null!;
     public DbSet<Role> Roles { get; set; } = null!;
     public DbSet<ServiceEntity> Services { get; set; } = null!;
-
     public DbSet<ServiceType> ServiceTypes { get; set; } = null!;
+    public DbSet<RoomType> RoomTypes { get; set; } = null!;
+    public DbSet<Room> Rooms { get; set; } = null!;
 
+    public DbSet<MetricHistory> MetricHistories { get; set; } = null!;
     // public DbSet<Wallet> Wallets { get; set; } = null!;
     // public DbSet<WalletType> WalletTypes { get; set; } = null!;
     // public DbSet<UserDevice> UserDevices { get; set; } = null!;
-    public DbSet<Notification> Notifications { get; set; } = null!;
-    public DbSet<NotificationType> NotificationTypes { get; set; } = null!;
-    public DbSet<RoomType> RoomTypes { get; set; } = null!;
-
-    public DbSet<Room> Rooms { get; set; } = null!;
-
+    // public DbSet<Notification> Notifications { get; set; } = null!;
+    // public DbSet<NotificationType> NotificationTypes { get; set; } = null!;
     // public DbSet<Utility> Utilities { get; set; } = null!;
     // public DbSet<UtilitiesRoom> UtilitiesRoom { get; set; } = null!;
-    public DbSet<MetricHistory> MetricHistories { get; set; } = null!;
-
     // public virtual DbSet<RoomType> RoomTypes { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

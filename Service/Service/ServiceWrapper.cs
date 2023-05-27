@@ -267,6 +267,7 @@ public class ServiceWrapper : IServiceWrapper
         }
     }
 
+    /*
     public INotificationService Notifications
     {
         get
@@ -275,7 +276,7 @@ public class ServiceWrapper : IServiceWrapper
             return _noti;
         }
     }
-
+    */
 
     public ICustomeMailService Mails
     {
@@ -323,7 +324,8 @@ public class ServiceWrapper : IServiceWrapper
 
     // private IDeviceService _device;
     private ICustomeMailService _mail;
-    private INotificationService _noti;
+
+    // private INotificationService _noti;
     private IRoomTypeService _roomType;
     private IRoomService _room;
     private IGetIdService _getId;
