@@ -29,12 +29,13 @@ public class RenterService : IRenterService
 
     public async Task<PagedList<Renter>?> GetRenterList(RenterFilter filters, int buildingId, CancellationToken token)
     {
-        var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<Renter>>(_cacheKey);
-        var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
-        var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
-
         var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
         var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
+        /*
+        var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<Renter>>(_cacheKey);
+        var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
+        var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);   
 
         var ifNullFilter = filters.GetType().GetProperties()
             .All(p => p.GetValue(filters) == null);
@@ -68,6 +69,7 @@ public class RenterService : IRenterService
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
             }
         }
+        */
 
         var queryable = _repositoryWrapper.Renters.GetRenterList(filters, buildingId);
 
@@ -77,9 +79,11 @@ public class RenterService : IRenterService
         var pagedList = await PagedList<Renter>
             .Create(queryable, pageNumber, pageSize, token);
 
+        /*
         await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
+        */
 
         return pagedList;
     }

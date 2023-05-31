@@ -30,12 +30,13 @@ public class FlatTypeService : IFlatTypeService
     public async Task<PagedList<FlatType>?> GetFlatTypeList(FlatTypeFilter filters, int buildingId,
         CancellationToken token)
     {
+        var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
+        /*
         var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<FlatType>>(_cacheKey);
         var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
         var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
-
-        var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
-        var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
 
         var ifNullFilter = filters.GetType().GetProperties()
             .All(p => p.GetValue(filters) == null);
@@ -66,6 +67,7 @@ public class FlatTypeService : IFlatTypeService
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
             }
         }
+        */
 
         var queryable = _repositoryWrapper.FlatTypes.GetFlatTypeList(filters, buildingId);
 
@@ -75,11 +77,19 @@ public class FlatTypeService : IFlatTypeService
         var pagedList = await PagedList<FlatType>
             .Create(queryable, pageNumber, pageSize, token);
 
+        /*
         await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
+        */
 
         return pagedList;
+    }
+
+    public async Task<List<FlatType>?> GetFlatTypeList(int buildingId, CancellationToken token)
+    {
+        return await _repositoryWrapper.FlatTypes.GetFlatTypeList(buildingId)
+            .ToListAsync(token);
     }
 
     public async Task<FlatType?> GetFlatTypeById(int? flatTypeId, int buildingId, CancellationToken token)

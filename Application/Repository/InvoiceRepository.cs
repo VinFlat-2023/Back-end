@@ -1,8 +1,6 @@
-﻿using System.Globalization;
-using Application.IRepository;
+﻿using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
-using Domain.EntityRequest.Invoice;
 using Domain.QueryFilter;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -169,6 +167,7 @@ public class InvoiceRepository : IInvoiceRepository
         CancellationToken token)
     {
         return await _context.Invoices
+            .Include(x => x.Employee)
             .Include(x => x.Renter)
             .Include(x => x.InvoiceDetails)
             .ThenInclude(x => x.Service)
@@ -300,33 +299,68 @@ public class InvoiceRepository : IInvoiceRepository
         }
     }
 
-
-    public async Task<RepositoryResponse> BatchInsertInvoice(IEnumerable<MassInvoiceCreateRequest> invoices)
+    public async Task<RepositoryResponse> BatchInsertMonthlyInvoice(IEnumerable<int> invoices, CancellationToken token)
     {
-        await using var transaction = await _context.Database.BeginTransactionAsync();
+        await using var transaction = await _context.Database.BeginTransactionAsync(token);
         try
         {
-            foreach (var invoiceEntity in invoices
-                         .Select(invoice => new Invoice
-                         {
-                             Name = invoice.Name,
-                             DueDate = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-                                 "dd/MM/yyyy HH:mm:ss", null).AddMonths(1),
-                             Status = true,
-                             Detail = invoice.Detail,
-                             EmployeeId = invoice.EmployeeId,
-                             RenterId = invoice.RenterId,
-                             InvoiceTypeId = invoice.InvoiceTypeId,
-                             CreatedTime = DateTime.ParseExact(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-                                 "dd/MM/yyyy HH:mm:ss", null)
-                         }))
+            var listOfUnpaidInvoice = new List<int>();
 
-                await _context.Invoices.AddAsync(invoiceEntity);
+            var listOfRenterNoLongerActive = new List<int>();
 
+            var listOfRenterNotExist = new List<int>();
 
-            await _context.SaveChangesAsync();
+            foreach (var renterId in invoices)
+            {
+                var renterInvoiceCheck =
+                    await GetLatestUnpaidInvoiceByRenter(renterId, token);
 
-            await transaction.CommitAsync();
+                if (renterInvoiceCheck != 0)
+                {
+                    listOfUnpaidInvoice.Add(renterId);
+                    break;
+                }
+
+                var renterContractCheck = await _context.Contracts
+                    .FirstOrDefaultAsync(x
+                        => x.RenterId == renterId &&
+                           x.ContractStatus.ToLower() == "active", token);
+
+                if (renterContractCheck == null)
+                {
+                    listOfRenterNoLongerActive.Add(renterId);
+                    break;
+                }
+
+                var renter = await _context.Renters
+                    .FirstOrDefaultAsync(x => x.RenterId == renterId, token);
+
+                if (renter == null)
+                {
+                    listOfRenterNotExist.Add(renterId);
+                    break;
+                }
+
+                var newInvoice = new Invoice
+                {
+                    RenterId = renterId,
+                    ContractId = renterContractCheck.ContractId,
+                    BuildingId = renterContractCheck.BuildingId,
+                    InvoiceTypeId = 1,
+                    Status = false,
+                    CreatedTime = DateTime.Now,
+                    DueDate = DateTime.Now.AddMonths(1).AddDays(9),
+                    Name = "Hóa đơn tháng " + DateTime.Now.Month + " năm " + DateTime.Now.Year + " của " +
+                           renter.FullName,
+                    Detail = "Hóa đơn tháng " + DateTime.Now.Month + " năm " + DateTime.Now.Year
+                };
+
+                await _context.Invoices.AddAsync(newInvoice, token);
+            }
+
+            await _context.SaveChangesAsync(token);
+
+            await transaction.CommitAsync(token);
 
             return new RepositoryResponse
             {
@@ -336,7 +370,103 @@ public class InvoiceRepository : IInvoiceRepository
         }
         catch
         {
-            await transaction.RollbackAsync();
+            await transaction.RollbackAsync(token);
+            return new RepositoryResponse
+            {
+                IsSuccess = false,
+                Message = "Tạo hóa đơn thất bại"
+            };
+        }
+    }
+
+    public async Task<RepositoryResponse> BatchInsertMonthlyInvoice(int buildingId, CancellationToken token)
+    {
+        await using var transaction = await _context.Database.BeginTransactionAsync(token);
+        try
+        {
+            var listOfUnpaidInvoice = new List<int>();
+
+            var listOfRenterNoLongerActive = new List<int>();
+
+            var listOfRenterNotExist = new List<int>();
+
+            var renterList = await _context
+                .Contracts
+                .Where(x => x.ContractStatus.ToLower() == "active"
+                            && x.BuildingId == buildingId)
+                .DistinctBy(x => x.RenterId)
+                .Select(x => x.RenterId)
+                .ToListAsync(token);
+
+            var listCount = renterList;
+
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = renterList.Count.ToString()
+            };
+
+            foreach (var renterId in renterList)
+            {
+                var renterInvoiceCheck =
+                    await GetLatestUnpaidInvoiceByRenter(renterId, token);
+
+                if (renterInvoiceCheck != 0)
+                {
+                    listOfUnpaidInvoice.Add(renterId);
+                    break;
+                }
+
+                var renterContractCheck = await _context.Contracts
+                    .FirstOrDefaultAsync(x
+                        => x.RenterId == renterId &&
+                           x.ContractStatus.ToLower() == "active", token);
+
+                if (renterContractCheck == null)
+                {
+                    listOfRenterNoLongerActive.Add(renterId);
+                    break;
+                }
+
+                var renter = await _context.Renters
+                    .FirstOrDefaultAsync(x => x.RenterId == renterId, token);
+
+                if (renter == null)
+                {
+                    listOfRenterNotExist.Add(renterId);
+                    break;
+                }
+
+                var newInvoice = new Invoice
+                {
+                    RenterId = renterId,
+                    ContractId = renterContractCheck.ContractId,
+                    BuildingId = renterContractCheck.BuildingId,
+                    InvoiceTypeId = 1,
+                    Status = false,
+                    CreatedTime = DateTime.Now,
+                    DueDate = DateTime.Now.AddMonths(1).AddDays(9),
+                    Name = "Hóa đơn tháng " + DateTime.Now.Month + " năm " + DateTime.Now.Year + " của " +
+                           renter.FullName,
+                    Detail = "Hóa đơn tháng " + DateTime.Now.Month + " năm " + DateTime.Now.Year
+                };
+
+                await _context.Invoices.AddAsync(newInvoice, token);
+            }
+
+            await _context.SaveChangesAsync(token);
+
+            await transaction.CommitAsync(token);
+
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Hóa đơn đã được tạo thành công"
+            };
+        }
+        catch
+        {
+            await transaction.RollbackAsync(token);
             return new RepositoryResponse
             {
                 IsSuccess = false,

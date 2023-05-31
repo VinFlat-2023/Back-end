@@ -32,6 +32,13 @@ public class FlatTypeRepository : IFlatTypeRepository
             .AsNoTracking();
     }
 
+    public IQueryable<FlatType> GetFlatTypeList(int buildingId)
+    {
+        return _context.FlatTypes
+            .Where(x => x.BuildingId == buildingId)
+            .AsTracking();
+    }
+
     /// <summary>
     ///     Get flat type by id
     /// </summary>

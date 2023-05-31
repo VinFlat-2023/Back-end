@@ -1,9 +1,9 @@
 using AutoMapper;
-using Domain.CustomEntities;
 using Domain.EntityRequest.Metric;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.ViewModel.FlatEntity;
+using Domain.ViewModel.MetricNumber;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -290,7 +290,7 @@ public class MetricController : ControllerBase
                 data = flat
             });
 
-        var flatMap = _mapper.Map<FlatBasicDetailEntity>(flat);
+        var flatMapped = _mapper.Map<FlatBasicDetailEntity>(flat);
 
         var result = await _serviceWrapper.Flats.GetTotalWaterAndElectricityByFlat(flatId, buildingId, token);
 
@@ -305,10 +305,62 @@ public class MetricController : ControllerBase
         var resultForFlat = new MetricNumberForFlat
         {
             LastFetch = DateTime.Now.ToString("dd/MM/yyyy"),
-            WaterNumber = result.WaterNumber,
-            ElectricityNumber = result.ElectricityNumber,
+            WaterNumber = result.TotalWaterNumber,
+            ElectricityNumber = result.TotalElectricityNumber,
             FlatId = flatId,
-            Flat = flatMap
+            Flat = flatMapped
+        };
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Hiển thị tổng số điện nước của căn hộ",
+            data = resultForFlat
+        });
+    }
+
+    [HttpGet("flat/{flatId:int}")]
+    [Authorize(Roles = "Supervisor, Technician")]
+    public async Task<IActionResult> GetTotalWaterAndElectricityInFlat(int flatId, CancellationToken token)
+    {
+        var userId = int.Parse(User.Identity.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+
+        switch (buildingId)
+        {
+            case -1:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang không quản lí toà nhà nào",
+                    data = ""
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
+                    data = -2
+                });
+        }
+
+        var flat = await _serviceWrapper.Flats.GetFlatById(flatId, buildingId, token);
+        if (flat == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Không tìm thấy căn hộ",
+                data = flat
+            });
+
+        var resultForFlat = new MetricNumber
+        {
+            WaterMeterBefore = flat.WaterMeterBefore,
+            WaterMeterAfter = flat.WaterMeterAfter,
+            ElectricityMeterBefore = flat.ElectricityMeterBefore,
+            ElectricityMeterAfter = flat.ElectricityMeterAfter,
+            LastFetch = DateTime.Now.ToString("dd/MM/yyyy")
         };
 
         return Ok(new

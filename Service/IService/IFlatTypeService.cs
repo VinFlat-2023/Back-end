@@ -7,6 +7,7 @@ namespace Service.IService;
 public interface IFlatTypeService
 {
     public Task<PagedList<FlatType>?> GetFlatTypeList(FlatTypeFilter filters, int buildingId, CancellationToken token);
+    public Task<List<FlatType>?> GetFlatTypeList(int buildingId, CancellationToken token);
     public Task<FlatType?> GetFlatTypeById(int? flatTypeId, int buildingId, CancellationToken token);
     public Task<FlatType?> AddFlatType(FlatType flatType);
     public Task<RepositoryResponse> UpdateFlatType(FlatType flatType);

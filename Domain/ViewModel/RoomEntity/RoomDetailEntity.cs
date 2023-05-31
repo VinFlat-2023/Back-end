@@ -26,6 +26,8 @@ public class RoomDetailEntity
     public string? RoomImageUrl5 { get; set; }
     public string? RoomImageUrl6 { get; set; }
 
+    public bool IsAnyOneRented { get; set; } = false;
+
     public virtual FlatBasicDetailEntity Flat { get; set; }
 
     public decimal ElectricityAttribute { get; set; }

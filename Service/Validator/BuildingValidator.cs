@@ -75,16 +75,6 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
                     break;
             }
 
-            switch (obj?.AveragePrice)
-            {
-                case not null when obj.AveragePrice < 0:
-                    ValidatorResult.Failures.Add("Giá tiền không được nhỏ hơn 0");
-                    break;
-                case null:
-                    ValidatorResult.Failures.Add("Giá tiền không được để trống");
-                    break;
-            }
-
             switch (obj?.AreaId)
             {
                 case null:
@@ -157,16 +147,6 @@ public class BuildingValidator : BaseValidator, IBuildingValidator
                     break;
                 case not null when !validatePhoneNumberRegex.IsMatch(obj.BuildingPhoneNumber):
                     ValidatorResult.Failures.Add("Số điện thoại không hợp lệ");
-                    break;
-            }
-
-            switch (obj?.AveragePrice)
-            {
-                case not null when obj.AveragePrice < 0:
-                    ValidatorResult.Failures.Add("Giá tiền không được nhỏ hơn 0");
-                    break;
-                case null:
-                    ValidatorResult.Failures.Add("Giá tiền không được để trống");
                     break;
             }
 

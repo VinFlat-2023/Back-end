@@ -1,6 +1,6 @@
 using Domain.ViewModel.FlatEntity;
 
-namespace Domain.CustomEntities;
+namespace Domain.ViewModel.MetricNumber;
 
 public class MetricNumberForFlat
 {

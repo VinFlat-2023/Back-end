@@ -220,18 +220,6 @@ public class FlatValidator : BaseValidator, IFlatValidator
             if (obj?.Status == null)
                 ValidatorResult.Failures.Add("Trạng thái không được để trống");
 
-            if (obj?.WaterMeterBefore == null)
-                ValidatorResult.Failures.Add("Số nước trước không được để trống");
-
-            if (obj?.ElectricityMeterBefore == null)
-                ValidatorResult.Failures.Add("Số điện trước không được để trống");
-
-            if (obj?.WaterMeterAfter == null)
-                ValidatorResult.Failures.Add("Số nước sau không được để trống");
-
-            if (obj?.ElectricityMeterAfter == null)
-                ValidatorResult.Failures.Add("Số điện sau không được để trống");
-
             if (flatId == null)
                 switch (obj?.FlatTypeId)
                 {
@@ -239,8 +227,14 @@ public class FlatValidator : BaseValidator, IFlatValidator
                         ValidatorResult.Failures.Add("Loại căn hộ không được để trống");
                         break;
                     case not null:
-                        if (await _conditionCheckHelper.FlatTypeCheck(obj.FlatTypeId, buildingId, token) == null)
+                        var flatTypeCheck =
+                            await _conditionCheckHelper.FlatTypeCheck(obj.FlatTypeId, buildingId, token);
+
+                        if (flatTypeCheck is null)
                             ValidatorResult.Failures.Add("Loại căn hộ không tồn tại");
+
+                        if (flatTypeCheck is { Status: false })
+                            ValidatorResult.Failures.Add("Loại căn hộ đã dừng sử dụng");
                         break;
                 }
         }
@@ -289,8 +283,14 @@ public class FlatValidator : BaseValidator, IFlatValidator
                     ValidatorResult.Failures.Add("Loại căn hộ không được để trống");
                     break;
                 case not null:
-                    if (await _conditionCheckHelper.FlatTypeCheck(obj.FlatTypeId, buildingId, token) == null)
+                    var flatTypeCheck = await _conditionCheckHelper.FlatTypeCheck(obj.FlatTypeId, buildingId, token);
+
+                    if (flatTypeCheck is null)
                         ValidatorResult.Failures.Add("Loại căn hộ không tồn tại");
+
+                    if (flatTypeCheck is { Status: false })
+                        ValidatorResult.Failures.Add("Loại căn hộ đã dừng sử dụng");
+
                     break;
             }
         }

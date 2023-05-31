@@ -3,6 +3,7 @@ using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Metric;
 using Domain.QueryFilter;
+using Domain.ViewModel.MetricNumber;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
@@ -59,7 +60,7 @@ public class FlatRepository : IFlatRepository
             .AsNoTracking();
     }
 
-    public async Task<MetricNumber?> GetTotalWaterAndElectricity(int buildingId, CancellationToken token)
+    public async Task<MetricNumberForTotal> GetTotalWaterAndElectricity(int buildingId, CancellationToken token)
     {
         var dataWater = await _context.Flats
             .Where(x => x.BuildingId == buildingId && x.Status.ToLower() != "inactive")
@@ -71,15 +72,15 @@ public class FlatRepository : IFlatRepository
             .Select(x => x.ElectricityMeterAfter)
             .SumAsync(x => x, token);
 
-        return new MetricNumber
+        return new MetricNumberForTotal
         {
-            WaterNumber = dataWater,
-            ElectricityNumber = dataElectricity,
+            TotalWaterNumber = dataWater,
+            TotalElectricityNumber = dataElectricity,
             LastFetch = DateTime.Now.ToString("dd/MM/yyyy")
         };
     }
 
-    public async Task<MetricNumber?> GetTotalWaterAndElectricityByFlat(int flatId, int buildingId,
+    public async Task<MetricNumberForTotal> GetTotalWaterAndElectricityByFlat(int flatId, int buildingId,
         CancellationToken token)
     {
         var dataWater = await _context.Flats
@@ -92,10 +93,10 @@ public class FlatRepository : IFlatRepository
             .Select(x => x.ElectricityMeterAfter)
             .SumAsync(x => x, token);
 
-        return new MetricNumber
+        return new MetricNumberForTotal
         {
-            WaterNumber = dataWater,
-            ElectricityNumber = dataElectricity,
+            TotalWaterNumber = dataWater,
+            TotalElectricityNumber = dataElectricity,
             LastFetch = DateTime.Now.ToString("dd/MM/yyyy")
         };
     }
@@ -115,12 +116,15 @@ public class FlatRepository : IFlatRepository
             };
 
         // TODO 
-        flatCheck.WaterMeterBefore = flatCheck.WaterMeterAfter;
-        flatCheck.WaterMeterAfter = request.WaterNumber;
+        flatCheck.WaterMeterBefore = request.WaterMeterBefore;
+        flatCheck.WaterMeterAfter = request.WaterMeterAfter;
 
-        flatCheck.ElectricityMeterBefore = flatCheck.WaterMeterAfter;
-        flatCheck.ElectricityMeterAfter = request.ElectricityNumber;
+        flatCheck.ElectricityMeterBefore = request.ElectricityMeterBefore;
+        flatCheck.ElectricityMeterAfter = request.ElectricityMeterAfter;
 
+        _context.Attach(flatCheck).State = EntityState.Modified;
+
+        await _context.SaveChangesAsync(token);
 
         return new RepositoryResponse
         {

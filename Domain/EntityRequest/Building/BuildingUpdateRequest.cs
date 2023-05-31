@@ -7,7 +7,6 @@ public class BuildingUpdateRequest
     public string BuildingAddress { get; set; }
     public bool Status { get; set; }
     public int AreaId { get; set; }
-    public decimal? AveragePrice { get; set; }
     public string BuildingPhoneNumber { get; set; }
     public string? ImageUrl { get; set; }
     public string? ImageUrl2 { get; set; }

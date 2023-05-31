@@ -1,5 +1,6 @@
 using Domain.ControllerEntities;
 using Domain.EntityRequest.Password;
+using Domain.EnumEntities;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
 using Swashbuckle.AspNetCore.Annotations;
@@ -59,7 +60,7 @@ public class AuthController : ControllerBase
         }
         */
 
-        var jwtToken = _serviceWrapper.Tokens.CreateTokenForEmployee(employee);
+        var jwtToken = _serviceWrapper.Tokens.CreateTokenForEmployee(employee, TokenType.Login);
         return Ok(new
         {
             status = "Success",
@@ -114,7 +115,7 @@ public class AuthController : ControllerBase
         }
         */
 
-        var jwtToken = _serviceWrapper.Tokens.CreateTokenForRenter(renter);
+        var jwtToken = _serviceWrapper.Tokens.CreateTokenForRenter(renter, TokenType.Login);
         return Ok(new
         {
             status = "Success",

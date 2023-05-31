@@ -2,6 +2,7 @@ using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Metric;
 using Domain.QueryFilter;
+using Domain.ViewModel.MetricNumber;
 
 namespace Service.IService;
 
@@ -15,11 +16,13 @@ public interface IFlatService
     public Task<RepositoryResponse> DeleteFlat(int flatId);
     public Task<RepositoryResponse> GetRoomInAFlat(int flatId, CancellationToken token);
     public Task<List<Flat>?> GetFlatList(int buildingId, CancellationToken token);
-    public Task<MetricNumber?> GetTotalWaterAndElectricity(int buildingId, CancellationToken token);
-    public Task<MetricNumber?> GetTotalWaterAndElectricityByFlat(int flatId, int buildingId, CancellationToken token);
+    public Task<MetricNumberForTotal?> GetTotalWaterAndElectricity(int buildingId, CancellationToken token);
 
-    public Task<RepositoryResponse> SetTotalWaterAndElectricityByFlat(UpdateMetricRequest flatId, int buildingId,
-        int token, CancellationToken cancellationToken);
+    public Task<MetricNumberForTotal?> GetTotalWaterAndElectricityByFlat(int flatId, int buildingId,
+        CancellationToken token);
+
+    public Task<RepositoryResponse> SetTotalWaterAndElectricityByFlat(UpdateMetricRequest request, int flatId,
+        int buildingId, CancellationToken token);
 
     public Task<int?> GetTotalFlatBasedOnFilter(MetricFlatFilter request, int buildingId, CancellationToken token);
 }

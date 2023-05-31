@@ -147,7 +147,8 @@ public class CustomeMailService : ICustomeMailService
                 logo.ContentId = MimeUtils.GenerateMessageId();
 
                 bodyBuilder.HtmlBody = FormatTemplate(template, logo.ContentId, name,
-                    invoice.DueDate?.ToString("dd/MM/yy") ?? DateTime.Now.ToString("dd/MM/yyyy"), invoice.ToHtmlTable());
+                    invoice.DueDate?.ToString("dd/MM/yy") ?? DateTime.Now.ToString("dd/MM/yyyy"),
+                    invoice.ToHtmlTable());
             }
             catch
             {

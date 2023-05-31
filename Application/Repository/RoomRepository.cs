@@ -36,7 +36,9 @@ public class RoomRepository : IRoomRepository
     public async Task<RepositoryResponse> UpdateRoom(Room room, int buildingId, CancellationToken token)
     {
         var roomCheck = await _context.Rooms
-            .FirstOrDefaultAsync(x => x.BuildingId == buildingId && x.RoomId == room.RoomId, token);
+            .FirstOrDefaultAsync(x
+                => x.BuildingId == buildingId
+                   && x.RoomId == room.RoomId, token);
 
         if (roomCheck == null)
             return new RepositoryResponse
@@ -45,14 +47,21 @@ public class RoomRepository : IRoomRepository
                 Message = "Phòng này không tồn tại trong tòa nhà đã chọn"
             };
 
-        roomCheck.RoomName = room.RoomName;
         roomCheck.RoomTypeId = room.RoomTypeId;
+        roomCheck.RoomName = room.RoomName;
         roomCheck.FlatId = room.FlatId;
         roomCheck.WaterAttribute = room.WaterAttribute;
         roomCheck.ElectricityAttribute = room.ElectricityAttribute;
         roomCheck.Status = room.Status;
+        roomCheck.RoomImageUrl1 = room.RoomImageUrl1;
+        roomCheck.RoomImageUrl2 = room.RoomImageUrl2;
+        roomCheck.RoomImageUrl3 = room.RoomImageUrl3;
+        roomCheck.RoomImageUrl4 = room.RoomImageUrl4;
+        roomCheck.RoomImageUrl5 = room.RoomImageUrl5;
+        roomCheck.RoomImageUrl6 = room.RoomImageUrl6;
 
         _context.Attach(roomCheck).State = EntityState.Modified;
+
         await _context.SaveChangesAsync(token);
 
         return new RepositoryResponse
@@ -85,9 +94,8 @@ public class RoomRepository : IRoomRepository
         CancellationToken token)
     {
         var roomCheck = await _context.Rooms
-            .FirstOrDefaultAsync(x => x.FlatId == flatId
-                                      && x.RoomId == roomId
-                                      && x.Status.ToLower() == "active", token);
+            .FirstOrDefaultAsync(x =>
+                x.FlatId == flatId && x.RoomId == roomId, token);
 
         if (roomCheck == null)
             return new RepositoryResponse
@@ -113,6 +121,8 @@ public class RoomRepository : IRoomRepository
     public async Task<Room?> GetRoomById(int roomId, int buildingId, CancellationToken token)
     {
         var roomCheck = await _context.Rooms
+            .Include(x => x.Flat)
+            .Include(x => x.RoomType)
             .FirstOrDefaultAsync(x => x.BuildingId == buildingId && x.RoomId == roomId, token);
 
         return roomCheck ?? null;
@@ -122,6 +132,7 @@ public class RoomRepository : IRoomRepository
         CancellationToken cancellationToken)
     {
         var roomInAFlatCheck = await _context.Rooms
+            .Include(x => x.RoomType)
             .FirstOrDefaultAsync(x => x.FlatId == flatId
                                       && x.RoomId == roomId
                                       && x.BuildingId == buildingId, cancellationToken);

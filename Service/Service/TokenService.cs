@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Domain.EntitiesForManagement;
+using Domain.EnumEntities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Service.IService;
@@ -17,7 +18,7 @@ public class TokenService : ITokenService
         _configuration = configuration;
     }
 
-    public string CreateTokenForRenter(Renter user)
+    public string CreateTokenForRenter(Renter user, TokenType tokenType)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -26,7 +27,8 @@ public class TokenService : ITokenService
             new(ClaimTypes.Role, "Renter"),
             new(ClaimTypes.Email, user.Email),
             new(ClaimTypes.Actor, user.Username),
-            new(ClaimTypes.Name, user.RenterId.ToString())
+            new(ClaimTypes.Name, user.RenterId.ToString()),
+            new(ClaimTypes.NameIdentifier, tokenType.ToString())
         };
 
         var securityKey = new SymmetricSecurityKey(
@@ -46,7 +48,7 @@ public class TokenService : ITokenService
         return tokenHandler.WriteToken(token);
     }
 
-    public string CreateTokenForEmployee(Employee employee)
+    public string CreateTokenForEmployee(Employee employee, TokenType tokenType)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -55,7 +57,8 @@ public class TokenService : ITokenService
             new(ClaimTypes.Role, employee.Role.RoleName),
             new(ClaimTypes.Email, employee.Email),
             new(ClaimTypes.Actor, employee.Username),
-            new(ClaimTypes.Name, employee.EmployeeId.ToString())
+            new(ClaimTypes.Name, employee.EmployeeId.ToString()),
+            new(ClaimTypes.NameIdentifier, tokenType.ToString())
         };
         var securityKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(_configuration["JwtToken:NotTokenKeyForSureSourceTrustMeDude"]));

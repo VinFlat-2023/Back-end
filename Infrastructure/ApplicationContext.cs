@@ -11,11 +11,10 @@ public class ApplicationContext : DbContext
         ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
     }
 
-    public DbSet<Employee> Employees { get; set; } = null!;
     public DbSet<Area> Areas { get; set; } = null!;
     public DbSet<Building> Buildings { get; set; } = null!;
-
     public DbSet<Contract> Contracts { get; set; } = null!;
+    public DbSet<Employee> Employees { get; set; } = null!;
 
     // public DbSet<Feedback> Feedbacks { get; set; } = null!;
     // public DbSet<FeedbackType> FeedbackTypes { get; set; } = null!;
@@ -24,16 +23,18 @@ public class ApplicationContext : DbContext
     public DbSet<Invoice> Invoices { get; set; } = null!;
     public DbSet<InvoiceDetail> InvoiceDetails { get; set; } = null!;
     public DbSet<InvoiceType> InvoiceTypes { get; set; } = null!;
+    public DbSet<MetricHistory> MetricHistories { get; set; } = null!;
+    public DbSet<PlaceholderForFee> PlaceholderForFees { get; set; } = null!;
     public DbSet<Renter> Renters { get; set; } = null!;
+    public DbSet<Role> Roles { get; set; } = null!;
+    public DbSet<Room> Rooms { get; set; } = null!;
+    public DbSet<RoomType> RoomTypes { get; set; } = null!;
+    public DbSet<ServiceEntity> Services { get; set; } = null!;
     public DbSet<Ticket> Tickets { get; set; } = null!;
     public DbSet<TicketType> TicketTypes { get; set; } = null!;
-    public DbSet<Role> Roles { get; set; } = null!;
-    public DbSet<ServiceEntity> Services { get; set; } = null!;
     public DbSet<ServiceType> ServiceTypes { get; set; } = null!;
-    public DbSet<RoomType> RoomTypes { get; set; } = null!;
-    public DbSet<Room> Rooms { get; set; } = null!;
 
-    public DbSet<MetricHistory> MetricHistories { get; set; } = null!;
+
     // public DbSet<Wallet> Wallets { get; set; } = null!;
     // public DbSet<WalletType> WalletTypes { get; set; } = null!;
     // public DbSet<UserDevice> UserDevices { get; set; } = null!;
@@ -99,6 +100,119 @@ public class ApplicationContext : DbContext
 
             entity.Property(e => e.Status).HasDefaultValueSql("((1))");
         });
+
+
+        modelBuilder.Entity<Renter>().HasData(
+            new Renter
+            {
+                RenterId = 1,
+                Username = "renter1",
+                Email = "renter1@mail.com",
+                Password = "renter1",
+                PhoneNumber = "0123543125",
+                FullName = "Nguyen Van A",
+                BirthDate = DateTime.UtcNow,
+                Status = true,
+                CitizenNumber = "3214324523",
+                Address = "HCM",
+                Gender = "Male",
+                CitizenCardFrontImageUrl = "Ewqea",
+                CitizenCardBackImageUrl = "ewqe"
+            },
+            new Renter
+            {
+                RenterId = 2,
+                Username = "renter2",
+                Email = "renter2@mail.com",
+                Password = "renter2",
+                PhoneNumber = "0123543125",
+                FullName = "Nguyen Van B",
+                BirthDate = DateTime.UtcNow,
+                Status = true,
+                CitizenNumber = "3214324523",
+                Address = "Hue",
+                Gender = "Male",
+                CitizenCardFrontImageUrl = "Ewqea",
+                CitizenCardBackImageUrl = "ewqe"
+            },
+            new Renter
+            {
+                RenterId = 3,
+                Username = "renter3",
+                Email = "renter3@mail.com",
+                Password = "renter3",
+                PhoneNumber = "0123543125",
+                FullName = "Nguyen Van C",
+                BirthDate = DateTime.UtcNow,
+                Status = true,
+                CitizenNumber = "3214324523",
+                Address = "DN",
+                Gender = "Female",
+                CitizenCardFrontImageUrl = "Ewqea",
+                CitizenCardBackImageUrl = "ewqe"
+            }, new Renter
+            {
+                RenterId = 4,
+                Username = "renter4",
+                Email = "renter4@mail.com",
+                Password = "renter4",
+                PhoneNumber = "0123543125",
+                FullName = "Nguyen Van D",
+                BirthDate = DateTime.UtcNow,
+                Status = true,
+                CitizenNumber = "3214324523",
+                Address = "HN",
+                Gender = "Female",
+                CitizenCardFrontImageUrl = "Ewqea",
+                CitizenCardBackImageUrl = "ewqe"
+            }, new Renter
+            {
+                RenterId = 5,
+                Username = "minhkhoi10a3",
+                Email = "trankhaimnhkhoi10a3@mail.com",
+                Password = "123456789",
+                PhoneNumber = "0123543125",
+                FullName = "Tran Minh Khoi",
+                BirthDate = DateTime.UtcNow,
+                Status = true,
+                CitizenNumber = "3214324523",
+                Address = "HCM",
+                Gender = "Male",
+                CitizenCardFrontImageUrl = "Ewqea",
+                CitizenCardBackImageUrl = "ewqe"
+            }, new Renter
+            {
+                RenterId = 6,
+                Username = "minhkhoi",
+                Email = "trankhaimnhkhoi@mail.com",
+                Password = "123456789",
+                PhoneNumber = "0123543125",
+                FullName = "Tran Minh Khoi",
+                BirthDate = DateTime.UtcNow,
+                Status = true,
+                CitizenNumber = "3214324523",
+                Address = "HCM",
+                Gender = "Male",
+                CitizenCardFrontImageUrl = "Ewqea",
+                CitizenCardBackImageUrl = "ewqe"
+            }, new Renter
+            {
+                RenterId = 7,
+                Username = "minhkhoitkm",
+                Email = "khoitkmse150850@fpt",
+                Password = "123456789",
+                PhoneNumber = "0123543125",
+                FullName = "Tran Minh Khoi",
+                BirthDate = DateTime.UtcNow,
+                Status = true,
+                CitizenNumber = "3214324523",
+                Address = "HCM",
+                Gender = "Male",
+                CitizenCardFrontImageUrl = "Ewqea",
+                CitizenCardBackImageUrl = "ewqe"
+            }
+        );
+
 
         modelBuilder.Entity<Employee>().HasData(
             new Employee
@@ -751,116 +865,6 @@ public class ApplicationContext : DbContext
             }
         );
 
-        modelBuilder.Entity<Renter>().HasData(
-            new Renter
-            {
-                RenterId = 1,
-                Username = "renter1",
-                Email = "renter1@mail.com",
-                Password = "renter1",
-                PhoneNumber = "0123543125",
-                FullName = "Nguyen Van A",
-                BirthDate = DateTime.UtcNow,
-                Status = true,
-                CitizenNumber = "3214324523",
-                Address = "HCM",
-                Gender = "Male",
-                CitizenCardBackImageUrl = "ewqe",
-                CitizenCardFrontImageUrl = "Ewqea"
-            },
-            new Renter
-            {
-                RenterId = 2,
-                Username = "renter2",
-                Email = "renter2@mail.com",
-                Password = "renter2",
-                PhoneNumber = "0123543125",
-                FullName = "Nguyen Van B",
-                BirthDate = DateTime.UtcNow,
-                Status = true,
-                CitizenNumber = "3214324523",
-                Address = "Hue",
-                Gender = "Male",
-                CitizenCardBackImageUrl = "ewqe",
-                CitizenCardFrontImageUrl = "Ewqea"
-            },
-            new Renter
-            {
-                RenterId = 3,
-                Username = "renter3",
-                Email = "renter3@mail.com",
-                Password = "renter3",
-                PhoneNumber = "0123543125",
-                FullName = "Nguyen Van C",
-                BirthDate = DateTime.UtcNow,
-                Status = true,
-                CitizenNumber = "3214324523",
-                Address = "DN",
-                Gender = "Female",
-                CitizenCardBackImageUrl = "ewqe",
-                CitizenCardFrontImageUrl = "Ewqea"
-            }, new Renter
-            {
-                RenterId = 4,
-                Username = "renter4",
-                Email = "renter4@mail.com",
-                Password = "renter4",
-                PhoneNumber = "0123543125",
-                FullName = "Nguyen Van D",
-                BirthDate = DateTime.UtcNow,
-                Status = true,
-                CitizenNumber = "3214324523",
-                Address = "HN",
-                Gender = "Female",
-                CitizenCardBackImageUrl = "ewqe",
-                CitizenCardFrontImageUrl = "Ewqea"
-            }, new Renter
-            {
-                RenterId = 5,
-                Username = "minhkhoi10a3",
-                Email = "trankhaimnhkhoi10a3@mail.com",
-                Password = "123456789",
-                PhoneNumber = "0123543125",
-                FullName = "Tran Minh Khoi",
-                BirthDate = DateTime.UtcNow,
-                Status = true,
-                CitizenNumber = "3214324523",
-                Address = "HCM",
-                Gender = "Male",
-                CitizenCardBackImageUrl = "ewqe",
-                CitizenCardFrontImageUrl = "Ewqea"
-            }, new Renter
-            {
-                RenterId = 6,
-                Username = "minhkhoi",
-                Email = "trankhaimnhkhoi@mail.com",
-                Password = "123456789",
-                PhoneNumber = "0123543125",
-                FullName = "Tran Minh Khoi",
-                BirthDate = DateTime.UtcNow,
-                Status = true,
-                CitizenNumber = "3214324523",
-                Address = "HCM",
-                Gender = "Male",
-                CitizenCardBackImageUrl = "ewqe",
-                CitizenCardFrontImageUrl = "Ewqea"
-            }, new Renter
-            {
-                RenterId = 7,
-                Username = "minhkhoitkm",
-                Email = "khoitkmse150850@fpt",
-                Password = "123456789",
-                PhoneNumber = "0123543125",
-                FullName = "Tran Minh Khoi",
-                BirthDate = DateTime.UtcNow,
-                Status = true,
-                CitizenNumber = "3214324523",
-                Address = "HCM",
-                Gender = "Male",
-                CitizenCardBackImageUrl = "ewqe",
-                CitizenCardFrontImageUrl = "Ewqea"
-            }
-        );
 
         modelBuilder.Entity<Area>().HasData(
             new Area
@@ -1806,6 +1810,7 @@ public class ApplicationContext : DbContext
             }
         );
 
+        /*
         modelBuilder.Entity<Utility>().HasData(
             new Utility
             {
@@ -1828,6 +1833,7 @@ public class ApplicationContext : DbContext
                 UtilitiesName = "Kitchen"
             }
         );
+        */
 
         modelBuilder.Entity<Room>().HasData(
             new Room
@@ -1856,6 +1862,8 @@ public class ApplicationContext : DbContext
             }
         );
 
+        /*
+        
         modelBuilder.Entity<UtilitiesRoom>().HasData(
             new UtilitiesRoom
             {
@@ -1870,6 +1878,9 @@ public class ApplicationContext : DbContext
                 UtilityId = 2
             }
         );
+    
+        */
+
 
         modelBuilder.Entity<Flat>().HasData(
             new Flat
@@ -1968,35 +1979,6 @@ public class ApplicationContext : DbContext
                 //Description = "ABCDEF"
             }
         );
-
-        /*
-        modelBuilder.Entity<RoomType>().HasData(
-            new RoomType
-            {
-                RoomTypeId = 1,
-                RoomTypeName = "Room type id 1 : 2 slots",
-                Description = "Room type id 1 : 2 slots",
-                NumberOfSlots = 2,
-                BuildingId = 5
-            },
-            new RoomType
-            {
-                RoomTypeId = 2,
-                RoomTypeName = "Room type id 2 : 2 slots",
-                Description = "Room type id 2 : 2 slots",
-                NumberOfSlots = 2,
-                BuildingId = 5
-            },
-            new RoomType
-            {
-                RoomTypeId = 3,
-                RoomTypeName = "Room type id 3 : 2 slots",
-                Description = "Room type id 3 : 2 slots",
-                NumberOfSlots = 2,
-                BuildingId = 5
-            }
-        );
-        */
 
         modelBuilder.Entity<TicketType>().HasData(
             new TicketType
@@ -2128,6 +2110,7 @@ public class ApplicationContext : DbContext
             }
         );
 
+
         modelBuilder.Entity<ServiceType>().HasData(
             new ServiceType
             {
@@ -2225,6 +2208,7 @@ public class ApplicationContext : DbContext
             }
         );
 
+
         modelBuilder.Entity<FeedbackType>().HasData(
             new FeedbackType
             {
@@ -2242,6 +2226,7 @@ public class ApplicationContext : DbContext
                 Name = "Other"
             }
         );
+
 
         modelBuilder.Entity<InvoiceType>().HasData(
             new InvoiceType
@@ -2267,6 +2252,7 @@ public class ApplicationContext : DbContext
                 Status = true,
                 Detail = "Detail for invoice 1",
                 CreatedTime = DateTime.UtcNow,
+                DueDate = DateTime.UtcNow.AddDays(30),
                 RenterId = 1,
                 EmployeeId = 2,
                 InvoiceTypeId = 1
@@ -2279,6 +2265,7 @@ public class ApplicationContext : DbContext
                 Status = true,
                 Detail = "Detail for invoice 2",
                 CreatedTime = DateTime.UtcNow,
+                DueDate = DateTime.UtcNow.AddDays(30),
                 RenterId = 2,
                 EmployeeId = 3,
                 InvoiceTypeId = 1
@@ -2353,6 +2340,7 @@ public class ApplicationContext : DbContext
                 InvoiceTypeId = 1
             }
         );
+
 
         modelBuilder.Entity<InvoiceDetail>().HasData(
             new InvoiceDetail
@@ -2629,6 +2617,7 @@ public class ApplicationContext : DbContext
                 }
             );
 
+
         modelBuilder.Entity<Wallet>(entity =>
         {
             entity.ToTable("Wallet");
@@ -2657,6 +2646,7 @@ public class ApplicationContext : DbContext
 
             entity.Property(e => e.UserName).HasMaxLength(50);
         });
+
 
         OnModelCreatingPartial(modelBuilder);
     }

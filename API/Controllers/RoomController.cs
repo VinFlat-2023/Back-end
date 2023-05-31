@@ -54,15 +54,6 @@ public class RoomController : ControllerBase
                 });
         }
 
-        var updateRoom = new Room
-        {
-            RoomId = roomId,
-            RoomName = request.RoomName,
-            ElectricityAttribute = request.ElectricityAttribute,
-            WaterAttribute = request.WaterAttribute,
-            Status = request.Status
-        };
-
         var roomCheck = await _serviceWrapper.Rooms.GetRoomById(roomId, buildingId, token);
 
         if (roomCheck == null)
@@ -72,6 +63,23 @@ public class RoomController : ControllerBase
                 message = "Phòng không tồn tại",
                 data = ""
             });
+
+        var updateRoom = new Room
+        {
+            RoomId = roomId,
+            RoomName = request.RoomName,
+            ElectricityAttribute = request.ElectricityAttribute,
+            WaterAttribute = request.WaterAttribute,
+            Status = request.Status,
+            RoomTypeId = request.RoomTypeId,
+            FlatId = request.FlatId,
+            RoomImageUrl1 = request.RoomImageUrl1 ?? roomCheck.RoomImageUrl1,
+            RoomImageUrl2 = request.RoomImageUrl2 ?? roomCheck.RoomImageUrl2,
+            RoomImageUrl3 = request.RoomImageUrl3 ?? roomCheck.RoomImageUrl3,
+            RoomImageUrl4 = request.RoomImageUrl4 ?? roomCheck.RoomImageUrl4,
+            RoomImageUrl5 = request.RoomImageUrl5 ?? roomCheck.RoomImageUrl5,
+            RoomImageUrl6 = request.RoomImageUrl6 ?? roomCheck.RoomImageUrl6
+        };
 
         var roomTypeCheck = await _serviceWrapper.RoomTypes.GetRoomTypeById(roomCheck.RoomTypeId, buildingId, token);
 
@@ -83,27 +91,78 @@ public class RoomController : ControllerBase
                 data = ""
             });
 
+        switch (roomTypeCheck.Status.ToLower())
+        {
+            case "inactive":
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Loại phòng đang không hoạt động",
+                    data = ""
+                });
+            case "maintenance":
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Loại phòng đang bảo trì",
+                    data = ""
+                });
+        }
+
         if (roomCheck.AvailableSlots == roomTypeCheck.TotalSlot
             && request.Status.ToLower() == "active")
+        {
             updateRoom.RoomTypeId = request.RoomTypeId;
+            updateRoom.FlatId = roomCheck.FlatId;
+        }
 
-        if ((roomCheck.AvailableSlots == roomTypeCheck.TotalSlot
-             && request.Status.ToLower() == "maintenance") ||
-            request.Status.ToLower() == "inactive")
+        if (roomCheck.AvailableSlots == roomTypeCheck.TotalSlot
+            && request.Status.ToLower() == "maintenance")
+        {
+            updateRoom.RoomTypeId = request.RoomTypeId;
+            updateRoom.FlatId = roomCheck.FlatId;
+        }
+
+        if (roomCheck.AvailableSlots == roomTypeCheck.TotalSlot
+            && request.Status.ToLower() == "inactive")
         {
             updateRoom.FlatId = request.FlatId;
             updateRoom.RoomTypeId = request.RoomTypeId;
         }
 
-        if ((roomCheck.AvailableSlots != roomTypeCheck.TotalSlot
-             && request.Status.ToLower() == "maintenance") ||
-            request.Status.ToLower() == "inactive")
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Phòng đang có người ở, không thể chuyển sang trạng thái bảo trì hoặc không hoạt động",
-                data = ""
-            });
+        if (request.Status.ToLower() == "active" && request.RoomTypeId != roomTypeCheck.RoomTypeId)
+            if (roomCheck.AvailableSlots != roomTypeCheck.TotalSlot)
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Phòng đang có người ở, không thể cập nhật loại phòng",
+                    data = ""
+                });
+
+        if (request.Status.ToLower() != "active")
+        {
+            if (roomCheck.AvailableSlots != roomTypeCheck.TotalSlot)
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Phòng đang có người ở, không thể cập nhật trạng thái của phòng",
+                    data = ""
+                });
+            if (request.RoomTypeId != roomTypeCheck.RoomTypeId && roomCheck.AvailableSlots != roomTypeCheck.TotalSlot)
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Phòng đang có người ở, không thể cập nhật loại phòng cùa căn hộ",
+                    data = ""
+                });
+            if (request.FlatId != roomCheck.FlatId && roomCheck.AvailableSlots != roomTypeCheck.TotalSlot)
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Phòng đang có người ở, không thể cập nhật căn hộ của phòng",
+                    data = ""
+                });
+        }
 
         var result = await _serviceWrapper.Rooms.UpdateRoom(updateRoom, buildingId, token);
 
@@ -179,7 +238,7 @@ public class RoomController : ControllerBase
 
     [HttpGet("flat/{flatId:int}/rooms")]
     [Authorize(Roles = "Supervisor")]
-    [SwaggerOperation("[Authorize] Get all rooms in building(s)")]
+    [SwaggerOperation("[Authorize] Get all rooms in flat(s)")]
     public async Task<IActionResult> GetAllRoomsInFlat(int flatId, CancellationToken token)
     {
         var userId = int.Parse(User.Identity.Name);
@@ -206,8 +265,6 @@ public class RoomController : ControllerBase
 
         var list = await _serviceWrapper.Rooms.GetRoomList(flatId, buildingId, token);
 
-        var resultList = _mapper.Map<IEnumerable<RoomDetailEntity>>(list);
-
         if (list == null || !list.Any())
             return NotFound(new
             {
@@ -216,11 +273,19 @@ public class RoomController : ControllerBase
                 data = ""
             });
 
+        var resultList = _mapper.Map<IEnumerable<RoomDetailEntity>>(list);
+
+        var roomDetailEntities = resultList as RoomDetailEntity[] ?? resultList.ToArray();
+
+        foreach (var room in roomDetailEntities)
+            if (room.AvailableSlots != room.RoomType.TotalSlot)
+                room.IsAnyOneRented = true;
+
         return Ok(new
         {
             status = "Success",
             message = "Hiển thị danh sách",
-            data = resultList
+            data = roomDetailEntities
         });
     }
 
@@ -262,11 +327,16 @@ public class RoomController : ControllerBase
                 data = ""
             });
 
+        var result = _mapper.Map<RoomDetailEntity>(room);
+
+        if (room.AvailableSlots != room.RoomType.TotalSlot)
+            result.IsAnyOneRented = true;
+
         return Ok(new
         {
             status = "Success",
             message = "Hiển thị thông tin phòng",
-            data = _mapper.Map<RoomDetailEntity>(room)
+            data = result
         });
     }
 

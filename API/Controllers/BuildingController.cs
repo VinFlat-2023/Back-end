@@ -172,15 +172,14 @@ public class BuildingController : ControllerBase
             BuildingAddress = building.BuildingAddress,
             Description = building.Description,
             BuildingPhoneNumber = building.BuildingPhoneNumber,
-            AveragePrice = building.AveragePrice ?? 0,
             Status = building.Status,
             AreaId = building.AreaId,
-            BuildingImageUrl1 = building.ImageUrl ?? buildingEntity.BuildingImageUrl1,
-            BuildingImageUrl2 = building.ImageUrl2 ?? buildingEntity.BuildingImageUrl2,
-            BuildingImageUrl3 = building.ImageUrl3 ?? buildingEntity.BuildingImageUrl3,
-            BuildingImageUrl4 = building.ImageUrl4 ?? buildingEntity.BuildingImageUrl4,
-            BuildingImageUrl5 = building.ImageUrl5 ?? buildingEntity.BuildingImageUrl5,
-            BuildingImageUrl6 = building.ImageUrl6 ?? buildingEntity.BuildingImageUrl6
+            BuildingImageUrl1 = building.ImageUrl,
+            BuildingImageUrl2 = building.ImageUrl2,
+            BuildingImageUrl3 = building.ImageUrl3,
+            BuildingImageUrl4 = building.ImageUrl4,
+            BuildingImageUrl5 = building.ImageUrl5,
+            BuildingImageUrl6 = building.ImageUrl6
         };
 
         var result = await _serviceWrapper.Buildings.UpdateBuilding(updateBuilding);
@@ -250,7 +249,6 @@ public class BuildingController : ControllerBase
                     BuildingAddress = building.BuildingAddress ?? "To be filled",
                     Description = building.Description ?? "Building description",
                     TotalFlats = 0,
-                    AveragePrice = building.AveragePrice ?? 0,
                     EmployeeId = employeeId,
                     Status = building.Status ?? true,
                     AreaId = building.AreaId,

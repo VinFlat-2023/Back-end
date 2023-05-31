@@ -99,8 +99,6 @@ public class BuildingRepository : IBuildingRepository
 
             employeeCheck.SupervisorBuildingId = building.BuildingId;
 
-            _context.Attach(employeeCheck).State = EntityState.Modified;
-
             await _context.SaveChangesAsync();
 
             await transaction.CommitAsync();
@@ -172,10 +170,10 @@ public class BuildingRepository : IBuildingRepository
         };
     }
 
-    public async Task<RepositoryResponse> UpdateBuilding(Building? building)
+    public async Task<RepositoryResponse> UpdateBuilding(Building building)
     {
         var buildingData = await _context.Buildings
-            .FirstOrDefaultAsync(x => building != null && x.BuildingId == building.BuildingId);
+            .FirstOrDefaultAsync(x => x.BuildingId == building.BuildingId);
 
         if (buildingData == null)
             return new RepositoryResponse
@@ -184,12 +182,11 @@ public class BuildingRepository : IBuildingRepository
                 Message = "Toà nhà không tồn tại"
             };
 
-        var count = _context.Flats
-            .Count(x => building != null && x.BuildingId == building.BuildingId);
+        var count = _context.Flats.Count(x => x.BuildingId == building.BuildingId);
 
-        buildingData.BuildingName = building?.BuildingName ?? buildingData.BuildingName;
-        buildingData.BuildingAddress = building?.BuildingAddress ?? buildingData.BuildingAddress;
-        buildingData.Description = building?.Description ?? buildingData.Description;
+        buildingData.BuildingName = building.BuildingName;
+        buildingData.BuildingAddress = building.BuildingAddress;
+        buildingData.Description = building.Description;
         buildingData.TotalFlats = count;
         buildingData.AveragePrice = building.AveragePrice;
         buildingData.Status = building.Status;

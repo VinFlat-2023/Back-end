@@ -1,7 +1,6 @@
 ﻿using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
-using Domain.EntityRequest.Invoice;
 using Domain.Options;
 using Domain.QueryFilter;
 using Microsoft.Extensions.Options;
@@ -46,12 +45,13 @@ public class InvoiceService : IInvoiceService
     public async Task<PagedList<Invoice>?> GetInvoiceList(InvoiceFilter filters, int id, bool isManagement,
         CancellationToken token)
     {
+        var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
+        /*
         var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<Invoice>>(_cacheKey);
         var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
         var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
-
-        var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
-        var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
 
         var ifNullFilter = filters.GetType().GetProperties()
             .All(p => p.GetValue(filters) == null);
@@ -93,7 +93,7 @@ public class InvoiceService : IInvoiceService
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
             }
         }
-
+        */
         var queryable = _repositoryWrapper.Invoices.GetInvoiceList(filters, id, isManagement);
 
         if (!queryable.Any())
@@ -101,11 +101,11 @@ public class InvoiceService : IInvoiceService
 
         var pagedList = await PagedList<Invoice>
             .Create(queryable, pageNumber, pageSize, token);
-
+        /*
         await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
-
+        */
         return pagedList;
     }
 
@@ -191,9 +191,15 @@ public class InvoiceService : IInvoiceService
         return await _repositoryWrapper.Invoices.AddServiceToLastInvoice(invoiceId, serviceId);
     }
 
-    public async Task<RepositoryResponse> BatchInsertInvoice(IEnumerable<MassInvoiceCreateRequest> invoices)
+    public async Task<RepositoryResponse> BatchInsertMonthlyInvoice(IEnumerable<int> invoices, CancellationToken token)
     {
-        return await _repositoryWrapper.Invoices.BatchInsertInvoice(invoices);
+        return await _repositoryWrapper.Invoices.BatchInsertMonthlyInvoice(invoices, token);
+    }
+
+    public async Task<RepositoryResponse> BatchInsertMonthlyInvoice(int buildingForCurrentSupervisor,
+        CancellationToken token)
+    {
+        return await _repositoryWrapper.Invoices.BatchInsertMonthlyInvoice(buildingForCurrentSupervisor, token);
     }
 
     public async Task<bool> AutoFinishInvoice()

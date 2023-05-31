@@ -1,6 +1,7 @@
 using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Renter;
+using Domain.EnumEntities;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.ViewModel.BuildingEntity;
@@ -308,14 +309,17 @@ public class RenterController : ControllerBase
             PriceForElectricity = contract.PriceForElectricity.DecimalToString(),
             PriceForService = contract.PriceForService.DecimalToString(),
             WaterMeterAfter = contract.Flat.WaterMeterAfter,
-            ElectricityMeterAfter = contract.Flat.ElectricityMeterAfter
+            WaterMeterBefore = contract.Flat.WaterMeterBefore,
+            ElectricityMeterAfter = contract.Flat.ElectricityMeterAfter,
+            ElectricityMeterBefore = contract.Flat.ElectricityMeterBefore
         };
 
         var buildingManager = new EmployeeBuildingDetailEntity
         {
             EmployeeId = building.EmployeeId,
-            FullName = building.Employee.FullName,
-            PhoneNumber = building.Employee.PhoneNumber
+            FullName = building.Employee?.FullName,
+            PhoneNumber = building.Employee?.PhoneNumber,
+            Phone = building.Employee?.PhoneNumber
         };
 
         var buildingDetail = new BuildingContractDetailEntity
@@ -521,7 +525,7 @@ public class RenterController : ControllerBase
 
         var result = await _serviceWrapper.Renters.UpdatePasswordRenter(finalizePasswordUpdate);
 
-        var jwtToken = _serviceWrapper.Tokens.CreateTokenForRenter(renterEntity);
+        var jwtToken = _serviceWrapper.Tokens.CreateTokenForRenter(renterEntity, TokenType.UpdatePassword);
 
         return result.IsSuccess switch
         {

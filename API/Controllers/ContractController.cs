@@ -192,7 +192,7 @@ public class ContractController : ControllerBase
     [SwaggerOperation(Summary = "Get all contract list of logged in renter (For renter)")]
     [Authorize(Roles = "Renter")]
     [HttpGet("latest/renter/current")]
-    public async Task<IActionResult> GetFirstContractsByRenter(CancellationToken token)
+    public async Task<IActionResult> GetLatestContractByLoggedInUser(CancellationToken token)
     {
         var renterId = Parse(User.Identity?.Name);
 

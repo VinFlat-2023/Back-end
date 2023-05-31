@@ -29,12 +29,12 @@ public class ServiceTypeService : IServiceTypeService
 
     public async Task<PagedList<ServiceType>?> GetServiceTypeList(ServiceTypeFilter filters, CancellationToken token)
     {
+        var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+        /*
         var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<ServiceType>>(_cacheKey);
         var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
         var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
-
-        var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
-        var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
 
         var ifNullFilter = filters.GetType().GetProperties()
             .All(p => p.GetValue(filters) == null);
@@ -63,6 +63,7 @@ public class ServiceTypeService : IServiceTypeService
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
             }
         }
+        */
 
         var queryable = _repositoryWrapper.ServiceTypes.GetServiceTypeList(filters);
 
@@ -72,9 +73,11 @@ public class ServiceTypeService : IServiceTypeService
         var pagedList = await PagedList<ServiceType>
             .Create(queryable, pageNumber, pageSize, token);
 
+        /*
         await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
+        */
 
         return pagedList;
     }

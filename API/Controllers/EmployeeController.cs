@@ -1,6 +1,7 @@
 using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Employee;
+using Domain.EnumEntities;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.Utils;
@@ -323,7 +324,7 @@ public class EmployeeController : ControllerBase
 
         var result = await _serviceWrapper.Employees.UpdatePasswordEmployee(updatePasswordEmployee);
 
-        var jwtToken = _serviceWrapper.Tokens.CreateTokenForEmployee(employeeEntity);
+        var jwtToken = _serviceWrapper.Tokens.CreateTokenForEmployee(employeeEntity, TokenType.UpdatePassword);
 
         return result.IsSuccess switch
         {

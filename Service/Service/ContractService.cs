@@ -74,6 +74,10 @@ public class ContractService : IContractService
         var pagedList = await PagedList<Contract>
             .Create(queryable, pageNumber, pageSize, token);
 
+        await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
+        await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
+        await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
+
         return pagedList;
     }
 
@@ -152,16 +156,75 @@ public class ContractService : IContractService
         bool isManagement,
         CancellationToken token)
     {
+        var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
+        /*
+        var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<Contract>>(_cacheKey);
+        var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
+        var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
+
+        var ifNullFilter = filters.GetType().GetProperties()
+            .All(p => p.GetValue(filters) == null);
+
+        if (cacheDataList != null)
+        {
+            if (ifNullFilter)
+            {
+                await _redis.RemoveCacheDataAsync(_cacheKey);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+            }
+            else
+            {
+                var matches = cacheDataList.Where(x =>
+                    (filters.ContractName == null ||
+                     x.ContractName.ToLower().Contains(filters.ContractName.ToLower()))
+                    && (filters.Description == null ||
+                        x.Description.ToLower().Contains(filters.Description.ToLower()))
+                    && (filters.PriceForWater == null || x.PriceForWater == filters.PriceForWater)
+                    && (filters.PriceForRent == null || x.PriceForRent == filters.PriceForRent)
+                    && (filters.PriceForElectricity == null || x.PriceForElectricity == filters.PriceForElectricity)
+                    && (filters.PriceForService == null || x.PriceForService == filters.PriceForService)
+                    && (filters.ContractStatus == null ||
+                        x.ContractStatus.ToLower() == filters.ContractStatus.ToLower())
+                    && (filters.DateSigned == null || x.DateSigned == filters.DateSigned)
+                    && (filters.EndDate == null || x.EndDate == filters.EndDate)
+                    && (filters.StartDate == null || x.StartDate == filters.StartDate)
+                    && (filters.RenterId == null || x.RenterId == filters.RenterId)
+                    && (filters.LastUpdated == null || x.LastUpdated == filters.LastUpdated)
+                    && (filters.RenterUsername == null || x.Renter.Username.ToLower()
+                        .Contains(filters.RenterUsername.ToLower()))
+                    && (filters.RenterPhoneNumber == null || x.Renter.PhoneNumber.ToLower()
+                        .Contains(filters.RenterPhoneNumber.ToLower()))
+                    && (filters.RenterEmail == null || x.Renter.Email.ToLower().Contains(filters.RenterEmail.ToLower()))
+                    && (filters.RenterFullname == null ||
+                        x.Renter.FullName.ToLower().Contains(filters.RenterFullname.ToLower()))
+                    && cacheDataPageNumber == pageNumber && cacheDataPageSize == pageSize);
+
+                if (matches.Any())
+                    return cacheDataList;
+
+                await _redis.RemoveCacheDataAsync(_cacheKey);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+                await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+            }
+        }
+        */
+
         var queryable = _repositoryWrapper.Contracts.GetContractList(filters, id, isManagement);
 
         if (!queryable.Any())
             return null;
 
-        var page = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
-        var size = filters.PageSize ?? _paginationOptions.DefaultPageSize;
-
         var pagedList = await PagedList<Contract>
-            .Create(queryable, page, size, token);
+            .Create(queryable, pageNumber, pageSize, token);
+
+        /*
+        await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
+        await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
+        await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
+        */
 
         return pagedList;
     }
@@ -181,7 +244,7 @@ public class ContractService : IContractService
     public async Task<Contract?> GetContractByRenterIdWithActiveStatus(int contractId, CancellationToken token)
     {
         return await _repositoryWrapper.Contracts.GetContractById(contractId)
-            .FirstOrDefaultAsync(x => x != null && x.ContractStatus == "Active", token);
+            .FirstOrDefaultAsync(token);
     }
 
     public async Task<Contract?> GetLatestContractByUserId(int? renterId, CancellationToken token)

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using AspNetCoreRateLimit;
 using Domain.Options;
 using Infrastructure;
 using Microsoft.AspNetCore.Http.Features;
@@ -81,6 +82,8 @@ builder.Services.AddAuthorizationService();
 
 builder.Services.AddRedisCacheService(config);
 
+builder.Services.AddRateLimiting(config);
+
 builder.Services.Configure<PaginationOption>(config.GetSection("Pagination"));
 
 //Add Scheduler service
@@ -135,6 +138,8 @@ using (var scope = app.Services.CreateScope())
     // Here is the migration executed
     dbContext.Database.Migrate();
 }
+
+app.UseIpRateLimiting();
 
 app.UseAuthentication();
 

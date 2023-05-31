@@ -143,11 +143,14 @@ public class InvoiceController : ControllerBase
                 message = "Hoá đơn không tồn tại",
                 data = ""
             });
+
+        var result = _mapper.Map<InvoiceRenterDetailEntity>(entity);
+
         return Ok(new
         {
             status = "Success",
             message = "Đã tìm thấy hoá đơn",
-            data = _mapper.Map<InvoiceRenterDetailEntity>(entity)
+            data = result
         });
     }
 
@@ -407,14 +410,6 @@ public class InvoiceController : ControllerBase
     public async Task<IActionResult> PostInvoice([FromBody] InvoiceCreateRequest invoice, CancellationToken token)
     {
         var employeeId = int.Parse(User.Identity?.Name);
-
-        if (employeeId == 0)
-            return BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Nhân viên không tồn tại",
-                data = ""
-            });
 
         var buildingForCurrentSupervisor =
             await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
@@ -811,11 +806,87 @@ public class InvoiceController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "[Authorize] Create invoice based on list of renter id (For management)")]
-    [HttpPost("create")]
+    [HttpPost("batch-create")]
     [Authorize(Roles = "Admin, Supervisor")]
-    public async Task<IActionResult> CreateManyInvoice([FromBody] List<MassInvoiceCreateRequest> invoices)
+    public async Task<IActionResult> CreateMonthlyInvoiceSelective([FromBody] List<int> invoices,
+        CancellationToken token)
     {
-        var result = await _serviceWrapper.Invoices.BatchInsertInvoice(invoices);
+        var result = await _serviceWrapper.Invoices.BatchInsertMonthlyInvoice(invoices, token);
+        return result switch
+        {
+            { IsSuccess: false } => BadRequest(new { status = "Bad Request", message = result.Message, data = "" }),
+            { IsSuccess: true } => Ok(new { status = "Success", message = result.Message, data = "" }),
+            null => BadRequest(new { status = "Bad Request", message = "Invoice failed to create", data = "" })
+        };
+    }
+
+    [SwaggerOperation(Summary =
+        "[Authorize] Create invoice for all renter with active contract in building (For management)")]
+    [HttpPost("batch-create-all")]
+    [Authorize(Roles = "Admin, Supervisor")]
+    public async Task<IActionResult> CreateMonthlyInvoices(CancellationToken token)
+    {
+        var employeeId = int.Parse(User.Identity?.Name);
+
+        var buildingForCurrentSupervisor =
+            await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
+
+        switch (buildingForCurrentSupervisor)
+        {
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                    data = ""
+                });
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Người quản lý không quản lý tòa nhà nào",
+                    data = ""
+                });
+        }
+
+        var result = await _serviceWrapper.Invoices.BatchInsertMonthlyInvoice(buildingForCurrentSupervisor, token);
+        return result switch
+        {
+            { IsSuccess: false } => BadRequest(new { status = "Bad Request", message = result.Message, data = "" }),
+            { IsSuccess: true } => Ok(new { status = "Success", message = result.Message, data = "" }),
+            null => BadRequest(new { status = "Bad Request", message = "Invoice failed to create", data = "" })
+        };
+    }
+
+    [SwaggerOperation(Summary = "[Authorize] Fill all invoice data of this month (For management)")]
+    [HttpPost("batch-fill")]
+    [Authorize(Roles = "Admin, Supervisor")]
+    public async Task<IActionResult> FillDataMonthlyInvoice(CancellationToken token)
+    {
+        var employeeId = int.Parse(User.Identity?.Name);
+
+        var buildingForCurrentSupervisor =
+            await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
+
+        switch (buildingForCurrentSupervisor)
+        {
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                    data = ""
+                });
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Người quản lý không quản lý tòa nhà nào",
+                    data = ""
+                });
+        }
+
+        var result = await _serviceWrapper.Invoices.BatchInsertMonthlyInvoice(buildingForCurrentSupervisor, token);
         return result switch
         {
             { IsSuccess: false } => BadRequest(new { status = "Bad Request", message = result.Message, data = "" }),

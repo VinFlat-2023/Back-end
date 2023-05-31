@@ -82,6 +82,53 @@ public class FlatController : ControllerBase
         });
     }
 
+    [HttpGet("type/active")]
+    [SwaggerOperation(Summary = "[Authorize] Get flat type list by filter request (For management)")]
+    [Authorize(Roles = "Supervisor")]
+    public async Task<IActionResult> GetFlatTypeActiveInBuilding(CancellationToken token)
+    {
+        var userId = int.Parse(User.Identity.Name);
+
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(userId, token);
+
+        switch (buildingId)
+        {
+            case -1:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang không quản lí toà nhà nào",
+                    data = ""
+                });
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
+                    data = ""
+                });
+        }
+
+        var list = await _serviceWrapper.FlatTypes.GetFlatTypeList(buildingId, token);
+
+        var resultList = _mapper.Map<IEnumerable<FlatTypeDetailEntity>>(list);
+
+        if (list == null || !list.Any())
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Danh sách loại căn hộ hiện đang trống",
+                data = ""
+            });
+
+        return Ok(new
+        {
+            status = "Success",
+            message = "Hiển thị danh sách",
+            data = resultList
+        });
+    }
+
     [HttpGet("active")]
     [SwaggerOperation(Summary = "[Authorize] Get flat list by filter request (For management)")]
     [Authorize(Roles = "Supervisor")]
@@ -325,15 +372,23 @@ public class FlatController : ControllerBase
         newFlat.MaxRoom = flatType.RoomCapacity;
         newFlat.AvailableRoom = flatType.RoomCapacity;
 
-        var totalRooms = newFlat.MaxRoom;
+        var flatMaxRoom = newFlat.MaxRoom;
 
-        var totalRoomsInRequest = flat.RoomTypeId.Count;
+        var totalRoomCreatedTypeInRequest = flat.RoomTypeId.Count;
 
-        if (totalRoomsInRequest > totalRooms)
+        if (totalRoomCreatedTypeInRequest > flatMaxRoom)
             return BadRequest(new
             {
                 status = "Bad Request",
                 message = "Tổng số phòng không được quá giới hạn của loại căn hộ",
+                data = ""
+            });
+
+        if (totalRoomCreatedTypeInRequest < flatMaxRoom)
+            return BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Tổng số phòng không được nhỏ hơn giới hạn của loại căn hộ",
                 data = ""
             });
 

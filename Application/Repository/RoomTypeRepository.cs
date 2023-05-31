@@ -116,6 +116,8 @@ public class RoomTypeRepository : IRoomTypeRepository
         roomTypeData.RoomTypeName = roomType.RoomTypeName;
         roomTypeData.Status = roomType.Status;
         roomTypeData.TotalSlot = roomType.TotalSlot;
+        roomTypeData.ElectricityAttribute = roomType.ElectricityAttribute;
+        roomTypeData.WaterAttribute = roomType.WaterAttribute;
 
         _context.Attach(roomTypeData).State = EntityState.Modified;
 

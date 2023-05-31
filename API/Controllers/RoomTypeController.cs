@@ -165,7 +165,9 @@ public class RoomTypeController : ControllerBase
             RoomTypeName = request.RoomTypeName,
             TotalSlot = request.TotalSlot,
             BuildingId = buildingId,
-            Status = request.Status ?? "Active"
+            Status = request.Status ?? "Active",
+            WaterAttribute = request.WaterAttribute ?? 1,
+            ElectricityAttribute = request.ElectricityAttribute ?? 1
         };
 
         var result = await _serviceWrapper.RoomTypes.AddRoomType(addRoom);
@@ -230,7 +232,9 @@ public class RoomTypeController : ControllerBase
             RoomTypeId = roomTypeId,
             RoomTypeName = request.RoomTypeName,
             TotalSlot = request.TotalSlot,
-            Status = request.Status
+            Status = request.Status,
+            WaterAttribute = request.WaterAttribute ?? 1,
+            ElectricityAttribute = request.ElectricityAttribute ?? 1
         };
 
         var result = await _serviceWrapper.RoomTypes.UpdateRoomType(updateRoom, buildingId, token);

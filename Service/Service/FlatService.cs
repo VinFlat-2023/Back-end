@@ -4,6 +4,7 @@ using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Metric;
 using Domain.Options;
 using Domain.QueryFilter;
+using Domain.ViewModel.MetricNumber;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Service.IHelper;
@@ -41,12 +42,12 @@ public class FlatService : IFlatService
 
     public async Task<PagedList<Flat>?> GetFlatList(FlatFilter filters, CancellationToken token)
     {
+        var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+        /*
         var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<Flat>>(_cacheKey);
         var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
         var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
-
-        var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
-        var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
 
         var ifNullFilter = filters.GetType().GetProperties()
             .All(p => p.GetValue(filters) == null);
@@ -81,6 +82,7 @@ public class FlatService : IFlatService
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
             }
         }
+        */
 
         var queryable = _repositoryWrapper.Flats.GetFlatList(filters);
 
@@ -90,21 +92,24 @@ public class FlatService : IFlatService
         var pagedList = await PagedList<Flat>
             .Create(queryable, pageNumber, pageSize, token);
 
+        /*
         await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
+        */
 
         return pagedList;
     }
 
     public async Task<PagedList<Flat>?> GetFlatList(FlatFilter filters, int buildingId, CancellationToken token)
     {
+        var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
+        var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
+        /*
         var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<Flat>>(_cacheKey);
         var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
         var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
-
-        var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
-        var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
 
         var ifNullFilter = filters.GetType().GetProperties()
             .All(p => p.GetValue(filters) == null);
@@ -139,6 +144,7 @@ public class FlatService : IFlatService
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
             }
         }
+        */
 
         var queryable = _repositoryWrapper.Flats.GetFlatList(filters, buildingId);
 
@@ -147,11 +153,11 @@ public class FlatService : IFlatService
 
         var pagedList = await PagedList<Flat>
             .Create(queryable, pageNumber, pageSize, token);
-
+        /*
         await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
-
+        */
         return pagedList;
     }
 
@@ -187,20 +193,19 @@ public class FlatService : IFlatService
             .ToListAsync(token);
     }
 
-    public async Task<MetricNumber?> GetTotalWaterAndElectricity(int buildingId, CancellationToken token)
+    public async Task<MetricNumberForTotal?> GetTotalWaterAndElectricity(int buildingId, CancellationToken token)
     {
         return await _repositoryWrapper.Flats.GetTotalWaterAndElectricity(buildingId, token);
     }
 
-    public async Task<MetricNumber?> GetTotalWaterAndElectricityByFlat(int flatId, int buildingId,
+    public async Task<MetricNumberForTotal?> GetTotalWaterAndElectricityByFlat(int flatId, int buildingId,
         CancellationToken token)
     {
         return await _repositoryWrapper.Flats.GetTotalWaterAndElectricityByFlat(flatId, buildingId, token);
     }
 
     public async Task<RepositoryResponse> SetTotalWaterAndElectricityByFlat(UpdateMetricRequest request, int flatId,
-        int buildingId,
-        CancellationToken cancellationToken)
+        int buildingId, CancellationToken cancellationToken)
     {
         return await _repositoryWrapper.Flats.SetTotalWaterAndElectricityByFlat(request, flatId, buildingId,
             cancellationToken);

@@ -1,6 +1,5 @@
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
-using Domain.EntityRequest.Invoice;
 using Domain.QueryFilter;
 
 namespace Service.IService;
@@ -18,5 +17,8 @@ public interface IInvoiceService
     public Task<bool> AutoFinishInvoice();
     public Task<int> GetLatestUnpaidInvoiceByRenter(int renterId, CancellationToken token);
     public Task<RepositoryResponse> AddServiceToLastInvoice(int invoiceId, IEnumerable<int> serviceId);
-    public Task<RepositoryResponse> BatchInsertInvoice(IEnumerable<MassInvoiceCreateRequest> invoices);
+    public Task<RepositoryResponse> BatchInsertMonthlyInvoice(IEnumerable<int> invoices, CancellationToken token);
+
+    public Task<RepositoryResponse>
+        BatchInsertMonthlyInvoice(int buildingForCurrentSupervisor, CancellationToken token);
 }
