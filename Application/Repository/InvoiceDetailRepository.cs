@@ -52,7 +52,8 @@ public class InvoiceDetailRepository : IInvoiceDetailRepository
     {
         return await _context.InvoiceDetails
             .Include(x => x.Invoice)
-            .Where(x => x.Invoice.Status == true && x.Invoice.RenterId == id)
+            .Where(x => x.Invoice.Status.ToLower() == "unpaid"
+                        && x.Invoice.RenterId == id)
             .FirstOrDefaultAsync(token);
     }
 

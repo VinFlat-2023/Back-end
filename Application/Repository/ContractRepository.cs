@@ -168,7 +168,12 @@ public class ContractRepository : IContractRepository
     {
         return _context.Contracts
             .Include(x => x.Renter)
-            .Where(x => x.RenterId == renterId);
+            .Include(x => x.Flat)
+            .ThenInclude(x => x.Rooms)
+            .Include(x => x.Flat)
+            .ThenInclude(x => x.Building)
+            .ThenInclude(x => x.Employee)
+            .Where(x => x.RenterId == renterId && x.ContractStatus.ToLower() == "active");
     }
 
     public IQueryable<Contract?> GetContractHistoryDetail(int contractId)
@@ -266,7 +271,8 @@ public class ContractRepository : IContractRepository
     public async Task<RepositoryResponse> AddContractWithRenter(Contract newContract, Renter newRenter,
         CancellationToken token)
     {
-        await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted);
+        await using var transaction =
+            await _context.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, token);
         try
         {
             await _context.Renters.AddAsync(newRenter, token);

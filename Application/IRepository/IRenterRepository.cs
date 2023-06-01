@@ -13,7 +13,7 @@ public interface IRenterRepository
     public Task<RepositoryResponse> UpdateRenter(Renter renter);
     public Task<RepositoryResponse> UpdateImageRenter(Renter renter);
     public Task<RepositoryResponse> UpdatePasswordRenter(Renter renter);
-    public Task<RepositoryResponse> ToggleRenter(int renterId);
+    public Task<RepositoryResponse> ToggleRenter(Renter renter);
     public Task<RepositoryResponse> DeleteRenter(int renterId);
     public Task<Renter?> RenterLogin(string usernameOrPhoneNumber, string password, CancellationToken token);
     public IQueryable<Renter> GetRenterByUsername(string username);

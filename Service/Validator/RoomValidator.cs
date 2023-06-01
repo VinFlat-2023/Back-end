@@ -13,7 +13,7 @@ public class RoomValidator : BaseValidator, IRoomValidator
         _conditionCheckHelper = conditionCheckHelper;
     }
 
-    public async Task<ValidatorResult> ValidateParams(RoomUpdateRequest? obj, int building, int? roomId,
+    public async Task<ValidatorResult> ValidateParams(RoomUpdateRequest? obj, int buildingId, int roomId,
         CancellationToken token)
     {
         try
@@ -27,12 +27,12 @@ public class RoomValidator : BaseValidator, IRoomValidator
                     ValidatorResult.Failures.Add("Mã phòng không được để trống");
                     break;
                 case not null:
-                    if (await _conditionCheckHelper.FlatCheck(obj.FlatId, building, token) == null)
+                    if (await _conditionCheckHelper.FlatCheck(obj.FlatId, buildingId, token) == null)
                         ValidatorResult.Failures.Add("Phòng không tồn tại");
                     break;
             }
 
-            if (await _conditionCheckHelper.GetRoomInAFlatById(roomId, obj.FlatId, building, token) == null)
+            if (await _conditionCheckHelper.GetRoomInAFlatById(roomId, obj.FlatId, buildingId, token) == null)
                 ValidatorResult.Failures.Add("Phòng không tồn tại");
 
             switch (obj?.RoomTypeId)
@@ -41,7 +41,7 @@ public class RoomValidator : BaseValidator, IRoomValidator
                     ValidatorResult.Failures.Add("Mã loại phòng không được để trống");
                     break;
                 case not null:
-                    if (await _conditionCheckHelper.RoomTypeCheck(obj.RoomTypeId, building, token) == null)
+                    if (await _conditionCheckHelper.RoomTypeCheck(obj.RoomTypeId, buildingId, token) == null)
                         ValidatorResult.Failures.Add("Loại phòng không tồn tại");
                     break;
             }
@@ -93,6 +93,11 @@ public class RoomValidator : BaseValidator, IRoomValidator
                     ValidatorResult.Failures.Add("Trạng thái không được để trống");
                     break;
             }
+
+            var roomCheck = await _conditionCheckHelper.RoomCheck(roomId, buildingId, token);
+
+            if (roomCheck is null)
+                ValidatorResult.Failures.Add("Phòng không tồn tại");
         }
         catch (Exception e)
         {

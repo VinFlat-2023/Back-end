@@ -1,6 +1,7 @@
 ﻿using Application.IRepository;
 using Domain.CustomEntities;
 using Domain.EntitiesForManagement;
+using Domain.EnumEntities;
 using Domain.QueryFilter;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +35,7 @@ public class InvoiceRepository : IInvoiceRepository
             // filter starts here
             .Where(x =>
                 (filter.Name == null || x.Name.ToLower().Contains(filter.Name.ToLower()))
-                && (filter.Status == null || x.Status == filter.Status)
+                && (filter.Status == null || x.Status.ToLower() == filter.Status.ToLower())
                 && (filter.Amount == null || x.TotalAmount == filter.Amount)
                 && (filter.Detail == null || x.Detail == filter.Detail)
                 && (filter.RenterId == null || x.RenterId == filter.RenterId)
@@ -145,7 +146,7 @@ public class InvoiceRepository : IInvoiceRepository
             .ThenInclude(x => x.PlaceholderForFee)
             .Include(x => x.InvoiceType)
             // false = unpaid invoice
-            .Where(x => x.RenterId == renterId && x.Status == false)
+            .Where(x => x.RenterId == renterId && x.Status.ToLower() == "unpaid")
             .OrderByDescending(x => x.CreatedTime)
             .Select(x => x.InvoiceId)
             .FirstOrDefaultAsync(token);
@@ -181,8 +182,8 @@ public class InvoiceRepository : IInvoiceRepository
     public async Task<Invoice?> GetUnpaidInvoiceByRenterAndMonth(int renterId, int month, CancellationToken token)
     {
         return await _context.Invoices
-            .Where(x => x.Status == false)
-            .FirstOrDefaultAsync(x => x.RenterId == renterId && x.CreatedTime.Value.Month == month, token);
+            .Where(x => x.Status.ToLower() == "unpaid")
+            .FirstOrDefaultAsync(x => x.RenterId == renterId && x.CreatedTime.Month == month, token);
     }
 
     /// <summary>
@@ -244,43 +245,81 @@ public class InvoiceRepository : IInvoiceRepository
     /// </summary>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public async Task<List<Invoice>> GetUnpaidInvoice(CancellationToken token)
+    public async Task<List<Invoice>> GetUnpaidInvoice(int buildingId, CancellationToken token)
     {
-        return await _context.Invoices
-            .Include(e => e.Renter)
-            .Include(e => e.InvoiceDetails)
-            .ThenInclude(e => e.Service)
-            .Where(e => !e.Status).ToListAsync(token);
+        var test = await _context.Invoices
+            .Include(x => x.Renter)
+            .Include(x => x.InvoiceDetails)
+            .ThenInclude(x => x.Service)
+            .ThenInclude(x => x.ServiceType)
+            .Include(x => x.InvoiceDetails)
+            .ThenInclude(x => x.PlaceholderForFee)
+            .Include(x => x.InvoiceType)
+            .Include(x => x.Contract)
+            .ThenInclude(x => x.Flat)
+            // false = unpaid invoice
+            .OrderByDescending(x => x.CreatedTime)
+            .Where(e => e.Status.ToLower() == "unpaid" && e.BuildingId == buildingId)
+            .ToListAsync(token);
+
+        return test;
     }
 
     public IEnumerable<Invoice> GetInvoiceListByMonth(int month)
     {
         return _context.Invoices
-            .Where(x => x.Status == false && x.CreatedTime.Value.Month == month);
+            .Where(x => x.CreatedTime.Month == month);
         //.Where(x.CreatedTime.Month == month);
     }
 
     public async Task<RepositoryResponse> AddServiceToLastInvoice(int invoiceId,
-        IEnumerable<int> serviceId)
+        IEnumerable<int> serviceIdList, CancellationToken token)
     {
         await using
-            var transaction = await _context.Database.BeginTransactionAsync();
+            var transaction = await _context.Database.BeginTransactionAsync(token);
         try
         {
-            foreach (var service in serviceId)
+            foreach (var serviceId in serviceIdList)
             {
-                var serviceEntity = new InvoiceDetail
-                {
-                    InvoiceId = invoiceId,
-                    ServiceId = service
-                };
+                var serviceCheckIfExistInDetail = await _context.InvoiceDetails
+                    .Include(x => x.Service)
+                    .FirstOrDefaultAsync(x => x.ServiceId == serviceId && x.InvoiceId == invoiceId, token);
 
-                _context.InvoiceDetails.Add(serviceEntity);
+                if (serviceCheckIfExistInDetail is { Service: not null })
+                {
+                    serviceCheckIfExistInDetail.Amount++;
+                    serviceCheckIfExistInDetail.Price =
+                        serviceCheckIfExistInDetail.Service.Price * serviceCheckIfExistInDetail.Amount;
+                }
+                else
+                {
+                    var serviceCheck = await _context.Services
+                        .FirstOrDefaultAsync(x => x.ServiceId == serviceId, token);
+
+                    if (serviceCheck == null)
+                    {
+                        await transaction.RollbackAsync(token);
+                        return new RepositoryResponse
+                        {
+                            IsSuccess = false,
+                            Message = "Dịch vụ không tồn tại"
+                        };
+                    }
+
+                    var serviceEntity = new InvoiceDetail
+                    {
+                        InvoiceId = invoiceId,
+                        ServiceId = serviceId,
+                        Price = serviceCheck.Price,
+                        Amount = 1
+                    };
+                    await _context.InvoiceDetails.AddAsync(serviceEntity, token);
+                }
             }
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(token);
 
-            await transaction.CommitAsync();
+            await transaction.CommitAsync(token);
 
             return new RepositoryResponse
             {
@@ -290,7 +329,7 @@ public class InvoiceRepository : IInvoiceRepository
         }
         catch
         {
-            await transaction.RollbackAsync();
+            await transaction.RollbackAsync(token);
             return new RepositoryResponse
             {
                 IsSuccess = false,
@@ -299,27 +338,19 @@ public class InvoiceRepository : IInvoiceRepository
         }
     }
 
-    public async Task<RepositoryResponse> BatchInsertMonthlyInvoice(IEnumerable<int> invoices, CancellationToken token)
+    public async Task<RepositoryResponse> BatchInsertMonthlyInvoice(IEnumerable<int> invoices, int employeeId,
+        CancellationToken token)
     {
         await using var transaction = await _context.Database.BeginTransactionAsync(token);
         try
         {
-            var listOfUnpaidInvoice = new List<int>();
-
-            var listOfRenterNoLongerActive = new List<int>();
-
-            var listOfRenterNotExist = new List<int>();
-
             foreach (var renterId in invoices)
             {
                 var renterInvoiceCheck =
-                    await GetLatestUnpaidInvoiceByRenter(renterId, token);
+                    await GetAllUnpaidInvoicesByRenterInThisMonth(renterId, token);
 
-                if (renterInvoiceCheck != 0)
-                {
-                    listOfUnpaidInvoice.Add(renterId);
+                if (renterInvoiceCheck.Count != 0)
                     break;
-                }
 
                 var renterContractCheck = await _context.Contracts
                     .FirstOrDefaultAsync(x
@@ -327,19 +358,13 @@ public class InvoiceRepository : IInvoiceRepository
                            x.ContractStatus.ToLower() == "active", token);
 
                 if (renterContractCheck == null)
-                {
-                    listOfRenterNoLongerActive.Add(renterId);
                     break;
-                }
 
                 var renter = await _context.Renters
                     .FirstOrDefaultAsync(x => x.RenterId == renterId, token);
 
                 if (renter == null)
-                {
-                    listOfRenterNotExist.Add(renterId);
                     break;
-                }
 
                 var newInvoice = new Invoice
                 {
@@ -347,7 +372,7 @@ public class InvoiceRepository : IInvoiceRepository
                     ContractId = renterContractCheck.ContractId,
                     BuildingId = renterContractCheck.BuildingId,
                     InvoiceTypeId = 1,
-                    Status = false,
+                    Status = InvoiceStatusEnum.unpaid.ToString(),
                     CreatedTime = DateTime.Now,
                     DueDate = DateTime.Now.AddMonths(1).AddDays(9),
                     Name = "Hóa đơn tháng " + DateTime.Now.Month + " năm " + DateTime.Now.Year + " của " +
@@ -379,43 +404,26 @@ public class InvoiceRepository : IInvoiceRepository
         }
     }
 
-    public async Task<RepositoryResponse> BatchInsertMonthlyInvoice(int buildingId, CancellationToken token)
+    public async Task<RepositoryResponse> BatchInsertMonthlyInvoice(int buildingId, int employeeId,
+        CancellationToken token)
     {
         await using var transaction = await _context.Database.BeginTransactionAsync(token);
         try
         {
-            var listOfUnpaidInvoice = new List<int>();
-
-            var listOfRenterNoLongerActive = new List<int>();
-
-            var listOfRenterNotExist = new List<int>();
-
             var renterList = await _context
                 .Contracts
                 .Where(x => x.ContractStatus.ToLower() == "active"
                             && x.BuildingId == buildingId)
-                .DistinctBy(x => x.RenterId)
                 .Select(x => x.RenterId)
                 .ToListAsync(token);
-
-            var listCount = renterList;
-
-            return new RepositoryResponse
-            {
-                IsSuccess = true,
-                Message = renterList.Count.ToString()
-            };
 
             foreach (var renterId in renterList)
             {
                 var renterInvoiceCheck =
-                    await GetLatestUnpaidInvoiceByRenter(renterId, token);
+                    await GetAllUnpaidInvoicesByRenterInThisMonth(renterId, token);
 
-                if (renterInvoiceCheck != 0)
-                {
-                    listOfUnpaidInvoice.Add(renterId);
+                if (renterInvoiceCheck.Capacity != 0)
                     break;
-                }
 
                 var renterContractCheck = await _context.Contracts
                     .FirstOrDefaultAsync(x
@@ -423,29 +431,25 @@ public class InvoiceRepository : IInvoiceRepository
                            x.ContractStatus.ToLower() == "active", token);
 
                 if (renterContractCheck == null)
-                {
-                    listOfRenterNoLongerActive.Add(renterId);
                     break;
-                }
 
                 var renter = await _context.Renters
                     .FirstOrDefaultAsync(x => x.RenterId == renterId, token);
 
                 if (renter == null)
-                {
-                    listOfRenterNotExist.Add(renterId);
                     break;
-                }
 
                 var newInvoice = new Invoice
                 {
                     RenterId = renterId,
                     ContractId = renterContractCheck.ContractId,
                     BuildingId = renterContractCheck.BuildingId,
+                    EmployeeId = employeeId,
                     InvoiceTypeId = 1,
-                    Status = false,
+                    Status = InvoiceStatusEnum.unpaid.ToString(),
                     CreatedTime = DateTime.Now,
-                    DueDate = DateTime.Now.AddMonths(1).AddDays(9),
+                    DueDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
+                        DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)).AddDays(10),
                     Name = "Hóa đơn tháng " + DateTime.Now.Month + " năm " + DateTime.Now.Year + " của " +
                            renter.FullName,
                     Detail = "Hóa đơn tháng " + DateTime.Now.Month + " năm " + DateTime.Now.Year
@@ -473,5 +477,12 @@ public class InvoiceRepository : IInvoiceRepository
                 Message = "Tạo hóa đơn thất bại"
             };
         }
+    }
+
+    private async Task<List<Invoice>> GetAllUnpaidInvoicesByRenterInThisMonth(int renterId, CancellationToken token)
+    {
+        return await _context.Invoices
+            .Where(x => x.RenterId == renterId && x.Status.ToLower() == "unpaid")
+            .ToListAsync(token);
     }
 }

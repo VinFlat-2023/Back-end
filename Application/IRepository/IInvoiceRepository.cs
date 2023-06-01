@@ -11,7 +11,7 @@ public interface IInvoiceRepository
     public Task<Invoice> AddInvoice(Invoice invoice);
     public Task<Invoice?> UpdateInvoice(Invoice invoice);
     public Task<bool> DeleteInvoice(int invoiceId);
-    public Task<List<Invoice>> GetUnpaidInvoice(CancellationToken token);
+    public Task<List<Invoice>> GetUnpaidInvoice(int buildingId, CancellationToken token);
     public Task<int> GetLatestUnpaidInvoiceByRenter(int renterId, CancellationToken token);
     public Task<Invoice?> GetInvoiceIncludeRenter(int invoiceId, CancellationToken token);
 
@@ -20,11 +20,15 @@ public interface IInvoiceRepository
 
     public Task<Invoice?> GetUnpaidInvoiceByRenterAndMonth(int renterId, int month, CancellationToken token);
     public IEnumerable<Invoice> GetInvoiceListByMonth(int month);
-    public Task<RepositoryResponse> BatchInsertMonthlyInvoice(IEnumerable<int> invoices, CancellationToken token);
 
-    public Task<RepositoryResponse>
-        BatchInsertMonthlyInvoice(int buildingForCurrentSupervisor, CancellationToken token);
+    public Task<RepositoryResponse> BatchInsertMonthlyInvoice(IEnumerable<int> invoices, int employeeId,
+        CancellationToken token);
 
-    public Task<RepositoryResponse> AddServiceToLastInvoice(int invoiceId, IEnumerable<int> serviceId);
+    public Task<RepositoryResponse> BatchInsertMonthlyInvoice(int buildingForCurrentSupervisor, int employeeId,
+        CancellationToken token);
+
+    public Task<RepositoryResponse> AddServiceToLastInvoice(int invoiceId, IEnumerable<int> serviceId,
+        CancellationToken token);
+
     IQueryable<Invoice> GetInvoiceList(InvoiceFilter filters, int id, bool isManagement);
 }

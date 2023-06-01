@@ -101,36 +101,60 @@ public class FlatRepository : IFlatRepository
         };
     }
 
-    public async Task<RepositoryResponse> SetTotalWaterAndElectricityByFlat(UpdateMetricRequest request, int flatId,
-        int buildingId,
-        CancellationToken token)
+    public async Task<RepositoryResponse> SetTotalWaterAndElectricityByFlat(UpdateMetricRequest request,
+        int flatId, int buildingId, CancellationToken token)
     {
-        var flatCheck = await _context.Flats
-            .FirstOrDefaultAsync(x => x.FlatId == flatId && x.BuildingId == buildingId, token);
+        await using var transaction = await _context.Database.BeginTransactionAsync(token);
+        try
+        {
+            var flatCheck = await _context.Flats
+                .FirstOrDefaultAsync(x => x.FlatId == flatId && x.BuildingId == buildingId, token);
 
-        if (flatCheck == null)
+            if (flatCheck == null)
+                return new RepositoryResponse
+                {
+                    IsSuccess = false,
+                    Message = "Căn hộ không tồn tại"
+                };
+
+            flatCheck.WaterMeterBefore = request.WaterMeterBefore;
+            flatCheck.WaterMeterAfter = request.WaterMeterAfter;
+
+            flatCheck.ElectricityMeterBefore = request.ElectricityMeterBefore;
+            flatCheck.ElectricityMeterAfter = request.ElectricityMeterAfter;
+
+            var newMetricHistory = new MetricHistory
+            {
+                FlatId = flatId,
+                WaterMeterBefore = request.WaterMeterBefore,
+                WaterMeterAfter = request.WaterMeterAfter,
+                ElectricityMeterBefore = request.ElectricityMeterBefore,
+                ElectricityMeterAfter = request.ElectricityMeterAfter,
+                CreatedDate = DateTime.Now,
+                RecordedDate = DateTime.Now.Month + "/" + DateTime.Now.Year
+            };
+
+            await _context.MetricHistories.AddAsync(newMetricHistory);
+
+            await _context.SaveChangesAsync(token);
+
+            await transaction.CommitAsync(token);
+
+            return new RepositoryResponse
+            {
+                IsSuccess = true,
+                Message = "Cập nhật điện nước thành công"
+            };
+        }
+        catch
+        {
+            await transaction.RollbackAsync(token);
             return new RepositoryResponse
             {
                 IsSuccess = false,
-                Message = "Căn hộ không tồn tại"
+                Message = "Cập nhật thất bại"
             };
-
-        // TODO 
-        flatCheck.WaterMeterBefore = request.WaterMeterBefore;
-        flatCheck.WaterMeterAfter = request.WaterMeterAfter;
-
-        flatCheck.ElectricityMeterBefore = request.ElectricityMeterBefore;
-        flatCheck.ElectricityMeterAfter = request.ElectricityMeterAfter;
-
-        _context.Attach(flatCheck).State = EntityState.Modified;
-
-        await _context.SaveChangesAsync(token);
-
-        return new RepositoryResponse
-        {
-            IsSuccess = true,
-            Message = "Cập nhật điện nước thành công"
-        };
+        }
     }
 
     public IQueryable<Flat> GetFlatList(FlatFilter filters, int buildingId)
@@ -180,6 +204,7 @@ public class FlatRepository : IFlatRepository
             .ThenInclude(x => x.Area)
             .Include(x => x.FlatType)
             .Include(x => x.Rooms)
+            .ThenInclude(x => x.RoomType)
             //.Include(x => x.UtilitiesFlats)
             //.ThenInclude(x => x.Utility)
             .Where(x => x.FlatId == flatId && x.BuildingId == buildingId);
@@ -305,7 +330,12 @@ public class FlatRepository : IFlatRepository
     public async Task<RepositoryResponse> UpdateFlat(Flat flat)
     {
         var flatData = await _context.Flats
+            .Include(x => x.Rooms)
             .FirstOrDefaultAsync(x => x.FlatId == flat.FlatId);
+
+        var roomInFlat = await _context.Rooms
+            .Where(x => x.FlatId == flat.FlatId)
+            .ToListAsync();
 
         if (flatData == null)
             return new RepositoryResponse
@@ -313,6 +343,30 @@ public class FlatRepository : IFlatRepository
                 IsSuccess = false,
                 Message = "Căn hộ này không tồn tại"
             };
+
+        // Update flat ??
+
+        // Flat 1 - M - Room 
+        // Flat M - 1 Flat Type
+        // Room M - 1 Room Type
+
+        if (flatData.FlatTypeId != flat.FlatTypeId)
+        {
+            var flatType = await _context.FlatTypes
+                .FirstOrDefaultAsync(x => x.FlatTypeId == flat.FlatTypeId);
+
+            if (flatType == null)
+                return new RepositoryResponse
+                {
+                    IsSuccess = false,
+                    Message = "Loại căn hộ này không tồn tại"
+                };
+
+            foreach (var room in roomInFlat)
+            {
+                // TODO :
+            }
+        }
 
         flatData.Name = flat.Name;
         flatData.Description = flat.Description;

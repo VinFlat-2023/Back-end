@@ -17,6 +17,6 @@ public interface IRoomTypeService
     public Task<PagedList<RoomType>?> GetRoomTypeList(RoomTypeFilter filters, int buildingId,
         CancellationToken token);
 
-    public Task<RepositoryResponse> IsAnyFlatInUseWithThisType(int? roomTypeId, int? buildingId,
+    public Task<RepositoryResponse> IsAnyRoomInUseWithThisType(int? roomTypeId, int? buildingId,
         CancellationToken token);
 }

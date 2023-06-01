@@ -23,27 +23,43 @@ public static class RegisteredService
 
         // wrapper services register
         services.AddScoped<IServiceWrapper, ServiceWrapper>();
+
         services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
         // condition and jwt helper
         services.AddScoped<IJwtRoleCheckerHelper, JwtRoleCheckHelper>();
+
         services.AddScoped<IConditionCheckHelper, ConditionCheckHelper>();
 
         // add validator service
         services.AddScoped<IEmployeeValidator, EmployeeValidator>();
+
         services.AddScoped<IAreaValidator, AreaValidator>();
+
         services.AddScoped<IBuildingValidator, BuildingValidator>();
+
         services.AddScoped<IContractValidator, ContractValidator>();
+
         // services.AddScoped<IFeedbackValidator, FeedbackValidator>();
+
         services.AddScoped<IFlatValidator, FlatValidator>();
+
         services.AddScoped<IInvoiceValidator, InvoiceValidator>();
+
         services.AddScoped<IRenterValidator, RenterValidator>();
+
         services.AddScoped<IRoleValidator, RoleValidator>();
+
         services.AddScoped<IRoomTypeValidator, RoomTypeValidator>();
+
         services.AddScoped<IRoomValidator, RoomValidator>();
+
         services.AddScoped<IServiceValidator, ServiceValidator>();
+
         services.AddScoped<ITicketValidator, TicketValidator>();
+
         services.AddScoped<ITransactionValidator, TransactionValidator>();
+
         services.AddScoped<IPasswordValidator, PasswordValidator>();
 
         services.AddScoped<IDynamicObjectPropertyExistExtension, DynamicObjectPropertyExistExtension>();

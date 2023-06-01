@@ -178,7 +178,7 @@ public class FlatController : ControllerBase
 
 
     // GET: api/Flats/5
-    [SwaggerOperation(Summary = "[Authorize] Get flat (For management and renter)")]
+    [SwaggerOperation(Summary = "[Authorize] Get flat (For management)")]
     [HttpGet("{id:int}")]
     [Authorize(Roles = "Supervisor")]
     public async Task<IActionResult> GetFlat(int id, CancellationToken token)
@@ -207,8 +207,6 @@ public class FlatController : ControllerBase
 
         var entity = await _serviceWrapper.Flats.GetFlatById(id, buildingId, token);
 
-        var result = _mapper.Map<FlatDetailEntity>(entity);
-
         if (entity == null)
             return NotFound(new
             {
@@ -216,6 +214,9 @@ public class FlatController : ControllerBase
                 message = "Căn hộ này không tồn tại",
                 data = ""
             });
+
+        var result = _mapper.Map<FlatDetailEntity>(entity);
+
         return Ok(
             new
             {
@@ -229,7 +230,7 @@ public class FlatController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Update flat info (For management)")]
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     public async Task<IActionResult> PutFlat(int id, [FromBody] FlatUpdateRequest request, CancellationToken token)
     {
         var userId = int.Parse(User.Identity.Name);
@@ -288,14 +289,14 @@ public class FlatController : ControllerBase
                 new
                 {
                     status = "Bad Request",
-                    message = "Cập nhật căn hộ thất bại",
+                    message = result.Message,
                     data = ""
                 }),
             true => Ok(
                 new
                 {
                     status = "Success",
-                    message = "Căn hộ đã được cập nhật",
+                    message = result.Message,
                     data = ""
                 })
         };
@@ -413,7 +414,7 @@ public class FlatController : ControllerBase
 
     // DELETE: api/Flats/5
     [SwaggerOperation(Summary = "[Authorize] Remove flat (For management)")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteFlat(int id)
     {
@@ -436,8 +437,8 @@ public class FlatController : ControllerBase
         };
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get flat type list by filter request (For management and renter)")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [SwaggerOperation(Summary = "[Authorize] Get flat type list by filter request (For management)")]
+    [Authorize(Roles = "Supervisor")]
     [HttpGet("type")]
     public async Task<IActionResult> GetFlatTypes([FromQuery] FlatTypeFilterRequest request, CancellationToken token)
     {
@@ -489,7 +490,7 @@ public class FlatController : ControllerBase
 
     // GET: api/FlatTypes/5
     [SwaggerOperation(Summary = "[Authorize] Get flat type by id (For management and renter)")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [Authorize(Roles = "Supervisor, Renter")]
     [HttpGet("type/{id:int}")]
     public async Task<IActionResult> GetFlatType(int id, CancellationToken token)
     {
@@ -534,7 +535,7 @@ public class FlatController : ControllerBase
     // PUT: api/FlatTypes/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Update flat type info (For management)")]
-    [Authorize(Roles = " Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     [HttpPut("type/{id:int}")]
     public async Task<IActionResult> PutFlatType(int id, [FromBody] FlatTypeUpdateRequest flatType,
         CancellationToken token)
@@ -721,7 +722,7 @@ public class FlatController : ControllerBase
 
     // DELETE: api/FlatTypes/5
     [SwaggerOperation(Summary = "[Authorize] Remove flat type (For management)")]
-    [Authorize(Roles = " Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     [HttpDelete("type/{id:int}")]
     public async Task<IActionResult> DeleteFlatType(int id)
     {
@@ -744,7 +745,7 @@ public class FlatController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "[Authorize] Check total available slots in a flat (For management)")]
-    [Authorize(Roles = " Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     [HttpDelete("room/{id:int}/slot-available")]
     public async Task<IActionResult> GetTotalAvailableRoom(int id, CancellationToken token)
     {

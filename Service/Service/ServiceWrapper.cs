@@ -1,5 +1,6 @@
 ﻿using Application.IRepository;
 using Application.Repository;
+using AutoMapper;
 using Domain.CustomEntities.Mail;
 using Domain.Options;
 using Infrastructure;
@@ -16,6 +17,7 @@ public class ServiceWrapper : IServiceWrapper
 {
     private readonly IConfiguration _configuration;
     private readonly IWebHostEnvironment _env;
+    private readonly IMapper _mapper;
     private readonly IOptions<PaginationOption> _paginationOptions;
     private readonly IRedisCacheHelper _redis;
     private readonly IRepositoryWrapper _repositories;
@@ -23,12 +25,13 @@ public class ServiceWrapper : IServiceWrapper
     public ServiceWrapper(IRepositoryWrapper? repositories,
         ApplicationContext? context, IConfiguration configuration,
         IOptions<PaginationOption> paginationOptions, ILoggerFactory logger,
-        IWebHostEnvironment env, IRedisCacheHelper redis)
+        IWebHostEnvironment env, IRedisCacheHelper redis, IMapper mapper)
     {
         _paginationOptions = paginationOptions;
         _configuration = configuration;
         _env = env;
         _redis = redis;
+        _mapper = mapper;
         if (repositories == null)
         {
             if (context == null)
@@ -278,7 +281,7 @@ public class ServiceWrapper : IServiceWrapper
     }
     */
 
-    public ICustomeMailService Mails
+    public ICustomerMailService Mails
     {
         get
         {
@@ -289,7 +292,7 @@ public class ServiceWrapper : IServiceWrapper
                 .GetSection("EmailConfiguration")
                 .Get<MailConfiguration>();
 
-            _mail = new CustomeMailService(_env, emailConfig, _repositories);
+            _mail = new CustomerMailService(_env, emailConfig, _repositories, _mapper);
 
             return _mail;
         }
@@ -323,7 +326,7 @@ public class ServiceWrapper : IServiceWrapper
     private ITokenService _tokens;
 
     // private IDeviceService _device;
-    private ICustomeMailService _mail;
+    private ICustomerMailService _mail;
 
     // private INotificationService _noti;
     private IRoomTypeService _roomType;

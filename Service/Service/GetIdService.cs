@@ -12,9 +12,9 @@ public class GetIdService : IGetIdService
         _repositoryWrapper = repositoryWrapper;
     }
 
-    public async Task<int> GetBuildingIdBasedOnRenter(int renterId, CancellationToken token)
+    public async Task<int> GetBuildingIdBasedOnRenterActiveContract(int renterId, CancellationToken token)
     {
-        return await _repositoryWrapper.GetId.GetBuildingIdBasedOnRenter(renterId, token);
+        return await _repositoryWrapper.GetId.GetBuildingIdBasedOnRenterActiveContract(renterId, token);
     }
 
     public async Task<int> GetBuildingIdBasedOnSupervisorId(int employeeId, CancellationToken token)

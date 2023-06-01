@@ -10,7 +10,8 @@ public class InvoiceRenterDetailEntity
     public int InvoiceId { get; set; }
     public string Name { get; set; } = null!;
     public decimal TotalAmount { get; set; }
-    public bool Status { get; set; }
+    public string Status { get; set; }
+    public bool InvoiceStatus { get; set; }
     public string? Detail { get; set; }
     public string? ImageUrl { get; set; }
     public DateTime? DueDate { get; set; }

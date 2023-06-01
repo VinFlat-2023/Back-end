@@ -127,7 +127,7 @@ public class ContractController : ControllerBase
 
                 var renterContractListReturn = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(renterContractList);
 
-                if (renterContractList == null)
+                if (renterContractList == null || !renterContractList.Any())
                     return NotFound(new
                     {
                         status = "Not Found",
@@ -475,7 +475,7 @@ public class ContractController : ControllerBase
     /*
 
     [SwaggerOperation(Summary = "[Authorize] Get active contract based on user Id (For management and renter)")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [Authorize(Roles = " Supervisor, Renter")]
     [HttpGet("user/{userId:int}/active")]
     public async Task<IActionResult> GetContractBasedOnUserId(int userId)
     {
@@ -698,6 +698,7 @@ public class ContractController : ControllerBase
             BirthDate = contract.RenterBirthDate.ToDateTime(),
             Address = contract.Address,
             Gender = contract.Gender,
+            Status = true,
             CitizenCardFrontImageUrl = contract.CitizenCardFrontImageUrl,
             CitizenCardBackImageUrl = contract.CitizenCardBackImageUrl,
             CitizenNumber = contract.CitizenNumber
@@ -858,7 +859,7 @@ public class ContractController : ControllerBase
 
     // DELETE: api/Contract/5
     [SwaggerOperation(Summary = "[Authorize] Remove contract (For management)")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteContract(int id)
     {

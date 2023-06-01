@@ -3,6 +3,7 @@ using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Invoice;
 using Domain.EntityRequest.InvoiceType;
+using Domain.EnumEntities;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.ViewModel.InvoiceEntity;
@@ -32,10 +33,10 @@ public class InvoiceController : ControllerBase
         _validator = validator;
     }
 
-    [SwaggerOperation(Summary = "[Authorize] Get invoice list (For management)")]
+    [SwaggerOperation(Summary = "[Authorize] Get invoice list (For management and renter)")]
     [Authorize(Roles = "Renter, Supervisor")]
     [HttpGet]
-    // [Authorize(Roles = "Admin, Supervisor")]
+    // [Authorize(Roles = " Supervisor")]
     public async Task<IActionResult> GetInvoices([FromQuery] InvoiceFilterRequest request, CancellationToken token)
     {
         var userRole = User.Identities
@@ -90,6 +91,7 @@ public class InvoiceController : ControllerBase
                     totalPage = supervisorList.TotalPages,
                     totalCount = supervisorList.TotalCount
                 });
+
             case "Renter":
                 var renterList = await _serviceWrapper.Invoices.GetInvoiceList(filter, userId, false, token);
 
@@ -103,14 +105,24 @@ public class InvoiceController : ControllerBase
 
                 var resulRenterList = _mapper.Map<IEnumerable<InvoiceRenterDetailEntity>>(renterList);
 
+                var invoiceRenterDetailEntities =
+                    resulRenterList as InvoiceRenterDetailEntity[] ?? resulRenterList.ToArray();
+
+                foreach (var renter in invoiceRenterDetailEntities)
+                    if (renter.Status.ToLower() == "paid" || renter.Status.ToLower() == "paidbutoverdue")
+                        renter.InvoiceStatus = true;
+                    else
+                        renter.InvoiceStatus = false;
+
                 return Ok(new
                 {
                     status = "Success",
                     message = "Hiển thị danh sách",
-                    data = resulRenterList,
+                    data = (IEnumerable<InvoiceRenterDetailEntity>)invoiceRenterDetailEntities,
                     totalPage = renterList.TotalPages,
                     totalCount = renterList.TotalCount
                 });
+
             case null:
                 return BadRequest(new
                 {
@@ -278,9 +290,10 @@ public class InvoiceController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice list by renter Id (For renter and management)")]
-    [HttpGet("user/current/status/{status:bool}")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
-    public async Task<IActionResult> GetInvoiceListRenterWithStatus([FromQuery] bool status, CancellationToken token)
+    [HttpGet("user/current/status")]
+    [Authorize(Roles = " Supervisor, Renter")]
+    public async Task<IActionResult> GetInvoiceListRenterWithStatus([FromQuery] InvoiceStatusRequest status,
+        CancellationToken token)
     {
         var userId = int.Parse(User.Identity?.Name);
 
@@ -294,7 +307,7 @@ public class InvoiceController : ControllerBase
             });
 
         var list = await _serviceWrapper.Invoices
-            .GetInvoiceList(new InvoiceFilter { RenterId = userId, Status = status }, token);
+            .GetInvoiceList(new InvoiceFilter { RenterId = userId, Status = status.Status.ToLower() }, token);
 
         // false = paid, true = unpaid
 
@@ -346,11 +359,18 @@ public class InvoiceController : ControllerBase
                 data = ""
             });
 
+        var result = _mapper.Map<InvoiceRenterDetailEntity>(entity);
+
+        if (result.Status.ToLower() == "paid" || result.Status.ToLower() == "paidbutoverdue")
+            result.InvoiceStatus = true;
+        else
+            result.InvoiceStatus = false;
+
         return Ok(new
         {
             status = "Success",
-            message = "Invoice found",
-            data = _mapper.Map<InvoiceRenterDetailEntity>(entity)
+            message = "Đã tìm thấy hoá đơn",
+            data = result
         });
     }
 
@@ -359,7 +379,7 @@ public class InvoiceController : ControllerBase
     [SwaggerOperation(Summary = "[Authorize] Update Invoice info (For management)",
         Description = "date format d/M/YYYY")]
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     public async Task<IActionResult> PutInvoice(int id, [FromBody] InvoiceUpdateRequest invoice,
         CancellationToken token)
     {
@@ -446,7 +466,7 @@ public class InvoiceController : ControllerBase
         var addNewInvoice = new Invoice
         {
             Name = invoice.Name,
-            Status = true,
+            Status = InvoiceStatusEnum.unpaid.ToString(),
             DueDate = invoice.DueDate,
             Detail = invoice.Detail,
             PaymentTime = null,
@@ -511,7 +531,7 @@ public class InvoiceController : ControllerBase
     // DELETE: api/Invoices/5
     [SwaggerOperation(Summary = "[Authorize] Delete invoice (For management)")]
     [HttpDelete("{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     public async Task<IActionResult> DeleteInvoice(int id)
     {
         var result = await _serviceWrapper.Invoices.DeleteInvoice(id);
@@ -533,7 +553,7 @@ public class InvoiceController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice type list (For management)")]
     [HttpGet("types")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     public async Task<IActionResult> GetInvoiceTypes([FromQuery] InvoiceTypeFilterRequest request,
         CancellationToken token)
     {
@@ -563,7 +583,7 @@ public class InvoiceController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice type by id (For management)")]
     [HttpGet("types/{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     public async Task<IActionResult> GetInvoiceTypeById(int id, CancellationToken token)
     {
         var entity = await _serviceWrapper.InvoiceTypes.GetInvoiceTypeById(id, token);
@@ -585,7 +605,7 @@ public class InvoiceController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Create invoice type (For management)")]
     [HttpPost("types")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     public async Task<IActionResult> CreateNewInvoiceType([FromBody] InvoiceTypeCreateRequest invoiceType,
         CancellationToken token)
     {
@@ -622,7 +642,7 @@ public class InvoiceController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Update invoice type (For management)")]
     [HttpPut("types/{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     public async Task<IActionResult> UpdateInvoiceType(int id, [FromBody] InvoiceTypeUpdateRequest invoiceType,
         CancellationToken token)
     {
@@ -687,7 +707,7 @@ public class InvoiceController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Delete invoice detail (For management)")]
     [HttpDelete("details/{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     public async Task<IActionResult> DeleteInvoiceDetail(int id)
     {
         var result = await _serviceWrapper.InvoiceDetails.DeleteInvoiceDetail(id);
@@ -710,7 +730,7 @@ public class InvoiceController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice detail list (For management)")]
     [HttpGet("details")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     public async Task<IActionResult> GetInvoiceDetails([FromQuery] InvoiceDetailFilterRequest request,
         CancellationToken token)
     {
@@ -740,7 +760,7 @@ public class InvoiceController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice detail by id (For management)")]
     [HttpGet("details/{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     public async Task<IActionResult> GetInvoiceDetailById(int id, CancellationToken token)
     {
         var entity = await _serviceWrapper.InvoiceDetails.GetInvoiceDetailById(id, token);
@@ -761,7 +781,7 @@ public class InvoiceController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice detail by user id with true (For management)")]
     [HttpGet("details/user/{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     public async Task<IActionResult> GetInvoiceDetailListByUserId(int id, CancellationToken token)
     {
         var result = await _serviceWrapper.InvoiceDetails
@@ -784,7 +804,7 @@ public class InvoiceController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Get invoice detail by user id with true (For management)")]
     [HttpGet("details/user/{id:int}/active")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     public async Task<IActionResult> GetInvoiceDetailByUserId(int id, CancellationToken token)
     {
         var entity = await _serviceWrapper.InvoiceDetails
@@ -807,11 +827,34 @@ public class InvoiceController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Create invoice based on list of renter id (For management)")]
     [HttpPost("batch-create")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     public async Task<IActionResult> CreateMonthlyInvoiceSelective([FromBody] List<int> invoices,
         CancellationToken token)
     {
-        var result = await _serviceWrapper.Invoices.BatchInsertMonthlyInvoice(invoices, token);
+        var employeeId = int.Parse(User.Identity?.Name);
+
+        var buildingForCurrentSupervisor =
+            await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(employeeId, token);
+
+        switch (buildingForCurrentSupervisor)
+        {
+            case -2:
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                    data = ""
+                });
+            case -1:
+                return NotFound(new
+                {
+                    status = "Not Found",
+                    message = "Người quản lý không quản lý tòa nhà nào",
+                    data = ""
+                });
+        }
+
+        var result = await _serviceWrapper.Invoices.BatchInsertMonthlyInvoice(invoices, employeeId, token);
         return result switch
         {
             { IsSuccess: false } => BadRequest(new { status = "Bad Request", message = result.Message, data = "" }),
@@ -823,7 +866,7 @@ public class InvoiceController : ControllerBase
     [SwaggerOperation(Summary =
         "[Authorize] Create invoice for all renter with active contract in building (For management)")]
     [HttpPost("batch-create-all")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     public async Task<IActionResult> CreateMonthlyInvoices(CancellationToken token)
     {
         var employeeId = int.Parse(User.Identity?.Name);
@@ -849,18 +892,43 @@ public class InvoiceController : ControllerBase
                 });
         }
 
-        var result = await _serviceWrapper.Invoices.BatchInsertMonthlyInvoice(buildingForCurrentSupervisor, token);
+        var result =
+            await _serviceWrapper.Invoices.BatchInsertMonthlyInvoice(buildingForCurrentSupervisor, employeeId, token);
+
+        /*
+        var resultEmail = await _serviceWrapper
+            .Mails.SendPaymentReminderAsync(buildingForCurrentSupervisor, token);
+        */
+
+        var resultEmail = await _serviceWrapper
+            .Mails.SendListOfUnPaidRenterToSupervisor(buildingForCurrentSupervisor, token);
+
+        var mailResult = resultEmail ? "Gửi thư thành công" : "Gửi thư thất bại";
+
         return result switch
         {
-            { IsSuccess: false } => BadRequest(new { status = "Bad Request", message = result.Message, data = "" }),
-            { IsSuccess: true } => Ok(new { status = "Success", message = result.Message, data = "" }),
-            null => BadRequest(new { status = "Bad Request", message = "Invoice failed to create", data = "" })
+            { IsSuccess: false }
+                => BadRequest(
+                    new
+                    {
+                        status = "Bad Request",
+                        message = mailResult + " và " + result.Message,
+                        data = ""
+                    }),
+            { IsSuccess: true }
+                => Ok(new
+                {
+                    status = "Success",
+                    message = mailResult + " và " + result.Message,
+                    data = ""
+                }),
+            null => BadRequest(new { status = "Bad Request", message = "Tạo thất bại", data = "" })
         };
     }
 
     [SwaggerOperation(Summary = "[Authorize] Fill all invoice data of this month (For management)")]
     [HttpPost("batch-fill")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     public async Task<IActionResult> FillDataMonthlyInvoice(CancellationToken token)
     {
         var employeeId = int.Parse(User.Identity?.Name);
@@ -886,32 +954,40 @@ public class InvoiceController : ControllerBase
                 });
         }
 
-        var result = await _serviceWrapper.Invoices.BatchInsertMonthlyInvoice(buildingForCurrentSupervisor, token);
+        var result =
+            await _serviceWrapper.Invoices.BatchInsertMonthlyInvoice(buildingForCurrentSupervisor, employeeId, token);
+
+        var resultEmail = await _serviceWrapper
+            .Mails.SendPaymentReminderAsync(buildingForCurrentSupervisor, token);
+
+        var resultMail2 = await _serviceWrapper
+            .Mails.SendListOfUnPaidRenterToSupervisor(buildingForCurrentSupervisor, token);
+
+        var mailResult = resultEmail ? "Gửi thư thành công" : "Gửi thư thất bại";
+
         return result switch
         {
-            { IsSuccess: false } => BadRequest(new { status = "Bad Request", message = result.Message, data = "" }),
-            { IsSuccess: true } => Ok(new { status = "Success", message = result.Message, data = "" }),
-            null => BadRequest(new { status = "Bad Request", message = "Invoice failed to create", data = "" })
+            { IsSuccess: false }
+                => BadRequest(
+                    new
+                    {
+                        status = "Bad Request",
+                        message = mailResult + " và " + result.Message,
+                        data = ""
+                    }),
+            { IsSuccess: true }
+                => Ok(new
+                {
+                    status = "Success",
+                    message = mailResult + " và " + result.Message,
+                    data = ""
+                }),
+            null => BadRequest(new
+            {
+                status = "Bad Request",
+                message = "Tạo thất bại",
+                data = ""
+            })
         };
-    }
-
-    private static int DateRemainingCheck(DateTime start, DateTime end)
-    {
-        return (start.Date - end.Date).Days + 1;
-    }
-
-    private static decimal CalculateBillAmount(Invoice? invoice)
-    {
-        if (invoice == null)
-            return -1;
-        //var dateStart = invoice.Contract.StartDate;
-        //var dateEnd = invoice.Renter.Contract.EndDate;
-        //var dateCheck = DateRemainingCheck(dateStart, dateEnd);
-        //switch (dateCheck)
-        //{
-        // TODO : Add more cases
-        //}
-
-        return 0;
     }
 }

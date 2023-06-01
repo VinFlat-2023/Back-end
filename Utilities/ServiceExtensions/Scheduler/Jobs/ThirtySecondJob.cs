@@ -9,7 +9,7 @@ internal class ThirtySecondJob : IJob
 {
     public static readonly string schedule = CronScheduleExpression.ThirtySecond;
     private readonly IInvoiceService invoiceService;
-    private readonly ICustomeMailService mailService;
+    private readonly ICustomerMailService mailService;
 
     public ThirtySecondJob(IServiceProvider service)
     {

@@ -2,7 +2,7 @@ namespace Service.IService;
 
 public interface IGetIdService
 {
-    Task<int> GetBuildingIdBasedOnRenter(int renterId, CancellationToken token);
+    Task<int> GetBuildingIdBasedOnRenterActiveContract(int renterId, CancellationToken token);
     Task<int> GetBuildingIdBasedOnSupervisorId(int employeeId, CancellationToken token);
     Task<int> GetContractIdBasedOnRenterId(int renterId, CancellationToken token);
 

@@ -235,6 +235,11 @@ public class AutoMapper : Profile
             .ForAllMembers(o => o.ExplicitExpansion());
         CreateMap<PlaceholderForFee, PlaceholderForFeeDetailEntity>()
             .ReverseMap();
+
+        CreateMap<PlaceholderForFeeDetailEmailEntity, PlaceholderForFee>()
+            .ForAllMembers(o => o.ExplicitExpansion());
+        CreateMap<PlaceholderForFee, PlaceholderForFeeDetailEmailEntity>()
+            .ReverseMap();
     }
 
     private void MapService()
@@ -253,6 +258,12 @@ public class AutoMapper : Profile
         CreateMap<ServiceBasicDetailEntity, ServiceEntity>()
             .ReverseMap();
         CreateMap<ServiceEntity, ServiceBasicDetailEntity>()
+            .ReverseMap();
+
+        CreateMap<ServiceEntity, ServiceDetailEmailEntity>()
+            .ReverseMap();
+
+        CreateMap<ServiceDetailEmailEntity, ServiceEntity>()
             .ReverseMap();
     }
 
@@ -320,6 +331,12 @@ public class AutoMapper : Profile
         CreateMap<InvoiceRenterDetailEntity, Invoice>()
             .ForAllMembers(o => o.ExplicitExpansion());
         CreateMap<Invoice, InvoiceRenterDetailEntity>()
+            .ReverseMap();
+
+        CreateMap<Invoice, InvoiceEmailDetailEntity>()
+            .ReverseMap();
+
+        CreateMap<InvoiceEmailDetailEntity, Invoice>()
             .ReverseMap();
     }
 

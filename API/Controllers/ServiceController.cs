@@ -1,7 +1,9 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Service;
 using Domain.EntityRequest.ServiceType;
+using Domain.EnumEntities;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.ViewModel.ServiceEntity;
@@ -32,37 +34,103 @@ public class ServiceController : ControllerBase
 
     // GET: api/ServiceEntities
     [HttpGet]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [Authorize(Roles = " Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get service list with pagination and filter (For management and renter))")]
     public async Task<IActionResult> GetServiceEntities([FromQuery] ServiceFilterRequest request,
         CancellationToken token)
     {
+        var userRole = User.Identities
+            .FirstOrDefault()?.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)
+            ?.Value ?? string.Empty;
+
+        var userId = User.Identity?.Name;
+
         var filter = _mapper.Map<ServiceEntityFilter>(request);
 
-        var list = await _serviceWrapper.ServicesEntity.GetServiceEntityList(filter, token);
-
-        var resultList = _mapper.Map<IEnumerable<ServiceDetailEntity>>(list);
-
-        if (list == null || !list.Any())
-            return NotFound(new
-            {
-                status = "Not Found",
-                message = "Service list is empty",
-                data = ""
-            });
-
-        return Ok(new
+        switch (userRole)
         {
-            status = "Success",
-            message = "Hiển thị danh sách",
-            data = resultList,
-            totalPage = list.TotalPages,
-            totalCount = list.TotalCount
+            case "Supervisor":
+                var supervisorBuildingId =
+                    await _serviceWrapper.GetId.GetBuildingIdBasedOnSupervisorId(int.Parse(userId), token);
+                switch (supervisorBuildingId)
+                {
+                    case -2:
+                        return BadRequest(new
+                        {
+                            status = "Bad Request",
+                            message = "Người quản lý đang quản lý nhiều hơn 1 tòa nhà",
+                            data = ""
+                        });
+                    case -1:
+                        return NotFound(new
+                        {
+                            status = "Not Found",
+                            message = "Người quản lý không quản lý tòa nhà nào",
+                            data = ""
+                        });
+                }
+
+                var supervisorServiceList = await _serviceWrapper.ServicesEntity
+                    .GetServiceEntityList(filter, supervisorBuildingId, token);
+
+                var supervisorServiceListReturn =
+                    _mapper.Map<IEnumerable<ServiceDetailEntitySupervisor>>(supervisorServiceList);
+
+                if (supervisorServiceList == null || !supervisorServiceList.Any())
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "Danh sách dịch vụ trống",
+                        data = ""
+                    });
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "Hiển thị danh sách",
+                    data = supervisorServiceListReturn,
+                    totalPage = supervisorServiceList.TotalPages,
+                    totalCount = supervisorServiceList.TotalCount
+                });
+
+            case "Renter":
+                var buildingId =
+                    await _serviceWrapper.GetId.GetBuildingIdBasedOnRenterActiveContract(int.Parse(userId), token);
+
+                var renterServiceList =
+                    await _serviceWrapper.ServicesEntity.GetServiceEntityList(filter, buildingId, token);
+
+                var renterServiceListReturn = _mapper.Map<IEnumerable<ServiceDetailEntity>>(renterServiceList);
+
+                if (renterServiceList == null || !renterServiceList.Any())
+                    return NotFound(new
+                    {
+                        status = "Not Found",
+                        message = "Danh sách dịch vụ trống",
+                        data = ""
+                    });
+
+                return Ok(new
+                {
+                    status = "Success",
+                    message = "Hiển thị danh sách",
+                    data = renterServiceListReturn,
+                    totalPage = renterServiceList.TotalPages,
+                    totalCount = renterServiceList.TotalCount
+                });
+        }
+
+        return BadRequest(new
+        {
+            status = "Bad Request",
+            message = "Lỗi hệ thống",
+            data = ""
         });
     }
 
     [HttpGet("building/current")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [Authorize(Roles = " Supervisor, Renter")]
     [SwaggerOperation(Summary =
         "[Authorize] Get service list based on current user building id (For management and renter)")]
     public async Task<IActionResult> GetServiceEntitiesBasedOnRenterId([FromQuery] ServiceFilterRequest request,
@@ -82,7 +150,8 @@ public class ServiceController : ControllerBase
                 data = ""
             });
 
-        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnRenter(userCheck.RenterId, token);
+        var buildingId =
+            await _serviceWrapper.GetId.GetBuildingIdBasedOnRenterActiveContract(userCheck.RenterId, token);
 
         var list = await _serviceWrapper.ServicesEntity.GetServiceEntityList(filter, buildingId, token);
 
@@ -107,7 +176,7 @@ public class ServiceController : ControllerBase
     }
 
     [HttpGet("building/{buildingId:int}")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Get service list based on building id (For management)d)")]
     public async Task<IActionResult> GetServiceEntitiesByBuilding([FromQuery] ServiceFilterRequest request,
         int buildingId, CancellationToken token)
@@ -149,7 +218,7 @@ public class ServiceController : ControllerBase
     [HttpPut("select")]
     [Authorize(Roles = "Renter")]
     [SwaggerOperation(Summary = "[Authorize] Select services to consume (For renter)")]
-    public async Task<IActionResult> SelectServices(List<int> serviceId, CancellationToken token)
+    public async Task<IActionResult> SelectServices(List<int> serviceIds, CancellationToken token)
     {
         var userId = int.Parse(User.Identity?.Name);
 
@@ -163,38 +232,95 @@ public class ServiceController : ControllerBase
                 data = ""
             });
 
-        var invoiceId = await _serviceWrapper.Invoices.GetLatestUnpaidInvoiceByRenter(userId, token);
+        var contractId = await _serviceWrapper.Contracts.GetLatestContractByUserId(userId, token);
 
-        if (invoiceId == 0)
+        if (contractId == null)
             return NotFound(new
             {
                 status = "Not Found",
-                message = "Hoá đơn không tồn tại ",
+                message = "Người dùng không có hợp đồng nào đang có hiệu lực",
                 data = ""
             });
 
-        var invoiceEntity = await _serviceWrapper.Invoices.AddServiceToLastInvoice(invoiceId, serviceId);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnRenterActiveContract(userId, token);
 
-        return invoiceEntity switch
+        var building = await _serviceWrapper.Buildings.GetBuildingById(buildingId, token);
+
+        if (building == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Toà nhà này không tồn tại trong hệ thống",
+                data = ""
+            });
+
+        var invoiceId = await _serviceWrapper.Invoices.GetLatestUnpaidInvoiceByRenter(userId, token);
+
+        if (invoiceId == 0)
         {
-            { IsSuccess: true } => Ok(new
+            var newInvoice = new Invoice
             {
-                status = "Success", message = invoiceEntity.Message, data = ""
-            }),
-            { IsSuccess: false } => BadRequest(new
+                RenterId = userId,
+                Name = "Hoá đơn tháng " + DateTime.Now.Month + " năm " + DateTime.Now.Year + " của " +
+                       userCheck.FullName,
+                Status = InvoiceStatusEnum.unpaid.ToString(),
+                CreatedTime = DateTime.Now,
+                PaymentTime = null,
+                Detail = "Chi tiết hoá đơn",
+                ContractId = contractId.ContractId,
+                EmployeeId = building.EmployeeId,
+                InvoiceTypeId = 1,
+                BuildingId = buildingId
+            };
+
+            await _serviceWrapper.Invoices.AddInvoice(newInvoice);
+
+            var newFetchInvoice = await _serviceWrapper.Invoices.GetLatestUnpaidInvoiceByRenter(userId, token);
+
+            var invoiceEntity =
+                await _serviceWrapper.Invoices.AddServiceToLastInvoice(newFetchInvoice, serviceIds, token);
+
+            return invoiceEntity switch
             {
-                status = "Bad Request", message = invoiceEntity.Message, data = ""
-            }),
-            null => NotFound(new
+                { IsSuccess: true } => Ok(new
+                {
+                    status = "Success", message = invoiceEntity.Message, data = ""
+                }),
+                { IsSuccess: false } => BadRequest(new
+                {
+                    status = "Bad Request", message = invoiceEntity.Message, data = ""
+                }),
+                null => NotFound(new
+                {
+                    status = "Not Found", message = "Hoá đơn không tồn tại ", data = ""
+                })
+            };
+        }
+        else
+        {
+            var invoiceEntity = await _serviceWrapper.Invoices.AddServiceToLastInvoice(invoiceId, serviceIds, token);
+
+            return invoiceEntity switch
             {
-                status = "Not Found", message = "Hoá đơn không tồn tại ", data = ""
-            })
-        };
+                { IsSuccess: true } => Ok(new
+                {
+                    status = "Success", message = invoiceEntity.Message, data = ""
+                }),
+                { IsSuccess: false } => BadRequest(new
+                {
+                    status = "Bad Request", message = invoiceEntity.Message, data = ""
+                }),
+                null => NotFound(new
+                {
+                    status = "Not Found", message = "Hoá đơn không tồn tại ", data = ""
+                })
+            };
+        }
     }
 
     // GET: api/ServiceEntitys/5
     [HttpGet("{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [Authorize(Roles = " Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get service by id (For management and renter)")]
     public async Task<IActionResult> GetServiceEntity(int id, CancellationToken token)
     {
@@ -217,7 +343,7 @@ public class ServiceController : ControllerBase
     // PUT: api/ServiceEntitys/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Update service by id (For management)")]
     public async Task<IActionResult> PutServiceEntity(int id, [FromBody] ServiceUpdateRequest service,
         CancellationToken token)
@@ -286,7 +412,7 @@ public class ServiceController : ControllerBase
     // POST: api/ServiceEntitiess
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Add new service (For management)")]
     public async Task<IActionResult> PostServiceEntity([FromBody] ServiceCreateRequest service, CancellationToken token)
     {
@@ -352,7 +478,7 @@ public class ServiceController : ControllerBase
 
     // DELETE: api/ServiceEntitys/5
     [HttpDelete("{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Delete service by id (For management)")]
     public async Task<IActionResult> DeleteServiceEntity(int id)
     {
@@ -375,7 +501,7 @@ public class ServiceController : ControllerBase
     }
 
     [HttpGet("type")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [Authorize(Roles = " Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get service type list (For management and renter)")]
     public async Task<IActionResult> GetServiceTypes([FromQuery] ServiceTypeFilterRequest request,
         CancellationToken token)
@@ -406,7 +532,7 @@ public class ServiceController : ControllerBase
 
     // GET: api/ServiceTypes/5
     [HttpGet("type/{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [Authorize(Roles = " Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get service type by id (For management and renter)")]
     public async Task<IActionResult> GetServiceType(int id, CancellationToken token)
     {
@@ -429,7 +555,7 @@ public class ServiceController : ControllerBase
     // PUT: api/ServiceTypes/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("type/{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Update service type by id (For management)")]
     public async Task<IActionResult> PutServiceType(int id, ServiceTypeCreateRequest serviceType,
         CancellationToken token)
@@ -472,7 +598,7 @@ public class ServiceController : ControllerBase
     // POST: api/ServiceTypes
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost("type")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Add new service type (For management)")]
     public async Task<IActionResult> PostServiceType(ServiceTypeCreateRequest serviceType, CancellationToken token)
     {
@@ -510,7 +636,7 @@ public class ServiceController : ControllerBase
 
     // DELETE: api/ServiceTypes/5
     [HttpDelete("type/{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Delete service type by id (For management)")]
     public async Task<IActionResult> DeleteServiceType(int id)
     {

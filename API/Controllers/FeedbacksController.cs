@@ -33,7 +33,7 @@ public class FeedbacksController : ControllerBase
 
     // GET: api/Feedbacks
     [SwaggerOperation(Summary = "[Authorize] Get Feedback List")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     [HttpGet]
     public async Task<IActionResult> GetFeedbacks([FromQuery] FeedbackFilterRequest request, CancellationToken token)
     {
@@ -63,7 +63,7 @@ public class FeedbacksController : ControllerBase
 
     // GET: api/Feedbacks/5
     [SwaggerOperation(Summary = "[Authorize] Get Feedback")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [Authorize(Roles = " Supervisor, Renter")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetFeedback(int id, CancellationToken token)
     {
@@ -86,7 +86,7 @@ public class FeedbacksController : ControllerBase
     // PUT: api/Feedbacks/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Update Feedback info")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [Authorize(Roles = " Supervisor, Renter")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutFeedback(int id, [FromBody] FeedbackUpdateRequest feedback,
         CancellationToken token)
@@ -134,7 +134,7 @@ public class FeedbacksController : ControllerBase
     // POST: api/Feedbacks
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Create Feedback")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [Authorize(Roles = " Supervisor, Renter")]
     [HttpPost]
     public async Task<IActionResult> PostFeedback([FromBody] FeedbackCreateRequest feedback, CancellationToken token)
     {
@@ -178,7 +178,7 @@ public class FeedbacksController : ControllerBase
 
     // DELETE: api/Feedbacks/5
     [SwaggerOperation(Summary = "Remove Feedback")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [Authorize(Roles = " Supervisor, Renter")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteFeedback(int id)
     {
@@ -202,7 +202,7 @@ public class FeedbacksController : ControllerBase
 
     [SwaggerOperation(Summary = "[Authorize] Get Feedback Type List")]
     [HttpGet("type")]
-    [Authorize(Roles = " Admin, Supervisor, Renter")]
+    [Authorize(Roles = "  Supervisor, Renter")]
     public async Task<IActionResult> GetFeedbackTypes([FromQuery] FeedbackTypeFilterRequest request,
         CancellationToken token)
     {
@@ -232,7 +232,7 @@ public class FeedbacksController : ControllerBase
     // GET: api/FeedbackTypes/5
     [SwaggerOperation(Summary = "[Authorize] GetFeedback Type")]
     [HttpGet("type/{id:int}")]
-    [Authorize(Roles = " Admin, Supervisor, Renter")]
+    [Authorize(Roles = "  Supervisor, Renter")]
     public async Task<IActionResult> GetFeedbackType(int id, CancellationToken token)
     {
         var entity = await _serviceWrapper.FeedbackTypes
@@ -257,7 +257,7 @@ public class FeedbacksController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Update Feedback Type info")]
     [HttpPut("type/{id:int}")]
-    [Authorize(Roles = " Admin, Supervisor")]
+    [Authorize(Roles = "  Supervisor")]
     public async Task<IActionResult> PutFeedbackType(int id, [FromBody] FeedbackTypeUpdateRequest feedbackType,
         CancellationToken token)
     {
@@ -298,7 +298,7 @@ public class FeedbacksController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "Create Feedback Type")]
     [HttpPost("type")]
-    [Authorize(Roles = " Admin, Supervisor")]
+    [Authorize(Roles = "  Supervisor")]
     public async Task<IActionResult> PostFeedbackType([FromBody] FeedbackTypeCreateRequest feedbackType,
         CancellationToken token)
     {
@@ -338,7 +338,7 @@ public class FeedbacksController : ControllerBase
     // DELETE: api/FeedbackTypes/5
     [SwaggerOperation(Summary = "Remove Feedback Type")]
     [HttpDelete("type/{id:int}")]
-    [Authorize(Roles = " Admin, Supervisor")]
+    [Authorize(Roles = "  Supervisor")]
     public async Task<IActionResult> DeleteFeedbackType(int id)
     {
         var result = await _serviceWrapper.Feedbacks.DeleteFeedback(id);

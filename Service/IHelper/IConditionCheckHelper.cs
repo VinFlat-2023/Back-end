@@ -79,7 +79,7 @@ public interface IConditionCheckHelper
     public Task<RepositoryResponse>
         IsRoomExistAndAvailableInThisFlat(int? roomId, int? flatId, CancellationToken token);
 
-    public Task<RepositoryResponse> IsAnyFlatInUseWithThisType(int? roomId, int? buildingId, CancellationToken token);
+    public Task<RepositoryResponse> IsAnyRoomInUseWithThisType(int? roomId, int? buildingId, CancellationToken token);
 
     public Task<RepositoryResponse> IsAnyFlatIsInUseWithThisType(int? flatTypeId, int buildingId,
         CancellationToken token);

@@ -241,9 +241,9 @@ public class ContractService : IContractService
             .FirstOrDefaultAsync(token);
     }
 
-    public async Task<Contract?> GetContractByRenterIdWithActiveStatus(int contractId, CancellationToken token)
+    public async Task<Contract?> GetContractByRenterIdWithActiveStatus(int renterId, CancellationToken token)
     {
-        return await _repositoryWrapper.Contracts.GetContractById(contractId)
+        return await _repositoryWrapper.Contracts.GetContractByRenterId(renterId)
             .FirstOrDefaultAsync(token);
     }
 

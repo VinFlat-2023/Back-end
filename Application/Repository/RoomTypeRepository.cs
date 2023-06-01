@@ -47,7 +47,7 @@ public class RoomTypeRepository : IRoomTypeRepository
             };
     }
 
-    public async Task<RepositoryResponse> IsAnyFlatInUseWithThisType(int? roomTypeId, int? buildingId,
+    public async Task<RepositoryResponse> IsAnyRoomInUseWithThisType(int? roomTypeId, int? buildingId,
         CancellationToken token)
     {
         var roomTypeCheck = await _context.RoomTypes

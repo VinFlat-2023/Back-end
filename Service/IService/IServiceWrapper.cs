@@ -27,7 +27,7 @@ public interface IServiceWrapper
 
     // public IWalletService Wallets { get; }
     // public IDeviceService Devices { get; }
-    public ICustomeMailService Mails { get; }
+    public ICustomerMailService Mails { get; }
     // public INotificationService Notifications { get; }
 
     public IRoomTypeService RoomTypes { get; }

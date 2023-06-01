@@ -53,12 +53,12 @@ public class RoomRepository : IRoomRepository
         roomCheck.WaterAttribute = room.WaterAttribute;
         roomCheck.ElectricityAttribute = room.ElectricityAttribute;
         roomCheck.Status = room.Status;
-        roomCheck.RoomImageUrl1 = room.RoomImageUrl1;
-        roomCheck.RoomImageUrl2 = room.RoomImageUrl2;
-        roomCheck.RoomImageUrl3 = room.RoomImageUrl3;
-        roomCheck.RoomImageUrl4 = room.RoomImageUrl4;
-        roomCheck.RoomImageUrl5 = room.RoomImageUrl5;
-        roomCheck.RoomImageUrl6 = room.RoomImageUrl6;
+        roomCheck.RoomImageUrl1 = room.RoomImageUrl1 ?? roomCheck.RoomImageUrl1;
+        roomCheck.RoomImageUrl2 = room.RoomImageUrl2 ?? roomCheck.RoomImageUrl2;
+        roomCheck.RoomImageUrl3 = room.RoomImageUrl3 ?? roomCheck.RoomImageUrl3;
+        roomCheck.RoomImageUrl4 = room.RoomImageUrl4 ?? roomCheck.RoomImageUrl4;
+        roomCheck.RoomImageUrl5 = room.RoomImageUrl5 ?? roomCheck.RoomImageUrl5;
+        roomCheck.RoomImageUrl6 = room.RoomImageUrl6 ?? roomCheck.RoomImageUrl6;
 
         _context.Attach(roomCheck).State = EntityState.Modified;
 

@@ -75,7 +75,7 @@ public class RoomTypeValidator : BaseValidator, IRoomTypeValidator
                         case not null:
                             // Check if anyone rented this room
                             var isAnyoneRentedCheckCheck =
-                                await _conditionCheckHelper.IsAnyFlatInUseWithThisType(roomId, buildingId, token);
+                                await _conditionCheckHelper.IsAnyRoomInUseWithThisType(roomId, buildingId, token);
                             switch (isAnyoneRentedCheckCheck.IsSuccess)
                             {
                                 case true:

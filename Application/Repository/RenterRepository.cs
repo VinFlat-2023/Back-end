@@ -19,14 +19,18 @@ public class RenterRepository : IRenterRepository
 
     public IQueryable<Renter> GetRenterList(int buildingId)
     {
+        var contract = _context.Contracts
+            .Include(x => x.Renter)
+            .Where(x => x.ContractStatus.ToLower() == "inactive" && x.BuildingId == buildingId)
+            .Select(x => x.RenterId);
+
         return _context.Renters
             .Include(x => x.Contracts)
-            .Where(x => x.Contracts
-                .Any(contract => contract.BuildingId == buildingId
-                                 && contract.ContractStatus.ToLower() != "active"))
-            .Distinct()
+            .Where(x => x.Contracts.Any(c => c.BuildingId == buildingId))
+            .Where(x => contract.Contains(x.RenterId))
             .AsNoTracking();
     }
+
 
     public IQueryable<Renter> GetRenterList(RenterFilter filters, int buildingId)
     {
@@ -275,10 +279,10 @@ public class RenterRepository : IRenterRepository
     /// </summary>
     /// <param name="renterId"></param>
     /// <returns></returns>
-    public async Task<RepositoryResponse> ToggleRenter(int renterId)
+    public async Task<RepositoryResponse> ToggleRenter(Renter renter)
     {
         var renterFound = await _context.Renters
-            .FirstOrDefaultAsync(x => x.RenterId == renterId);
+            .FirstOrDefaultAsync(x => x.RenterId == renter.RenterId);
 
         if (renterFound == null)
             return new RepositoryResponse
@@ -287,7 +291,7 @@ public class RenterRepository : IRenterRepository
                 Message = "Người dùng không tồn tại"
             };
 
-        _ = renterFound.Status == !renterFound.Status;
+        renterFound.Status = renter.Status;
 
         _context.Attach(renterFound).State = EntityState.Modified;
 

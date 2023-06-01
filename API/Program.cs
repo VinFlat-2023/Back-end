@@ -1,6 +1,5 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using AspNetCoreRateLimit;
 using Domain.Options;
 using Infrastructure;
 using Microsoft.AspNetCore.Http.Features;
@@ -8,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Utilities.MiddlewareExtension;
 using Utilities.ServiceExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -82,7 +80,7 @@ builder.Services.AddAuthorizationService();
 
 builder.Services.AddRedisCacheService(config);
 
-builder.Services.AddRateLimiting(config);
+//builder.Services.AddRateLimiting(config);
 
 builder.Services.Configure<PaginationOption>(config.GetSection("Pagination"));
 
@@ -139,7 +137,7 @@ using (var scope = app.Services.CreateScope())
     dbContext.Database.Migrate();
 }
 
-app.UseIpRateLimiting();
+//app.UseIpRateLimiting();
 
 app.UseAuthentication();
 
@@ -151,7 +149,7 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-app.ConfigMiddleware(config);
+// app.ConfigMiddleware(config);
 
 app.MapControllers();
 

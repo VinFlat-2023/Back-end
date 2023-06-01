@@ -188,6 +188,7 @@ internal class TicketRepository : ITicketRepository
     ///     UpdateFeedback ticket by id
     /// </summary>
     /// <param name="ticket"></param>
+    /// <param name="number"></param>
     /// <returns></returns>
     public async Task<RepositoryResponse> UpdateTicket(Ticket ticket, int number)
     {
@@ -203,6 +204,7 @@ internal class TicketRepository : ITicketRepository
         ticketFound.TicketName = ticket.TicketName;
         ticketFound.Description = ticket.Description;
         ticketFound.TicketTypeId = ticket.TicketTypeId;
+
         switch (number)
         {
             case 1:

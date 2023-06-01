@@ -680,7 +680,7 @@ public class TicketController : ControllerBase
                 data = ""
             });
 
-        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnRenter(userId, token);
+        var buildingId = await _serviceWrapper.GetId.GetBuildingIdBasedOnRenterActiveContract(userId, token);
 
         if (buildingId == 0)
             return NotFound(new
@@ -874,7 +874,7 @@ public class TicketController : ControllerBase
 
     // GET: api/RequestTypes
     [HttpGet("type")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [Authorize(Roles = " Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get ticket type list (For management and renter)")]
     public async Task<IActionResult> GetTicketTypes([FromQuery] TicketTypeFilterRequest request,
         CancellationToken token)
@@ -905,7 +905,7 @@ public class TicketController : ControllerBase
 
     // GET: api/RequestTypes/5
     [HttpGet("type/{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [Authorize(Roles = " Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Get ticket type by id (For management and renter)")]
     public async Task<IActionResult> GetTicketType(int id, CancellationToken token)
     {
@@ -930,7 +930,7 @@ public class TicketController : ControllerBase
     // PUT: api/RequestTypes/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("type/{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Update ticket type by id (For management)")]
     public async Task<IActionResult> PutTicketType(int id,
         [FromBody] TicketTypeUpdateRequest ticketTypeUpdateRequestType)
@@ -976,7 +976,7 @@ public class TicketController : ControllerBase
     // POST: api/RequestTypes
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost("type")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Create ticket type (For management)")]
     public async Task<IActionResult> PostTicketType([FromBody] TicketTypeCreateRequest ticketTypeCreateRequestType,
         CancellationToken token)
@@ -1017,7 +1017,7 @@ public class TicketController : ControllerBase
 
     // DELETE: api/RequestTypes/5
     [HttpDelete("type/{id:int}")]
-    [Authorize(Roles = " Admin, Supervisor")]
+    [Authorize(Roles = "  Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Delete ticket type by id (For management)")]
     public async Task<IActionResult> DeleteTicketType(int id)
     {

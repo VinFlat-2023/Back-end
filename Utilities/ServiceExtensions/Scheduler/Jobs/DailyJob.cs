@@ -8,7 +8,7 @@ namespace Utilities.ServiceExtensions.Scheduler.Jobs;
 public class DailyJob : IJob
 {
     public static readonly string schedule = CronScheduleExpression.Daily;
-    private readonly ICustomeMailService mailService;
+    private readonly ICustomerMailService mailService;
 
 
     public DailyJob(IServiceProvider service)
@@ -25,7 +25,7 @@ public class DailyJob : IJob
             $"Email sent at {DateTime.Now.ToString("dd/MM/yy hh.mm.ss")}",
             null
         );
-        await mailService.SendPaymentReminderAsync(CancellationToken.None);
+        await mailService.SendPaymentReminderAsync(0, CancellationToken.None);
         Console.WriteLine($"Daily Task completed at {DateTime.Now.ToString("dd/MM/yy hh.mm.ss")}");
         //return Task.CompletedTask;
     }

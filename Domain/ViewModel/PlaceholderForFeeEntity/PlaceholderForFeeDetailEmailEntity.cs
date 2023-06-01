@@ -1,6 +1,6 @@
 namespace Domain.ViewModel.PlaceholderForFeeEntity;
 
-public class PlaceholderForFeeDetailEntity
+public class PlaceholderForFeeDetailEmailEntity
 {
     public int PlaceholderForFeeId { get; set; }
     public int? TicketId { get; set; }

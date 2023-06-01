@@ -14,6 +14,7 @@ public class InvoiceService : IInvoiceService
     private readonly string _cacheKey = "invoice";
     private readonly string _cacheKeyPageNumber = "page-number-invoice";
     private readonly string _cacheKeyPageSize = "page-size-invoice";
+
     private readonly PaginationOption _paginationOptions;
     private readonly IRedisCacheHelper _redis;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -166,10 +167,10 @@ public class InvoiceService : IInvoiceService
                 {
                     Name = $"Hoá đơn tháng {currentMonth} cho {renter.Username}",
                     TotalAmount = 0,
-                    Status = false,
+                    Status = "Unpaid",
                     Detail = $"Hoá đơn tháng {currentMonth} cho {renter.Username}",
                     CreatedTime = DateTime.UtcNow, //Start of this month
-                    DueDate = DateTime.UtcNow.AddMonths(1).AddDays(-1), //End of this month
+                    DueDate = DateTime.UtcNow.AddMonths(1).AddDays(-1),
                     RenterId = renter.RenterId,
                     InvoiceTypeId = 1
                 };
@@ -186,20 +187,22 @@ public class InvoiceService : IInvoiceService
     }
 
     public async Task<RepositoryResponse> AddServiceToLastInvoice(int invoiceId,
-        IEnumerable<int> serviceId)
+        IEnumerable<int> serviceId, CancellationToken token)
     {
-        return await _repositoryWrapper.Invoices.AddServiceToLastInvoice(invoiceId, serviceId);
+        return await _repositoryWrapper.Invoices.AddServiceToLastInvoice(invoiceId, serviceId, token);
     }
 
-    public async Task<RepositoryResponse> BatchInsertMonthlyInvoice(IEnumerable<int> invoices, CancellationToken token)
-    {
-        return await _repositoryWrapper.Invoices.BatchInsertMonthlyInvoice(invoices, token);
-    }
-
-    public async Task<RepositoryResponse> BatchInsertMonthlyInvoice(int buildingForCurrentSupervisor,
+    public async Task<RepositoryResponse> BatchInsertMonthlyInvoice(IEnumerable<int> invoices, int employeeId,
         CancellationToken token)
     {
-        return await _repositoryWrapper.Invoices.BatchInsertMonthlyInvoice(buildingForCurrentSupervisor, token);
+        return await _repositoryWrapper.Invoices.BatchInsertMonthlyInvoice(invoices, employeeId, token);
+    }
+
+    public async Task<RepositoryResponse> BatchInsertMonthlyInvoice(int buildingForCurrentSupervisor, int employeeId,
+        CancellationToken token)
+    {
+        return await _repositoryWrapper.Invoices.BatchInsertMonthlyInvoice(buildingForCurrentSupervisor, employeeId,
+            token);
     }
 
     public async Task<bool> AutoFinishInvoice()

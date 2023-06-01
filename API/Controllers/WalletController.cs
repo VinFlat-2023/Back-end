@@ -26,7 +26,7 @@ public class WalletController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin, Renter, Supervisor")]
+    [Authorize(Roles = " Renter, Supervisor")]
     [Route("wallets")]
     [SwaggerOperation(Summary = "[Authorize] Get Wallet By authorized renter")]
     public async Task<IActionResult> GetWalletByEmployeeId()
@@ -42,7 +42,7 @@ public class WalletController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin, Renter, Supervisor")]
+    [Authorize(Roles = " Renter, Supervisor")]
     [Route("wallets")]
     [SwaggerOperation(Summary = "[Authorize] Create a Wallet")]
     public async Task<IActionResult> CreateWallet(WalletCreateRequest request)
@@ -70,7 +70,7 @@ public class WalletController : ControllerBase
 
 
     [HttpPut]
-    [Authorize(Roles = "Admin, Renter, Supervisor")]
+    [Authorize(Roles = " Renter, Supervisor")]
     [Route("wallets")]
     [SwaggerOperation(Summary = "[Authorize] Update a Wallet")]
     public async Task<IActionResult> UpdateWallet(WalletUpdateRequest request)
@@ -93,7 +93,7 @@ public class WalletController : ControllerBase
     }
 
     [HttpDelete]
-    [Authorize(Roles = "Admin, Renter, Supervisor")]
+    [Authorize(Roles = " Renter, Supervisor")]
     [Route("wallets")]
     [SwaggerOperation(Summary = "[Authorize] Disable a Wallet")]
     public async Task<IActionResult> DisableWallet(Guid id)
@@ -111,7 +111,7 @@ public class WalletController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin, Renter, Supervisor")]
+    [Authorize(Roles = " Renter, Supervisor")]
     [Route("wallets/types")]
     [SwaggerOperation(Summary = "[Authorize] Get All Wallet Types")]
     public async Task<IActionResult> GetAllWalletTypes()
@@ -123,7 +123,7 @@ public class WalletController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin, Renter, Supervisor")]
+    [Authorize(Roles = " Renter, Supervisor")]
     [Route("wallet/type")]
     [SwaggerOperation(Summary = "[Authorize] Get wallet by its type")]
     public async Task<IActionResult> GetWalletByRenterIdAndType(WalletTypeEnum walletType)
@@ -143,7 +143,7 @@ public class WalletController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin, Renter, Supervisor")]
+    [Authorize(Roles = " Renter, Supervisor")]
     [Route("wallet/{id:guid}")]
     [SwaggerOperation(Summary = "[Authorize] Get Wallet By its ID")]
     public async Task<IActionResult> GetWalletById(Guid id)

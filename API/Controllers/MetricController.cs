@@ -394,7 +394,7 @@ public class MetricController : ControllerBase
                 {
                     status = "Bad Request",
                     message = "Quản lí này hiện đang quản lí hơn 1 toà nhà",
-                    data = -2
+                    data = ""
                 });
         }
 

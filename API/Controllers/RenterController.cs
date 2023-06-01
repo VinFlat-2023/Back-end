@@ -308,10 +308,10 @@ public class RenterController : ControllerBase
             PriceForWater = contract.PriceForWater.DecimalToString(),
             PriceForElectricity = contract.PriceForElectricity.DecimalToString(),
             PriceForService = contract.PriceForService.DecimalToString(),
-            WaterMeterAfter = contract.Flat.WaterMeterAfter,
-            WaterMeterBefore = contract.Flat.WaterMeterBefore,
-            ElectricityMeterAfter = contract.Flat.ElectricityMeterAfter,
-            ElectricityMeterBefore = contract.Flat.ElectricityMeterBefore
+            WaterMeterAfter = contract.Flat.WaterMeterAfter.DecimalToString(),
+            WaterMeterBefore = contract.Flat.WaterMeterBefore.DecimalToString(),
+            ElectricityMeterAfter = contract.Flat.ElectricityMeterAfter.DecimalToString(),
+            ElectricityMeterBefore = contract.Flat.ElectricityMeterBefore.DecimalToString()
         };
 
         var buildingManager = new EmployeeBuildingDetailEntity
@@ -368,6 +368,7 @@ public class RenterController : ControllerBase
 
         var contract =
             await _serviceWrapper.Contracts.GetContractByRenterIdWithActiveStatus(rentalCheck.RenterId, token);
+
         if (contract == null)
             return NotFound(new
             {
@@ -395,6 +396,16 @@ public class RenterController : ControllerBase
                 data = ""
             });
 
+        var room = await _serviceWrapper.Rooms.GetRoomById(contract.RoomId, building.BuildingId, token);
+
+        if (room == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Phòng này không tồn tại trong hệ thống",
+                data = ""
+            });
+
         // GET BUILDING / FLAT / RENTER / ROOM
         var basicRental = new BasicRentalEntity
         {
@@ -403,7 +414,7 @@ public class RenterController : ControllerBase
             FlatId = flatCheck.FlatId,
             FlatName = flatCheck.Name,
             RoomId = contract.RoomId,
-            RoomName = "VF-2300"
+            RoomName = room.RoomName
         };
 
         return Ok(new
@@ -550,7 +561,7 @@ public class RenterController : ControllerBase
     // POST: api/Renters
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = " Supervisor")]
     [SwaggerOperation(Summary = "[Authorize] Register a new renter (For management)")]
     public async Task<IActionResult> PostRenter([FromBody] RenterCreateRequest renter)
     {
@@ -626,10 +637,11 @@ public class RenterController : ControllerBase
 
 
     // DELETE: api/Renters/5
-    [HttpDelete("{id:int}")]
-    [Authorize(Roles = "Admin, Supervisor, Renter")]
+    [HttpPut("{id:int}")]
+    [Authorize(Roles = " Supervisor, Renter")]
     [SwaggerOperation(Summary = "[Authorize] Disable renter by id (For management)")]
-    public async Task<IActionResult> DeleteRenter(int id, CancellationToken token)
+    public async Task<IActionResult> DeleteRenter(int id, [FromBody] RenterStatusUpdateRequest request,
+        CancellationToken token)
     {
         var renter = await _serviceWrapper.Renters.GetRenterById(id, token);
 
@@ -648,20 +660,26 @@ public class RenterController : ControllerBase
             await _serviceWrapper.Devices.DeleteUserDevice(listUserDevice);
         */
 
-        var result = await _serviceWrapper.Renters.DeleteRenter(id);
+        var newStatus = new Renter
+        {
+            RenterId = id,
+            Status = request.Status
+        };
+
+        var result = await _serviceWrapper.Renters.ToggleRenterStatus(newStatus);
 
         return result.IsSuccess switch
         {
             true => Ok(new
             {
                 status = "Success",
-                message = "Renter deleted successfully",
+                message = result.Message,
                 data = ""
             }),
             false => BadRequest(new
             {
                 status = "Bad Request",
-                message = "Renter failed to delete",
+                message = result.Message,
                 data = ""
             })
         };

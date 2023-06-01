@@ -9,14 +9,14 @@ namespace API.Controllers;
 public class MailController : ControllerBase
 {
     private readonly IWebHostEnvironment _env;
-    private readonly ICustomeMailService _mailService;
+    private readonly ICustomerMailService _mailService;
     private readonly IMapper _mapper;
 
     private readonly IServiceWrapper _serviceWrapper;
 
     //private readonly IWebHostEnvironment env;
     public MailController( /*ICustomeMailService emailSender,*/ /*IWebHostEnvironment env,*/ IMapper mapper,
-        IServiceWrapper serviceWrapper, ICustomeMailService mailService, IWebHostEnvironment env)
+        IServiceWrapper serviceWrapper, ICustomerMailService mailService, IWebHostEnvironment env)
     {
         //mailService = emailSender;
         //this.env = env;
@@ -27,13 +27,16 @@ public class MailController : ControllerBase
     }
 
 
-    [HttpGet("paymentReminder")]
+    [HttpGet("")]
     public async Task<IActionResult> SendPaymentReminder()
     {
         //string rootPath = env.WebRootPath;
-        var result = await _serviceWrapper.Mails.SendPaymentReminderAsync(CancellationToken.None);
+        var result = await _serviceWrapper
+            .Mails.SendPaymentReminderAsync(0, CancellationToken.None);
 
-        return result ? Ok("Send mail successfully") : BadRequest("Somthing went wrong");
+        return result
+            ? Ok("Send mail successfully")
+            : BadRequest("Something went wrong");
     }
 
     [HttpPost]

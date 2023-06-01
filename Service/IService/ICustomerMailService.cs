@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace Service.IService;
 
-public interface ICustomeMailService
+public interface ICustomerMailService
 {
     public Task<bool> SendEmailWithDefaultTemplateAsync(IEnumerable<string> receivers, string subject, string content,
         IFormFileCollection attachments);
 
-    public Task<bool> SendPaymentReminderAsync(CancellationToken token);
+    public Task<bool> SendPaymentReminderAsync(int buildingId, CancellationToken token);
+    public Task<bool> SendListOfUnPaidRenterToSupervisor(int buildingId, CancellationToken token);
     public Task<bool> SendPaymentConfirmAsync(MomoResponseEntity momo, CancellationToken token);
 
     #region unsued code

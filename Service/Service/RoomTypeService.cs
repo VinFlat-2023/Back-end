@@ -104,9 +104,9 @@ public class RoomTypeService : IRoomTypeService
         return pagedList;
     }
 
-    public async Task<RepositoryResponse> IsAnyFlatInUseWithThisType(int? roomTypeId, int? buildingId,
+    public async Task<RepositoryResponse> IsAnyRoomInUseWithThisType(int? roomTypeId, int? buildingId,
         CancellationToken token)
     {
-        return await _repositoryWrapper.RoomsTypes.IsAnyFlatInUseWithThisType(roomTypeId, buildingId, token);
+        return await _repositoryWrapper.RoomsTypes.IsAnyRoomInUseWithThisType(roomTypeId, buildingId, token);
     }
 }

@@ -140,7 +140,7 @@ public class BuildingController : ControllerBase
     // PUT: api/Buildings/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Update Building info (For management)")]
-    [Authorize(Roles = "Admin, Supervisor")]
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutBuilding(int id, [FromBody] BuildingUpdateRequest building,
         CancellationToken token)

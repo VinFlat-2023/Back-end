@@ -9,7 +9,7 @@ public class EndMonthlyJob : IJob
 {
     public static readonly string schedule = CronScheduleExpression.EndMonthly;
     private readonly IInvoiceService invoiceService;
-    private readonly ICustomeMailService mailService;
+    private readonly ICustomerMailService mailService;
 
     public EndMonthlyJob(IServiceProvider service)
     {
@@ -35,7 +35,7 @@ public class EndMonthlyJob : IJob
             Console.WriteLine(ex.ToString());
         }
 
-        await mailService.SendPaymentReminderAsync(CancellationToken.None);
+        await mailService.SendPaymentReminderAsync(0, CancellationToken.None);
         Console.WriteLine($"Monthly Task completed at {DateTime.Now.ToString("dd/MM/yy hh.mm.ss")}");
         //return Task.CompletedTask;
     }

@@ -2,7 +2,7 @@ namespace Application.IRepository;
 
 public interface IGetIdRepository
 {
-    Task<int> GetBuildingIdBasedOnRenter(int renterId, CancellationToken token);
+    Task<int> GetBuildingIdBasedOnRenterActiveContract(int renterId, CancellationToken token);
     Task<int> GetContractIdBasedOnRenterId(int renterId, CancellationToken token);
 
     Task<int> GetActiveContractIdBasedOnRenterId(int renterId, CancellationToken token);

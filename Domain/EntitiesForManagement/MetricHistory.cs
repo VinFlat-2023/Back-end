@@ -4,17 +4,17 @@ public class MetricHistory
 {
     public int MetricHistoryId { get; set; }
 
-    public int? WaterMeterBefore { get; set; }
+    public decimal WaterMeterBefore { get; set; }
 
-    public int? WaterMeterAfter { get; set; }
+    public decimal WaterMeterAfter { get; set; }
 
-    public int? ElectricityMeterBefore { get; set; }
+    public decimal ElectricityMeterBefore { get; set; }
 
-    public int? ElectricityMeterAfter { get; set; }
+    public decimal ElectricityMeterAfter { get; set; }
 
     public DateTime CreatedDate { get; set; }
 
-    public DateTime? RecordedDate { get; set; }
+    public string? RecordedDate { get; set; }
 
     public int FlatId { get; set; }
 

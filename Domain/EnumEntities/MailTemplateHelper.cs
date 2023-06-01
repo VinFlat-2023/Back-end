@@ -13,26 +13,26 @@ public static class MailTemplateHelper
 
     public static string DEFAULT_TEMPLATE(string rootPath)
     {
-        if (string.IsNullOrEmpty(default_template))
-            default_template = GetTemplate(rootPath + Path.DirectorySeparatorChar + FOLDER +
+        if (string.IsNullOrEmpty(_defaultTemplate))
+            _defaultTemplate = GetTemplate(rootPath + Path.DirectorySeparatorChar + FOLDER +
                                            Path.DirectorySeparatorChar + DEFAULT_TEMPLATE_FILE);
-        return default_template;
+        return _defaultTemplate;
     }
 
     public static string PAYMENT_REMINDER_TEMPLATE(string rootPath)
     {
-        if (string.IsNullOrEmpty(payment_reminder_template))
-            default_template = GetTemplate(rootPath + Path.DirectorySeparatorChar + FOLDER +
+        if (string.IsNullOrEmpty(_paymentReminderTemplate))
+            _defaultTemplate = GetTemplate(rootPath + Path.DirectorySeparatorChar + FOLDER +
                                            Path.DirectorySeparatorChar + PAYMENT_REMINDER_TEMPLATE_FILE);
-        return payment_confirm_template;
+        return _paymentConfirmTemplate;
     }
 
     public static string PAYMENT_CONFIRM_TEMPLATE(string rootPath)
     {
-        if (string.IsNullOrEmpty(default_template))
-            default_template = GetTemplate(rootPath + Path.DirectorySeparatorChar + FOLDER +
+        if (string.IsNullOrEmpty(_defaultTemplate))
+            _defaultTemplate = GetTemplate(rootPath + Path.DirectorySeparatorChar + FOLDER +
                                            Path.DirectorySeparatorChar + PAYMENT_CONFIRM_TEMPLATE_FILE);
-        return payment_confirm_template;
+        return _paymentConfirmTemplate;
     }
 
     public static string GetTemplate(string templatePath)
@@ -118,25 +118,23 @@ public static class MailTemplateHelper
             tables += serviceTable.ToString();
         }
 
-        if (hasRequest)
-        {
-            requesttable.Append("<tr>");
-            requesttable.Append("<td colspan=\"3\">Total</td >");
-            requesttable.Append($"<td>{requestTotal}</td >");
-            requesttable.Append("</tr>");
-            requesttable.Append("</tbody>");
-            requesttable.Append("</table>");
-            tables += requesttable.ToString();
-        }
+        if (!hasRequest) return tables;
+        requesttable.Append("<tr>");
+        requesttable.Append("<td colspan=\"3\">Total</td >");
+        requesttable.Append($"<td>{requestTotal}</td >");
+        requesttable.Append("</tr>");
+        requesttable.Append("</tbody>");
+        requesttable.Append("</table>");
+        tables += requesttable.ToString();
 
         return tables;
     }
 
     #region field
 
-    public static string default_template;
-    public static string payment_reminder_template;
-    private static string payment_confirm_template;
+    private static string? _defaultTemplate;
+    private static string? _paymentReminderTemplate;
+    private static string? _paymentConfirmTemplate;
 
     #endregion
 }

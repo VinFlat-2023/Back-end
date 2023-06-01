@@ -12,6 +12,6 @@ public interface IRoomTypeRepository
     public Task<RepositoryResponse> DeleteRoomType(int roomTypeId, int buildingId);
     public Task<RepositoryResponse> AddRoomType(RoomType roomType);
 
-    public Task<RepositoryResponse> IsAnyFlatInUseWithThisType(int? roomTypeId, int? buildingId,
+    public Task<RepositoryResponse> IsAnyRoomInUseWithThisType(int? roomTypeId, int? buildingId,
         CancellationToken token);
 }

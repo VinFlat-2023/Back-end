@@ -2,12 +2,12 @@ namespace Domain.ViewModel.FlatEntity;
 
 public class FlatMeterDetailEntity
 {
-    public decimal WaterMeterAfter { get; set; }
-    public decimal ElectricityMeterAfter { get; set; }
-    public decimal WaterMeterBefore { get; set; }
-    public decimal ElectricityMeterBefore { get; set; }
-    public string PriceForRent { get; set; } = null!;
-    public string PriceForWater { get; set; } = null!;
-    public string PriceForElectricity { get; set; } = null!;
-    public string PriceForService { get; set; } = null!;
+    public string WaterMeterAfter { get; set; }
+    public string ElectricityMeterAfter { get; set; }
+    public string WaterMeterBefore { get; set; }
+    public string ElectricityMeterBefore { get; set; }
+    public string PriceForRent { get; set; }
+    public string PriceForWater { get; set; }
+    public string PriceForElectricity { get; set; }
+    public string PriceForService { get; set; }
 }
