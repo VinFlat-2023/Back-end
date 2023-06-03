@@ -13,7 +13,7 @@ namespace Service.Service;
 public class AreaService : IAreaService
 {
     private readonly string _cacheKey = "area";
-    private readonly string _cacheKeyAreaList = "area";
+    private readonly string _cacheKeyAreaList = "area-list";
     private readonly string _cacheKeyPageNumber = "page-number-area";
     private readonly string _cacheKeyPageSize = "page-size-area";
     private readonly PaginationOption _paginationOptions;
@@ -33,10 +33,10 @@ public class AreaService : IAreaService
         var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
         var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
 
-        /*
         var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<Area>>(_cacheKey);
         var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
         var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
+        var cacheDataAreaList = await _redis.GetCachePagedDataAsync<List<Area>>(_cacheKeyAreaList);
 
         var ifNullFilter = filters.GetType().GetProperties()
             .All(p => p.GetValue(filters) == null);
@@ -48,6 +48,7 @@ public class AreaService : IAreaService
                 await _redis.RemoveCacheDataAsync(_cacheKey);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+                await _redis.RemoveCacheDataAsync(_cacheKeyAreaList);
             }
             else
             {
@@ -62,10 +63,9 @@ public class AreaService : IAreaService
                 await _redis.RemoveCacheDataAsync(_cacheKey);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+                await _redis.RemoveCacheDataAsync(_cacheKeyAreaList);
             }
         }
-        
-        */
 
         var queryable = _repositoryWrapper.Areas.GetAreaList(filters);
 
@@ -74,11 +74,9 @@ public class AreaService : IAreaService
 
         var pagedList = await PagedList<Area>.Create(queryable, pageNumber, pageSize, token);
 
-        /*
         await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
-        */
 
         return pagedList;
     }
@@ -86,16 +84,15 @@ public class AreaService : IAreaService
 
     public async Task<List<Area>?> GetAreaList(CancellationToken token)
     {
-        /*
-    var cacheDataList = await _redis.GetCachePagedDataAsync<List<Area>>(_cacheKeyAreaList);
-    
-    if (cacheDataList != null) return cacheDataList;
-        */
+        var cacheDataList = await _redis.GetCachePagedDataAsync<List<Area>>(_cacheKeyAreaList);
+
+        if (cacheDataList != null)
+            return cacheDataList;
 
         var listArea = await _repositoryWrapper.Areas.GetAreaList()
             .ToListAsync(token);
 
-//await _redis.SetCacheDataAsync(_cacheKeyAreaList, listArea, 10, 5);
+        await _redis.SetCacheDataAsync(_cacheKeyAreaList, listArea, 10, 5);
 
         return listArea;
     }
@@ -126,6 +123,9 @@ public class AreaService : IAreaService
     {
         await _repositoryWrapper.Areas.AddArea(area);
         await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        await _redis.RemoveCacheDataAsync(_cacheKeyAreaList);
         return area;
     }
 
@@ -133,6 +133,9 @@ public class AreaService : IAreaService
     {
         var response = await _repositoryWrapper.Areas.UpdateArea(area);
         await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        await _redis.RemoveCacheDataAsync(_cacheKeyAreaList);
         return response;
     }
 
@@ -140,6 +143,9 @@ public class AreaService : IAreaService
     {
         var response = await _repositoryWrapper.Areas.DeleteArea(areaId);
         await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        await _redis.RemoveCacheDataAsync(_cacheKeyAreaList);
         return response;
     }
 
@@ -147,6 +153,9 @@ public class AreaService : IAreaService
     {
         var response = await _repositoryWrapper.Areas.UpdateAreaImage(updateArea, number);
         await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        await _redis.RemoveCacheDataAsync(_cacheKeyAreaList);
         return response;
     }
 
@@ -154,6 +163,9 @@ public class AreaService : IAreaService
     {
         var response = await _repositoryWrapper.Areas.ToggleArea(areaId);
         await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        await _redis.RemoveCacheDataAsync(_cacheKeyAreaList);
         return response;
     }
 }

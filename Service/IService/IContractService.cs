@@ -8,7 +8,8 @@ public interface IContractService
 {
     public Task<PagedList<Contract>?> GetContractList(ContractFilter filters, CancellationToken token);
 
-    public Task<PagedList<Contract>?> GetContractList(ContractFilter filters, int? id, bool isManagement,
+    public Task<PagedList<Contract>?> GetContractList(ContractFilter filters, int? buildingId, int? userId,
+        bool isManagement,
         CancellationToken token);
 
     public Task<Contract?> GetContractHistoryById(int contractId, CancellationToken token);

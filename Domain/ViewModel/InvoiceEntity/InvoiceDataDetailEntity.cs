@@ -6,6 +6,7 @@ namespace Domain.ViewModel.InvoiceEntity;
 public class InvoiceDataDetailEntity
 {
     public int InvoiceDetailId { get; set; }
+    public string Name { get; set; }
 
     public decimal Amount { get; set; }
 

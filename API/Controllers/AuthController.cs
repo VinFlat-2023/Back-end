@@ -1,5 +1,4 @@
 using Domain.ControllerEntities;
-using Domain.EntityRequest.Password;
 using Domain.EnumEntities;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
@@ -131,13 +130,13 @@ public class AuthController : ControllerBase
 
     [HttpPost("reset-password")]
     [SwaggerOperation("[Authorize] Reset password")]
-    public async Task<IActionResult> ResetPasswordRenter([FromBody] EmailResetPassword emailResetPassword,
+    public async Task<IActionResult> ResetPasswordRenter([FromBody] EmailResetPasswordRequest emailResetPassword,
         CancellationToken token)
     {
-        var emailCheck = await _serviceWrapper.Renters
-            .IsRenterEmailExist(emailResetPassword.registeredEmail, token);
+        var emailCheck = await _serviceWrapper.Mails
+            .SendResetPasswordEmail(emailResetPassword, token);
 
-        return emailCheck.IsSuccess switch
+        return emailCheck switch
         {
             true => Ok(new
             {

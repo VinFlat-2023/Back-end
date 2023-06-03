@@ -15,6 +15,7 @@ namespace Service.Service;
 public class FlatService : IFlatService
 {
     private readonly string _cacheKey = "flat";
+    private readonly string _cacheKeyFlatList = "flat-list";
     private readonly string _cacheKeyPageNumber = "page-number-flat";
     private readonly string _cacheKeyPageSize = "page-size-flat";
     private readonly PaginationOption _paginationOptions;
@@ -44,7 +45,7 @@ public class FlatService : IFlatService
     {
         var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
         var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
-        /*
+
         var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<Flat>>(_cacheKey);
         var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
         var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
@@ -59,6 +60,7 @@ public class FlatService : IFlatService
                 await _redis.RemoveCacheDataAsync(_cacheKey);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+                await _redis.RemoveCacheDataAsync(_cacheKeyFlatList);
             }
             else
             {
@@ -80,9 +82,9 @@ public class FlatService : IFlatService
                 await _redis.RemoveCacheDataAsync(_cacheKey);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+                await _redis.RemoveCacheDataAsync(_cacheKeyFlatList);
             }
         }
-        */
 
         var queryable = _repositoryWrapper.Flats.GetFlatList(filters);
 
@@ -92,11 +94,9 @@ public class FlatService : IFlatService
         var pagedList = await PagedList<Flat>
             .Create(queryable, pageNumber, pageSize, token);
 
-        /*
         await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
-        */
 
         return pagedList;
     }
@@ -106,7 +106,6 @@ public class FlatService : IFlatService
         var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
         var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
 
-        /*
         var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<Flat>>(_cacheKey);
         var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
         var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
@@ -121,6 +120,7 @@ public class FlatService : IFlatService
                 await _redis.RemoveCacheDataAsync(_cacheKey);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+                await _redis.RemoveCacheDataAsync(_cacheKeyFlatList);
             }
             else
             {
@@ -142,9 +142,9 @@ public class FlatService : IFlatService
                 await _redis.RemoveCacheDataAsync(_cacheKey);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+                await _redis.RemoveCacheDataAsync(_cacheKeyFlatList);
             }
         }
-        */
 
         var queryable = _repositoryWrapper.Flats.GetFlatList(filters, buildingId);
 
@@ -153,11 +153,11 @@ public class FlatService : IFlatService
 
         var pagedList = await PagedList<Flat>
             .Create(queryable, pageNumber, pageSize, token);
-        /*
+
         await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
-        */
+
         return pagedList;
     }
 
@@ -169,12 +169,22 @@ public class FlatService : IFlatService
 
     public async Task<RepositoryResponse> AddFlat(Flat flat, List<int> roomTypeIds, CancellationToken token)
     {
-        return await _repositoryWrapper.Flats.AddFlat(flat, roomTypeIds, token);
+        var response = await _repositoryWrapper.Flats.AddFlat(flat, roomTypeIds, token);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        await _redis.RemoveCacheDataAsync(_cacheKeyFlatList);
+        return response;
     }
 
     public async Task<RepositoryResponse> UpdateFlat(Flat flat)
     {
-        return await _repositoryWrapper.Flats.UpdateFlat(flat);
+        var response = await _repositoryWrapper.Flats.UpdateFlat(flat);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        await _redis.RemoveCacheDataAsync(_cacheKeyFlatList);
+        return response;
     }
 
     public async Task<RepositoryResponse> DeleteFlat(int flatId)
@@ -189,8 +199,17 @@ public class FlatService : IFlatService
 
     public async Task<List<Flat>?> GetFlatList(int buildingId, CancellationToken token)
     {
-        return await _repositoryWrapper.Flats.GetFlatList(buildingId)
+        var cacheDataList = await _redis.GetCachePagedDataAsync<List<Flat>>(_cacheKeyFlatList);
+
+        if (cacheDataList != null)
+            return cacheDataList;
+
+        var response = await _repositoryWrapper.Flats.GetFlatList(buildingId)
             .ToListAsync(token);
+
+        await _redis.SetCacheDataAsync(_cacheKeyFlatList, response, 10, 5);
+
+        return response;
     }
 
     public async Task<MetricNumberForTotal?> GetTotalWaterAndElectricity(int buildingId, CancellationToken token)

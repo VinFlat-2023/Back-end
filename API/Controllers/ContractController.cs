@@ -97,7 +97,7 @@ public class ContractController : ControllerBase
                 }
 
                 var supervisorContractList =
-                    await _serviceWrapper.Contracts.GetContractList(filter, buildingId, true, token);
+                    await _serviceWrapper.Contracts.GetContractList(filter, buildingId, null, true, token);
 
                 var supervisorContractListReturn =
                     _mapper.Map<IEnumerable<ContactDetailRenterEntity>>(supervisorContractList);
@@ -123,7 +123,7 @@ public class ContractController : ControllerBase
                 var renterId = Parse(User.Identity?.Name);
 
                 var renterContractList =
-                    await _serviceWrapper.Contracts.GetContractList(filter, renterId, false, token);
+                    await _serviceWrapper.Contracts.GetContractList(filter, null, renterId, false, token);
 
                 var renterContractListReturn = _mapper.Map<IEnumerable<ContractBasicDetailEntity>>(renterContractList);
 

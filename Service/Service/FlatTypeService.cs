@@ -13,6 +13,7 @@ namespace Service.Service;
 public class FlatTypeService : IFlatTypeService
 {
     private readonly string _cacheKey = "flat-type";
+    private readonly string _cacheKeyFlatTypeList = "flat-type-list";
     private readonly string _cacheKeyPageNumber = "page-number-flat-type";
     private readonly string _cacheKeyPageSize = "page-size-flat-type";
     private readonly PaginationOption _paginationOptions;
@@ -33,7 +34,6 @@ public class FlatTypeService : IFlatTypeService
         var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
         var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
 
-        /*
         var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<FlatType>>(_cacheKey);
         var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
         var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
@@ -48,6 +48,7 @@ public class FlatTypeService : IFlatTypeService
                 await _redis.RemoveCacheDataAsync(_cacheKey);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+                await _redis.RemoveCacheDataAsync(_cacheKeyFlatTypeList);
             }
             else
             {
@@ -65,9 +66,9 @@ public class FlatTypeService : IFlatTypeService
                 await _redis.RemoveCacheDataAsync(_cacheKey);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+                await _redis.RemoveCacheDataAsync(_cacheKeyFlatTypeList);
             }
         }
-        */
 
         var queryable = _repositoryWrapper.FlatTypes.GetFlatTypeList(filters, buildingId);
 
@@ -77,19 +78,26 @@ public class FlatTypeService : IFlatTypeService
         var pagedList = await PagedList<FlatType>
             .Create(queryable, pageNumber, pageSize, token);
 
-        /*
         await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
-        */
 
         return pagedList;
     }
 
     public async Task<List<FlatType>?> GetFlatTypeList(int buildingId, CancellationToken token)
     {
-        return await _repositoryWrapper.FlatTypes.GetFlatTypeList(buildingId)
+        var cacheDataList = await _redis.GetCachePagedDataAsync<List<FlatType>>(_cacheKeyFlatTypeList);
+
+        if (cacheDataList != null)
+            return cacheDataList;
+
+        var response = await _repositoryWrapper.FlatTypes.GetFlatTypeList(buildingId)
             .ToListAsync(token);
+
+        await _redis.SetCacheDataAsync(_cacheKeyFlatTypeList, response, 10, 5);
+
+        return response;
     }
 
     public async Task<FlatType?> GetFlatTypeById(int? flatTypeId, int buildingId, CancellationToken token)
@@ -100,17 +108,32 @@ public class FlatTypeService : IFlatTypeService
 
     public async Task<FlatType?> AddFlatType(FlatType flatType)
     {
-        return await _repositoryWrapper.FlatTypes.AddFlatType(flatType);
+        var response = await _repositoryWrapper.FlatTypes.AddFlatType(flatType);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        await _redis.RemoveCacheDataAsync(_cacheKeyFlatTypeList);
+        return response;
     }
 
     public async Task<RepositoryResponse> UpdateFlatType(FlatType flatType)
     {
-        return await _repositoryWrapper.FlatTypes.UpdateFlatType(flatType);
+        var response = await _repositoryWrapper.FlatTypes.UpdateFlatType(flatType);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        await _redis.RemoveCacheDataAsync(_cacheKeyFlatTypeList);
+        return response;
     }
 
     public async Task<RepositoryResponse> ToggleStatus(int id)
     {
-        return await _repositoryWrapper.FlatTypes.ToggleStatus(id);
+        var response = await _repositoryWrapper.FlatTypes.ToggleStatus(id);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        await _redis.RemoveCacheDataAsync(_cacheKeyFlatTypeList);
+        return response;
     }
 
     public async Task<RepositoryResponse> DeleteFlatType(int flatTypeId)

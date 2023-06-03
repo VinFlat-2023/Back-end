@@ -13,8 +13,10 @@ namespace Service.Service;
 public class RenterService : IRenterService
 {
     private readonly string _cacheKey = "renter";
+    private readonly string _cacheKeyBuildingId = "renter-building-id";
     private readonly string _cacheKeyPageNumber = "page-number-renter";
     private readonly string _cacheKeyPageSize = "page-size-renter";
+    private readonly string _cacheKeyRenterList = "renter-list";
     private readonly PaginationOption _paginationOptions;
     private readonly IRedisCacheHelper _redis;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -32,10 +34,10 @@ public class RenterService : IRenterService
         var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
         var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
 
-        /*
         var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<Renter>>(_cacheKey);
         var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
-        var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);   
+        var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
+        var cacheDataBuildingId = await _redis.GetCachePagedDataAsync<int>(_cacheKeyBuildingId);
 
         var ifNullFilter = filters.GetType().GetProperties()
             .All(p => p.GetValue(filters) == null);
@@ -47,6 +49,8 @@ public class RenterService : IRenterService
                 await _redis.RemoveCacheDataAsync(_cacheKey);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+                await _redis.RemoveCacheDataAsync(_cacheKeyBuildingId);
+                await _redis.RemoveCacheDataAsync(_cacheKeyRenterList);
             }
             else
             {
@@ -59,7 +63,8 @@ public class RenterService : IRenterService
                         && (filters.Email == null || y.Email.ToLower().Contains(filters.Email.ToLower()))
                         && (filters.Gender == null || y.Gender == filters.Gender)
                         && (filters.FullName == null || y.FullName.ToLower().Contains(filters.FullName.ToLower()))
-                        && cacheDataPageNumber == pageNumber && cacheDataPageSize == pageSize);
+                        && cacheDataPageNumber == pageNumber && cacheDataPageSize == pageSize
+                        && cacheDataBuildingId == buildingId);
 
                 if (matches.Any())
                     return cacheDataList;
@@ -67,9 +72,10 @@ public class RenterService : IRenterService
                 await _redis.RemoveCacheDataAsync(_cacheKey);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+                await _redis.RemoveCacheDataAsync(_cacheKeyBuildingId);
+                await _redis.RemoveCacheDataAsync(_cacheKeyRenterList);
             }
         }
-        */
 
         var queryable = _repositoryWrapper.Renters.GetRenterList(filters, buildingId);
 
@@ -79,11 +85,10 @@ public class RenterService : IRenterService
         var pagedList = await PagedList<Renter>
             .Create(queryable, pageNumber, pageSize, token);
 
-        /*
         await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
-        */
+        await _redis.SetCacheDataAsync(_cacheKeyBuildingId, buildingId, 10, 5);
 
         return pagedList;
     }
@@ -133,33 +138,72 @@ public class RenterService : IRenterService
 
     public async Task<RepositoryResponse> UpdatePasswordRenter(Renter renter)
     {
-        return await _repositoryWrapper.Renters.UpdatePasswordRenter(renter);
+        var response = await _repositoryWrapper.Renters.UpdatePasswordRenter(renter);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        await _redis.RemoveCacheDataAsync(_cacheKeyBuildingId);
+        await _redis.RemoveCacheDataAsync(_cacheKeyRenterList);
+        return response;
     }
 
     public async Task<List<Renter>?> GetRenterList(int buildingId, CancellationToken token)
     {
-        return await _repositoryWrapper.Renters.GetRenterList(buildingId)
+        var cacheDataList = await _redis.GetCachePagedDataAsync<List<Renter>>(_cacheKeyRenterList);
+
+        if (cacheDataList != null)
+            return cacheDataList;
+
+        var response = await _repositoryWrapper.Renters.GetRenterList(buildingId)
             .ToListAsync(token);
+
+        await _redis.SetCacheDataAsync(_cacheKeyRenterList, response, 10, 5);
+
+        return response;
     }
 
     public async Task<Renter?> AddRenter(Renter renter)
     {
-        return await _repositoryWrapper.Renters.AddRenter(renter);
+        var response = await _repositoryWrapper.Renters.AddRenter(renter);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        await _redis.RemoveCacheDataAsync(_cacheKeyBuildingId);
+        await _redis.RemoveCacheDataAsync(_cacheKeyRenterList);
+        return response;
     }
 
     public async Task<RepositoryResponse> UpdateRenter(Renter renter)
     {
-        return await _repositoryWrapper.Renters.UpdateRenter(renter);
+        var response = await _repositoryWrapper.Renters.UpdateRenter(renter);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        await _redis.RemoveCacheDataAsync(_cacheKeyBuildingId);
+        await _redis.RemoveCacheDataAsync(_cacheKeyRenterList);
+        return response;
     }
 
     public async Task<RepositoryResponse> UpdateImageRenter(Renter renter)
     {
-        return await _repositoryWrapper.Renters.UpdateImageRenter(renter);
+        var response = await _repositoryWrapper.Renters.UpdateImageRenter(renter);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        await _redis.RemoveCacheDataAsync(_cacheKeyBuildingId);
+        await _redis.RemoveCacheDataAsync(_cacheKeyRenterList);
+        return response;
     }
 
     public async Task<RepositoryResponse> ToggleRenterStatus(Renter renter)
     {
-        return await _repositoryWrapper.Renters.ToggleRenter(renter);
+        var response = await _repositoryWrapper.Renters.ToggleRenter(renter);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        await _redis.RemoveCacheDataAsync(_cacheKeyBuildingId);
+        await _redis.RemoveCacheDataAsync(_cacheKeyRenterList);
+        return response;
     }
 
     public async Task<RepositoryResponse> DeleteRenter(int renterId)

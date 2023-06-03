@@ -3,7 +3,6 @@ using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Invoice;
 using Domain.EntityRequest.InvoiceType;
-using Domain.EnumEntities;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.ViewModel.InvoiceEntity;
@@ -71,7 +70,8 @@ public class InvoiceController : ControllerBase
                         });
                 }
 
-                var supervisorList = await _serviceWrapper.Invoices.GetInvoiceList(filter, buildingId, true, token);
+                var supervisorList =
+                    await _serviceWrapper.Invoices.GetInvoiceList(filter, buildingId, null, true, token);
 
                 if (supervisorList == null || !supervisorList.Any())
                     return NotFound(new
@@ -93,7 +93,7 @@ public class InvoiceController : ControllerBase
                 });
 
             case "Renter":
-                var renterList = await _serviceWrapper.Invoices.GetInvoiceList(filter, userId, false, token);
+                var renterList = await _serviceWrapper.Invoices.GetInvoiceList(filter, null, userId, false, token);
 
                 if (renterList == null || !renterList.Any())
                     return NotFound(new
@@ -107,12 +107,6 @@ public class InvoiceController : ControllerBase
 
                 var invoiceRenterDetailEntities =
                     resulRenterList as InvoiceRenterDetailEntity[] ?? resulRenterList.ToArray();
-
-                foreach (var renter in invoiceRenterDetailEntities)
-                    if (renter.Status.ToLower() == "paid" || renter.Status.ToLower() == "paidbutoverdue")
-                        renter.InvoiceStatus = true;
-                    else
-                        renter.InvoiceStatus = false;
 
                 return Ok(new
                 {
@@ -307,7 +301,7 @@ public class InvoiceController : ControllerBase
             });
 
         var list = await _serviceWrapper.Invoices
-            .GetInvoiceList(new InvoiceFilter { RenterId = userId, Status = status.Status.ToLower() }, token);
+            .GetInvoiceList(new InvoiceFilter { RenterId = userId, Status = status.Status }, token);
 
         // false = paid, true = unpaid
 
@@ -360,11 +354,6 @@ public class InvoiceController : ControllerBase
             });
 
         var result = _mapper.Map<InvoiceRenterDetailEntity>(entity);
-
-        if (result.Status.ToLower() == "paid" || result.Status.ToLower() == "paidbutoverdue")
-            result.InvoiceStatus = true;
-        else
-            result.InvoiceStatus = false;
 
         return Ok(new
         {
@@ -466,7 +455,7 @@ public class InvoiceController : ControllerBase
         var addNewInvoice = new Invoice
         {
             Name = invoice.Name,
-            Status = InvoiceStatusEnum.unpaid.ToString(),
+            Status = false,
             DueDate = invoice.DueDate,
             Detail = invoice.Detail,
             PaymentTime = null,
@@ -494,14 +483,12 @@ public class InvoiceController : ControllerBase
                 addNewInvoice.ContractId = contractLatest.ContractId;
                 break;
             case 2:
-                if (addNewInvoice.RenterId != null)
-                    return BadRequest(new
-                    {
-                        status = "Bad Request",
-                        message = "Hoá đơn với loại là phiếu thu thì không được gắn với người thuê",
-                        data = ""
-                    });
-                break;
+                return BadRequest(new
+                {
+                    status = "Bad Request",
+                    message = "Hoá đơn với loại là phiếu thu thì không được gắn với người thuê",
+                    data = ""
+                });
             default:
                 return BadRequest(new
                 {
@@ -512,6 +499,7 @@ public class InvoiceController : ControllerBase
         }
 
         var result = await _serviceWrapper.Invoices.AddInvoice(addNewInvoice);
+
         if (result == null)
             return BadRequest(new
             {
@@ -825,6 +813,8 @@ public class InvoiceController : ControllerBase
             });
     }
 
+    /*
+
     [SwaggerOperation(Summary = "[Authorize] Create invoice based on list of renter id (For management)")]
     [HttpPost("batch-create")]
     [Authorize(Roles = " Supervisor")]
@@ -895,10 +885,9 @@ public class InvoiceController : ControllerBase
         var result =
             await _serviceWrapper.Invoices.BatchInsertMonthlyInvoice(buildingForCurrentSupervisor, employeeId, token);
 
-        /*
+        
         var resultEmail = await _serviceWrapper
             .Mails.SendPaymentReminderAsync(buildingForCurrentSupervisor, token);
-        */
 
         var resultEmail = await _serviceWrapper
             .Mails.SendListOfUnPaidRenterToSupervisor(buildingForCurrentSupervisor, token);
@@ -925,6 +914,8 @@ public class InvoiceController : ControllerBase
             null => BadRequest(new { status = "Bad Request", message = "Tạo thất bại", data = "" })
         };
     }
+    
+    */
 
     [SwaggerOperation(Summary = "[Authorize] Fill all invoice data of this month (For management)")]
     [HttpPost("batch-fill")]
@@ -954,40 +945,76 @@ public class InvoiceController : ControllerBase
                 });
         }
 
-        var result =
-            await _serviceWrapper.Invoices.BatchInsertMonthlyInvoice(buildingForCurrentSupervisor, employeeId, token);
-
-        var resultEmail = await _serviceWrapper
-            .Mails.SendPaymentReminderAsync(buildingForCurrentSupervisor, token);
-
-        var resultMail2 = await _serviceWrapper
-            .Mails.SendListOfUnPaidRenterToSupervisor(buildingForCurrentSupervisor, token);
-
-        var mailResult = resultEmail ? "Gửi thư thành công" : "Gửi thư thất bại";
-
-        return result switch
+        if (DateTime.Now.Day <= 25)
         {
-            { IsSuccess: false }
-                => BadRequest(
+            var resultDate =
+                await _serviceWrapper.Invoices.BatchInsertMonthlyInvoice(buildingForCurrentSupervisor, employeeId,
+                    token);
+
+            switch (resultDate.IsSuccess)
+            {
+                case false:
+                    return BadRequest(
+                        new
+                        {
+                            status = "Bad Request",
+                            message = resultDate.Message,
+                            data = ""
+                        });
+
+                case true:
+                    var resultEmailRenter = await _serviceWrapper
+                        .Mails.SendPaymentReminderAsync(buildingForCurrentSupervisor, token);
+
+                    var resultMailSupervisor = await _serviceWrapper
+                        .Mails.SendListOfUnPaidRenterToSupervisor(buildingForCurrentSupervisor, token);
+
+                    var mailResultRenter = resultEmailRenter ? "gửi thư cho khách thuê thành công" : "gửi thư thất bại";
+
+                    var mailResultSupervisor =
+                        resultMailSupervisor ? "gửi thư cho quản lí thành công" : "gửi thư thất bại";
+
+                    return Ok(new
+                    {
+                        status = "Success",
+                        message = resultDate.Message + " và " + mailResultRenter + ", " + mailResultSupervisor,
+                        data = ""
+                    });
+            }
+        }
+
+        var result =
+            await _serviceWrapper.Invoices.BatchInsertMonthlyInvoiceWithData(buildingForCurrentSupervisor, employeeId,
+                token);
+
+        switch (result.IsSuccess)
+        {
+            case false:
+                return BadRequest(
                     new
                     {
                         status = "Bad Request",
-                        message = mailResult + " và " + result.Message,
+                        message = result.Message,
                         data = ""
-                    }),
-            { IsSuccess: true }
-                => Ok(new
+                    });
+
+            case true:
+                var resultEmailRenter = await _serviceWrapper
+                    .Mails.SendPaymentReminderAsync(buildingForCurrentSupervisor, token);
+
+                var resultMailSupervisor = await _serviceWrapper
+                    .Mails.SendListOfUnPaidRenterToSupervisor(buildingForCurrentSupervisor, token);
+
+                var mailResultRenter = resultEmailRenter ? "gửi thư cho khách thuê thành công" : "gửi thư thất bại";
+
+                var mailResultSupervisor = resultMailSupervisor ? "gửi thư cho quản lí thành công" : "gửi thư thất bại";
+
+                return Ok(new
                 {
                     status = "Success",
-                    message = mailResult + " và " + result.Message,
+                    message = result.Message + " và " + mailResultRenter + ", " + mailResultSupervisor,
                     data = ""
-                }),
-            null => BadRequest(new
-            {
-                status = "Bad Request",
-                message = "Tạo thất bại",
-                data = ""
-            })
-        };
+                });
+        }
     }
 }

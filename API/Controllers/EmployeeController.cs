@@ -140,11 +140,11 @@ public class EmployeeController : ControllerBase
 
         switch (employee.RoleId)
         {
+            case 2:
+                newEmployee.SupervisorBuildingId = employee.BuildingId;
+                break;
             case 3:
                 newEmployee.TechnicianBuildingId = employee.BuildingId;
-                break;
-            case 2 when employee.BuildingId != null:
-                newEmployee.SupervisorBuildingId = employee.BuildingId;
                 break;
         }
 
@@ -204,6 +204,16 @@ public class EmployeeController : ControllerBase
                 data = ""
             });
 
+        var employeeCheck = await _serviceWrapper.Employees.GetEmployeeById(id, token);
+
+        if (employeeCheck == null)
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Nhân viên không tồn tại",
+                data = ""
+            });
+
         var updateEmployee = new Employee
         {
             EmployeeId = id,
@@ -211,6 +221,16 @@ public class EmployeeController : ControllerBase
             Email = employee.Email,
             FullName = employee.Fullname
         };
+
+        switch (employeeCheck.Role.RoleName.ToLower())
+        {
+            case "supervisor":
+                updateEmployee.SupervisorBuildingId = employee.BuildingId;
+                break;
+            case "technician":
+                updateEmployee.TechnicianBuildingId = employee.BuildingId;
+                break;
+        }
 
         if (employee.Phone != null)
             updateEmployee.PhoneNumber = employee.Phone;

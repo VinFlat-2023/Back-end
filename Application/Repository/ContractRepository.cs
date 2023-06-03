@@ -51,7 +51,7 @@ public class ContractRepository : IContractRepository
             .AsNoTracking();
     }
 
-    public IQueryable<Contract> GetContractList(ContractFilter filters, int? id, bool isManagement)
+    public IQueryable<Contract> GetContractList(ContractFilter filters, int? buildingId, int? userId, bool isManagement)
     {
         return isManagement switch
         {
@@ -59,7 +59,7 @@ public class ContractRepository : IContractRepository
             true => _context.Contracts
                 .Include(x => x.Renter)
                 .Include(x => x.Flat)
-                .Where(x => x.BuildingId == id)
+                .Where(x => x.BuildingId == buildingId)
                 .Where(x =>
                     (filters.ContractName == null ||
                      x.ContractName.ToLower().Contains(filters.ContractName.ToLower()))
@@ -89,7 +89,7 @@ public class ContractRepository : IContractRepository
                 .Include(x => x.Renter)
                 .Include(x => x.Flat)
                 .ThenInclude(x => x.Building)
-                .Where(x => x.RenterId == id)
+                .Where(x => x.RenterId == userId)
                 .Where(x =>
                     (filters.ContractName == null ||
                      x.ContractName.ToLower().Contains(filters.ContractName.ToLower()))

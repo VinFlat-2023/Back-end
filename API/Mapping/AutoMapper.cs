@@ -250,9 +250,17 @@ public class AutoMapper : Profile
             .ReverseMap();
         CreateMap<ServiceFilterRequest, ServiceEntityFilter>()
             .ReverseMap();
+
         CreateMap<ServiceEntity, ServiceDetailEntity>()
             .ForAllMembers(o => o.ExplicitExpansion());
         CreateMap<ServiceDetailEntity, ServiceEntity>()
+            .ReverseMap();
+        CreateMap<ServiceEntity, ServiceDetailEntity>()
+            .ReverseMap();
+
+        CreateMap<ServiceDetailEntitySupervisor, ServiceEntity>()
+            .ReverseMap();
+        CreateMap<ServiceEntity, ServiceDetailEntitySupervisor>()
             .ReverseMap();
 
         CreateMap<ServiceBasicDetailEntity, ServiceEntity>()

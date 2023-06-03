@@ -31,7 +31,7 @@ public class EmployeeService : IEmployeeService
     {
         var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
         var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
-        /*
+
         var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<Employee>>(_cacheKey);
         var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
         var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
@@ -66,7 +66,7 @@ public class EmployeeService : IEmployeeService
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
             }
         }
-        */
+
         var queryable = _repositoryWrapper.Employees.GetEmployeeList(filters);
 
         if (!queryable.Any())
@@ -74,11 +74,9 @@ public class EmployeeService : IEmployeeService
 
         var pagedList = await PagedList<Employee>.Create(queryable, pageNumber, pageSize, token);
 
-        /*
         await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
-        */
 
         return pagedList;
     }
@@ -98,37 +96,65 @@ public class EmployeeService : IEmployeeService
 
     public async Task<RepositoryResponse> UpdateEmployeeProfilePicture(Employee employee)
     {
-        return await _repositoryWrapper.Employees.UpdateEmployeeProfilePicture(employee);
+        var response = await _repositoryWrapper.Employees.UpdateEmployeeProfilePicture(employee);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        return response;
     }
 
     public async Task<Employee?> AddEmployee(Employee employee)
     {
-        return await _repositoryWrapper.Employees.AddEmployee(employee);
+        var response = await _repositoryWrapper.Employees.AddEmployee(employee);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        return response;
     }
 
     public async Task<RepositoryResponse> UpdateEmployee(Employee employee)
     {
-        return await _repositoryWrapper.Employees.UpdateEmployee(employee);
+        var response = await _repositoryWrapper.Employees.UpdateEmployee(employee);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        return response;
     }
 
     public async Task<RepositoryResponse> UpdateEmployeeBuilding(Employee employee)
     {
-        return await _repositoryWrapper.Employees.UpdateEmployeeBuilding(employee);
+        var response = await _repositoryWrapper.Employees.UpdateEmployeeBuilding(employee);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        return response;
     }
 
     public async Task<RepositoryResponse> UpdateEmployeeManagement(Employee employee)
     {
-        return await _repositoryWrapper.Employees.UpdateEmployeeManagement(employee);
+        var response = await _repositoryWrapper.Employees.UpdateEmployeeManagement(employee);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        return response;
     }
 
     public async Task<RepositoryResponse> UpdatePasswordEmployee(Employee employee)
     {
-        return await _repositoryWrapper.Employees.UpdateEmployeePassword(employee);
+        var response = await _repositoryWrapper.Employees.UpdateEmployeePassword(employee);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        return response;
     }
 
     public async Task<RepositoryResponse> ToggleEmployeeStatus(int employeeId)
     {
-        return await _repositoryWrapper.Employees.ToggleEmployee(employeeId);
+        var response = await _repositoryWrapper.Employees.ToggleEmployee(employeeId);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        return response;
     }
 
     public async Task<RepositoryResponse> DeleteEmployee(int employeeId)
@@ -140,7 +166,6 @@ public class EmployeeService : IEmployeeService
     {
         return await _repositoryWrapper.Employees.IsEmployeeEmailExist(email, employeeId, token);
     }
-
 
     public async Task<RepositoryResponse> IsEmployeeEmailExist(string? email, CancellationToken token)
     {

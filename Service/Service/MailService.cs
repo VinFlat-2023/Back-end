@@ -2,12 +2,14 @@
 using System.Text;
 using Application.IRepository;
 using AutoMapper;
+using Domain.ControllerEntities;
 using Domain.CustomEntities.Mail;
 using Domain.CustomEntities.MomoEntities;
 using Domain.EntitiesForManagement;
 using Domain.EnumEntities;
 using Domain.ViewModel.InvoiceEntity;
 using Domain.ViewModel.RenterEntity;
+using Google.Apis.Util;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -72,6 +74,26 @@ public class CustomerMailService : ICustomerMailService
                 Console.WriteLine("Failed to send email to this user");
             }
 
+        return false;
+    }
+
+    public async Task<bool> SendResetPasswordEmail(EmailResetPasswordRequest resetPassword, CancellationToken token)
+    {
+        var emailResetPassword = await SendResetPasswordAsync(resetPassword, token);
+
+        if (emailResetPassword.Count == 0)
+            return false;
+
+        foreach (var mimeMessage in emailResetPassword)
+            try
+            {
+                await SendAsync(mimeMessage);
+            }
+            catch
+            {
+                Console.WriteLine("Failed to send email to this user");
+            }
+
         return true;
     }
 
@@ -83,12 +105,12 @@ public class CustomerMailService : ICustomerMailService
         if (!unpaidInvoices.Any())
             return false;
 
-        var mimeMessagesForAdmin =
+        var mimeMessagesForSupervisor =
             await CreateListOfUnpaidInvoiceWithRenterName(buildingId, unpaidInvoices, token);
 
-        if (mimeMessagesForAdmin.Count == 0)
+        if (mimeMessagesForSupervisor.Count == 0)
             return false;
-        foreach (var mimeMessage in mimeMessagesForAdmin)
+        foreach (var mimeMessage in mimeMessagesForSupervisor)
             await SendAsync(mimeMessage);
         return true;
     }
@@ -173,6 +195,61 @@ public class CustomerMailService : ICustomerMailService
         return list;
     }
 
+    private async Task<List<MimeMessage>> SendResetPasswordAsync(EmailResetPasswordRequest resetPassword,
+        CancellationToken token)
+    {
+        var list = new List<MimeMessage>();
+
+        var (message, password) = await _repositories.GetId.GetNewPasswordAfterReset(resetPassword, token);
+
+        if (message is null or "error" && password is null or "error")
+            return await Task.FromResult(list);
+
+        try
+        {
+            var mimeMessage = new MimeMessage();
+
+            mimeMessage.From.Add(new MailboxAddress(_emailConfig.From));
+
+            mimeMessage.To.Add(new MailboxAddress(resetPassword.registeredEmail));
+
+            mimeMessage.Subject = "Đã cung cấp mật khẩu mới";
+
+            // Create the HTML content with CSS styling
+            var bodyBuilder = new BodyBuilder
+            {
+                HtmlBody = @"
+            <style>
+            h1 {
+                color: #2c3e50;
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 20px;
+            }
+            p {
+                color: #34495e;
+                font-size: 16px;
+                line-height: 1.5;
+                margin-bottom: 30px;
+            }
+            </style>
+            <h1>Đã thay đổi mật khẩu</h1>
+            <p>Mật khẩu của bạn đã được tại mới thành công, hãy đăng nhập lại và thay đổi mật khẩu mới</p> 
+            <br>" + $"<br><p>Đây là mật khẩu mới của bạn</p>  <br><p>{password}</p>"
+            };
+
+            // Set the content of the message
+            mimeMessage.Body = bodyBuilder.ToMessageBody();
+
+            list.Add(mimeMessage);
+        }
+        catch
+        {
+            return await Task.FromResult(list);
+        }
+
+        return list;
+    }
 
     private async Task<List<MimeMessage>> CreateListOfUnpaidInvoiceWithRenterName(int buildingId,
         List<Invoice> unpaidInvoices, CancellationToken token)
@@ -191,7 +268,7 @@ public class CustomerMailService : ICustomerMailService
 
             mimeMessage.From.Add(new MailboxAddress(_emailConfig.From));
 
-            mimeMessage.To.Add(new MailboxAddress("teenlonglanh@gmail.com"));
+            mimeMessage.To.Add(new MailboxAddress(employee.Employee.Email));
 
             mimeMessage.Subject = "Nhắc hẹn về việc những khách hàng chưa thanh toán hóa đơn";
 
@@ -293,7 +370,7 @@ public class CustomerMailService : ICustomerMailService
 
             mimeMessage.To.Add(new MailboxAddress(invoice.Renter.Email));
 
-            mimeMessage.Subject = "Nhắc hẹn về việc thanh toán hoá đơnr";
+            mimeMessage.Subject = "Nhắc hẹn về việc thanh toán hoá đơn";
 
             var bodyBuilder = new BodyBuilder();
 
@@ -316,29 +393,53 @@ public class CustomerMailService : ICustomerMailService
             tableBuilder.Append("</tr>");
 
             foreach (var prop in typeof(InvoiceEmailDetailEntity).GetFilteredProperties())
-                switch (prop.GetValue(invoiceMapped.ToString()?.ToLower()))
-                {
-                    case "unpaid":
-                        tableBuilder.Append($"<td>{"Chưa thanh toán"}</td>");
-                        break;
-                    case "paid":
-                        tableBuilder.Append($"<td>{"Đã thanh toán"}</td>");
-                        break;
-                    case "overdue":
-                        tableBuilder.Append($"<td>{"Quá hạn"}</td>");
-                        break;
-                    case "paidoverdue":
-                        tableBuilder.Append($"<td>{"Đã thanh toán quá hạn"}</td>");
-                        break;
-                    default:
-                        tableBuilder.Append($"<td>{prop.GetValue(invoiceMapped)}</td>");
-                        break;
-                }
+                tableBuilder.Append($"<td>{prop.GetValue(invoiceMapped)}</td>");
 
             tableBuilder.Append("</tr>");
             tableBuilder.Append("</table>");
 
             // Another table for invoice detail
+
+            var tableBuilderDetail = new StringBuilder();
+
+            // Generate the HTML table dynamically based on the MyObject properties
+
+            tableBuilderDetail.Append("<table>");
+            tableBuilderDetail.Append("<tr>");
+
+            if (invoice.InvoiceDetails.Count != 0)
+            {
+                var properties = typeof(InvoiceDetailEmailEntity).GetProperties()
+                    .Where(prop => Attribute.IsDefined(prop, typeof(DisplayNameAttribute)))
+                    .Select(prop => new
+                    {
+                        prop.Name, prop.GetCustomAttribute<DisplayNameAttribute>().DisplayName
+                    });
+
+                foreach (var property in properties) tableBuilderDetail.Append($"<th>{property.DisplayName}</th>");
+
+                tableBuilderDetail.Append("<tr>");
+
+                foreach (var invoiceDetail in invoice.InvoiceDetails)
+                {
+                    tableBuilderDetail.Append("<tr>");
+
+                    var invoiceDetailObject = new InvoiceDetailEmailEntity
+                    {
+                        Name = invoiceDetail.Name,
+                        Amount = invoiceDetail.Amount,
+                        Price = invoiceDetail.Price
+                    };
+
+                    foreach (var prop in typeof(InvoiceDetailEmailEntity).GetFilteredProperties())
+                        tableBuilderDetail.Append($"<td>{prop.GetValue(invoiceDetailObject)}</td>");
+
+                    tableBuilderDetail.Append("</tr>");
+                }
+
+                tableBuilderDetail.Append("</tr>");
+                tableBuilderDetail.Append("</table>");
+            }
 
             // Get distinct nullable property values in a list of objects
 
@@ -367,6 +468,9 @@ public class CustomerMailService : ICustomerMailService
                 $"<br>" +
                 $"<br>" +
                 $"{tableBuilder}" +
+                $"<br>" +
+                $"<br>" +
+                $"{tableBuilderDetail}" +
                 $"<br>" +
                 $"<br>" +
                 $"{footerBuilder}" +

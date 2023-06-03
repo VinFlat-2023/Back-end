@@ -14,13 +14,14 @@ public class InvoiceEmailDetailEntity
     [DisplayName("Ngày tạo")] public DateTime CreatedTime { get; set; }
 
     [DisplayName("Ngày hết hạn")] public DateTime? DueDate { get; set; }
-
     [SkipProperty] [Browsable(false)] public DateTime? PaymentTime { get; set; }
 
     [DisplayName("Ngày thanh toán")]
     public string PaymentTimeStr => PaymentTime?.ToString("dd/MM/yyyy HH:mm:ss") ?? "Chưa thanh toán";
 
-    [DisplayName("Trạng thái thanh toán")] public string Status { get; set; }
+    [SkipProperty] [Browsable(false)] public bool Status { get; set; }
+
+    [DisplayName("Trạng thái thanh toán")] public string StatusStr => Status ? "Đã thanh toán" : "Chưa thanh toán";
 
     [SkipProperty] [Browsable(false)] public virtual ICollection<InvoiceDataDetailEntity> InvoiceDetails { get; set; }
 }

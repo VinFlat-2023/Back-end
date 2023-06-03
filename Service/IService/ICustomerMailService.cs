@@ -1,4 +1,5 @@
-﻿using Domain.CustomEntities.MomoEntities;
+﻿using Domain.ControllerEntities;
+using Domain.CustomEntities.MomoEntities;
 using Microsoft.AspNetCore.Http;
 
 namespace Service.IService;
@@ -11,6 +12,7 @@ public interface ICustomerMailService
     public Task<bool> SendPaymentReminderAsync(int buildingId, CancellationToken token);
     public Task<bool> SendListOfUnPaidRenterToSupervisor(int buildingId, CancellationToken token);
     public Task<bool> SendPaymentConfirmAsync(MomoResponseEntity momo, CancellationToken token);
+    public Task<bool> SendResetPasswordEmail(EmailResetPasswordRequest resetPassword, CancellationToken token);
 
     #region unsued code
 

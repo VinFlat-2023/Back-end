@@ -24,11 +24,15 @@ public interface IInvoiceRepository
     public Task<RepositoryResponse> BatchInsertMonthlyInvoice(IEnumerable<int> invoices, int employeeId,
         CancellationToken token);
 
-    public Task<RepositoryResponse> BatchInsertMonthlyInvoice(int buildingForCurrentSupervisor, int employeeId,
-        CancellationToken token);
 
     public Task<RepositoryResponse> AddServiceToLastInvoice(int invoiceId, IEnumerable<int> serviceId,
         CancellationToken token);
 
-    IQueryable<Invoice> GetInvoiceList(InvoiceFilter filters, int id, bool isManagement);
+    IQueryable<Invoice> GetInvoiceList(InvoiceFilter filters, int? buildingId, int? userId, bool isManagement);
+
+    public Task<RepositoryResponse> BatchInsertMonthlyInvoice(int buildingId, int employeeId,
+        CancellationToken token);
+
+    public Task<RepositoryResponse> BatchInsertMonthlyInvoiceWithData(int buildingId, int employeeId,
+        CancellationToken token);
 }

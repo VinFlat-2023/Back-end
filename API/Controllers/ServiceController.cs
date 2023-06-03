@@ -3,7 +3,6 @@ using AutoMapper;
 using Domain.EntitiesForManagement;
 using Domain.EntityRequest.Service;
 using Domain.EntityRequest.ServiceType;
-using Domain.EnumEntities;
 using Domain.FilterRequests;
 using Domain.QueryFilter;
 using Domain.ViewModel.ServiceEntity;
@@ -263,7 +262,7 @@ public class ServiceController : ControllerBase
                 RenterId = userId,
                 Name = "Hoá đơn tháng " + DateTime.Now.Month + " năm " + DateTime.Now.Year + " của " +
                        userCheck.FullName,
-                Status = InvoiceStatusEnum.unpaid.ToString(),
+                Status = false,
                 CreatedTime = DateTime.Now,
                 PaymentTime = null,
                 Detail = "Chi tiết hoá đơn",

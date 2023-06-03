@@ -56,6 +56,29 @@ public class BuildingController : ControllerBase
         });
     }
 
+    [SwaggerOperation(Summary = "[Authorize] Get building list using query")]
+    [HttpGet("list")]
+    public async Task<IActionResult> GetBuildingsNoFilter(CancellationToken token)
+    {
+        var list = await _serviceWrapper.Buildings.GetBuildingList(token);
+
+        var resultList = _mapper.Map<IEnumerable<BuildingDetailEntity>>(list);
+
+        if (list == null || !list.Any())
+            return NotFound(new
+            {
+                status = "Not Found",
+                message = "Danh sách toà nhà trống",
+                data = ""
+            });
+        return Ok(new
+        {
+            status = "Success",
+            message = "Hiển thị danh sách toà nhà",
+            data = resultList
+        });
+    }
+
     [SwaggerOperation(Summary = "[Authorize] Get current building (Supervisor only)")]
     [Authorize(Roles = "Supervisor")]
     [HttpGet("current")]
@@ -140,7 +163,7 @@ public class BuildingController : ControllerBase
     // PUT: api/Buildings/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [SwaggerOperation(Summary = "[Authorize] Update Building info (For management)")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Supervisor")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutBuilding(int id, [FromBody] BuildingUpdateRequest building,
         CancellationToken token)
@@ -286,8 +309,6 @@ public class BuildingController : ControllerBase
                             SupervisorBuildingId = buildingDetail.BuildingId
                         };
 
-                        //TODO: Implement batch insertion to include roll back
-
                         var employeeUpdateManagement =
                             await _serviceWrapper.Employees.UpdateEmployeeBuilding(employeeUpdate);
 
@@ -298,6 +319,41 @@ public class BuildingController : ControllerBase
                                 message = "Không thể cập nhật quản lý cho toà nhà",
                                 data = ""
                             });
+
+                        var newServiceType = new ServiceType
+                        {
+                            Name = "Dịch vụ",
+                            BuildingId = buildingId,
+                            Status = "active"
+                        };
+
+                        var newServiceTypeResult = await _serviceWrapper.ServiceTypes.AddServiceType(newServiceType);
+
+                        var newService = new ServiceEntity
+                        {
+                            Name = "Dọn dẹp",
+                            Description = "Dọn dẹp",
+                            BuildingId = buildingId,
+                            Price = 100000,
+                            ServiceTypeId = newServiceTypeResult.ServiceTypeId
+                        };
+
+                        await _serviceWrapper.ServicesEntity.AddServiceEntity(newService);
+
+                        var newTechnician = new Employee
+                        {
+                            Username = supervisor.Username + "-tech",
+                            FullName = "Kĩ thuật viên",
+                            Password = "123456",
+                            Email = $"technician-building-{buildingId}{employeeId}@gmail.com",
+                            PhoneNumber = "095475743",
+                            Status = true,
+                            Address = "HCM",
+                            TechnicianBuildingId = buildingDetail.BuildingId,
+                            RoleId = 3
+                        };
+
+                        await _serviceWrapper.Employees.AddEmployee(newTechnician);
 
                         return Ok(new
                         {

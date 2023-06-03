@@ -1,3 +1,5 @@
+using Domain.ControllerEntities;
+
 namespace Application.IRepository;
 
 public interface IGetIdRepository
@@ -11,4 +13,5 @@ public interface IGetIdRepository
     Task<int> GetBuildingIdBasedOnSupervisorId(int employeeId, CancellationToken token);
     Task<int> GetBuildingIdBasedOnTechnicianId(int employeeId, CancellationToken token);
     Task<int?> GetSupervisorIdByBuildingId(int entityBuildingId, CancellationToken token);
+    Task<(string, string)> GetNewPasswordAfterReset(EmailResetPasswordRequest resetPassword, CancellationToken token);
 }

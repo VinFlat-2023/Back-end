@@ -4,7 +4,7 @@ public class InvoiceFilter : PagingFilter
 {
     public string? Name { get; set; }
     public int? Amount { get; set; }
-    public string? Status { get; set; }
+    public bool? Status { get; set; }
     public DateTime? DueDate { get; set; }
     public string? Detail { get; set; }
 

@@ -7,7 +7,10 @@ namespace Service.IService;
 public interface IInvoiceService
 {
     public Task<PagedList<Invoice>?> GetInvoiceList(InvoiceFilter filter, CancellationToken token);
-    Task<PagedList<Invoice>?> GetInvoiceList(InvoiceFilter filter, int id, bool isManagement, CancellationToken token);
+
+    Task<PagedList<Invoice>?> GetInvoiceList(InvoiceFilter filter, int? buildingId, int? userId, bool isManagement,
+        CancellationToken token);
+
     public Task<Invoice?> GetInvoiceById(int? invoiceId, CancellationToken token);
     public Task<Invoice?> AddInvoice(Invoice invoice);
     public Task<Invoice?> UpdateInvoice(Invoice invoice);
@@ -20,9 +23,13 @@ public interface IInvoiceService
     public Task<RepositoryResponse> AddServiceToLastInvoice(int invoiceId, IEnumerable<int> serviceId,
         CancellationToken token);
 
+    /*
     public Task<RepositoryResponse> BatchInsertMonthlyInvoice(IEnumerable<int> invoices, int employeeId,
         CancellationToken token);
-
+    */
     public Task<RepositoryResponse>
         BatchInsertMonthlyInvoice(int buildingForCurrentSupervisor, int employeeId, CancellationToken token);
+
+    public Task<RepositoryResponse> BatchInsertMonthlyInvoiceWithData(int buildingForCurrentSupervisor, int employeeId,
+        CancellationToken token);
 }

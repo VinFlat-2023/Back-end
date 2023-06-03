@@ -45,6 +45,17 @@ public class BuildingRepository : IBuildingRepository
             .AsNoTracking();
     }
 
+    public IQueryable<Building> GetBuildingList()
+    {
+        return _context.Buildings
+            .Include(x => x.Area)
+            .Include(x => x.Employee)
+            .Include(x => x.Flats)
+            .ThenInclude(x => x.Rooms)
+            .Where(x => x.Status == true)
+            .AsNoTracking();
+    }
+
     /// <summary>
     ///     Get building detail using building id
     /// </summary>

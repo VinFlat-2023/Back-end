@@ -1070,150 +1070,6 @@ namespace Infrastructure.Migrations
                                 .HasColumnName("PeriodEnd");
                         }
                     ));
-
-                    b.HasData(
-                        new
-                        {
-                            ContractId = 1,
-                            BuildingId = 3,
-                            ContractImageUrl1 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractImageUrl2 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractImageUrl3 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractImageUrl4 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractName = "Contract for renter 1",
-                            ContractSerialNumber = "VF-0001",
-                            ContractStatus = "Active",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 5, 2, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5660),
-                            Description = "Contract description for renter 1",
-                            FlatId = 3,
-                            LastUpdated = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5662),
-                            PriceForElectricity = 0m,
-                            PriceForRent = 1800000m,
-                            PriceForService = 0m,
-                            PriceForWater = 0m,
-                            RenterId = 1,
-                            RoomId = 3,
-                            StartDate = new DateTime(2023, 5, 7, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5661)
-                        },
-                        new
-                        {
-                            ContractId = 2,
-                            BuildingId = 3,
-                            ContractImageUrl1 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractImageUrl2 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractImageUrl3 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractImageUrl4 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractName = "Contract for renter 2",
-                            ContractSerialNumber = "VF-0002",
-                            ContractStatus = "Active",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 5, 3, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5670),
-                            Description = "Contract description for renter 2",
-                            FlatId = 3,
-                            LastUpdated = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5670),
-                            PriceForElectricity = 0m,
-                            PriceForRent = 2800000m,
-                            PriceForService = 0m,
-                            PriceForWater = 0m,
-                            RenterId = 2,
-                            RoomId = 3,
-                            StartDate = new DateTime(2023, 5, 5, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5670)
-                        },
-                        new
-                        {
-                            ContractId = 3,
-                            BuildingId = 3,
-                            ContractImageUrl1 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractImageUrl2 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractImageUrl3 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractImageUrl4 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractName = "Contract for renter 3",
-                            ContractSerialNumber = "VF-0003",
-                            ContractStatus = "Active",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 5, 3, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5693),
-                            Description = "Contract description for renter 3",
-                            FlatId = 3,
-                            LastUpdated = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5694),
-                            PriceForElectricity = 120m,
-                            PriceForRent = 2800000m,
-                            PriceForService = 10000m,
-                            PriceForWater = 1000m,
-                            RenterId = 3,
-                            RoomId = 3,
-                            StartDate = new DateTime(2023, 5, 5, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5694)
-                        },
-                        new
-                        {
-                            ContractId = 4,
-                            BuildingId = 3,
-                            ContractImageUrl1 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractImageUrl2 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractImageUrl3 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractImageUrl4 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractName = "Contract for renter 3 (2)",
-                            ContractSerialNumber = "VF-0004",
-                            ContractStatus = "Active",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 5, 3, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5696),
-                            Description = "Contract description for renter 3",
-                            FlatId = 3,
-                            LastUpdated = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5697),
-                            PriceForElectricity = 120m,
-                            PriceForRent = 2800000m,
-                            PriceForService = 10000m,
-                            PriceForWater = 1000m,
-                            RenterId = 3,
-                            RoomId = 2,
-                            StartDate = new DateTime(2023, 5, 5, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5697)
-                        },
-                        new
-                        {
-                            ContractId = 5,
-                            BuildingId = 3,
-                            ContractImageUrl1 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractImageUrl2 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractImageUrl3 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractImageUrl4 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractName = "Contract for renter 3 (3)",
-                            ContractSerialNumber = "VF-0005",
-                            ContractStatus = "Inactive",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 5, 3, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5699),
-                            Description = "Contract description for renter 3",
-                            FlatId = 3,
-                            LastUpdated = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5699),
-                            PriceForElectricity = 120m,
-                            PriceForRent = 2800000m,
-                            PriceForService = 10000m,
-                            PriceForWater = 1000m,
-                            RenterId = 3,
-                            RoomId = 2,
-                            StartDate = new DateTime(2023, 5, 5, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5699)
-                        },
-                        new
-                        {
-                            ContractId = 6,
-                            BuildingId = 3,
-                            ContractImageUrl1 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractImageUrl2 = "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg",
-                            ContractName = "Contract for renter 3 (4)",
-                            ContractSerialNumber = "VF-0006",
-                            ContractStatus = "Inactive",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateSigned = new DateTime(2023, 5, 3, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5701),
-                            Description = "Contract description for renter 3",
-                            FlatId = 3,
-                            LastUpdated = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5701),
-                            PriceForElectricity = 120m,
-                            PriceForRent = 2800000m,
-                            PriceForService = 10000m,
-                            PriceForWater = 1000m,
-                            RenterId = 3,
-                            RoomId = 2,
-                            StartDate = new DateTime(2023, 5, 5, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5701)
-                        });
                 });
 
             modelBuilder.Entity("Domain.EntitiesForManagement.Employee", b =>
@@ -1964,23 +1820,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("FeedbackTypeId");
 
                     b.ToTable("FeedbackType");
-
-                    b.HasData(
-                        new
-                        {
-                            FeedbackTypeId = 1,
-                            Name = "Rating"
-                        },
-                        new
-                        {
-                            FeedbackTypeId = 2,
-                            Name = "Suggestion"
-                        },
-                        new
-                        {
-                            FeedbackTypeId = 3,
-                            Name = "Other"
-                        });
                 });
 
             modelBuilder.Entity("Domain.EntitiesForManagement.Flat", b =>
@@ -2052,68 +1891,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("FlatTypeId");
 
                     b.ToTable("Flats");
-
-                    b.HasData(
-                        new
-                        {
-                            FlatId = 1,
-                            AvailableRoom = 0,
-                            BuildingId = 1,
-                            Description = "Flat 1",
-                            ElectricityMeterAfter = 0m,
-                            ElectricityMeterBefore = 0m,
-                            FlatTypeId = 1,
-                            MaxRoom = 0,
-                            Name = "Flat 1",
-                            Status = "Active",
-                            WaterMeterAfter = 0m,
-                            WaterMeterBefore = 0m
-                        },
-                        new
-                        {
-                            FlatId = 2,
-                            AvailableRoom = 0,
-                            BuildingId = 3,
-                            Description = "Flat 2",
-                            ElectricityMeterAfter = 0m,
-                            ElectricityMeterBefore = 0m,
-                            FlatTypeId = 3,
-                            MaxRoom = 0,
-                            Name = "Flat 2",
-                            Status = "Active",
-                            WaterMeterAfter = 0m,
-                            WaterMeterBefore = 0m
-                        },
-                        new
-                        {
-                            FlatId = 3,
-                            AvailableRoom = 0,
-                            BuildingId = 2,
-                            Description = "Flat 3",
-                            ElectricityMeterAfter = 0m,
-                            ElectricityMeterBefore = 0m,
-                            FlatTypeId = 2,
-                            MaxRoom = 0,
-                            Name = "Flat 3",
-                            Status = "Active",
-                            WaterMeterAfter = 0m,
-                            WaterMeterBefore = 0m
-                        },
-                        new
-                        {
-                            FlatId = 4,
-                            AvailableRoom = 0,
-                            BuildingId = 2,
-                            Description = "Flat 4",
-                            ElectricityMeterAfter = 0m,
-                            ElectricityMeterBefore = 0m,
-                            FlatTypeId = 5,
-                            MaxRoom = 0,
-                            Name = "Flat 4",
-                            Status = "NonActive",
-                            WaterMeterAfter = 0m,
-                            WaterMeterBefore = 0m
-                        });
                 });
 
             modelBuilder.Entity("Domain.EntitiesForManagement.FlatType", b =>
@@ -2214,6 +1991,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("InvoiceTypeId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsLate")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -2234,9 +2014,8 @@ namespace Infrastructure.Migrations
                     b.Property<int?>("RenterId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(18,2)");
@@ -2263,110 +2042,6 @@ namespace Infrastructure.Migrations
                                 .HasColumnName("PeriodEnd");
                         }
                     ));
-
-                    b.HasData(
-                        new
-                        {
-                            InvoiceId = 1,
-                            BuildingId = 0,
-                            CreatedTime = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5605),
-                            Detail = "Detail for invoice 1",
-                            DueDate = new DateTime(2023, 7, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5605),
-                            EmployeeId = 2,
-                            InvoiceTypeId = 1,
-                            Name = "Hoá đơn điện tử cho renter 1",
-                            RenterId = 1,
-                            Status = "Paid",
-                            TotalAmount = 0m
-                        },
-                        new
-                        {
-                            InvoiceId = 2,
-                            BuildingId = 0,
-                            CreatedTime = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5610),
-                            Detail = "Detail for invoice 2",
-                            DueDate = new DateTime(2023, 7, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5610),
-                            EmployeeId = 3,
-                            InvoiceTypeId = 1,
-                            Name = "Hoá đơn điện tử cho renter 2",
-                            RenterId = 2,
-                            Status = "PaidButOverdue",
-                            TotalAmount = 0m
-                        },
-                        new
-                        {
-                            InvoiceId = 3,
-                            BuildingId = 0,
-                            CreatedTime = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5612),
-                            Detail = "Detail for invoice 3",
-                            DueDate = new DateTime(2023, 7, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5612),
-                            EmployeeId = 4,
-                            InvoiceTypeId = 1,
-                            Name = "Hoá đơn điện tử cho renter 3",
-                            RenterId = 3,
-                            Status = "Overdue",
-                            TotalAmount = 0m
-                        },
-                        new
-                        {
-                            InvoiceId = 4,
-                            BuildingId = 0,
-                            CreatedTime = new DateTime(2023, 2, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5614),
-                            Detail = "Detail for invoice 3 (2)",
-                            DueDate = new DateTime(2023, 3, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5616),
-                            EmployeeId = 2,
-                            InvoiceTypeId = 1,
-                            Name = "Hoá đơn điện tử cho renter 3 (2)",
-                            PaymentTime = new DateTime(2023, 2, 27, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5616),
-                            RenterId = 3,
-                            Status = "Paid",
-                            TotalAmount = 0m
-                        },
-                        new
-                        {
-                            InvoiceId = 5,
-                            BuildingId = 0,
-                            CreatedTime = new DateTime(2023, 3, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5618),
-                            Detail = "Detail for invoice 3 (3)",
-                            DueDate = new DateTime(2023, 3, 21, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5619),
-                            EmployeeId = 2,
-                            InvoiceTypeId = 1,
-                            Name = "Hoá đơn điện tử cho renter 3 (3)",
-                            PaymentTime = new DateTime(2023, 3, 19, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5619),
-                            RenterId = 3,
-                            Status = "PaidButOverdue",
-                            TotalAmount = 0m
-                        },
-                        new
-                        {
-                            InvoiceId = 6,
-                            BuildingId = 0,
-                            CreatedTime = new DateTime(2023, 5, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5621),
-                            Detail = "Detail for invoice 3 (4)",
-                            DueDate = new DateTime(2023, 5, 20, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5621),
-                            EmployeeId = 2,
-                            InvoiceTypeId = 1,
-                            Name = "Hoá đơn điện tử cho renter 3 (4)",
-                            PaymentTime = new DateTime(2023, 5, 18, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5622),
-                            RenterId = 3,
-                            Status = "PaidButOverdue",
-                            TotalAmount = 0m
-                        },
-                        new
-                        {
-                            InvoiceId = 7,
-                            BuildingId = 0,
-                            CreatedTime = new DateTime(2023, 4, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5623),
-                            Detail = "Detail for invoice 3 (5)",
-                            DueDate = new DateTime(2023, 4, 20, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5624),
-                            EmployeeId = 2,
-                            InvoiceTypeId = 1,
-                            Name = "Hoá đơn điện tử cho renter 3 (5)",
-                            PaymentTime = new DateTime(2023, 4, 18, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5624),
-                            RenterId = 3,
-                            Status = "Paid",
-                            TotalAmount = 0m
-                        });
                 });
 
             modelBuilder.Entity("Domain.EntitiesForManagement.InvoiceDetail", b =>
@@ -2382,6 +2057,10 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("InvoiceId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PlaceholderForFeeId")
                         .HasColumnType("int");
@@ -2401,134 +2080,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("ServiceId");
 
                     b.ToTable("InvoiceDetails");
-
-                    b.HasData(
-                        new
-                        {
-                            InvoiceDetailId = 1,
-                            Amount = 0m,
-                            InvoiceId = 1,
-                            Price = 0m,
-                            ServiceId = 1
-                        },
-                        new
-                        {
-                            InvoiceDetailId = 2,
-                            Amount = 0m,
-                            InvoiceId = 1,
-                            Price = 0m,
-                            ServiceId = 2
-                        },
-                        new
-                        {
-                            InvoiceDetailId = 3,
-                            Amount = 0m,
-                            InvoiceId = 1,
-                            Price = 0m
-                        },
-                        new
-                        {
-                            InvoiceDetailId = 4,
-                            Amount = 0m,
-                            InvoiceId = 2,
-                            Price = 0m
-                        },
-                        new
-                        {
-                            InvoiceDetailId = 5,
-                            Amount = 0m,
-                            InvoiceId = 4,
-                            Price = 0m,
-                            ServiceId = 4
-                        },
-                        new
-                        {
-                            InvoiceDetailId = 6,
-                            Amount = 0m,
-                            InvoiceId = 4,
-                            Price = 0m,
-                            ServiceId = 4
-                        },
-                        new
-                        {
-                            InvoiceDetailId = 7,
-                            Amount = 0m,
-                            InvoiceId = 5,
-                            Price = 0m,
-                            ServiceId = 4
-                        },
-                        new
-                        {
-                            InvoiceDetailId = 8,
-                            Amount = 0m,
-                            InvoiceId = 5,
-                            Price = 0m,
-                            ServiceId = 5
-                        },
-                        new
-                        {
-                            InvoiceDetailId = 9,
-                            Amount = 0m,
-                            InvoiceId = 5,
-                            Price = 0m,
-                            ServiceId = 5
-                        },
-                        new
-                        {
-                            InvoiceDetailId = 10,
-                            Amount = 0m,
-                            InvoiceId = 6,
-                            Price = 0m,
-                            ServiceId = 6
-                        },
-                        new
-                        {
-                            InvoiceDetailId = 11,
-                            Amount = 0m,
-                            InvoiceId = 6,
-                            Price = 0m,
-                            ServiceId = 5
-                        },
-                        new
-                        {
-                            InvoiceDetailId = 12,
-                            Amount = 0m,
-                            InvoiceId = 6,
-                            Price = 0m,
-                            ServiceId = 6
-                        },
-                        new
-                        {
-                            InvoiceDetailId = 13,
-                            Amount = 0m,
-                            InvoiceId = 7,
-                            Price = 0m,
-                            ServiceId = 3
-                        },
-                        new
-                        {
-                            InvoiceDetailId = 14,
-                            Amount = 0m,
-                            InvoiceId = 7,
-                            Price = 0m,
-                            ServiceId = 3
-                        },
-                        new
-                        {
-                            InvoiceDetailId = 15,
-                            Amount = 0m,
-                            InvoiceId = 7,
-                            Price = 0m,
-                            ServiceId = 4
-                        },
-                        new
-                        {
-                            InvoiceDetailId = 16,
-                            Amount = 0m,
-                            InvoiceId = 7,
-                            Price = 0m,
-                            ServiceId = 5
-                        });
                 });
 
             modelBuilder.Entity("Domain.EntitiesForManagement.InvoiceType", b =>
@@ -2758,120 +2309,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("RenterId");
 
                     b.ToTable("Renters");
-
-                    b.HasData(
-                        new
-                        {
-                            RenterId = 1,
-                            Address = "HCM",
-                            BirthDate = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(4909),
-                            CitizenCardBackImageUrl = "ewqe",
-                            CitizenCardFrontImageUrl = "Ewqea",
-                            CitizenNumber = "3214324523",
-                            Email = "renter1@mail.com",
-                            FullName = "Nguyen Van A",
-                            Gender = "Male",
-                            Password = "renter1",
-                            PhoneNumber = "0123543125",
-                            Status = true,
-                            Username = "renter1"
-                        },
-                        new
-                        {
-                            RenterId = 2,
-                            Address = "Hue",
-                            BirthDate = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(4913),
-                            CitizenCardBackImageUrl = "ewqe",
-                            CitizenCardFrontImageUrl = "Ewqea",
-                            CitizenNumber = "3214324523",
-                            Email = "renter2@mail.com",
-                            FullName = "Nguyen Van B",
-                            Gender = "Male",
-                            Password = "renter2",
-                            PhoneNumber = "0123543125",
-                            Status = true,
-                            Username = "renter2"
-                        },
-                        new
-                        {
-                            RenterId = 3,
-                            Address = "DN",
-                            BirthDate = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(4915),
-                            CitizenCardBackImageUrl = "ewqe",
-                            CitizenCardFrontImageUrl = "Ewqea",
-                            CitizenNumber = "3214324523",
-                            Email = "renter3@mail.com",
-                            FullName = "Nguyen Van C",
-                            Gender = "Female",
-                            Password = "renter3",
-                            PhoneNumber = "0123543125",
-                            Status = true,
-                            Username = "renter3"
-                        },
-                        new
-                        {
-                            RenterId = 4,
-                            Address = "HN",
-                            BirthDate = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(4916),
-                            CitizenCardBackImageUrl = "ewqe",
-                            CitizenCardFrontImageUrl = "Ewqea",
-                            CitizenNumber = "3214324523",
-                            Email = "renter4@mail.com",
-                            FullName = "Nguyen Van D",
-                            Gender = "Female",
-                            Password = "renter4",
-                            PhoneNumber = "0123543125",
-                            Status = true,
-                            Username = "renter4"
-                        },
-                        new
-                        {
-                            RenterId = 5,
-                            Address = "HCM",
-                            BirthDate = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(4917),
-                            CitizenCardBackImageUrl = "ewqe",
-                            CitizenCardFrontImageUrl = "Ewqea",
-                            CitizenNumber = "3214324523",
-                            Email = "trankhaimnhkhoi10a3@mail.com",
-                            FullName = "Tran Minh Khoi",
-                            Gender = "Male",
-                            Password = "123456789",
-                            PhoneNumber = "0123543125",
-                            Status = true,
-                            Username = "minhkhoi10a3"
-                        },
-                        new
-                        {
-                            RenterId = 6,
-                            Address = "HCM",
-                            BirthDate = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(4919),
-                            CitizenCardBackImageUrl = "ewqe",
-                            CitizenCardFrontImageUrl = "Ewqea",
-                            CitizenNumber = "3214324523",
-                            Email = "trankhaimnhkhoi@mail.com",
-                            FullName = "Tran Minh Khoi",
-                            Gender = "Male",
-                            Password = "123456789",
-                            PhoneNumber = "0123543125",
-                            Status = true,
-                            Username = "minhkhoi"
-                        },
-                        new
-                        {
-                            RenterId = 7,
-                            Address = "HCM",
-                            BirthDate = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(4920),
-                            CitizenCardBackImageUrl = "ewqe",
-                            CitizenCardFrontImageUrl = "Ewqea",
-                            CitizenNumber = "3214324523",
-                            Email = "khoitkmse150850@fpt",
-                            FullName = "Tran Minh Khoi",
-                            Gender = "Male",
-                            Password = "123456789",
-                            PhoneNumber = "0123543125",
-                            Status = true,
-                            Username = "minhkhoitkm"
-                        });
                 });
 
             modelBuilder.Entity("Domain.EntitiesForManagement.Role", b =>
@@ -2973,32 +2410,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("RoomTypeId");
 
                     b.ToTable("Rooms");
-
-                    b.HasData(
-                        new
-                        {
-                            RoomId = 1,
-                            AvailableSlots = 5,
-                            BuildingId = 3,
-                            ElectricityAttribute = 1m,
-                            FlatId = 1,
-                            RoomName = "VF-02",
-                            RoomTypeId = 1,
-                            Status = "Active",
-                            WaterAttribute = 1m
-                        },
-                        new
-                        {
-                            RoomId = 2,
-                            AvailableSlots = 5,
-                            BuildingId = 3,
-                            ElectricityAttribute = 1m,
-                            FlatId = 2,
-                            RoomName = "VLA-203",
-                            RoomTypeId = 2,
-                            Status = "Active",
-                            WaterAttribute = 1m
-                        });
                 });
 
             modelBuilder.Entity("Domain.EntitiesForManagement.RoomType", b =>
@@ -3032,48 +2443,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("RoomTypeId");
 
                     b.ToTable("RoomTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            RoomTypeId = 1,
-                            BuildingId = 3,
-                            ElectricityAttribute = 1m,
-                            RoomTypeName = "Room 1 with 4 slots",
-                            Status = "Ok",
-                            TotalSlot = 4,
-                            WaterAttribute = 1m
-                        },
-                        new
-                        {
-                            RoomTypeId = 2,
-                            BuildingId = 3,
-                            ElectricityAttribute = 1m,
-                            RoomTypeName = "Room 2 for 5 slots",
-                            Status = "Active",
-                            TotalSlot = 5,
-                            WaterAttribute = 1m
-                        },
-                        new
-                        {
-                            RoomTypeId = 3,
-                            BuildingId = 3,
-                            ElectricityAttribute = 1m,
-                            RoomTypeName = "Room 3 for 6 slots",
-                            Status = "Active",
-                            TotalSlot = 5,
-                            WaterAttribute = 1m
-                        },
-                        new
-                        {
-                            RoomTypeId = 4,
-                            BuildingId = 3,
-                            ElectricityAttribute = 1m,
-                            RoomTypeName = "Room 4 for 6 slots",
-                            Status = "Maintaince",
-                            TotalSlot = 0,
-                            WaterAttribute = 1m
-                        });
                 });
 
             modelBuilder.Entity("Domain.EntitiesForManagement.ServiceEntity", b =>
@@ -3300,97 +2669,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("TicketTypeId");
 
                     b.ToTable("Tickets");
-
-                    b.HasData(
-                        new
-                        {
-                            TicketId = 1,
-                            ContractId = 3,
-                            CreateDate = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5396),
-                            Description = "Sự cố 1",
-                            EmployeeId = 2,
-                            Status = "Active",
-                            TicketName = "Ticket của renter 3 sự cố 1",
-                            TicketTypeId = 1
-                        },
-                        new
-                        {
-                            TicketId = 2,
-                            ContractId = 3,
-                            CreateDate = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5398),
-                            Description = "Sự cố 2",
-                            EmployeeId = 2,
-                            Status = "Processing",
-                            TicketName = "Ticket của renter 3 sự cố 2",
-                            TicketTypeId = 2
-                        },
-                        new
-                        {
-                            TicketId = 3,
-                            ContractId = 3,
-                            CreateDate = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5399),
-                            Description = "Sự cố 3",
-                            EmployeeId = 2,
-                            Status = "Confirming",
-                            TicketName = "Ticket của renter 3 sự cố 3",
-                            TicketTypeId = 3
-                        },
-                        new
-                        {
-                            TicketId = 4,
-                            ContractId = 3,
-                            CreateDate = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5400),
-                            Description = "Sự cố 4",
-                            EmployeeId = 2,
-                            Status = "Solved",
-                            TicketName = "Ticket của renter 3 sự cố 4",
-                            TicketTypeId = 1
-                        },
-                        new
-                        {
-                            TicketId = 5,
-                            ContractId = 3,
-                            CreateDate = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5401),
-                            Description = "Sự cố 1",
-                            EmployeeId = 2,
-                            Status = "Active",
-                            TicketName = "Ticket của renter 3 sự cố 5",
-                            TicketTypeId = 1
-                        },
-                        new
-                        {
-                            TicketId = 6,
-                            ContractId = 3,
-                            CreateDate = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5403),
-                            Description = "Sự cố 2",
-                            EmployeeId = 2,
-                            Status = "Processing",
-                            TicketName = "Ticket của renter 3 sự cố 6",
-                            TicketTypeId = 2
-                        },
-                        new
-                        {
-                            TicketId = 7,
-                            ContractId = 3,
-                            CreateDate = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5405),
-                            Description = "Sự cố 3",
-                            EmployeeId = 2,
-                            Status = "Confirming",
-                            TicketName = "Ticket 7 test",
-                            TicketTypeId = 3
-                        },
-                        new
-                        {
-                            TicketId = 8,
-                            ContractId = 3,
-                            CreateDate = new DateTime(2023, 6, 1, 17, 9, 38, 772, DateTimeKind.Utc).AddTicks(5406),
-                            Description = "Sự cố 4",
-                            EmployeeId = 2,
-                            SolveDate = new DateTime(2023, 5, 26, 0, 9, 38, 772, DateTimeKind.Local).AddTicks(5409),
-                            Status = "Solved",
-                            TicketName = "Ticket 8 esting",
-                            TicketTypeId = 1
-                        });
                 });
 
             modelBuilder.Entity("Domain.EntitiesForManagement.TicketType", b =>

@@ -10,19 +10,18 @@ public class InvoiceRenterDetailEntity
     public int InvoiceId { get; set; }
     public string Name { get; set; } = null!;
     public decimal TotalAmount { get; set; }
-    public string Status { get; set; }
-    public bool InvoiceStatus { get; set; }
+    public bool Status { get; set; }
     public string? Detail { get; set; }
     public string? ImageUrl { get; set; }
     public DateTime? DueDate { get; set; }
 
     public string DueDateReturn
-        => DueDate?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture) ?? "No date set";
+        => DueDate?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture) ?? "Chưa cập nhập ngày";
 
     public DateTime? PaymentTime { get; set; }
 
     public string PaymentTimeReturn
-        => PaymentTime?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture) ?? "Not yet paid";
+        => PaymentTime?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture) ?? "Chưa thanh toán";
 
     public DateTime CreatedTime { get; set; }
 

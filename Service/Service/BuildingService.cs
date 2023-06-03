@@ -27,16 +27,20 @@ public class BuildingService : IBuildingService
         _paginationOptions = paginationOptions.Value;
     }
 
+    public async Task<List<Building>?> GetBuildingList(CancellationToken token)
+    {
+        return await _repositoryWrapper.Buildings.GetBuildingList()
+            .ToListAsync(token);
+    }
+
     public async Task<PagedList<Building>?> GetBuildingList(BuildingFilter filters, CancellationToken token)
     {
         var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
         var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
-        /*
+
         var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<Building>>(_cacheKey);
         var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
         var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
-
-        
 
         var ifNullFilter = filters.GetType().GetProperties()
             .All(p => p.GetValue(filters) == null);
@@ -79,7 +83,7 @@ public class BuildingService : IBuildingService
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
             }
         }
-        */
+
         var queryable = _repositoryWrapper.Buildings.GetBuildingList(filters);
 
         if (!queryable.Any())
@@ -87,11 +91,10 @@ public class BuildingService : IBuildingService
 
         var pagedList = await PagedList<Building>.Create(queryable, pageNumber, pageSize, token);
 
-        /*
         await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
-        */
+
         return pagedList;
     }
 
@@ -103,17 +106,29 @@ public class BuildingService : IBuildingService
 
     public async Task<RepositoryResponse> AddBuildingAndItsManagement(Building building, int employeeId)
     {
-        return await _repositoryWrapper.Buildings.AddBuildingAndItsManagement(building, employeeId);
+        var response = await _repositoryWrapper.Buildings.AddBuildingAndItsManagement(building, employeeId);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        return response;
     }
 
     public async Task<RepositoryResponse> UpdateBuilding(Building building)
     {
-        return await _repositoryWrapper.Buildings.UpdateBuilding(building);
+        var response = await _repositoryWrapper.Buildings.UpdateBuilding(building);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        return response;
     }
 
     public async Task<RepositoryResponse> UpdateBuildingImages(Building building, int number)
     {
-        return await _repositoryWrapper.Buildings.UpdateBuildingImages(building, number);
+        var response = await _repositoryWrapper.Buildings.UpdateBuildingImages(building, number);
+        await _redis.RemoveCacheDataAsync(_cacheKey);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
+        await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+        return response;
     }
 
     public async Task<RepositoryResponse> DeleteBuilding(int buildingId)

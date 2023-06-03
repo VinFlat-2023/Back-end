@@ -12,4 +12,5 @@ public interface IBuildingService
     public Task<RepositoryResponse> UpdateBuilding(Building building);
     public Task<RepositoryResponse> UpdateBuildingImages(Building building, int number);
     public Task<RepositoryResponse> DeleteBuilding(int buildingId);
+    public Task<List<Building>?> GetBuildingList(CancellationToken filters);
 }

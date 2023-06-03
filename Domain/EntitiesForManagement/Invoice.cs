@@ -16,23 +16,18 @@ public class Invoice
 
     public string Name { get; set; } = null!;
     public decimal TotalAmount { get; set; }
-    public string Status { get; set; }
+    public bool Status { get; set; }
+    public bool IsLate { get; set; }
     public DateTime CreatedTime { get; set; }
     public DateTime? DueDate { get; set; }
     public DateTime? PaymentTime { get; set; }
-
     public string Detail { get; set; }
-
     // Contract 
-    public int? ContractId { get; set; }
-
-    public virtual Contract? Contract { get; set; }
-
+    public int ContractId { get; set; }
+    public virtual Contract Contract { get; set; }
     // Receiver 
-    public int? RenterId { get; set; }
-
-    public virtual Renter? Renter { get; set; }
-
+    public int RenterId { get; set; }
+    public virtual Renter Renter { get; set; }
     // Management employee
     public int EmployeeId { get; set; }
     public virtual Employee Employee { get; set; }

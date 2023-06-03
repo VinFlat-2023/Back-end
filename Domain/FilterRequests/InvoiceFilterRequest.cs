@@ -8,7 +8,7 @@ public class InvoiceFilterRequest : PagingFilter
 
     public int? Amount { get; set; }
 
-    public string? Status { get; set; }
+    public bool? Status { get; set; }
 
     public DateTime? DueDate { get; set; }
 

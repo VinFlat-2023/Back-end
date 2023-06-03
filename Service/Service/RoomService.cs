@@ -13,6 +13,7 @@ namespace Service.Service;
 public class RoomService : IRoomService
 {
     private readonly string _cacheKey = "room";
+    private readonly string _cacheKeyBuildingId = "room-building-id";
     private readonly string _cacheKeyPageNumber = "page-number-room";
     private readonly string _cacheKeyPageSize = "page-size-room";
     private readonly PaginationOption _paginationOptions;
@@ -36,10 +37,12 @@ public class RoomService : IRoomService
     {
         var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
         var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
         /*
         var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<Room>>(_cacheKey);
         var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
         var cacheDataPageNumber = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageNumber);
+        var cacheDataBuildingId = await _redis.GetCachePagedDataAsync<int>(_cacheKeyBuildingId);
 
         var ifNullFilter = filters.GetType().GetProperties()
             .All(p => p.GetValue(filters) == null);
@@ -51,6 +54,7 @@ public class RoomService : IRoomService
                 await _redis.RemoveCacheDataAsync(_cacheKey);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+                await _redis.RemoveCacheDataAsync(_cacheKeyBuildingId);
             }
             else
             {
@@ -67,7 +71,8 @@ public class RoomService : IRoomService
                         && (filters.FlatName == null || f.Flat.Name.ToLower().Contains(filters.FlatName.ToLower()))
                         && (filters.AvailableSlots == null || f.AvailableSlots == filters.AvailableSlots)
                         && (filters.TotalSlot == null || f.RoomType.TotalSlot == filters.TotalSlot)
-                        && cacheDataPageNumber == pageNumber && cacheDataPageSize == pageSize);
+                        && cacheDataPageNumber == pageNumber && cacheDataPageSize == pageSize 
+                        && cacheDataBuildingId == buildingId);
 
                 if (matches.Any())
                     return cacheDataList;
@@ -75,9 +80,9 @@ public class RoomService : IRoomService
                 await _redis.RemoveCacheDataAsync(_cacheKey);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageSize);
                 await _redis.RemoveCacheDataAsync(_cacheKeyPageNumber);
+                await _redis.RemoveCacheDataAsync(_cacheKeyBuildingId);
             }
         }
-        
         */
 
         var queryable = _repositoryWrapper.Rooms.GetRoomList(filters, buildingId);
@@ -92,7 +97,7 @@ public class RoomService : IRoomService
         await _redis.SetCacheDataAsync(_cacheKey, pagedList, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
-        
+        await _redis.SetCacheDataAsync(_cacheKeyBuildingId, buildingId, 10, 5);
         */
 
         return pagedList;

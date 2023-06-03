@@ -1,4 +1,6 @@
+using Application.Extension;
 using Application.IRepository;
+using Domain.ControllerEntities;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
@@ -108,5 +110,51 @@ public class GetIdRepository : IGetIdRepository
             return -1;
 
         return await employee.FirstOrDefaultAsync(token);
+    }
+
+    public async Task<(string, string)> GetNewPasswordAfterReset(EmailResetPasswordRequest resetPassword,
+        CancellationToken token)
+    {
+        var emailCheckEmployee = await _context.Employees
+            .FirstOrDefaultAsync(x => x.Email.ToLower().Trim()
+                                      == resetPassword.registeredEmail.ToLower().Trim(), token);
+
+        var emailCheckRenter = await _context.Renters
+            .FirstOrDefaultAsync(x => x.Email.ToLower().Trim()
+                                      == resetPassword.registeredEmail.ToLower().Trim(), token);
+
+        if (emailCheckEmployee == null && emailCheckRenter == null)
+            return ("error", "error");
+
+        if (emailCheckEmployee != null && emailCheckRenter == null)
+        {
+            var password = PasswordGeneratorExtension.CreateRandomPassword();
+
+            emailCheckEmployee.Password = password;
+
+            _context.Employees.Attach(emailCheckEmployee);
+
+            await _context.SaveChangesAsync(token);
+
+            return ("success", password);
+        }
+
+        if (emailCheckEmployee == null && emailCheckRenter != null)
+        {
+            var password = PasswordGeneratorExtension.CreateRandomPassword();
+
+            emailCheckRenter.Password = password;
+
+            _context.Renters.Attach(emailCheckRenter);
+
+            await _context.SaveChangesAsync(token);
+
+            return ("success", password);
+        }
+
+        if (emailCheckEmployee != null && emailCheckRenter != null)
+            return ("error", "error");
+
+        return ("error", "error");
     }
 }

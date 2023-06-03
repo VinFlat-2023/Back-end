@@ -1,5 +1,4 @@
 using Domain.EntitiesForManagement;
-using Domain.EnumEntities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure;
@@ -103,6 +102,8 @@ public class ApplicationContext : DbContext
         });
 
 
+        /*
+        
         modelBuilder.Entity<Renter>().HasData(
             new Renter
             {
@@ -213,6 +214,8 @@ public class ApplicationContext : DbContext
                 CitizenCardBackImageUrl = "ewqe"
             }
         );
+        
+        */
 
 
         modelBuilder.Entity<Employee>().HasData(
@@ -1834,7 +1837,6 @@ public class ApplicationContext : DbContext
                 UtilitiesName = "Kitchen"
             }
         );
-        */
 
         modelBuilder.Entity<Room>().HasData(
             new Room
@@ -1863,8 +1865,6 @@ public class ApplicationContext : DbContext
             }
         );
 
-        /*
-        
         modelBuilder.Entity<UtilitiesRoom>().HasData(
             new UtilitiesRoom
             {
@@ -1880,9 +1880,6 @@ public class ApplicationContext : DbContext
             }
         );
     
-        */
-
-
         modelBuilder.Entity<Flat>().HasData(
             new Flat
             {
@@ -1980,6 +1977,9 @@ public class ApplicationContext : DbContext
                 //Description = "ABCDEF"
             }
         );
+        
+                */
+
 
         modelBuilder.Entity<TicketType>().HasData(
             new TicketType
@@ -2012,6 +2012,7 @@ public class ApplicationContext : DbContext
             }
         );
 
+        /*
         modelBuilder.Entity<Ticket>().HasData(
             new Ticket
             {
@@ -2110,7 +2111,7 @@ public class ApplicationContext : DbContext
                 ContractId = 3
             }
         );
-
+        */
 
         modelBuilder.Entity<ServiceType>().HasData(
             new ServiceType
@@ -2209,6 +2210,7 @@ public class ApplicationContext : DbContext
             }
         );
 
+        /*
 
         modelBuilder.Entity<FeedbackType>().HasData(
             new FeedbackType
@@ -2228,6 +2230,7 @@ public class ApplicationContext : DbContext
             }
         );
 
+        */
 
         modelBuilder.Entity<InvoiceType>().HasData(
             new InvoiceType
@@ -2244,13 +2247,15 @@ public class ApplicationContext : DbContext
             }
         );
 
+        /*
+
         modelBuilder.Entity<Invoice>().HasData(
             new Invoice
             {
                 InvoiceId = 1,
                 Name = "Hoá đơn điện tử cho renter 1",
                 TotalAmount = 0,
-                Status = InvoiceStatusEnum.paid.ToString(),
+                Status = true,
                 Detail = "Detail for invoice 1",
                 CreatedTime = DateTime.UtcNow,
                 DueDate = DateTime.UtcNow.AddDays(30),
@@ -2263,7 +2268,7 @@ public class ApplicationContext : DbContext
                 InvoiceId = 2,
                 Name = "Hoá đơn điện tử cho renter 2",
                 TotalAmount = 0,
-                Status = InvoiceStatusEnum.paidbutoverdue.ToString(),
+                Status = false,
                 Detail = "Detail for invoice 2",
                 CreatedTime = DateTime.UtcNow,
                 DueDate = DateTime.UtcNow.AddDays(30),
@@ -2276,7 +2281,7 @@ public class ApplicationContext : DbContext
                 InvoiceId = 3,
                 Name = "Hoá đơn điện tử cho renter 3",
                 TotalAmount = 0,
-                Status = InvoiceStatusEnum.overdue.ToString(),
+                Status = true,
                 Detail = "Detail for invoice 3",
                 CreatedTime = DateTime.UtcNow,
                 DueDate = DateTime.UtcNow.AddDays(30),
@@ -2289,7 +2294,7 @@ public class ApplicationContext : DbContext
                 InvoiceId = 4,
                 Name = "Hoá đơn điện tử cho renter 3 (2)",
                 TotalAmount = 0,
-                Status = InvoiceStatusEnum.paid.ToString(),
+                Status = true,
                 Detail = "Detail for invoice 3 (2)",
                 CreatedTime = DateTime.UtcNow.AddMonths(-4),
                 DueDate = DateTime.UtcNow.AddDays(-92),
@@ -2303,7 +2308,7 @@ public class ApplicationContext : DbContext
                 InvoiceId = 5,
                 Name = "Hoá đơn điện tử cho renter 3 (3)",
                 TotalAmount = 0,
-                Status = InvoiceStatusEnum.paidbutoverdue.ToString(),
+                Status = true,
                 Detail = "Detail for invoice 3 (3)",
                 CreatedTime = DateTime.UtcNow.AddMonths(-3),
                 DueDate = DateTime.UtcNow.AddDays(-72),
@@ -2317,7 +2322,7 @@ public class ApplicationContext : DbContext
                 InvoiceId = 6,
                 Name = "Hoá đơn điện tử cho renter 3 (4)",
                 TotalAmount = 0,
-                Status = InvoiceStatusEnum.paidbutoverdue.ToString(),
+                Status = true,
                 Detail = "Detail for invoice 3 (4)",
                 CreatedTime = DateTime.UtcNow.AddMonths(-1),
                 DueDate = DateTime.UtcNow.AddDays(-12),
@@ -2331,7 +2336,7 @@ public class ApplicationContext : DbContext
                 InvoiceId = 7,
                 Name = "Hoá đơn điện tử cho renter 3 (5)",
                 TotalAmount = 0,
-                Status = InvoiceStatusEnum.paid.ToString(),
+                Status = true,
                 Detail = "Detail for invoice 3 (5)",
                 CreatedTime = DateTime.UtcNow.AddMonths(-2),
                 DueDate = DateTime.UtcNow.AddDays(-42),
@@ -2341,7 +2346,6 @@ public class ApplicationContext : DbContext
                 InvoiceTypeId = 1
             }
         );
-
 
         modelBuilder.Entity<InvoiceDetail>().HasData(
             new InvoiceDetail
@@ -2617,7 +2621,7 @@ public class ApplicationContext : DbContext
                     RoomId = 2
                 }
             );
-
+        */
 
         modelBuilder.Entity<Wallet>(entity =>
         {

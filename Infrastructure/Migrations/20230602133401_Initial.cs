@@ -301,7 +301,7 @@ namespace Infrastructure.Migrations
                     BuildingImageUrl6 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AveragePrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: true),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
                     AreaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -317,7 +317,8 @@ namespace Infrastructure.Migrations
                         name: "FK_Buildings_Employees_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "Employees",
-                        principalColumn: "EmployeeId");
+                        principalColumn: "EmployeeId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -518,12 +519,12 @@ namespace Infrastructure.Migrations
                 {
                     MetricHistoryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    WaterMeterBefore = table.Column<int>(type: "int", nullable: true),
-                    WaterMeterAfter = table.Column<int>(type: "int", nullable: true),
-                    ElectricityMeterBefore = table.Column<int>(type: "int", nullable: true),
-                    ElectricityMeterAfter = table.Column<int>(type: "int", nullable: true),
+                    WaterMeterBefore = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    WaterMeterAfter = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ElectricityMeterBefore = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ElectricityMeterAfter = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RecordedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RecordedDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FlatId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -583,7 +584,8 @@ namespace Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsLate = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PaymentTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Detail = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -680,6 +682,7 @@ namespace Infrastructure.Migrations
                 {
                     InvoiceDetailId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     InvoiceId = table.Column<int>(type: "int", nullable: false),
@@ -739,16 +742,6 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "FeedbackType",
-                columns: new[] { "FeedbackTypeId", "Name" },
-                values: new object[,]
-                {
-                    { 1, "Rating" },
-                    { 2, "Suggestion" },
-                    { 3, "Other" }
-                });
-
-            migrationBuilder.InsertData(
                 table: "FlatTypes",
                 columns: new[] { "FlatTypeId", "BuildingId", "FlatTypeName", "RoomCapacity", "Status" },
                 values: new object[,]
@@ -770,42 +763,13 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Renters",
-                columns: new[] { "RenterId", "Address", "BirthDate", "CitizenCardBackImageUrl", "CitizenCardFrontImageUrl", "CitizenNumber", "Email", "FullName", "Gender", "ImageUrl", "Password", "PhoneNumber", "Status", "Username" },
-                values: new object[,]
-                {
-                    { 1, "HCM", new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(7405), "ewqe", "Ewqea", "3214324523", "renter1@mail.com", "Nguyen Van A", "Male", null, "renter1", "0123543125", true, "renter1" },
-                    { 2, "Hue", new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(7408), "ewqe", "Ewqea", "3214324523", "renter2@mail.com", "Nguyen Van B", "Male", null, "renter2", "0123543125", true, "renter2" },
-                    { 3, "DN", new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(7410), "ewqe", "Ewqea", "3214324523", "renter3@mail.com", "Nguyen Van C", "Female", null, "renter3", "0123543125", true, "renter3" },
-                    { 4, "HN", new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(7411), "ewqe", "Ewqea", "3214324523", "renter4@mail.com", "Nguyen Van D", "Female", null, "renter4", "0123543125", true, "renter4" },
-                    { 5, "HCM", new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(7413), "ewqe", "Ewqea", "3214324523", "trankhaimnhkhoi10a3@mail.com", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", true, "minhkhoi10a3" },
-                    { 6, "HCM", new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(7414), "ewqe", "Ewqea", "3214324523", "trankhaimnhkhoi@mail.com", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", true, "minhkhoi" },
-                    { 7, "HCM", new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(7415), "ewqe", "Ewqea", "3214324523", "khoitkmse150850@fpt", "Tran Minh Khoi", "Male", null, "123456789", "0123543125", true, "minhkhoitkm" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Roles",
-                columns: new[] { "RoleId", "RoleName", "Status" },
-                values: new object[] { 1, "Admin", false });
-
-            migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "RoleId", "RoleName", "Status" },
                 values: new object[,]
                 {
+                    { 1, "Admin", false },
                     { 2, "Supervisor", false },
                     { 3, "Technician", false }
-                });
-
-            migrationBuilder.InsertData(
-                table: "RoomTypes",
-                columns: new[] { "RoomTypeId", "BuildingId", "ElectricityAttribute", "RoomTypeName", "Status", "TotalSlot", "WaterAttribute" },
-                values: new object[,]
-                {
-                    { 1, 3, 1m, "Room 1 with 4 slots", "Ok", 4, 1m },
-                    { 2, 3, 1m, "Room 2 for 5 slots", "Active", 5, 1m },
-                    { 3, 3, 1m, "Room 3 for 6 slots", "Active", 5, 1m },
-                    { 4, 3, 1m, "Room 4 for 6 slots", "Maintaince", 0, 1m }
                 });
 
             migrationBuilder.InsertData(
@@ -957,40 +921,6 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Invoices",
-                columns: new[] { "InvoiceId", "BuildingId", "ContractId", "CreatedTime", "Detail", "DueDate", "EmployeeId", "InvoiceTypeId", "Name", "PaymentTime", "RenterId", "Status", "TotalAmount" },
-                values: new object[,]
-                {
-                    { 1, 0, null, new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8059), "Detail for invoice 1", new DateTime(2023, 6, 26, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8059), 2, 1, "Hoá đơn điện tử cho renter 1", null, 1, true, 0m },
-                    { 2, 0, null, new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8062), "Detail for invoice 2", new DateTime(2023, 6, 26, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8062), 3, 1, "Hoá đơn điện tử cho renter 2", null, 2, true, 0m },
-                    { 3, 0, null, new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8064), "Detail for invoice 3", new DateTime(2023, 6, 26, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8064), 4, 1, "Hoá đơn điện tử cho renter 3", null, 3, false, 0m },
-                    { 4, 0, null, new DateTime(2023, 1, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8066), "Detail for invoice 3 (2)", new DateTime(2023, 2, 24, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8068), 2, 1, "Hoá đơn điện tử cho renter 3 (2)", new DateTime(2023, 2, 22, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8068), 3, true, 0m },
-                    { 5, 0, null, new DateTime(2023, 2, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8070), "Detail for invoice 3 (3)", new DateTime(2023, 3, 16, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8070), 2, 1, "Hoá đơn điện tử cho renter 3 (3)", new DateTime(2023, 3, 14, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8071), 3, true, 0m },
-                    { 6, 0, null, new DateTime(2023, 4, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8073), "Detail for invoice 3 (4)", new DateTime(2023, 5, 15, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8073), 2, 1, "Hoá đơn điện tử cho renter 3 (4)", new DateTime(2023, 5, 13, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8074), 3, true, 0m },
-                    { 7, 0, null, new DateTime(2023, 3, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8075), "Detail for invoice 3 (5)", new DateTime(2023, 4, 15, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8081), 2, 1, "Hoá đơn điện tử cho renter 3 (5)", new DateTime(2023, 4, 13, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8081), 3, true, 0m }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Flats",
-                columns: new[] { "FlatId", "AvailableRoom", "BuildingId", "Description", "ElectricityMeterAfter", "ElectricityMeterBefore", "FlatImageUrl1", "FlatImageUrl2", "FlatImageUrl3", "FlatImageUrl4", "FlatImageUrl5", "FlatImageUrl6", "FlatTypeId", "MaxRoom", "Name", "Status", "WaterMeterAfter", "WaterMeterBefore" },
-                values: new object[,]
-                {
-                    { 1, 0, 1, "Flat 1", 0m, 0m, null, null, null, null, null, null, 1, 0, "Flat 1", "Active", 0m, 0m },
-                    { 2, 0, 3, "Flat 2", 0m, 0m, null, null, null, null, null, null, 3, 0, "Flat 2", "Active", 0m, 0m },
-                    { 3, 0, 2, "Flat 3", 0m, 0m, null, null, null, null, null, null, 2, 0, "Flat 3", "Active", 0m, 0m },
-                    { 4, 0, 2, "Flat 4", 0m, 0m, null, null, null, null, null, null, 5, 0, "Flat 4", "NonActive", 0m, 0m }
-                });
-
-            migrationBuilder.InsertData(
-                table: "InvoiceDetails",
-                columns: new[] { "InvoiceDetailId", "Amount", "InvoiceId", "PlaceholderForFeeId", "Price", "ServiceId" },
-                values: new object[,]
-                {
-                    { 3, 0m, 1, null, 0m, null },
-                    { 4, 0m, 2, null, 0m, null }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Services",
                 columns: new[] { "ServiceId", "BuildingId", "Description", "ImageUrl", "ImageUrl2", "ImageUrl3", "ImageUrl4", "Name", "Price", "ServiceTypeId", "Status" },
                 values: new object[,]
@@ -1001,64 +931,6 @@ namespace Infrastructure.Migrations
                     { 4, 3, "Cung cấp 4 cho toa nha 3", null, null, null, null, "Xe đưa đón", 0m, 2, true },
                     { 5, 3, "Cung cấp 5 cho toa nha 3", null, null, null, null, "Dọn dẹp", 0m, 2, true },
                     { 6, 3, "Cung cấp 6 cho toa nha 3", null, null, null, null, "Chuyển vat tu", 0m, 2, true }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Contracts",
-                columns: new[] { "ContractId", "BuildingId", "CancelledDate", "ContractImageUrl1", "ContractImageUrl2", "ContractImageUrl3", "ContractImageUrl4", "ContractName", "ContractSerialNumber", "ContractStatus", "CreatedDate", "DateSigned", "Description", "EndDate", "FlatId", "LastUpdated", "PriceForElectricity", "PriceForRent", "PriceForService", "PriceForWater", "RenterId", "RoomId", "StartDate" },
-                values: new object[,]
-                {
-                    { 1, 3, null, "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "Contract for renter 1", "VF-0001", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 4, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8158), "Contract description for renter 1", null, 3, new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8161), 0m, 1800000m, 0m, 0m, 1, 3, new DateTime(2023, 5, 2, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8160) },
-                    { 2, 3, null, "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "Contract for renter 2", "VF-0002", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 4, 28, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8164), "Contract description for renter 2", null, 3, new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8166), 0m, 2800000m, 0m, 0m, 2, 3, new DateTime(2023, 4, 30, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8165) },
-                    { 3, 3, null, "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "Contract for renter 3", "VF-0003", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 4, 28, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8168), "Contract description for renter 3", null, 3, new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8169), 120m, 2800000m, 10000m, 1000m, 3, 3, new DateTime(2023, 4, 30, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8168) },
-                    { 4, 3, null, "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "Contract for renter 3 (2)", "VF-0004", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 4, 28, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8172), "Contract description for renter 3", null, 3, new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8172), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 4, 30, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8172) },
-                    { 5, 3, null, "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "Contract for renter 3 (3)", "VF-0005", "Inactive", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 4, 28, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8174), "Contract description for renter 3", null, 3, new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8182), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 4, 30, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8174) },
-                    { 6, 3, null, "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", "https://parleypro.azurewebsites.net/wp-content/uploads/2021/01/license-agreemen-example.jpg", null, null, "Contract for renter 3 (4)", "VF-0006", "Inactive", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 4, 28, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8184), "Contract description for renter 3", null, 3, new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8186), 120m, 2800000m, 10000m, 1000m, 3, 2, new DateTime(2023, 4, 30, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(8186) }
-                });
-
-            migrationBuilder.InsertData(
-                table: "InvoiceDetails",
-                columns: new[] { "InvoiceDetailId", "Amount", "InvoiceId", "PlaceholderForFeeId", "Price", "ServiceId" },
-                values: new object[,]
-                {
-                    { 1, 0m, 1, null, 0m, 1 },
-                    { 2, 0m, 1, null, 0m, 2 },
-                    { 5, 0m, 4, null, 0m, 4 },
-                    { 6, 0m, 4, null, 0m, 4 },
-                    { 7, 0m, 5, null, 0m, 4 },
-                    { 8, 0m, 5, null, 0m, 5 },
-                    { 9, 0m, 5, null, 0m, 5 },
-                    { 10, 0m, 6, null, 0m, 6 },
-                    { 11, 0m, 6, null, 0m, 5 },
-                    { 12, 0m, 6, null, 0m, 6 },
-                    { 13, 0m, 7, null, 0m, 3 },
-                    { 14, 0m, 7, null, 0m, 3 },
-                    { 15, 0m, 7, null, 0m, 4 },
-                    { 16, 0m, 7, null, 0m, 5 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Rooms",
-                columns: new[] { "RoomId", "AvailableSlots", "BuildingId", "ElectricityAttribute", "FlatId", "RoomImageUrl1", "RoomImageUrl2", "RoomImageUrl3", "RoomImageUrl4", "RoomImageUrl5", "RoomImageUrl6", "RoomName", "RoomTypeId", "Status", "WaterAttribute" },
-                values: new object[,]
-                {
-                    { 1, 5, 3, 1m, 1, null, null, null, null, null, null, "VF-02", 1, "Active", 1m },
-                    { 2, 5, 3, 1m, 2, null, null, null, null, null, null, "VLA-203", 2, "Active", 1m }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Tickets",
-                columns: new[] { "TicketId", "CancelledReason", "ContractId", "CreateDate", "Description", "EmployeeId", "ImageUrl1", "ImageUrl2", "ImageUrl3", "SolveDate", "Status", "TicketName", "TicketTypeId", "TotalAmount" },
-                values: new object[,]
-                {
-                    { 1, null, 3, new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(7921), "Sự cố 1", 2, null, null, null, null, "Active", "Ticket của renter 3 sự cố 1", 1, null },
-                    { 2, null, 3, new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(7923), "Sự cố 2", 2, null, null, null, null, "Processing", "Ticket của renter 3 sự cố 2", 2, null },
-                    { 3, null, 3, new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(7924), "Sự cố 3", 2, null, null, null, null, "Confirming", "Ticket của renter 3 sự cố 3", 3, null },
-                    { 4, null, 3, new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(7925), "Sự cố 4", 2, null, null, null, null, "Solved", "Ticket của renter 3 sự cố 4", 1, null },
-                    { 5, null, 3, new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(7926), "Sự cố 1", 2, null, null, null, null, "Active", "Ticket của renter 3 sự cố 5", 1, null },
-                    { 6, null, 3, new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(7927), "Sự cố 2", 2, null, null, null, null, "Processing", "Ticket của renter 3 sự cố 6", 2, null },
-                    { 7, null, 3, new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(7927), "Sự cố 3", 2, null, null, null, null, "Confirming", "Ticket 7 test", 3, null },
-                    { 8, null, 3, new DateTime(2023, 5, 27, 10, 19, 27, 954, DateTimeKind.Utc).AddTicks(7928), "Sự cố 4", 2, null, null, null, new DateTime(2023, 5, 20, 17, 19, 27, 954, DateTimeKind.Local).AddTicks(7932), "Solved", "Ticket 8 esting", 1, null }
                 });
 
             migrationBuilder.CreateIndex(

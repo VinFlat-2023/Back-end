@@ -32,6 +32,7 @@ public class ServiceEntityService : IServiceEntityService
     {
         var pageNumber = filters.PageNumber ?? _paginationOptions.DefaultPageNumber;
         var pageSize = filters.PageSize ?? _paginationOptions.DefaultPageSize;
+
         /*
         var cacheDataList = await _redis.GetCachePagedDataAsync<PagedList<ServiceEntity>>(_cacheKey);
         var cacheDataPageSize = await _redis.GetCachePagedDataAsync<int>(_cacheKeyPageSize);
@@ -87,13 +88,14 @@ public class ServiceEntityService : IServiceEntityService
         await _redis.SetCacheDataAsync(_cacheKeyPageNumber, pageNumber, 10, 5);
         await _redis.SetCacheDataAsync(_cacheKeyPageSize, pageSize, 10, 5);
         */
+
         return pagedList;
     }
 
     public async Task<ServiceEntity?> GetServiceEntityById(int? serviceEntityId, CancellationToken token)
     {
         return await _repositoryWrapper.ServiceEntities.GetServiceDetail(serviceEntityId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(token);
     }
 
     public async Task<ServiceEntity?> AddServiceEntity(ServiceEntity serviceEntity)
